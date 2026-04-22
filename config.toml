@@ -10,11 +10,12 @@ source = "arxiv"
 
 # For arXiv, use search_query syntax (https://info.arxiv.org/help/api/user-manual.html).
 arxiv_queries = [
-  "cat:cs.AI",
-  "cat:cs.CL",
-  "all:\"machine learning\"",
-  "all:\"natural language processing\"",
-  "all:\"large language model\"",
+  "cat:cs.AI", # AI
+  "cat:cs.CL", # computation and language
+  "cat:cs.LG", # machine learning
+  # "cat:cs.MA", # multiagent systems
+  # "cat:cs.CY", # computers and society
+  # "cat:cs.IR", # information retrieval
 ]
 
 # For Semantic Scholar, use their query syntax.
@@ -26,18 +27,18 @@ semantic_scholar_queries = [
   "(\"large language models\" OR LLM) AND language:English",
 ]
 
-year_min = 2016
+year_min = 2015
 year_max = 2026
-samples_per_month = 5
-max_results = 1000
-page_size = 5
-arxiv_monthly_output_jsonl = "data/raw/arxiv_monthly_papers.jsonl"
+page_size = 100
+arxiv_collection_mode = "full" # full or monthly
+samples_per_month = 5 # used only when arxiv_collection_mode = "monthly"
 arxiv_output_jsonl = "data/raw/arxiv_papers.jsonl"
+arxiv_monthly_output_jsonl = "data/raw/arxiv_monthly_papers.jsonl"
 semantic_scholar_output_jsonl = "data/raw/semantic_scholar_papers.jsonl"
 # Safe request pacing for collection APIs.
-min_request_interval_seconds = 3.0
+min_request_interval_seconds = 3.1
 max_retries = 8
-initial_backoff_seconds = 2.0
+initial_backoff_seconds = 3.1
 max_backoff_seconds = 90.0
 backoff_jitter_seconds = 0.25
 
@@ -50,30 +51,21 @@ fields = [
   "authors",
   "venue",
   "publicationDate",
-  "citationCount",
-  "influentialCitationCount",
   "fieldsOfStudy",
   "publicationTypes",
   "journal",
-  "isOpenAccess",
   "externalIds",
   "url",
   "tldr",
 ]
 
-[experiment]
-# First year where LLM usage likely becomes prominent in mainstream writing.
-llm_introduction_year = 2022
-# Optional offset for pre/post windows used in later analyses.
-pre_window_years = 6
-post_window_years = 4
 
 [analysis]
 enabled = true
 include_readability = true
-# Defaults follow collection output basename (e.g. arxiv_monthly_papers.*).
+# Defaults follow collection output basename (e.g. arxiv_papers.*).
 # Keep only explicit overrides you need.
-preprocessed_jsonl = "data/processed/arxiv_monthly_papers.jsonl"
+preprocessed_jsonl = ""
 feature_dataset_jsonl = ""
 trends_csv = ""
 trends_plot_dir = ""
