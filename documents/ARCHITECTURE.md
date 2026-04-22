@@ -5,6 +5,7 @@
 1. Config-first: all experiment controls live in root config.toml.
 2. Small modules: each file owns one responsibility.
 3. Pipeline clarity: ingest first, analyze later.
+4. Analysis stages are explicit: preprocess -> feature extraction/readability -> trend analysis.
 
 ## Module Map
 
@@ -14,11 +15,25 @@
   - Handles Semantic Scholar API requests and pagination.
 - src/not_an_llm/pipelines/collect.py
   - Orchestrates collection and writes JSONL.
+- src/not_an_llm/preprocessing/text.py
+  - Text preprocessor class for normalization and core text fields.
+- src/not_an_llm/pipelines/preprocess.py
+  - Runs preprocessing and persists preprocessed JSONL.
+- src/not_an_llm/analysis/feature_extractor.py
+  - Extracts stylistic and marker-based features from preprocessed text.
+- src/not_an_llm/analysis/readability.py
+  - Computes readability metrics (Flesch, FK grade, Fog, SMOG).
+- src/not_an_llm/analysis/trends.py
+  - Aggregates yearly feature trends and saves visualizations.
+- src/not_an_llm/pipelines/analyze.py
+  - Orchestrates analysis modules and writes trend artifacts.
 - src/not_an_llm/analysis/features.py
-  - Defines initial hypotheses and feature placeholders.
+  - Defines high-level hypotheses.
 - src/not_an_llm/cli.py
-  - CLI routing for collection and diagnostics.
+  - CLI routing for collection, preprocessing, and analysis.
 
 ## Data Contract (Current)
 
-Output is JSONL with one paper per line, containing the fields configured in config.toml.
+1. Raw JSONL from source collection.
+2. Preprocessed JSONL with normalized text fields.
+3. Feature-enriched JSONL plus per-year trend CSV and trend plots.
