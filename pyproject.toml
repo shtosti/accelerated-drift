@@ -5,8 +5,13 @@ description = "Collect Semantic Scholar papers and analyze writing-feature shift
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "ipykernel>=7.2.0",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.4",
     "pandas>=3.0.2",
     "requests>=2.33.1",
+    "textstat>=0.7.13",
     "tqdm>=4.67.3",
 ]
 
