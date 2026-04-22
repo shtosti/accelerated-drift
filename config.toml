@@ -28,8 +28,10 @@ semantic_scholar_queries = [
 
 year_min = 2016
 year_max = 2026
-max_results = 10
-page_size = 1
+samples_per_month = 5
+max_results = 1000
+page_size = 5
+arxiv_monthly_output_jsonl = "data/raw/arxiv_monthly_papers.jsonl"
 arxiv_output_jsonl = "data/raw/arxiv_papers.jsonl"
 semantic_scholar_output_jsonl = "data/raw/semantic_scholar_papers.jsonl"
 # Safe request pacing for collection APIs.
@@ -68,5 +70,12 @@ post_window_years = 4
 
 [analysis]
 enabled = true
-# Placeholders for future feature extraction toggles.
-features = ["hedging", "verbosity", "list_density", "meta_discourse"]
+include_readability = true
+# Defaults follow collection output basename (e.g. arxiv_monthly_papers.*).
+# Keep only explicit overrides you need.
+preprocessed_jsonl = "data/processed/arxiv_monthly_papers.jsonl"
+feature_dataset_jsonl = ""
+trends_csv = ""
+trends_plot_dir = ""
+# Use "all" to automatically include every numeric feature in yearly trend analysis.
+features = ["all"]
