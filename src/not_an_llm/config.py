@@ -10,10 +10,10 @@ import tomllib
 class CollectionConfig:
     source: str
     queries: list[str]
+    arxiv_collection_mode: str
     samples_per_month: int
     year_min: int
     year_max: int
-    max_results: int
     page_size: int
     output_jsonl: Path
     fields: list[str]
@@ -22,13 +22,6 @@ class CollectionConfig:
     initial_backoff_seconds: float
     max_backoff_seconds: float
     backoff_jitter_seconds: float
-
-
-@dataclass(slots=True)
-class ExperimentConfig:
-    llm_introduction_year: int
-    pre_window_years: int
-    post_window_years: int
 
 
 @dataclass(slots=True)
@@ -47,7 +40,6 @@ class AppConfig:
     project_name: str
     data_dir: Path
     collection: CollectionConfig
-    experiment: ExperimentConfig
     analysis: AnalysisConfig
 
 
@@ -58,11 +50,11 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
 
     project = _require_dict(raw, "project")
     collection = _require_dict(raw, "collection")
-    experiment = _require_dict(raw, "experiment")
     analysis = _require_dict(raw, "analysis")
     source = _load_collection_source(collection)
+    arxiv_collection_mode = _load_arxiv_collection_mode(collection)
     queries = _load_collection_queries(collection, source)
-    output_jsonl = _load_output_jsonl(collection, source)
+    output_jsonl = _load_output_jsonl(collection, source, arxiv_collection_mode)
     default_preprocessed, default_feature_dataset, default_trends_csv, default_trends_plot_dir = (
         _default_analysis_paths(output_jsonl)
     )
@@ -73,10 +65,10 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         collection=CollectionConfig(
             source=source,
             queries=queries,
+            arxiv_collection_mode=arxiv_collection_mode,
             samples_per_month=int(collection.get("samples_per_month", 5)),
             year_min=int(collection["year_min"]),
             year_max=int(collection["year_max"]),
-            max_results=int(collection["max_results"]),
             page_size=int(collection["page_size"]),
             output_jsonl=output_jsonl,
             fields=[str(item) for item in collection["fields"]],
@@ -85,11 +77,6 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             initial_backoff_seconds=float(collection.get("initial_backoff_seconds", 1.0)),
             max_backoff_seconds=float(collection.get("max_backoff_seconds", 30.0)),
             backoff_jitter_seconds=float(collection.get("backoff_jitter_seconds", 0.25)),
-        ),
-        experiment=ExperimentConfig(
-            llm_introduction_year=int(experiment["llm_introduction_year"]),
-            pre_window_years=int(experiment["pre_window_years"]),
-            post_window_years=int(experiment["post_window_years"]),
         ),
         analysis=AnalysisConfig(
             enabled=bool(analysis["enabled"]),
@@ -155,15 +142,32 @@ def _load_collection_source(collection: dict[str, Any]) -> str:
     return raw_source
 
 
-def _load_output_jsonl(collection: dict[str, Any], source: str) -> Path:
-    if source == "arxiv":
-        source_specific_path = collection.get("arxiv_monthly_output_jsonl")
-        if isinstance(source_specific_path, str) and source_specific_path.strip():
-            return Path(source_specific_path.strip())
+def _load_arxiv_collection_mode(collection: dict[str, Any]) -> str:
+    raw_mode = str(collection.get("arxiv_collection_mode", "full")).strip().lower()
+    allowed_modes = {"full", "monthly"}
+    if raw_mode not in allowed_modes:
+        raise ValueError("collection.arxiv_collection_mode must be one of: full, monthly")
+    return raw_mode
 
-        source_specific_path = collection.get("arxiv_output_jsonl")
-        if isinstance(source_specific_path, str) and source_specific_path.strip():
-            return Path(source_specific_path.strip())
+
+def _load_output_jsonl(collection: dict[str, Any], source: str, arxiv_collection_mode: str) -> Path:
+    if source == "arxiv":
+        if arxiv_collection_mode == "monthly":
+            source_specific_path = collection.get("arxiv_monthly_output_jsonl")
+            if isinstance(source_specific_path, str) and source_specific_path.strip():
+                return Path(source_specific_path.strip())
+
+            source_specific_path = collection.get("arxiv_output_jsonl")
+            if isinstance(source_specific_path, str) and source_specific_path.strip():
+                return Path(source_specific_path.strip())
+        else:
+            source_specific_path = collection.get("arxiv_output_jsonl")
+            if isinstance(source_specific_path, str) and source_specific_path.strip():
+                return Path(source_specific_path.strip())
+
+            source_specific_path = collection.get("arxiv_monthly_output_jsonl")
+            if isinstance(source_specific_path, str) and source_specific_path.strip():
+                return Path(source_specific_path.strip())
 
     if source == "semantic_scholar":
         source_specific_path = collection.get("semantic_scholar_output_jsonl")
