@@ -35,7 +35,7 @@ class ArxivClient:
         fields: list[str],
         year_min: int,
         year_max: int,
-        limit: int,
+        limit: int | None,
         page_size: int,
         published_year: int | None = None,
         published_month: int | None = None,
@@ -46,8 +46,14 @@ class ArxivClient:
         start = 0
         date_query = self._build_date_query(published_year=published_year, published_month=published_month)
 
-        while len(papers) < limit:
-            batch_size = min(page_size, limit - len(papers))
+        while True:
+            if limit is not None and len(papers) >= limit:
+                break
+
+            batch_size = page_size if limit is None else min(page_size, limit - len(papers))
+            if batch_size <= 0:
+                break
+
             payload = self._get_feed(query=query, date_query=date_query, start=start, max_results=batch_size)
             batch = self._parse_entries(
                 payload=payload,
