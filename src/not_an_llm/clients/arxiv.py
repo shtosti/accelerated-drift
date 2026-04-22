@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import calendar
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
@@ -36,16 +37,25 @@ class ArxivClient:
         year_max: int,
         limit: int,
         page_size: int,
+        published_year: int | None = None,
+        published_month: int | None = None,
     ) -> list[dict[str, Any]]:
         del fields
 
         papers: list[dict[str, Any]] = []
         start = 0
+        date_query = self._build_date_query(published_year=published_year, published_month=published_month)
 
         while len(papers) < limit:
             batch_size = min(page_size, limit - len(papers))
-            payload = self._get_feed(query=query, start=start, max_results=batch_size)
-            batch = self._parse_entries(payload=payload, year_min=year_min, year_max=year_max)
+            payload = self._get_feed(query=query, date_query=date_query, start=start, max_results=batch_size)
+            batch = self._parse_entries(
+                payload=payload,
+                year_min=year_min,
+                year_max=year_max,
+                published_year=published_year,
+                published_month=published_month,
+            )
             if not batch:
                 break
 
@@ -57,9 +67,10 @@ class ArxivClient:
 
         return papers
 
-    def _get_feed(self, *, query: str, start: int, max_results: int) -> str:
+    def _get_feed(self, *, query: str, date_query: str | None, start: int, max_results: int) -> str:
+        search_query = self._build_search_query(query=query, date_query=date_query)
         params = {
-            "search_query": query,
+            "search_query": search_query,
             "start": start,
             "max_results": max_results,
             "sortBy": "submittedDate",
@@ -114,7 +125,14 @@ class ArxivClient:
             time.sleep(sleep_seconds)
 
     @staticmethod
-    def _parse_entries(*, payload: str, year_min: int, year_max: int) -> list[dict[str, Any]]:
+    def _parse_entries(
+        *,
+        payload: str,
+        year_min: int,
+        year_max: int,
+        published_year: int | None = None,
+        published_month: int | None = None,
+    ) -> list[dict[str, Any]]:
         namespace = {"atom": ATOM_NS}
         root = ET.fromstring(payload)
         entries = root.findall("atom:entry", namespace)
@@ -128,6 +146,10 @@ class ArxivClient:
             published_at = datetime.fromisoformat(published_text.replace("Z", "+00:00"))
             year = published_at.year
             if year < year_min or year > year_max:
+                continue
+            if published_year is not None and year != published_year:
+                continue
+            if published_month is not None and published_at.month != published_month:
                 continue
 
             arxiv_id = _extract_arxiv_id(_entry_text(entry, "id", namespace))
@@ -166,6 +188,22 @@ class ArxivClient:
             )
 
         return papers
+
+    @staticmethod
+    def _build_date_query(*, published_year: int | None, published_month: int | None) -> str | None:
+        if published_year is None or published_month is None:
+            return None
+
+        last_day = calendar.monthrange(published_year, published_month)[1]
+        start_stamp = f"{published_year:04d}{published_month:02d}010000"
+        end_stamp = f"{published_year:04d}{published_month:02d}{last_day:02d}2359"
+        return f"submittedDate:[{start_stamp} TO {end_stamp}]"
+
+    @staticmethod
+    def _build_search_query(*, query: str, date_query: str | None) -> str:
+        if date_query is None:
+            return query
+        return f"({query}) AND {date_query}"
 
 
 def _entry_text(entry: ET.Element, name: str, namespace: dict[str, str]) -> str | None:
