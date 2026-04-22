@@ -3,23 +3,39 @@ name = "not-an-llm"
 data_dir = "data"
 
 [collection]
-# You can provide multiple independent Semantic Scholar queries.
-queries = [
+# Data source: semantic_scholar or arxiv
+source = "arxiv"
+
+# Keep source-specific queries side-by-side so switching source never overwrites them.
+
+# For arXiv, use search_query syntax (https://info.arxiv.org/help/api/user-manual.html).
+arxiv_queries = [
+  "cat:cs.AI",
+  "cat:cs.CL",
+  "all:\"machine learning\"",
+  "all:\"natural language processing\"",
+  "all:\"large language model\"",
+]
+
+# For Semantic Scholar, use their query syntax.
+semantic_scholar_queries = [
   "(\"artificial intelligence\" OR AI) AND language:English",
   "(\"deep learning\" OR \"machine learning\") AND language:English",
   "(\"computer science\") AND language:English",
   "(\"natural language processing\" OR NLP) AND language:English",
   "(\"large language models\" OR LLM) AND language:English",
 ]
+
 year_min = 2016
 year_max = 2026
-max_results = 100
-page_size = 50
-output_jsonl = "data/raw/semantic_scholar_papers.jsonl"
-# Safe request pacing for Semantic Scholar.
-min_request_interval_seconds = 1.2
+max_results = 10
+page_size = 1
+arxiv_output_jsonl = "data/raw/arxiv_papers.jsonl"
+semantic_scholar_output_jsonl = "data/raw/semantic_scholar_papers.jsonl"
+# Safe request pacing for collection APIs.
+min_request_interval_seconds = 3.0
 max_retries = 8
-initial_backoff_seconds = 1.2
+initial_backoff_seconds = 2.0
 max_backoff_seconds = 90.0
 backoff_jitter_seconds = 0.25
 
@@ -38,7 +54,6 @@ fields = [
   "publicationTypes",
   "journal",
   "isOpenAccess",
-  "openAccessPdf",
   "externalIds",
   "url",
   "tldr",
