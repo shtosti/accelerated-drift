@@ -51,20 +51,26 @@ def _run_full_arxiv_collection(config: AppConfig) -> Path:
 
     client = _build_collection_client(config)
 
+    year_plan = _build_year_plan(config.collection.year_min, config.collection.year_max)
+
     new_count = 0
     with tqdm(desc="Collecting arXiv papers", initial=existing_total, unit="paper") as progress:
         with output_path.open("a", encoding="utf-8") as handle:
-            for paper in _collect_all_papers_for_queries(
-                client,
-                config,
-                seen_keys=seen_keys,
-                year_min=config.collection.year_min,
-                year_max=config.collection.year_max,
-            ):
-                handle.write(json.dumps(paper, ensure_ascii=False) + "\n")
-                new_count += 1
-                progress.update(1)
-                handle.flush()
+            for year in year_plan:
+                progress.set_postfix_str(f"year={year}")
+                logger.info("[arxiv] Collecting year bucket: %s", year)
+
+                for paper in _collect_all_papers_for_queries(
+                    client,
+                    config,
+                    seen_keys=seen_keys,
+                    year_min=year,
+                    year_max=year,
+                ):
+                    handle.write(json.dumps(paper, ensure_ascii=False) + "\n")
+                    new_count += 1
+                    progress.update(1)
+                    handle.flush()
 
             handle.flush()
 
@@ -292,19 +298,8 @@ def _collect_papers_for_queries(
                 duplicate_count += 1
                 continue
             seen_keys.add(key)
-            collected_count += 1
             added_count += 1
             yield paper
-
-            if collected_count >= target_count:
-                logger.info(
-                    "[%s] Reached bucket target (%s). stopping early after query %s/%s.",
-                    label,
-                    target_count,
-                    index + 1,
-                    query_count,
-                )
-                return
 
         logger.info(
             "[%s] Query %s/%s done: fetched=%s added=%s duplicates=%s",
@@ -484,6 +479,10 @@ def _build_month_plan(year_min: int, year_max: int) -> list[tuple[int, int]]:
         for month in range(1, 13):
             months.append((year, month))
     return months
+
+
+def _build_year_plan(year_min: int, year_max: int) -> list[int]:
+    return list(range(year_min, year_max + 1))
 
 
 def _build_collection_client(config: AppConfig) -> SemanticScholarClient | ArxivClient:
