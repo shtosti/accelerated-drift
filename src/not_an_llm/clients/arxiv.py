@@ -44,7 +44,12 @@ class ArxivClient:
 
         papers: list[dict[str, Any]] = []
         start = 0
-        date_query = self._build_date_query(published_year=published_year, published_month=published_month)
+        date_query = self._build_date_query(
+            year_min=year_min,
+            year_max=year_max,
+            published_year=published_year,
+            published_month=published_month,
+        )
 
         while True:
             if limit is not None and len(papers) >= limit:
@@ -196,13 +201,21 @@ class ArxivClient:
         return papers
 
     @staticmethod
-    def _build_date_query(*, published_year: int | None, published_month: int | None) -> str | None:
-        if published_year is None or published_month is None:
-            return None
+    def _build_date_query(
+        *,
+        year_min: int,
+        year_max: int,
+        published_year: int | None,
+        published_month: int | None,
+    ) -> str:
+        if published_year is not None and published_month is not None:
+            last_day = calendar.monthrange(published_year, published_month)[1]
+            start_stamp = f"{published_year:04d}{published_month:02d}010000"
+            end_stamp = f"{published_year:04d}{published_month:02d}{last_day:02d}2359"
+            return f"submittedDate:[{start_stamp} TO {end_stamp}]"
 
-        last_day = calendar.monthrange(published_year, published_month)[1]
-        start_stamp = f"{published_year:04d}{published_month:02d}010000"
-        end_stamp = f"{published_year:04d}{published_month:02d}{last_day:02d}2359"
+        start_stamp = f"{year_min:04d}01010000"
+        end_stamp = f"{year_max:04d}12312359"
         return f"submittedDate:[{start_stamp} TO {end_stamp}]"
 
     @staticmethod
