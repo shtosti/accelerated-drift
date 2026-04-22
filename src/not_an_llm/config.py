@@ -10,6 +10,7 @@ import tomllib
 class CollectionConfig:
     source: str
     queries: list[str]
+    samples_per_month: int
     year_min: int
     year_max: int
     max_results: int
@@ -34,6 +35,11 @@ class ExperimentConfig:
 class AnalysisConfig:
     enabled: bool
     features: list[str]
+    include_readability: bool
+    preprocessed_jsonl: Path
+    feature_dataset_jsonl: Path
+    trends_csv: Path
+    trends_plot_dir: Path
 
 
 @dataclass(slots=True)
@@ -57,6 +63,9 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
     source = _load_collection_source(collection)
     queries = _load_collection_queries(collection, source)
     output_jsonl = _load_output_jsonl(collection, source)
+    default_preprocessed, default_feature_dataset, default_trends_csv, default_trends_plot_dir = (
+        _default_analysis_paths(output_jsonl)
+    )
 
     return AppConfig(
         project_name=str(project["name"]),
@@ -64,6 +73,7 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         collection=CollectionConfig(
             source=source,
             queries=queries,
+            samples_per_month=int(collection.get("samples_per_month", 5)),
             year_min=int(collection["year_min"]),
             year_max=int(collection["year_max"]),
             max_results=int(collection["max_results"]),
@@ -84,6 +94,11 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         analysis=AnalysisConfig(
             enabled=bool(analysis["enabled"]),
             features=[str(item) for item in analysis["features"]],
+            include_readability=bool(analysis.get("include_readability", True)),
+            preprocessed_jsonl=_load_optional_path(analysis.get("preprocessed_jsonl"), default_preprocessed),
+            feature_dataset_jsonl=_load_optional_path(analysis.get("feature_dataset_jsonl"), default_feature_dataset),
+            trends_csv=_load_optional_path(analysis.get("trends_csv"), default_trends_csv),
+            trends_plot_dir=_load_optional_path(analysis.get("trends_plot_dir"), default_trends_plot_dir),
         ),
     )
 
@@ -141,10 +156,19 @@ def _load_collection_source(collection: dict[str, Any]) -> str:
 
 
 def _load_output_jsonl(collection: dict[str, Any], source: str) -> Path:
-    source_specific_key = f"{source}_output_jsonl"
-    source_specific_path = collection.get(source_specific_key)
-    if isinstance(source_specific_path, str) and source_specific_path.strip():
-        return Path(source_specific_path.strip())
+    if source == "arxiv":
+        source_specific_path = collection.get("arxiv_monthly_output_jsonl")
+        if isinstance(source_specific_path, str) and source_specific_path.strip():
+            return Path(source_specific_path.strip())
+
+        source_specific_path = collection.get("arxiv_output_jsonl")
+        if isinstance(source_specific_path, str) and source_specific_path.strip():
+            return Path(source_specific_path.strip())
+
+    if source == "semantic_scholar":
+        source_specific_path = collection.get("semantic_scholar_output_jsonl")
+        if isinstance(source_specific_path, str) and source_specific_path.strip():
+            return Path(source_specific_path.strip())
 
     fallback_path = collection.get("output_jsonl")
     if isinstance(fallback_path, str) and fallback_path.strip():
@@ -152,5 +176,21 @@ def _load_output_jsonl(collection: dict[str, Any], source: str) -> Path:
 
     raise ValueError(
         "collection must define source-specific output path "
-        f"'{source_specific_key}' or fallback 'output_jsonl'"
+        "('arxiv_monthly_output_jsonl'/'arxiv_output_jsonl' for arxiv, "
+        "'semantic_scholar_output_jsonl' for semantic_scholar) or fallback 'output_jsonl'"
     )
+
+
+def _load_optional_path(raw_value: Any, default: Path) -> Path:
+    if isinstance(raw_value, str) and raw_value.strip():
+        return Path(raw_value.strip())
+    return default
+
+
+def _default_analysis_paths(raw_output_path: Path) -> tuple[Path, Path, Path, Path]:
+    suffix = raw_output_path.suffix or ".jsonl"
+    preprocessed = Path("data/processed") / raw_output_path.name
+    feature_dataset = Path("data/processed") / f"{raw_output_path.stem}_features{suffix}"
+    trends_csv = Path("data/analysis") / f"{raw_output_path.stem}_feature_trends_by_year.csv"
+    trends_plot_dir = Path("data/analysis/plots") / raw_output_path.stem
+    return preprocessed, feature_dataset, trends_csv, trends_plot_dir
