@@ -8,7 +8,9 @@ from pathlib import Path
 
 from not_an_llm.analysis.features import default_hypotheses
 from not_an_llm.config import load_config
+from not_an_llm.pipelines.analyze import run_analysis
 from not_an_llm.pipelines.collect import run_collection
+from not_an_llm.pipelines.preprocess import run_preprocessing
 
 
 
@@ -22,6 +24,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("collect", help="Download Semantic Scholar papers to JSONL.")
+    subparsers.add_parser("preprocess", help="Preprocess raw title/abstract text and save JSONL.")
+    subparsers.add_parser("analyze", help="Run feature and readability analysis with yearly trends.")
     subparsers.add_parser("show-hypotheses", help="Print default feature-shift hypotheses.")
 
     return parser
@@ -41,6 +45,18 @@ def main() -> None:
     if args.command == "collect":
         output_path = run_collection(config)
         print(f"Saved paper records to {output_path}")
+        return
+
+    if args.command == "preprocess":
+        output_path = run_preprocessing(config)
+        print(f"Saved preprocessed records to {output_path}")
+        return
+
+    if args.command == "analyze":
+        artifacts = run_analysis(config)
+        print(f"Saved feature dataset to {artifacts.feature_dataset_jsonl}")
+        print(f"Saved yearly trends to {artifacts.trends_csv}")
+        print(f"Saved trend plots to {config.analysis.trends_plot_dir} ({len(artifacts.trends_plot_paths)} files)")
         return
 
     if args.command == "show-hypotheses":
