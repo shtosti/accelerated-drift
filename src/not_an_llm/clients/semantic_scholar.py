@@ -34,14 +34,20 @@ class SemanticScholarClient:
         fields: list[str],
         year_min: int,
         year_max: int,
-        limit: int,
+        limit: int | None,
         page_size: int,
     ) -> list[dict[str, Any]]:
         papers: list[dict[str, Any]] = []
         offset = 0
 
-        while len(papers) < limit:
-            batch_size = min(page_size, limit - len(papers))
+        while True:
+            if limit is not None and len(papers) >= limit:
+                break
+
+            batch_size = page_size if limit is None else min(page_size, limit - len(papers))
+            if batch_size <= 0:
+                break
+
             params = {
                 "query": query,
                 "fields": ",".join(fields),
