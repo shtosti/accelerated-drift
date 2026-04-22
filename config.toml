@@ -1,0 +1,57 @@
+[project]
+name = "not-an-llm"
+data_dir = "data"
+
+[collection]
+# You can provide multiple independent Semantic Scholar queries.
+queries = [
+  "(\"artificial intelligence\" OR AI) AND language:English",
+  "(\"deep learning\" OR \"machine learning\") AND language:English",
+  "(\"computer science\") AND language:English",
+  "(\"natural language processing\" OR NLP) AND language:English",
+  "(\"large language models\" OR LLM) AND language:English",
+]
+year_min = 2016
+year_max = 2026
+max_results = 100
+page_size = 50
+output_jsonl = "data/raw/semantic_scholar_papers.jsonl"
+# Safe request pacing for Semantic Scholar.
+min_request_interval_seconds = 1.2
+max_retries = 8
+initial_backoff_seconds = 1.2
+max_backoff_seconds = 90.0
+backoff_jitter_seconds = 0.25
+
+# Keep fields explicit so moderation is centralized in this file.
+fields = [
+  "paperId",
+  "title",
+  "abstract",
+  "year",
+  "authors",
+  "venue",
+  "publicationDate",
+  "citationCount",
+  "influentialCitationCount",
+  "fieldsOfStudy",
+  "publicationTypes",
+  "journal",
+  "isOpenAccess",
+  "openAccessPdf",
+  "externalIds",
+  "url",
+  "tldr",
+]
+
+[experiment]
+# First year where LLM usage likely becomes prominent in mainstream writing.
+llm_introduction_year = 2022
+# Optional offset for pre/post windows used in later analyses.
+pre_window_years = 6
+post_window_years = 4
+
+[analysis]
+enabled = true
+# Placeholders for future feature extraction toggles.
+features = ["hedging", "verbosity", "list_density", "meta_discourse"]
