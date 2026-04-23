@@ -1,0 +1,437 @@
+2026-04-23 11:04:05,264 INFO not_an_llm.pipelines.collect: Starting medarxiv collection: queries=1 years=2015-2026 (month-split)
+2026-04-23 11:04:05,265 INFO not_an_llm.pipelines.collect: Resuming from existing output: path=data/raw/medarxiv_papers.jsonl existing_unique_papers=166
+Collecting medarxiv papers: 166paper [00:00, ?paper/s]Collecting medarxiv papers: 166paper [00:00, ?paper/s, 2015-01]2026-04-23 11:04:05,279 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-01
+2026-04-23 11:04:05,280 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-01 query=*
+2026-04-23 11:04:05,733 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:00, ?paper/s, 2015-02]2026-04-23 11:04:05,733 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-02
+2026-04-23 11:04:05,733 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-02 query=*
+2026-04-23 11:04:09,629 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:04, ?paper/s, 2015-03]2026-04-23 11:04:09,630 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-03
+2026-04-23 11:04:09,630 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-03 query=*
+2026-04-23 11:04:13,492 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:08, ?paper/s, 2015-04]2026-04-23 11:04:13,493 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-04
+2026-04-23 11:04:13,493 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-04 query=*
+2026-04-23 11:04:17,372 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:12, ?paper/s, 2015-05]2026-04-23 11:04:17,373 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-05
+2026-04-23 11:04:17,373 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-05 query=*
+2026-04-23 11:04:21,245 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:15, ?paper/s, 2015-06]2026-04-23 11:04:21,245 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-06
+2026-04-23 11:04:21,245 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-06 query=*
+2026-04-23 11:04:25,132 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:19, ?paper/s, 2015-07]2026-04-23 11:04:25,133 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-07
+2026-04-23 11:04:25,133 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-07 query=*
+2026-04-23 11:04:29,015 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:23, ?paper/s, 2015-08]2026-04-23 11:04:29,016 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-08
+2026-04-23 11:04:29,016 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-08 query=*
+2026-04-23 11:04:32,885 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:27, ?paper/s, 2015-09]2026-04-23 11:04:32,886 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-09
+2026-04-23 11:04:32,886 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-09 query=*
+2026-04-23 11:04:36,760 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:31, ?paper/s, 2015-10]2026-04-23 11:04:36,774 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-10
+2026-04-23 11:04:36,774 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-10 query=*
+2026-04-23 11:04:40,632 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:35, ?paper/s, 2015-11]2026-04-23 11:04:40,633 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-11
+2026-04-23 11:04:40,633 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-11 query=*
+2026-04-23 11:04:44,531 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:39, ?paper/s, 2015-12]2026-04-23 11:04:44,532 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2015-12
+2026-04-23 11:04:44,532 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2015-2015 month=2015-12 query=*
+2026-04-23 11:04:48,435 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:43, ?paper/s, 2016-01]2026-04-23 11:04:48,435 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-01
+2026-04-23 11:04:48,435 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-01 query=*
+2026-04-23 11:04:52,332 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:47, ?paper/s, 2016-02]2026-04-23 11:04:52,333 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-02
+2026-04-23 11:04:52,333 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-02 query=*
+2026-04-23 11:04:56,227 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:50, ?paper/s, 2016-03]2026-04-23 11:04:56,228 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-03
+2026-04-23 11:04:56,228 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-03 query=*
+2026-04-23 11:05:00,092 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:54, ?paper/s, 2016-04]2026-04-23 11:05:00,093 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-04
+2026-04-23 11:05:00,093 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-04 query=*
+2026-04-23 11:05:03,965 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [00:58, ?paper/s, 2016-05]2026-04-23 11:05:03,965 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-05
+2026-04-23 11:05:03,965 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-05 query=*
+2026-04-23 11:05:07,830 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:02, ?paper/s, 2016-06]2026-04-23 11:05:07,831 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-06
+2026-04-23 11:05:07,831 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-06 query=*
+2026-04-23 11:05:11,707 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:06, ?paper/s, 2016-07]2026-04-23 11:05:11,708 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-07
+2026-04-23 11:05:11,708 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-07 query=*
+2026-04-23 11:05:15,582 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:10, ?paper/s, 2016-08]2026-04-23 11:05:15,583 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-08
+2026-04-23 11:05:15,583 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-08 query=*
+2026-04-23 11:05:19,489 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:14, ?paper/s, 2016-09]2026-04-23 11:05:19,490 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-09
+2026-04-23 11:05:19,490 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-09 query=*
+2026-04-23 11:05:23,361 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:18, ?paper/s, 2016-10]2026-04-23 11:05:23,361 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-10
+2026-04-23 11:05:23,361 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-10 query=*
+2026-04-23 11:05:27,231 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:21, ?paper/s, 2016-11]2026-04-23 11:05:27,231 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-11
+2026-04-23 11:05:27,231 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-11 query=*
+2026-04-23 11:05:31,099 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:25, ?paper/s, 2016-12]2026-04-23 11:05:31,100 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2016-12
+2026-04-23 11:05:31,100 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2016-2016 month=2016-12 query=*
+2026-04-23 11:05:34,963 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:29, ?paper/s, 2017-01]2026-04-23 11:05:34,963 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-01
+2026-04-23 11:05:34,963 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-01 query=*
+2026-04-23 11:05:38,827 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:33, ?paper/s, 2017-02]2026-04-23 11:05:38,828 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-02
+2026-04-23 11:05:38,828 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-02 query=*
+2026-04-23 11:05:42,698 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:37, ?paper/s, 2017-03]2026-04-23 11:05:42,698 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-03
+2026-04-23 11:05:42,698 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-03 query=*
+2026-04-23 11:05:46,588 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:41, ?paper/s, 2017-04]2026-04-23 11:05:46,588 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-04
+2026-04-23 11:05:46,588 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-04 query=*
+2026-04-23 11:05:50,462 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:45, ?paper/s, 2017-05]2026-04-23 11:05:50,463 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-05
+2026-04-23 11:05:50,463 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-05 query=*
+2026-04-23 11:05:54,329 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:49, ?paper/s, 2017-06]2026-04-23 11:05:54,329 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-06
+2026-04-23 11:05:54,329 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-06 query=*
+2026-04-23 11:05:58,202 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:52, ?paper/s, 2017-07]2026-04-23 11:05:58,202 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-07
+2026-04-23 11:05:58,202 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-07 query=*
+2026-04-23 11:06:02,084 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [01:56, ?paper/s, 2017-08]2026-04-23 11:06:02,085 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-08
+2026-04-23 11:06:02,085 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-08 query=*
+2026-04-23 11:06:05,947 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:00, ?paper/s, 2017-09]2026-04-23 11:06:05,948 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-09
+2026-04-23 11:06:05,948 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-09 query=*
+2026-04-23 11:06:09,838 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:04, ?paper/s, 2017-10]2026-04-23 11:06:09,838 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-10
+2026-04-23 11:06:09,838 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-10 query=*
+2026-04-23 11:06:13,747 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:08, ?paper/s, 2017-11]2026-04-23 11:06:13,747 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-11
+2026-04-23 11:06:13,748 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-11 query=*
+2026-04-23 11:06:17,616 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:12, ?paper/s, 2017-12]2026-04-23 11:06:17,616 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2017-12
+2026-04-23 11:06:17,616 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2017-2017 month=2017-12 query=*
+2026-04-23 11:06:21,519 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:16, ?paper/s, 2018-01]2026-04-23 11:06:21,520 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-01
+2026-04-23 11:06:21,520 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-01 query=*
+2026-04-23 11:06:25,397 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:20, ?paper/s, 2018-02]2026-04-23 11:06:25,397 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-02
+2026-04-23 11:06:25,397 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-02 query=*
+2026-04-23 11:06:29,324 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:24, ?paper/s, 2018-03]2026-04-23 11:06:29,325 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-03
+2026-04-23 11:06:29,325 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-03 query=*
+2026-04-23 11:06:33,190 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:27, ?paper/s, 2018-04]2026-04-23 11:06:33,190 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-04
+2026-04-23 11:06:33,190 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-04 query=*
+2026-04-23 11:06:37,055 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:31, ?paper/s, 2018-05]2026-04-23 11:06:37,057 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-05
+2026-04-23 11:06:37,057 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-05 query=*
+2026-04-23 11:06:40,964 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:35, ?paper/s, 2018-06]2026-04-23 11:06:40,964 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-06
+2026-04-23 11:06:40,964 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-06 query=*
+2026-04-23 11:06:44,841 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:39, ?paper/s, 2018-07]2026-04-23 11:06:44,841 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-07
+2026-04-23 11:06:44,842 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-07 query=*
+2026-04-23 11:06:48,722 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:43, ?paper/s, 2018-08]2026-04-23 11:06:48,723 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-08
+2026-04-23 11:06:48,723 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-08 query=*
+2026-04-23 11:06:52,610 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:47, ?paper/s, 2018-09]2026-04-23 11:06:52,611 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-09
+2026-04-23 11:06:52,611 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-09 query=*
+2026-04-23 11:06:56,496 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:51, ?paper/s, 2018-10]2026-04-23 11:06:56,497 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-10
+2026-04-23 11:06:56,497 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-10 query=*
+2026-04-23 11:07:00,376 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:55, ?paper/s, 2018-11]2026-04-23 11:07:00,376 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-11
+2026-04-23 11:07:00,376 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-11 query=*
+2026-04-23 11:07:04,239 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [02:58, ?paper/s, 2018-12]2026-04-23 11:07:04,239 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2018-12
+2026-04-23 11:07:04,239 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2018-2018 month=2018-12 query=*
+2026-04-23 11:07:08,139 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [03:02, ?paper/s, 2019-01]2026-04-23 11:07:08,139 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-01
+2026-04-23 11:07:08,139 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-01 query=*
+2026-04-23 11:07:12,003 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [03:06, ?paper/s, 2019-02]2026-04-23 11:07:12,003 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-02
+2026-04-23 11:07:12,003 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-02 query=*
+2026-04-23 11:07:15,888 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [03:10, ?paper/s, 2019-03]2026-04-23 11:07:15,889 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-03
+2026-04-23 11:07:15,889 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-03 query=*
+2026-04-23 11:07:19,759 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [03:14, ?paper/s, 2019-04]2026-04-23 11:07:19,759 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-04
+2026-04-23 11:07:19,759 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-04 query=*
+2026-04-23 11:07:23,629 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [03:18, ?paper/s, 2019-05]2026-04-23 11:07:23,629 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-05
+2026-04-23 11:07:23,629 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-05 query=*
+2026-04-23 11:07:27,515 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 166paper [03:22, ?paper/s, 2019-06]2026-04-23 11:07:27,515 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-06
+2026-04-23 11:07:27,515 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-06 query=*
+Collecting medarxiv papers: 167paper [03:26, 206.45s/paper, 2019-06]2026-04-23 11:07:31,805 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=32 added=28 duplicates=4
+Collecting medarxiv papers: 194paper [03:26, 206.45s/paper, 2019-07]2026-04-23 11:07:31,805 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-07
+2026-04-23 11:07:31,805 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-07 query=*
+Collecting medarxiv papers: 195paper [03:34,  5.33s/paper, 2019-07] 2026-04-23 11:07:40,238 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=129 added=115 duplicates=14
+Collecting medarxiv papers: 309paper [03:34,  5.33s/paper, 2019-08]2026-04-23 11:07:40,238 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-08
+2026-04-23 11:07:40,238 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-08 query=*
+Collecting medarxiv papers: 310paper [03:43,  1.17paper/s, 2019-08]2026-04-23 11:07:48,736 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=132 added=110 duplicates=22
+Collecting medarxiv papers: 419paper [03:43,  1.17paper/s, 2019-09]2026-04-23 11:07:48,736 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-09
+2026-04-23 11:07:48,737 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-09 query=*
+Collecting medarxiv papers: 420paper [03:52,  2.29paper/s, 2019-09]2026-04-23 11:07:57,315 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=137 added=116 duplicates=21
+Collecting medarxiv papers: 535paper [03:52,  2.29paper/s, 2019-10]2026-04-23 11:07:57,316 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-10
+2026-04-23 11:07:57,316 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-10 query=*
+Collecting medarxiv papers: 536paper [04:00,  3.63paper/s, 2019-10]2026-04-23 11:08:06,047 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=199 added=175 duplicates=24
+Collecting medarxiv papers: 710paper [04:00,  3.63paper/s, 2019-11]2026-04-23 11:08:06,047 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-11
+2026-04-23 11:08:06,047 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-11 query=*
+Collecting medarxiv papers: 711paper [04:13,  5.67paper/s, 2019-11]2026-04-23 11:08:18,973 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=233 added=188 duplicates=45
+Collecting medarxiv papers: 898paper [04:13,  5.67paper/s, 2019-12]2026-04-23 11:08:18,974 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2019-12
+2026-04-23 11:08:18,975 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2019-2019 month=2019-12 query=*
+Collecting medarxiv papers: 899paper [04:22,  8.29paper/s, 2019-12]2026-04-23 11:08:27,726 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=193 added=166 duplicates=27
+Collecting medarxiv papers: 1064paper [04:22,  8.29paper/s, 2020-01]2026-04-23 11:08:27,727 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-01
+2026-04-23 11:08:27,727 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-01 query=*
+Collecting medarxiv papers: 1065paper [04:35,  9.46paper/s, 2020-01]2026-04-23 11:08:40,687 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=266 added=223 duplicates=43
+Collecting medarxiv papers: 1287paper [04:35,  9.46paper/s, 2020-02]2026-04-23 11:08:40,688 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-02
+2026-04-23 11:08:40,688 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-02 query=*
+Collecting medarxiv papers: 1287paper [04:50,  9.46paper/s, 2020-02]Collecting medarxiv papers: 1288paper [05:01,  9.04paper/s, 2020-02]2026-04-23 11:09:07,012 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=584 added=451 duplicates=133
+Collecting medarxiv papers: 1738paper [05:01,  9.04paper/s, 2020-03]2026-04-23 11:09:07,013 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-03
+2026-04-23 11:09:07,013 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-03 query=*
+Collecting medarxiv papers: 1739paper [05:49,  9.23paper/s, 2020-03]Collecting medarxiv papers: 1971paper [05:49, 12.86paper/s, 2020-03]Collecting medarxiv papers: 2502paper [05:49, 24.72paper/s, 2020-03]2026-04-23 11:09:55,122 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1066 added=838 duplicates=228
+Collecting medarxiv papers: 2576paper [05:49, 24.72paper/s, 2020-04]2026-04-23 11:09:55,124 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-04
+2026-04-23 11:09:55,124 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-04 query=*
+Collecting medarxiv papers: 2576paper [06:00, 24.72paper/s, 2020-04]Collecting medarxiv papers: 2577paper [07:21,  6.92paper/s, 2020-04]Collecting medarxiv papers: 2668paper [07:21,  7.97paper/s, 2020-04]Collecting medarxiv papers: 3108paper [07:21, 15.26paper/s, 2020-04]Collecting medarxiv papers: 3521paper [07:21, 25.00paper/s, 2020-04]Collecting medarxiv papers: 4080paper [07:21, 43.71paper/s, 2020-04]2026-04-23 11:11:26,900 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=2014 added=1566 duplicates=448
+Collecting medarxiv papers: 4142paper [07:21, 43.71paper/s, 2020-05]2026-04-23 11:11:26,903 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-05
+2026-04-23 11:11:26,903 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-05 query=*
+Collecting medarxiv papers: 4142paper [07:40, 43.71paper/s, 2020-05]Collecting medarxiv papers: 4143paper [09:19,  7.02paper/s, 2020-05]Collecting medarxiv papers: 4852paper [09:19, 14.32paper/s, 2020-05]Collecting medarxiv papers: 5540paper [09:19, 24.42paper/s, 2020-05]2026-04-23 11:13:24,763 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=2697 added=2078 duplicates=619
+Collecting medarxiv papers: 6220paper [09:19, 24.42paper/s, 2020-06]2026-04-23 11:13:24,767 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-06
+2026-04-23 11:13:24,768 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-06 query=*
+Collecting medarxiv papers: 6220paper [09:30, 24.42paper/s, 2020-06]Collecting medarxiv papers: 6221paper [10:55, 12.85paper/s, 2020-06]Collecting medarxiv papers: 7521paper [10:55, 25.77paper/s, 2020-06]2026-04-23 11:15:00,670 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=2187 added=1612 duplicates=575
+Collecting medarxiv papers: 7832paper [10:55, 25.77paper/s, 2020-07]2026-04-23 11:15:00,674 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-07
+2026-04-23 11:15:00,674 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-07 query=*
+Collecting medarxiv papers: 7832paper [11:10, 25.77paper/s, 2020-07]Collecting medarxiv papers: 7833paper [12:18, 13.85paper/s, 2020-07]Collecting medarxiv papers: 8918paper [12:18, 23.94paper/s, 2020-07]2026-04-23 11:16:23,792 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1818 added=1381 duplicates=437
+Collecting medarxiv papers: 9213paper [12:18, 23.94paper/s, 2020-08]2026-04-23 11:16:23,795 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-08
+2026-04-23 11:16:23,795 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-08 query=*
+Collecting medarxiv papers: 9213paper [12:30, 23.94paper/s, 2020-08]Collecting medarxiv papers: 9214paper [13:28, 14.42paper/s, 2020-08]Collecting medarxiv papers: 10015paper [13:28, 22.26paper/s, 2020-08]2026-04-23 11:17:34,108 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1545 added=1148 duplicates=397
+Collecting medarxiv papers: 10361paper [13:28, 22.26paper/s, 2020-09]2026-04-23 11:17:34,111 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-09
+2026-04-23 11:17:34,111 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-09 query=*
+Collecting medarxiv papers: 10361paper [13:40, 22.26paper/s, 2020-09]Collecting medarxiv papers: 10362paper [14:51, 12.54paper/s, 2020-09]Collecting medarxiv papers: 11364paper [14:51, 21.79paper/s, 2020-09]2026-04-23 11:18:57,204 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1853 added=1397 duplicates=456
+Collecting medarxiv papers: 11758paper [14:51, 21.79paper/s, 2020-10]2026-04-23 11:18:57,206 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-10
+2026-04-23 11:18:57,206 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-10 query=*
+Collecting medarxiv papers: 11758paper [15:10, 21.79paper/s, 2020-10]Collecting medarxiv papers: 11759paper [16:02, 14.02paper/s, 2020-10]Collecting medarxiv papers: 12802paper [16:02, 24.22paper/s, 2020-10]2026-04-23 11:20:07,393 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1508 added=1100 duplicates=408
+Collecting medarxiv papers: 12858paper [16:02, 24.22paper/s, 2020-11]2026-04-23 11:20:07,395 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-11
+2026-04-23 11:20:07,395 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-11 query=*
+Collecting medarxiv papers: 12858paper [16:20, 24.22paper/s, 2020-11]Collecting medarxiv papers: 12859paper [17:12, 12.62paper/s, 2020-11]2026-04-23 11:21:17,685 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1581 added=1231 duplicates=350
+Collecting medarxiv papers: 14089paper [17:12, 12.62paper/s, 2020-12]2026-04-23 11:21:17,687 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2020-12
+2026-04-23 11:21:17,687 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2020-2020 month=2020-12 query=*
+Collecting medarxiv papers: 14090paper [18:14, 15.40paper/s, 2020-12]Collecting medarxiv papers: 14093paper [18:15, 15.29paper/s, 2020-12]Collecting medarxiv papers: 14747paper [18:15, 23.47paper/s, 2020-12]2026-04-23 11:22:20,780 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1375 added=1018 duplicates=357
+Collecting medarxiv papers: 15107paper [18:15, 23.47paper/s, 2021-01]2026-04-23 11:22:20,782 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-01
+2026-04-23 11:22:20,782 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-01 query=*
+Collecting medarxiv papers: 15107paper [18:30, 23.47paper/s, 2021-01]Collecting medarxiv papers: 15108paper [19:20, 13.88paper/s, 2021-01]Collecting medarxiv papers: 15550paper [19:20, 19.10paper/s, 2021-01]2026-04-23 11:23:25,506 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1423 added=1097 duplicates=326
+Collecting medarxiv papers: 16204paper [19:20, 19.10paper/s, 2021-02]2026-04-23 11:23:25,509 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-02
+2026-04-23 11:23:25,509 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-02 query=*
+Collecting medarxiv papers: 16204paper [19:40, 19.10paper/s, 2021-02]Collecting medarxiv papers: 16205paper [20:22, 14.68paper/s, 2021-02]Collecting medarxiv papers: 16374paper [20:22, 16.64paper/s, 2021-02]Collecting medarxiv papers: 16835paper [20:22, 24.33paper/s, 2021-02]2026-04-23 11:24:28,249 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1389 added=1057 duplicates=332
+Collecting medarxiv papers: 17261paper [20:22, 24.33paper/s, 2021-03]2026-04-23 11:24:28,252 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-03
+2026-04-23 11:24:28,252 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-03 query=*
+Collecting medarxiv papers: 17261paper [20:40, 24.33paper/s, 2021-03]Collecting medarxiv papers: 17262paper [21:46, 11.50paper/s, 2021-03]Collecting medarxiv papers: 17263paper [21:46, 11.49paper/s, 2021-03]Collecting medarxiv papers: 17572paper [21:46, 16.44paper/s, 2021-03]Collecting medarxiv papers: 17978paper [21:47, 25.71paper/s, 2021-03]Collecting medarxiv papers: 18481paper [21:47, 42.09paper/s, 2021-03]2026-04-23 11:25:52,553 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1826 added=1430 duplicates=396
+Collecting medarxiv papers: 18691paper [21:47, 42.09paper/s, 2021-04]2026-04-23 11:25:52,556 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-04
+2026-04-23 11:25:52,556 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-04 query=*
+Collecting medarxiv papers: 18691paper [22:00, 42.09paper/s, 2021-04]Collecting medarxiv papers: 18692paper [22:51, 12.90paper/s, 2021-04]Collecting medarxiv papers: 18872paper [22:52, 15.86paper/s, 2021-04]2026-04-23 11:26:57,445 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1439 added=1102 duplicates=337
+Collecting medarxiv papers: 19793paper [22:52, 15.86paper/s, 2021-05]2026-04-23 11:26:57,448 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-05
+2026-04-23 11:26:57,448 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-05 query=*
+Collecting medarxiv papers: 19793paper [23:10, 15.86paper/s, 2021-05]Collecting medarxiv papers: 19794paper [23:55, 15.13paper/s, 2021-05]Collecting medarxiv papers: 20221paper [23:55, 20.89paper/s, 2021-05]Collecting medarxiv papers: 20762paper [23:55, 31.31paper/s, 2021-05]2026-04-23 11:28:00,566 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1389 added=1082 duplicates=307
+Collecting medarxiv papers: 20875paper [23:55, 31.31paper/s, 2021-06]2026-04-23 11:28:00,569 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-06
+2026-04-23 11:28:00,569 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-06 query=*
+Collecting medarxiv papers: 20875paper [24:10, 31.31paper/s, 2021-06]Collecting medarxiv papers: 20876paper [24:52, 13.34paper/s, 2021-06]Collecting medarxiv papers: 21487paper [24:52, 22.63paper/s, 2021-06]2026-04-23 11:28:58,092 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1276 added=1024 duplicates=252
+Collecting medarxiv papers: 21899paper [24:52, 22.63paper/s, 2021-07]2026-04-23 11:28:58,095 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-07
+2026-04-23 11:28:58,095 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-07 query=*
+Collecting medarxiv papers: 21899paper [25:10, 22.63paper/s, 2021-07]Collecting medarxiv papers: 21900paper [26:03, 12.46paper/s, 2021-07]Collecting medarxiv papers: 22552paper [26:03, 20.42paper/s, 2021-07]Collecting medarxiv papers: 23061paper [26:03, 29.27paper/s, 2021-07]2026-04-23 11:30:08,889 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1544 added=1211 duplicates=333
+Collecting medarxiv papers: 23110paper [26:03, 29.27paper/s, 2021-08]2026-04-23 11:30:08,891 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-08
+2026-04-23 11:30:08,891 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-08 query=*
+Collecting medarxiv papers: 23110paper [26:20, 29.27paper/s, 2021-08]Collecting medarxiv papers: 23111paper [26:56, 13.17paper/s, 2021-08]Collecting medarxiv papers: 23777paper [26:56, 23.38paper/s, 2021-08]2026-04-23 11:31:01,836 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1197 added=900 duplicates=297
+Collecting medarxiv papers: 24010paper [26:56, 23.38paper/s, 2021-09]2026-04-23 11:31:01,838 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-09
+2026-04-23 11:31:01,838 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-09 query=*
+Collecting medarxiv papers: 24010paper [27:10, 23.38paper/s, 2021-09]Collecting medarxiv papers: 24011paper [27:53, 12.66paper/s, 2021-09]Collecting medarxiv papers: 24495paper [27:53, 19.36paper/s, 2021-09]2026-04-23 11:31:59,073 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1255 added=995 duplicates=260
+Collecting medarxiv papers: 25005paper [27:53, 19.36paper/s, 2021-10]2026-04-23 11:31:59,075 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-10
+2026-04-23 11:31:59,075 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-10 query=*
+Collecting medarxiv papers: 25005paper [28:10, 19.36paper/s, 2021-10]Collecting medarxiv papers: 25006paper [28:50, 13.85paper/s, 2021-10]Collecting medarxiv papers: 25271paper [28:50, 17.35paper/s, 2021-10]2026-04-23 11:32:56,079 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1220 added=951 duplicates=269
+Collecting medarxiv papers: 25956paper [28:50, 17.35paper/s, 2021-11]2026-04-23 11:32:56,082 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-11
+2026-04-23 11:32:56,082 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-11 query=*
+Collecting medarxiv papers: 25956paper [29:10, 17.35paper/s, 2021-11]Collecting medarxiv papers: 25957paper [29:43, 15.19paper/s, 2021-11]Collecting medarxiv papers: 26167paper [29:43, 18.02paper/s, 2021-11]Collecting medarxiv papers: 26784paper [29:43, 29.88paper/s, 2021-11]2026-04-23 11:33:48,945 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1118 added=861 duplicates=257
+Collecting medarxiv papers: 26817paper [29:43, 29.88paper/s, 2021-12]2026-04-23 11:33:48,948 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2021-12
+2026-04-23 11:33:48,948 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2021-2021 month=2021-12 query=*
+Collecting medarxiv papers: 26817paper [30:00, 29.88paper/s, 2021-12]Collecting medarxiv papers: 26818paper [30:39, 12.07paper/s, 2021-12]Collecting medarxiv papers: 27399paper [30:40, 21.00paper/s, 2021-12]2026-04-23 11:34:45,459 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1260 added=1014 duplicates=246
+Collecting medarxiv papers: 27831paper [30:40, 21.00paper/s, 2022-01]2026-04-23 11:34:45,462 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-01
+2026-04-23 11:34:45,462 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-01 query=*
+2026-04-23 11:35:01,897 WARNING not_an_llm.clients.medarxiv: Network error from medRxiv (attempt 1/9). sleeping 3.50s
+Collecting medarxiv papers: 27831paper [31:00, 21.00paper/s, 2022-01]Collecting medarxiv papers: 27832paper [31:44, 12.61paper/s, 2022-01]Collecting medarxiv papers: 28109paper [31:44, 16.19paper/s, 2022-01]Collecting medarxiv papers: 28516paper [31:44, 23.67paper/s, 2022-01]2026-04-23 11:35:50,197 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1314 added=1008 duplicates=306
+Collecting medarxiv papers: 28839paper [31:44, 23.67paper/s, 2022-02]2026-04-23 11:35:50,200 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-02
+2026-04-23 11:35:50,200 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-02 query=*
+Collecting medarxiv papers: 28839paper [32:00, 23.67paper/s, 2022-02]Collecting medarxiv papers: 28840paper [32:41, 12.95paper/s, 2022-02]Collecting medarxiv papers: 29047paper [32:41, 16.07paper/s, 2022-02]Collecting medarxiv papers: 29773paper [32:41, 31.70paper/s, 2022-02]2026-04-23 11:36:46,699 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1205 added=951 duplicates=254
+Collecting medarxiv papers: 29790paper [32:41, 31.70paper/s, 2022-03]2026-04-23 11:36:46,702 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-03
+2026-04-23 11:36:46,702 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-03 query=*
+Collecting medarxiv papers: 29790paper [33:00, 31.70paper/s, 2022-03]Collecting medarxiv papers: 29791paper [33:38, 11.75paper/s, 2022-03]Collecting medarxiv papers: 29810paper [33:38, 12.03paper/s, 2022-03]Collecting medarxiv papers: 30296paper [33:38, 23.10paper/s, 2022-03]Collecting medarxiv papers: 30669paper [33:38, 35.14paper/s, 2022-03]2026-04-23 11:37:43,644 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1280 added=1032 duplicates=248
+Collecting medarxiv papers: 30822paper [33:38, 35.14paper/s, 2022-04]2026-04-23 11:37:43,648 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-04
+2026-04-23 11:37:43,648 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-04 query=*
+Collecting medarxiv papers: 30822paper [33:50, 35.14paper/s, 2022-04]Collecting medarxiv papers: 30823paper [34:30, 12.35paper/s, 2022-04]Collecting medarxiv papers: 31682paper [34:30, 28.93paper/s, 2022-04]2026-04-23 11:38:35,962 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1133 added=930 duplicates=203
+Collecting medarxiv papers: 31752paper [34:30, 28.93paper/s, 2022-05]2026-04-23 11:38:35,964 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-05
+2026-04-23 11:38:35,964 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-05 query=*
+Collecting medarxiv papers: 31752paper [34:50, 28.93paper/s, 2022-05]Collecting medarxiv papers: 31753paper [35:22, 12.64paper/s, 2022-05]Collecting medarxiv papers: 32597paper [35:23, 26.23paper/s, 2022-05]2026-04-23 11:39:28,340 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1141 added=954 duplicates=187
+Collecting medarxiv papers: 32706paper [35:23, 26.23paper/s, 2022-06]2026-04-23 11:39:28,343 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-06
+2026-04-23 11:39:28,343 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-06 query=*
+Collecting medarxiv papers: 32706paper [35:40, 26.23paper/s, 2022-06]Collecting medarxiv papers: 32707paper [36:11, 13.59paper/s, 2022-06]Collecting medarxiv papers: 33101paper [36:11, 19.68paper/s, 2022-06]2026-04-23 11:40:17,009 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1062 added=859 duplicates=203
+Collecting medarxiv papers: 33565paper [36:11, 19.68paper/s, 2022-07]2026-04-23 11:40:17,011 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-07
+2026-04-23 11:40:17,011 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-07 query=*
+Collecting medarxiv papers: 33565paper [36:30, 19.68paper/s, 2022-07]Collecting medarxiv papers: 33566paper [36:54, 15.30paper/s, 2022-07]Collecting medarxiv papers: 33972paper [36:55, 21.82paper/s, 2022-07]2026-04-23 11:41:00,450 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=924 added=760 duplicates=164
+Collecting medarxiv papers: 34325paper [36:55, 21.82paper/s, 2022-08]2026-04-23 11:41:00,452 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-08
+2026-04-23 11:41:00,452 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-08 query=*
+Collecting medarxiv papers: 34325paper [37:10, 21.82paper/s, 2022-08]Collecting medarxiv papers: 34326paper [37:38, 14.93paper/s, 2022-08]Collecting medarxiv papers: 34972paper [37:38, 25.46paper/s, 2022-08]2026-04-23 11:41:44,248 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=983 added=774 duplicates=209
+Collecting medarxiv papers: 35099paper [37:38, 25.46paper/s, 2022-09]2026-04-23 11:41:44,249 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-09
+2026-04-23 11:41:44,250 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-09 query=*
+Collecting medarxiv papers: 35099paper [37:50, 25.46paper/s, 2022-09]Collecting medarxiv papers: 35100paper [38:22, 14.10paper/s, 2022-09]Collecting medarxiv papers: 35629paper [38:22, 22.82paper/s, 2022-09]2026-04-23 11:42:28,178 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=974 added=787 duplicates=187
+Collecting medarxiv papers: 35886paper [38:22, 22.82paper/s, 2022-10]2026-04-23 11:42:28,180 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-10
+2026-04-23 11:42:28,180 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-10 query=*
+Collecting medarxiv papers: 35886paper [38:40, 22.82paper/s, 2022-10]Collecting medarxiv papers: 35887paper [39:06, 14.25paper/s, 2022-10]Collecting medarxiv papers: 36020paper [39:06, 16.44paper/s, 2022-10]Collecting medarxiv papers: 36422paper [39:06, 25.85paper/s, 2022-10]2026-04-23 11:43:11,769 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=933 added=759 duplicates=174
+Collecting medarxiv papers: 36645paper [39:06, 25.85paper/s, 2022-11]2026-04-23 11:43:11,771 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-11
+2026-04-23 11:43:11,771 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-11 query=*
+Collecting medarxiv papers: 36645paper [39:20, 25.85paper/s, 2022-11]Collecting medarxiv papers: 36646paper [39:54, 12.83paper/s, 2022-11]2026-04-23 11:43:59,402 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1059 added=867 duplicates=192
+Collecting medarxiv papers: 37512paper [39:54, 12.83paper/s, 2022-12]2026-04-23 11:43:59,404 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2022-12
+2026-04-23 11:43:59,404 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2022-2022 month=2022-12 query=*
+Collecting medarxiv papers: 37513paper [40:37, 15.94paper/s, 2022-12]2026-04-23 11:44:43,205 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=987 added=818 duplicates=169
+Collecting medarxiv papers: 38330paper [40:37, 15.94paper/s, 2023-01]2026-04-23 11:44:43,207 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-01
+2026-04-23 11:44:43,207 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-01 query=*
+Collecting medarxiv papers: 38330paper [40:50, 15.94paper/s, 2023-01]Collecting medarxiv papers: 38331paper [41:21, 17.01paper/s, 2023-01]2026-04-23 11:45:27,009 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=943 added=749 duplicates=194
+Collecting medarxiv papers: 39079paper [41:21, 17.01paper/s, 2023-02]2026-04-23 11:45:27,012 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-02
+2026-04-23 11:45:27,012 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-02 query=*
+Collecting medarxiv papers: 39079paper [41:40, 17.01paper/s, 2023-02]Collecting medarxiv papers: 39080paper [42:09, 16.52paper/s, 2023-02]Collecting medarxiv papers: 39339paper [42:09, 19.43paper/s, 2023-02]Collecting medarxiv papers: 39883paper [42:09, 28.17paper/s, 2023-02]2026-04-23 11:46:14,769 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1008 added=826 duplicates=182
+Collecting medarxiv papers: 39905paper [42:09, 28.17paper/s, 2023-03]2026-04-23 11:46:14,772 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-03
+2026-04-23 11:46:14,772 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-03 query=*
+Collecting medarxiv papers: 39905paper [42:20, 28.17paper/s, 2023-03]Collecting medarxiv papers: 39906paper [43:06, 12.47paper/s, 2023-03]Collecting medarxiv papers: 40466paper [43:06, 20.44paper/s, 2023-03]2026-04-23 11:47:11,473 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1272 added=1064 duplicates=208
+Collecting medarxiv papers: 40969paper [43:06, 20.44paper/s, 2023-04]2026-04-23 11:47:11,475 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-04
+2026-04-23 11:47:11,475 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-04 query=*
+Collecting medarxiv papers: 40969paper [43:20, 20.44paper/s, 2023-04]Collecting medarxiv papers: 40970paper [43:49, 16.31paper/s, 2023-04]Collecting medarxiv papers: 41481paper [43:49, 24.18paper/s, 2023-04]2026-04-23 11:47:54,891 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=956 added=798 duplicates=158
+Collecting medarxiv papers: 41767paper [43:49, 24.18paper/s, 2023-05]2026-04-23 11:47:54,893 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-05
+2026-04-23 11:47:54,893 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-05 query=*
+Collecting medarxiv papers: 41767paper [44:00, 24.18paper/s, 2023-05]Collecting medarxiv papers: 41768paper [44:37, 14.83paper/s, 2023-05]Collecting medarxiv papers: 42010paper [44:37, 18.51paper/s, 2023-05]Collecting medarxiv papers: 42404paper [44:37, 27.05paper/s, 2023-05]2026-04-23 11:48:43,147 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1053 added=882 duplicates=171
+Collecting medarxiv papers: 42649paper [44:37, 27.05paper/s, 2023-06]2026-04-23 11:48:43,151 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-06
+2026-04-23 11:48:43,151 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-06 query=*
+Collecting medarxiv papers: 42649paper [44:50, 27.05paper/s, 2023-06]Collecting medarxiv papers: 42650paper [45:29, 13.23paper/s, 2023-06]Collecting medarxiv papers: 42864paper [45:29, 16.83paper/s, 2023-06]Collecting medarxiv papers: 43182paper [45:30, 24.45paper/s, 2023-06]2026-04-23 11:49:35,318 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1189 added=1012 duplicates=177
+Collecting medarxiv papers: 43661paper [45:30, 24.45paper/s, 2023-07]2026-04-23 11:49:35,321 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-07
+2026-04-23 11:49:35,321 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-07 query=*
+Collecting medarxiv papers: 43661paper [45:40, 24.45paper/s, 2023-07]Collecting medarxiv papers: 43662paper [46:13, 16.42paper/s, 2023-07]Collecting medarxiv papers: 43715paper [46:13, 17.43paper/s, 2023-07]Collecting medarxiv papers: 43949paper [46:13, 23.89paper/s, 2023-07]Collecting medarxiv papers: 44153paper [46:13, 31.89paper/s, 2023-07]Collecting medarxiv papers: 44425paper [46:13, 47.07paper/s, 2023-07]2026-04-23 11:50:19,232 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=974 added=800 duplicates=174
+Collecting medarxiv papers: 44461paper [46:13, 47.07paper/s, 2023-08]2026-04-23 11:50:19,234 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-08
+2026-04-23 11:50:19,234 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-08 query=*
+Collecting medarxiv papers: 44461paper [46:30, 47.07paper/s, 2023-08]Collecting medarxiv papers: 44462paper [47:10,  9.03paper/s, 2023-08]Collecting medarxiv papers: 44762paper [47:10, 15.24paper/s, 2023-08]Collecting medarxiv papers: 45248paper [47:10, 29.56paper/s, 2023-08]2026-04-23 11:51:16,015 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1204 added=1014 duplicates=190
+Collecting medarxiv papers: 45475paper [47:10, 29.56paper/s, 2023-09]2026-04-23 11:51:16,017 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-09
+2026-04-23 11:51:16,017 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-09 query=*
+Collecting medarxiv papers: 45475paper [47:30, 29.56paper/s, 2023-09]Collecting medarxiv papers: 45476paper [48:06, 11.60paper/s, 2023-09]Collecting medarxiv papers: 45990paper [48:06, 20.74paper/s, 2023-09]2026-04-23 11:52:12,242 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1209 added=1010 duplicates=199
+Collecting medarxiv papers: 46485paper [48:06, 20.74paper/s, 2023-10]2026-04-23 11:52:12,244 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-10
+2026-04-23 11:52:12,244 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-10 query=*
+Collecting medarxiv papers: 46485paper [48:20, 20.74paper/s, 2023-10]Collecting medarxiv papers: 46486paper [49:03, 13.63paper/s, 2023-10]Collecting medarxiv papers: 46732paper [49:03, 17.27paper/s, 2023-10]Collecting medarxiv papers: 47068paper [49:03, 24.31paper/s, 2023-10]2026-04-23 11:53:09,321 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1236 added=1002 duplicates=234
+Collecting medarxiv papers: 47487paper [49:04, 24.31paper/s, 2023-11]2026-04-23 11:53:09,323 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-11
+2026-04-23 11:53:09,324 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-11 query=*
+Collecting medarxiv papers: 47487paper [49:20, 24.31paper/s, 2023-11]Collecting medarxiv papers: 47488paper [49:56, 14.38paper/s, 2023-11]Collecting medarxiv papers: 47565paper [49:56, 15.63paper/s, 2023-11]Collecting medarxiv papers: 47791paper [49:56, 20.98paper/s, 2023-11]Collecting medarxiv papers: 48220paper [49:56, 35.46paper/s, 2023-11]2026-04-23 11:54:01,748 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1134 added=932 duplicates=202
+Collecting medarxiv papers: 48419paper [49:56, 35.46paper/s, 2023-12]2026-04-23 11:54:01,750 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2023-12
+2026-04-23 11:54:01,751 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2023-2023 month=2023-12 query=*
+Collecting medarxiv papers: 48419paper [50:10, 35.46paper/s, 2023-12]Collecting medarxiv papers: 48420paper [50:48, 12.88paper/s, 2023-12]Collecting medarxiv papers: 48670paper [50:48, 17.78paper/s, 2023-12]2026-04-23 11:54:53,583 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1128 added=933 duplicates=195
+Collecting medarxiv papers: 49352paper [50:48, 17.78paper/s, 2024-01]2026-04-23 11:54:53,585 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-01
+2026-04-23 11:54:53,585 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-01 query=*
+Collecting medarxiv papers: 49352paper [51:00, 17.78paper/s, 2024-01]Collecting medarxiv papers: 49353paper [51:40, 14.97paper/s, 2024-01]Collecting medarxiv papers: 49914paper [51:40, 24.06paper/s, 2024-01]2026-04-23 11:55:45,948 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1135 added=944 duplicates=191
+Collecting medarxiv papers: 50296paper [51:40, 24.06paper/s, 2024-02]2026-04-23 11:55:45,950 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-02
+2026-04-23 11:55:45,951 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-02 query=*
+Collecting medarxiv papers: 50296paper [52:00, 24.06paper/s, 2024-02]Collecting medarxiv papers: 50297paper [52:32, 14.88paper/s, 2024-02]Collecting medarxiv papers: 50615paper [52:33, 19.61paper/s, 2024-02]Collecting medarxiv papers: 51200paper [52:33, 32.04paper/s, 2024-02]2026-04-23 11:56:38,425 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1157 added=977 duplicates=180
+Collecting medarxiv papers: 51273paper [52:33, 32.04paper/s, 2024-03]2026-04-23 11:56:38,427 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-03
+2026-04-23 11:56:38,427 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-03 query=*
+Collecting medarxiv papers: 51273paper [52:50, 32.04paper/s, 2024-03]Collecting medarxiv papers: 51274paper [53:29, 12.60paper/s, 2024-03]Collecting medarxiv papers: 51467paper [53:29, 15.66paper/s, 2024-03]Collecting medarxiv papers: 51996paper [53:29, 27.66paper/s, 2024-03]2026-04-23 11:57:35,187 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1281 added=1079 duplicates=202
+Collecting medarxiv papers: 52352paper [53:29, 27.66paper/s, 2024-04]2026-04-23 11:57:35,191 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-04
+2026-04-23 11:57:35,191 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-04 query=*
+Collecting medarxiv papers: 52352paper [53:40, 27.66paper/s, 2024-04]Collecting medarxiv papers: 52353paper [54:26, 13.81paper/s, 2024-04]Collecting medarxiv papers: 52478paper [54:26, 15.83paper/s, 2024-04]Collecting medarxiv papers: 52818paper [54:26, 23.69paper/s, 2024-04]Collecting medarxiv papers: 53318paper [54:26, 40.16paper/s, 2024-04]2026-04-23 11:58:32,152 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1240 added=1020 duplicates=220
+Collecting medarxiv papers: 53372paper [54:26, 40.16paper/s, 2024-05]2026-04-23 11:58:32,155 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-05
+2026-04-23 11:58:32,155 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-05 query=*
+Collecting medarxiv papers: 53372paper [54:40, 40.16paper/s, 2024-05]Collecting medarxiv papers: 53373paper [55:27, 11.04paper/s, 2024-05]Collecting medarxiv papers: 53629paper [55:27, 15.48paper/s, 2024-05]Collecting medarxiv papers: 54102paper [55:27, 27.17paper/s, 2024-05]Collecting medarxiv papers: 54469paper [55:28, 39.69paper/s, 2024-05]2026-04-23 11:59:33,447 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1369 added=1139 duplicates=230
+Collecting medarxiv papers: 54511paper [55:28, 39.69paper/s, 2024-06]2026-04-23 11:59:33,449 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-06
+2026-04-23 11:59:33,449 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-06 query=*
+Collecting medarxiv papers: 54511paper [55:40, 39.69paper/s, 2024-06]Collecting medarxiv papers: 54512paper [56:24, 10.96paper/s, 2024-06]Collecting medarxiv papers: 54976paper [56:24, 19.61paper/s, 2024-06]2026-04-23 12:00:29,891 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1206 added=1003 duplicates=203
+Collecting medarxiv papers: 55514paper [56:24, 19.61paper/s, 2024-07]2026-04-23 12:00:29,893 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-07
+2026-04-23 12:00:29,893 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-07 query=*
+Collecting medarxiv papers: 55514paper [56:40, 19.61paper/s, 2024-07]Collecting medarxiv papers: 55515paper [57:21, 13.48paper/s, 2024-07]Collecting medarxiv papers: 55606paper [57:21, 14.83paper/s, 2024-07]Collecting medarxiv papers: 56084paper [57:21, 25.08paper/s, 2024-07]Collecting medarxiv papers: 56520paper [57:21, 38.37paper/s, 2024-07]2026-04-23 12:01:27,209 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1229 added=1012 duplicates=217
+Collecting medarxiv papers: 56526paper [57:21, 38.37paper/s, 2024-08]2026-04-23 12:01:27,228 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-08
+2026-04-23 12:01:27,229 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-08 query=*
+Collecting medarxiv papers: 56526paper [57:40, 38.37paper/s, 2024-08]Collecting medarxiv papers: 56527paper [58:23, 10.49paper/s, 2024-08]Collecting medarxiv papers: 56916paper [58:23, 17.05paper/s, 2024-08]Collecting medarxiv papers: 57286paper [58:23, 25.92paper/s, 2024-08]Collecting medarxiv papers: 57629paper [58:23, 37.57paper/s, 2024-08]2026-04-23 12:02:28,973 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1346 added=1125 duplicates=221
+Collecting medarxiv papers: 57651paper [58:23, 37.57paper/s, 2024-09]2026-04-23 12:02:28,976 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-09
+2026-04-23 12:02:28,976 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-09 query=*
+Collecting medarxiv papers: 57651paper [58:40, 37.57paper/s, 2024-09]Collecting medarxiv papers: 57652paper [59:29,  9.17paper/s, 2024-09]Collecting medarxiv papers: 57747paper [59:29, 10.73paper/s, 2024-09]Collecting medarxiv papers: 58233paper [59:29, 22.17paper/s, 2024-09]Collecting medarxiv papers: 58557paper [59:29, 32.94paper/s, 2024-09]2026-04-23 12:03:35,095 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1442 added=1173 duplicates=269
+Collecting medarxiv papers: 58824paper [59:29, 32.94paper/s, 2024-10]2026-04-23 12:03:35,098 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-10
+2026-04-23 12:03:35,098 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-10 query=*
+Collecting medarxiv papers: 58824paper [59:40, 32.94paper/s, 2024-10]Collecting medarxiv papers: 58825paper [1:00:35, 11.04paper/s, 2024-10]Collecting medarxiv papers: 59193paper [1:00:35, 17.09paper/s, 2024-10]Collecting medarxiv papers: 59578paper [1:00:35, 26.09paper/s, 2024-10]Collecting medarxiv papers: 59970paper [1:00:35, 39.11paper/s, 2024-10]2026-04-23 12:04:41,020 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1436 added=1167 duplicates=269
+Collecting medarxiv papers: 59991paper [1:00:35, 39.11paper/s, 2024-11]2026-04-23 12:04:41,024 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-11
+2026-04-23 12:04:41,024 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-11 query=*
+Collecting medarxiv papers: 59991paper [1:00:50, 39.11paper/s, 2024-11]Collecting medarxiv papers: 59992paper [1:01:37, 10.12paper/s, 2024-11]Collecting medarxiv papers: 60425paper [1:01:37, 17.54paper/s, 2024-11]2026-04-23 12:05:43,323 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1394 added=1140 duplicates=254
+Collecting medarxiv papers: 61131paper [1:01:38, 17.54paper/s, 2024-12]2026-04-23 12:05:43,326 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2024-12
+2026-04-23 12:05:43,326 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2024-2024 month=2024-12 query=*
+Collecting medarxiv papers: 61131paper [1:01:50, 17.54paper/s, 2024-12]Collecting medarxiv papers: 61132paper [1:02:35, 14.50paper/s, 2024-12]Collecting medarxiv papers: 61322paper [1:02:35, 17.24paper/s, 2024-12]Collecting medarxiv papers: 61641paper [1:02:35, 23.82paper/s, 2024-12]Collecting medarxiv papers: 62024paper [1:02:35, 35.06paper/s, 2024-12]2026-04-23 12:06:40,936 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1288 added=1059 duplicates=229
+Collecting medarxiv papers: 62190paper [1:02:35, 35.06paper/s, 2025-01]2026-04-23 12:06:40,938 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-01
+2026-04-23 12:06:40,938 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-01 query=*
+Collecting medarxiv papers: 62190paper [1:02:50, 35.06paper/s, 2025-01]Collecting medarxiv papers: 62191paper [1:03:32, 12.41paper/s, 2025-01]Collecting medarxiv papers: 62527paper [1:03:32, 18.35paper/s, 2025-01]Collecting medarxiv papers: 62874paper [1:03:32, 27.07paper/s, 2025-01]2026-04-23 12:07:37,822 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1298 added=1066 duplicates=232
+Collecting medarxiv papers: 63256paper [1:03:32, 27.07paper/s, 2025-02]2026-04-23 12:07:37,825 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-02
+2026-04-23 12:07:37,825 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-02 query=*
+Collecting medarxiv papers: 63256paper [1:03:50, 27.07paper/s, 2025-02]Collecting medarxiv papers: 63257paper [1:04:33, 12.79paper/s, 2025-02]Collecting medarxiv papers: 63275paper [1:04:33, 13.06paper/s, 2025-02]Collecting medarxiv papers: 63518paper [1:04:33, 18.59paper/s, 2025-02]Collecting medarxiv papers: 63944paper [1:04:33, 32.43paper/s, 2025-02]Collecting medarxiv papers: 64224paper [1:04:33, 45.17paper/s, 2025-02]2026-04-23 12:08:39,185 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1333 added=1115 duplicates=218
+Collecting medarxiv papers: 64371paper [1:04:33, 45.17paper/s, 2025-03]2026-04-23 12:08:39,188 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-03
+2026-04-23 12:08:39,188 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-03 query=*
+Collecting medarxiv papers: 64371paper [1:04:50, 45.17paper/s, 2025-03]Collecting medarxiv papers: 64372paper [1:05:43,  9.75paper/s, 2025-03]Collecting medarxiv papers: 64726paper [1:05:44, 15.66paper/s, 2025-03]Collecting medarxiv papers: 65028paper [1:05:44, 22.82paper/s, 2025-03]Collecting medarxiv papers: 65337paper [1:05:44, 33.23paper/s, 2025-03]2026-04-23 12:09:49,587 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1513 added=1242 duplicates=271
+Collecting medarxiv papers: 65613paper [1:05:44, 33.23paper/s, 2025-04]2026-04-23 12:09:49,589 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-04
+2026-04-23 12:09:49,589 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-04 query=*
+Collecting medarxiv papers: 65613paper [1:06:00, 33.23paper/s, 2025-04]Collecting medarxiv papers: 65614paper [1:06:45, 11.78paper/s, 2025-04]Collecting medarxiv papers: 65754paper [1:06:45, 14.20paper/s, 2025-04]Collecting medarxiv papers: 66149paper [1:06:45, 24.00paper/s, 2025-04]Collecting medarxiv papers: 66505paper [1:06:45, 36.52paper/s, 2025-04]2026-04-23 12:10:50,896 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1380 added=1114 duplicates=266
+Collecting medarxiv papers: 66727paper [1:06:45, 36.52paper/s, 2025-05]2026-04-23 12:10:50,899 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-05
+2026-04-23 12:10:50,899 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-05 query=*
+Collecting medarxiv papers: 66727paper [1:07:00, 36.52paper/s, 2025-05]Collecting medarxiv papers: 66728paper [1:07:55, 10.56paper/s, 2025-05]Collecting medarxiv papers: 66895paper [1:07:55, 13.20paper/s, 2025-05]Collecting medarxiv papers: 67161paper [1:07:55, 19.21paper/s, 2025-05]Collecting medarxiv papers: 67509paper [1:07:55, 30.40paper/s, 2025-05]Collecting medarxiv papers: 67954paper [1:07:55, 50.70paper/s, 2025-05]2026-04-23 12:12:01,083 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1552 added=1258 duplicates=294
+Collecting medarxiv papers: 67985paper [1:07:55, 50.70paper/s, 2025-06]2026-04-23 12:12:01,086 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-06
+2026-04-23 12:12:01,086 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-06 query=*
+Collecting medarxiv papers: 67985paper [1:08:10, 50.70paper/s, 2025-06]Collecting medarxiv papers: 67986paper [1:09:05,  9.48paper/s, 2025-06]Collecting medarxiv papers: 68072paper [1:09:05, 10.92paper/s, 2025-06]Collecting medarxiv papers: 68439paper [1:09:05, 19.69paper/s, 2025-06]Collecting medarxiv papers: 68889paper [1:09:05, 34.98paper/s, 2025-06]2026-04-23 12:13:10,935 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1529 added=1244 duplicates=285
+Collecting medarxiv papers: 69229paper [1:09:05, 34.98paper/s, 2025-07]2026-04-23 12:13:10,938 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-07
+2026-04-23 12:13:10,938 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-07 query=*
+Collecting medarxiv papers: 69229paper [1:09:20, 34.98paper/s, 2025-07]Collecting medarxiv papers: 69230paper [1:10:10, 12.33paper/s, 2025-07]Collecting medarxiv papers: 69395paper [1:10:11, 15.05paper/s, 2025-07]Collecting medarxiv papers: 70068paper [1:10:11, 30.96paper/s, 2025-07]2026-04-23 12:14:16,609 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1468 added=1208 duplicates=260
+Collecting medarxiv papers: 70437paper [1:10:11, 30.96paper/s, 2025-08]2026-04-23 12:14:16,612 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-08
+2026-04-23 12:14:16,612 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-08 query=*
+Collecting medarxiv papers: 70437paper [1:10:30, 30.96paper/s, 2025-08]Collecting medarxiv papers: 70438paper [1:11:25, 12.37paper/s, 2025-08]Collecting medarxiv papers: 70869paper [1:11:25, 18.25paper/s, 2025-08]Collecting medarxiv papers: 71454paper [1:11:25, 29.66paper/s, 2025-08]2026-04-23 12:15:31,045 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1657 added=1381 duplicates=276
+Collecting medarxiv papers: 71818paper [1:11:25, 29.66paper/s, 2025-09]2026-04-23 12:15:31,048 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-09
+2026-04-23 12:15:31,048 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-09 query=*
+Collecting medarxiv papers: 71818paper [1:11:40, 29.66paper/s, 2025-09]Collecting medarxiv papers: 71819paper [1:12:43, 12.52paper/s, 2025-09]Collecting medarxiv papers: 72458paper [1:12:43, 20.50paper/s, 2025-09]2026-04-23 12:16:49,288 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1720 added=1444 duplicates=276
+Collecting medarxiv papers: 73262paper [1:12:44, 20.50paper/s, 2025-10]2026-04-23 12:16:49,292 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-10
+2026-04-23 12:16:49,292 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-10 query=*
+Collecting medarxiv papers: 73262paper [1:13:00, 20.50paper/s, 2025-10]Collecting medarxiv papers: 73263paper [1:14:02, 14.48paper/s, 2025-10]Collecting medarxiv papers: 73285paper [1:14:02, 14.70paper/s, 2025-10]Collecting medarxiv papers: 73805paper [1:14:03, 22.53paper/s, 2025-10]Collecting medarxiv papers: 74343paper [1:14:03, 34.07paper/s, 2025-10]2026-04-23 12:18:08,764 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1730 added=1436 duplicates=294
+Collecting medarxiv papers: 74698paper [1:14:03, 34.07paper/s, 2025-11]2026-04-23 12:18:08,767 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-11
+2026-04-23 12:18:08,767 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-11 query=*
+Collecting medarxiv papers: 74698paper [1:14:20, 34.07paper/s, 2025-11]Collecting medarxiv papers: 74699paper [1:15:13, 14.24paper/s, 2025-11]Collecting medarxiv papers: 74925paper [1:15:13, 17.36paper/s, 2025-11]Collecting medarxiv papers: 75586paper [1:15:13, 30.41paper/s, 2025-11]2026-04-23 12:19:18,901 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1535 added=1233 duplicates=302
+Collecting medarxiv papers: 75931paper [1:15:13, 30.41paper/s, 2025-12]2026-04-23 12:19:18,904 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2025-12
+2026-04-23 12:19:18,904 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2025-2025 month=2025-12 query=*
+Collecting medarxiv papers: 75931paper [1:15:30, 30.41paper/s, 2025-12]Collecting medarxiv papers: 75932paper [1:16:23, 13.47paper/s, 2025-12]Collecting medarxiv papers: 76490paper [1:16:23, 21.00paper/s, 2025-12]Collecting medarxiv papers: 77030paper [1:16:23, 31.37paper/s, 2025-12]2026-04-23 12:20:29,199 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1518 added=1239 duplicates=279
+Collecting medarxiv papers: 77170paper [1:16:23, 31.37paper/s, 2026-01]2026-04-23 12:20:29,202 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-01
+2026-04-23 12:20:29,203 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-01 query=*
+Collecting medarxiv papers: 77170paper [1:16:40, 31.37paper/s, 2026-01]Collecting medarxiv papers: 77171paper [1:17:29, 12.61paper/s, 2026-01]Collecting medarxiv papers: 77336paper [1:17:29, 14.91paper/s, 2026-01]Collecting medarxiv papers: 77902paper [1:17:29, 26.22paper/s, 2026-01]2026-04-23 12:21:34,610 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1443 added=1143 duplicates=300
+Collecting medarxiv papers: 78313paper [1:17:29, 26.22paper/s, 2026-02]2026-04-23 12:21:34,612 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-02
+2026-04-23 12:21:34,612 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-02 query=*
+Collecting medarxiv papers: 78313paper [1:17:40, 26.22paper/s, 2026-02]Collecting medarxiv papers: 78314paper [1:18:39, 12.61paper/s, 2026-02]Collecting medarxiv papers: 78711paper [1:18:39, 17.97paper/s, 2026-02]Collecting medarxiv papers: 79136paper [1:18:40, 26.01paper/s, 2026-02]Collecting medarxiv papers: 79470paper [1:18:40, 35.08paper/s, 2026-02]2026-04-23 12:22:45,574 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1507 added=1226 duplicates=281
+Collecting medarxiv papers: 79539paper [1:18:40, 35.08paper/s, 2026-03]2026-04-23 12:22:45,576 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-03
+2026-04-23 12:22:45,576 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-03 query=*
+Collecting medarxiv papers: 79539paper [1:19:00, 35.08paper/s, 2026-03]Collecting medarxiv papers: 79540paper [1:20:03,  8.91paper/s, 2026-03]Collecting medarxiv papers: 79668paper [1:20:03, 10.58paper/s, 2026-03]Collecting medarxiv papers: 80053paper [1:20:03, 17.77paper/s, 2026-03]Collecting medarxiv papers: 80355paper [1:20:03, 25.78paper/s, 2026-03]Collecting medarxiv papers: 80787paper [1:20:03, 42.08paper/s, 2026-03]2026-04-23 12:24:09,123 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1880 added=1529 duplicates=351
+Collecting medarxiv papers: 81068paper [1:20:03, 42.08paper/s, 2026-04]2026-04-23 12:24:09,126 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-04
+2026-04-23 12:24:09,126 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-04 query=*
+Collecting medarxiv papers: 81068paper [1:20:20, 42.08paper/s, 2026-04]Collecting medarxiv papers: 81069paper [1:20:55, 14.97paper/s, 2026-04]Collecting medarxiv papers: 81265paper [1:20:55, 18.90paper/s, 2026-04]Collecting medarxiv papers: 81608paper [1:20:56, 28.71paper/s, 2026-04]2026-04-23 12:25:01,443 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=1157 added=943 duplicates=214
+Collecting medarxiv papers: 82011paper [1:20:56, 28.71paper/s, 2026-05]2026-04-23 12:25:01,445 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-05
+2026-04-23 12:25:01,446 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-05 query=*
+2026-04-23 12:25:05,039 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 82011paper [1:20:59, 28.71paper/s, 2026-06]2026-04-23 12:25:05,039 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-06
+2026-04-23 12:25:05,039 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-06 query=*
+2026-04-23 12:25:08,918 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 82011paper [1:21:03, 28.71paper/s, 2026-07]2026-04-23 12:25:08,918 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-07
+2026-04-23 12:25:08,918 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-07 query=*
+2026-04-23 12:25:12,806 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 82011paper [1:21:07, 28.71paper/s, 2026-08]2026-04-23 12:25:12,806 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-08
+2026-04-23 12:25:12,806 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-08 query=*
+Collecting medarxiv papers: 82011paper [1:21:10, 28.71paper/s, 2026-08]2026-04-23 12:25:16,681 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 82011paper [1:21:11, 28.71paper/s, 2026-09]2026-04-23 12:25:16,681 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-09
+2026-04-23 12:25:16,681 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-09 query=*
+2026-04-23 12:25:20,551 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 82011paper [1:21:15, 28.71paper/s, 2026-10]2026-04-23 12:25:20,552 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-10
+2026-04-23 12:25:20,552 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-10 query=*
+2026-04-23 12:25:24,402 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 82011paper [1:21:19, 28.71paper/s, 2026-11]2026-04-23 12:25:24,402 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-11
+2026-04-23 12:25:24,402 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-11 query=*
+2026-04-23 12:25:28,280 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 82011paper [1:21:23, 28.71paper/s, 2026-12]2026-04-23 12:25:28,280 INFO not_an_llm.pipelines.collect: [medarxiv] Collecting month bucket: 2026-12
+2026-04-23 12:25:28,280 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1: years=2026-2026 month=2026-12 query=*
+2026-04-23 12:25:32,164 INFO not_an_llm.pipelines.collect: [medarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+Collecting medarxiv papers: 82011paper [1:21:26, 16.75paper/s, 2026-12]
+2026-04-23 12:25:32,244 INFO not_an_llm.pipelines.collect: medarxiv collection complete: new_papers=81845 total_unique_papers=82011 output=data/raw/medarxiv_papers.jsonl

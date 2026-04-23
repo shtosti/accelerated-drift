@@ -1,0 +1,87 @@
+2026-04-23 00:12:48,244 INFO not_an_llm.pipelines.collect: Starting arXiv collection: queries=3 years=2015-2026
+Collecting arXiv papers: 0paper [00:00, ?paper/s]Collecting arXiv papers: 0paper [00:00, ?paper/s, year=2015]2026-04-23 00:12:48,327 INFO not_an_llm.pipelines.collect: [arxiv] Collecting year bucket: 2015
+2026-04-23 00:12:48,327 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 query=cat:cs.AI
+Collecting arXiv papers: 1paper [01:18, 78.59s/paper, year=2015]2026-04-23 00:14:06,945 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1117 added=1117 duplicates=0
+2026-04-23 00:14:06,945 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 query=cat:cs.CL
+Collecting arXiv papers: 1118paper [02:19,  9.66paper/s, year=2015]2026-04-23 00:15:07,681 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=832 added=711 duplicates=121
+2026-04-23 00:15:07,681 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 query=cat:cs.LG
+Collecting arXiv papers: 1828paper [02:30,  9.66paper/s, year=2015]Collecting arXiv papers: 1829paper [05:33,  5.42paper/s, year=2015]Collecting arXiv papers: 2049paper [05:33,  6.56paper/s, year=2015]Collecting arXiv papers: 2677paper [05:33, 11.20paper/s, year=2015]2026-04-23 00:18:22,312 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2490 added=2011 duplicates=479
+Collecting arXiv papers: 3839paper [05:33, 11.20paper/s, year=2016]2026-04-23 00:18:22,315 INFO not_an_llm.pipelines.collect: [arxiv] Collecting year bucket: 2016
+2026-04-23 00:18:22,315 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 query=cat:cs.AI
+Collecting arXiv papers: 3839paper [05:50, 11.20paper/s, year=2016]2026-04-23 00:21:29,321 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 1/9). sleeping 10.00s
+2026-04-23 00:21:50,009 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/9). sleeping 10.00s
+2026-04-23 00:22:30,257 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 3/9). sleeping 14.00s
+2026-04-23 00:22:59,756 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 4/9). sleeping 28.00s
+2026-04-23 00:23:28,393 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 5/9). sleeping 56.00s
+2026-04-23 00:24:40,181 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 6/9). sleeping 90.00s
+Collecting arXiv papers: 3840paper [14:23,  3.56paper/s, year=2016]Collecting arXiv papers: 4796paper [14:23,  5.75paper/s, year=2016]2026-04-23 00:27:12,146 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1945 added=1945 duplicates=0
+2026-04-23 00:27:12,146 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 query=cat:cs.CL
+Collecting arXiv papers: 5784paper [14:40,  5.75paper/s, year=2016]Collecting arXiv papers: 5785paper [16:37,  6.25paper/s, year=2016]Collecting arXiv papers: 6609paper [16:37,  8.93paper/s, year=2016]2026-04-23 00:29:25,512 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1692 added=1408 duplicates=284
+2026-04-23 00:29:25,512 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 query=cat:cs.LG
+Collecting arXiv papers: 7192paper [16:50,  8.93paper/s, year=2016]Collecting arXiv papers: 7193paper [21:27,  4.95paper/s, year=2016]Collecting arXiv papers: 7847paper [21:28,  6.80paper/s, year=2016]Collecting arXiv papers: 8929paper [21:28, 11.15paper/s, year=2016]2026-04-23 00:34:16,537 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3576 added=2732 duplicates=844
+Collecting arXiv papers: 9924paper [21:28, 11.15paper/s, year=2017]2026-04-23 00:34:16,542 INFO not_an_llm.pipelines.collect: [arxiv] Collecting year bucket: 2017
+2026-04-23 00:34:16,542 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 query=cat:cs.AI
+Collecting arXiv papers: 9924paper [21:40, 11.15paper/s, year=2017]2026-04-23 00:39:04,596 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/9). sleeping 3.50s
+2026-04-23 00:39:38,308 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 2/9). sleeping 7.00s
+2026-04-23 00:40:15,594 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 3/9). sleeping 14.00s
+2026-04-23 00:40:59,892 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 4/9). sleeping 28.00s
+2026-04-23 00:41:58,164 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 5/9). sleeping 56.00s
+Collecting arXiv papers: 9925paper [32:07,  3.61paper/s, year=2017]Collecting arXiv papers: 12406paper [32:07,  7.97paper/s, year=2017]2026-04-23 00:44:55,713 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=2816 added=2816 duplicates=0
+2026-04-23 00:44:55,714 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 query=cat:cs.CL
+Collecting arXiv papers: 12740paper [32:20,  7.97paper/s, year=2017]2026-04-23 00:47:05,217 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/9). sleeping 3.50s
+2026-04-23 00:47:34,811 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/9). sleeping 10.00s
+2026-04-23 00:47:45,315 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/9). sleeping 14.00s
+2026-04-23 00:48:29,444 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 4/9). sleeping 28.00s
+2026-04-23 00:48:57,735 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 5/9). sleeping 56.00s
+2026-04-23 00:50:23,850 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 6/9). sleeping 90.00s
+2026-04-23 00:52:09,712 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 7/9). sleeping 90.00s
+2026-04-23 00:53:54,041 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 1/9). sleeping 10.00s
+2026-04-23 00:54:04,461 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/9). sleeping 10.00s
+2026-04-23 00:54:44,533 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 3/9). sleeping 14.00s
+Collecting arXiv papers: 12741paper [44:34,  3.06paper/s, year=2017]Collecting arXiv papers: 13378paper [44:34,  3.86paper/s, year=2017]Collecting arXiv papers: 14501paper [44:34,  5.85paper/s, year=2017]2026-04-23 00:57:23,253 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2399 added=2006 duplicates=393
+2026-04-23 00:57:23,253 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 query=cat:cs.LG
+Collecting arXiv papers: 14746paper [44:50,  5.85paper/s, year=2017]2026-04-23 01:06:05,911 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/9). sleeping 3.50s
+2026-04-23 01:06:39,495 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 2/9). sleeping 7.00s
+2026-04-23 01:06:56,046 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/9). sleeping 14.00s
+2026-04-23 01:07:25,825 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 4/9). sleeping 28.00s
+2026-04-23 01:08:09,798 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 5/9). sleeping 56.00s
+2026-04-23 01:09:06,095 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 6/9). sleeping 90.00s
+2026-04-23 01:10:36,480 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 7/9). sleeping 90.00s
+Collecting arXiv papers: 14747paper [59:35,  1.97paper/s, year=2017]Collecting arXiv papers: 15515paper [59:35,  2.82paper/s, year=2017]Collecting arXiv papers: 16358paper [59:35,  4.15paper/s, year=2017]Collecting arXiv papers: 17143paper [59:35,  5.91paper/s, year=2017]Collecting arXiv papers: 17912paper [59:35,  8.39paper/s, year=2017]Collecting arXiv papers: 18676paper [59:35, 11.89paper/s, year=2017]2026-04-23 01:12:24,060 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=5252 added=4004 duplicates=1248
+Collecting arXiv papers: 18750paper [59:35, 11.89paper/s, year=2018]2026-04-23 01:12:24,066 INFO not_an_llm.pipelines.collect: [arxiv] Collecting year bucket: 2018
+2026-04-23 01:12:24,067 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 query=cat:cs.AI
+Collecting arXiv papers: 18750paper [59:50, 11.89paper/s, year=2018]Collecting arXiv papers: 18751paper [1:05:16,  3.83paper/s, year=2018]Collecting arXiv papers: 19329paper [1:05:16,  5.50paper/s, year=2018]Collecting arXiv papers: 20203paper [1:05:16,  9.12paper/s, year=2018]2026-04-23 01:18:04,689 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=4280 added=4280 duplicates=0
+2026-04-23 01:18:04,689 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 query=cat:cs.CL
+Collecting arXiv papers: 23030paper [1:05:30,  9.12paper/s, year=2018]Collecting arXiv papers: 23031paper [1:10:24,  9.15paper/s, year=2018]Collecting arXiv papers: 23665paper [1:10:24, 11.04paper/s, year=2018]Collecting arXiv papers: 24422paper [1:10:24, 14.27paper/s, year=2018]Collecting arXiv papers: 25126paper [1:10:25, 18.53paper/s, year=2018]Collecting arXiv papers: 25794paper [1:10:25, 24.32paper/s, year=2018]2026-04-23 01:23:13,727 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=3729 added=3047 duplicates=682
+2026-04-23 01:23:13,727 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 query=cat:cs.LG
+Collecting arXiv papers: 26077paper [1:10:40, 24.32paper/s, year=2018]2026-04-23 01:36:53,443 WARNING not_an_llm.clients.arxiv: Retryable HTTP 500 from arXiv (attempt 1/9). sleeping 3.50s
+2026-04-23 01:36:57,545 WARNING not_an_llm.clients.arxiv: Retryable HTTP 500 from arXiv (attempt 2/9). sleeping 7.00s
+2026-04-23 01:37:05,081 WARNING not_an_llm.clients.arxiv: Retryable HTTP 500 from arXiv (attempt 3/9). sleeping 14.00s
+2026-04-23 01:37:19,636 WARNING not_an_llm.clients.arxiv: Retryable HTTP 500 from arXiv (attempt 4/9). sleeping 28.00s
+2026-04-23 01:37:48,221 WARNING not_an_llm.clients.arxiv: Retryable HTTP 500 from arXiv (attempt 5/9). sleeping 56.00s
+2026-04-23 01:38:45,155 WARNING not_an_llm.clients.arxiv: Retryable HTTP 500 from arXiv (attempt 6/9). sleeping 90.00s
+2026-04-23 01:40:15,746 WARNING not_an_llm.clients.arxiv: Retryable HTTP 500 from arXiv (attempt 7/9). sleeping 90.00s
+2026-04-23 01:41:46,429 WARNING not_an_llm.clients.arxiv: Retryable HTTP 500 from arXiv (attempt 8/9). sleeping 90.00s
+Collecting arXiv papers: 26077paper [1:30:29,  4.80paper/s, year=2018]
+Traceback (most recent call last):
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/main.py", line 13, in <module>
+    main()
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/cli.py", line 46, in main
+    output_path = run_collection(config)
+                  ^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/pipelines/collect.py", line 23, in run_collection
+    return _run_full_arxiv_collection(config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/pipelines/collect.py", line 63, in _run_full_arxiv_collection
+    for paper in _collect_all_papers_for_queries(
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/pipelines/collect.py", line 176, in _collect_all_papers_for_queries
+    batch = client.search_papers(
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/clients/arxiv.py", line 62, in search_papers
+    payload = self._get_feed(query=query, date_query=date_query, start=start, max_results=batch_size)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/clients/arxiv.py", line 97, in _get_feed
+    response.raise_for_status()
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/requests/models.py", line 1028, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://export.arxiv.org/api/query?search_query=%28cat%3Acs.LG%29+AND+submittedDate%3A%5B201801010000+TO+201812312359%5D&start=10000&max_results=50&sortBy=submittedDate&sortOrder=descending
