@@ -210,3 +210,6 @@ __marimo__/
 data/raw/*.jsonl
 data/processed/*.jsonl
 slurm.sh
+slurm_analyze.sh
+slurm_collect.sh
+slurm_preprocess.sh
