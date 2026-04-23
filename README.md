@@ -34,12 +34,19 @@ Edit only this file to control:
 
 Optional: set S2_API_KEY for higher Semantic Scholar API limits.
 
+Collection sources:
+1. `semantic_scholar`: query-based Semantic Scholar API.
+2. `arxiv`: arXiv API with month-split full collection to avoid 10k offset failures.
+3. `medarxiv`: medRxiv API with date-range cursor pagination and the same month-split full collection strategy.
+
 ## Structure
 
 - [config.toml](config.toml): root moderation file
 - [main.py](main.py): root entrypoint
 - [src/not_an_llm/config.py](src/not_an_llm/config.py): typed config loading
 - [src/not_an_llm/clients/semantic_scholar.py](src/not_an_llm/clients/semantic_scholar.py): API client
+- [src/not_an_llm/clients/arxiv.py](src/not_an_llm/clients/arxiv.py): arXiv API client
+- [src/not_an_llm/clients/medarxiv.py](src/not_an_llm/clients/medarxiv.py): medRxiv API client
 - [src/not_an_llm/pipelines/collect.py](src/not_an_llm/pipelines/collect.py): ingestion pipeline
 - [src/not_an_llm/pipelines/preprocess.py](src/not_an_llm/pipelines/preprocess.py): preprocessing pipeline
 - [src/not_an_llm/pipelines/analyze.py](src/not_an_llm/pipelines/analyze.py): feature/readability analysis pipeline
