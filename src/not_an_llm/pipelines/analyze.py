@@ -4,10 +4,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import pandas as pd
-import spacy
 
+from not_an_llm.analysis.feature_extractor import FeatureExtractor
+from not_an_llm.analysis.readability import ReadabilityAnalyzer
 from not_an_llm.analysis.trends import TrendAnalyzer
-from not_an_llm.analysis.unified_features import UnifiedLinguisticFeatures
 from not_an_llm.config import AppConfig
 
 
@@ -26,34 +26,21 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         )
 
     frame = pd.read_json(input_path, lines=True)
-    
-    # Load spaCy pipeline for single-pass feature extraction
-    try:
-        nlp = spacy.load("en_core_web_sm", disable=["ner"])
-    except Exception:
-        nlp = spacy.blank("en")
-    
-    # Single-pass unified feature extraction
-    unified = UnifiedLinguisticFeatures(
+
+    feature_extractor = FeatureExtractor(
         syntactic_features=config.analysis.syntactic_features,
         marker_phrases=config.analysis.llm_marker_phrases,
         marker_words=config.analysis.llm_marker_words,
         marker_word_matching=config.analysis.llm_marker_word_matching,
-        hedge_terms=config.analysis.hedge_terms,
+        hedges=config.analysis.hedge_terms,
         certainty_terms=config.analysis.certainty_terms,
-        readability_metrics=config.analysis.readability_metrics if config.analysis.include_readability else [],
     )
-    
-    # Single unified pass: tokenize + extract all features
-    texts = frame["text_clean"].fillna("").astype(str).tolist()
-    docs = list(nlp.pipe(texts, batch_size=128))
-    
-    feature_rows = []
-    for text, doc in zip(texts, docs):
-        feature_rows.append(unified.extract(text, doc))
-    
-    features_df = pd.DataFrame(feature_rows)
-    enriched = pd.concat([frame.reset_index(drop=True), features_df.reset_index(drop=True)], axis=1)
+
+    enriched = feature_extractor.transform(frame)
+
+    if config.analysis.include_readability:
+        readability = ReadabilityAnalyzer(metrics=config.analysis.readability_metrics)
+        enriched = readability.transform(enriched)
 
 
     enriched_output_path = config.analysis.feature_dataset_jsonl
