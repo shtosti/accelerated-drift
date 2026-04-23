@@ -14,8 +14,18 @@ class TextPreprocessor:
     def preprocess_dataframe(self, frame: pd.DataFrame) -> pd.DataFrame:
         df = frame.copy()
 
-        df["title"] = df.get("title", "").fillna("").astype(str)
-        df["abstract"] = df.get("abstract", "").fillna("").astype(str)
+        df["title"] = (
+            df.get("title", "")
+            .fillna("")
+            .astype(str)
+            .apply(self._normalize_whitespace)
+        )
+        df["abstract"] = (
+            df.get("abstract", "")
+            .fillna("")
+            .astype(str)
+            .apply(self._normalize_whitespace)
+        )
 
         text_raw = (df["title"].str.strip() + " " + df["abstract"].str.strip()).str.strip()
         df["text_raw"] = text_raw
@@ -28,15 +38,21 @@ class TextPreprocessor:
         return df
 
     def normalize_text(self, text: str) -> str:
-        value = text or ""
+        value = self._normalize_whitespace(text)
         value = value.replace("\u2014", " -- ")
         value = value.replace("\u2013", " - ")
-        value = re.sub(r"[\t\r\n]+", " ", value)
         value = re.sub(r"\s+", " ", value).strip()
 
         if not self.keep_case:
             value = value.lower()
 
+        return value
+
+    @staticmethod
+    def _normalize_whitespace(text: str) -> str:
+        value = text or ""
+        value = re.sub(r"[\t\r\n]+", " ", value)
+        value = re.sub(r"\s+", " ", value).strip()
         return value
 
     @staticmethod
