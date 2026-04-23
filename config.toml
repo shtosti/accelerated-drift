@@ -3,7 +3,7 @@ name = "not-an-llm"
 data_dir = "data"
 
 [collection]
-# Data source: semantic_scholar or arxiv
+# Data source: semantic_scholar, arxiv, medarxiv, or bioarxiv
 source = "arxiv"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
@@ -27,14 +27,26 @@ semantic_scholar_queries = [
   "(\"large language models\" OR LLM) AND language:English",
 ]
 
+# For medRxiv, query is a local text filter over title/abstract/category.
+# Use ["*"] to collect all records in the date range.
+medarxiv_queries = ["*"]
+
+# For bioRxiv, query is a local text filter over title/abstract/category.
+# Use ["*"] to collect all records in the date range.
+bioarxiv_queries = ["*"]
+
 year_min = 2015
 year_max = 2026
-page_size = 50
+page_size = 100
 arxiv_collection_mode = "full" # full or monthly
-samples_per_month = 5 # used only when arxiv_collection_mode = "monthly"
+medarxiv_collection_mode = "full" # full or monthly
+bioarxiv_collection_mode = "full" # full or monthly
+samples_per_month = 2 # used only when *_collection_mode = "monthly"
 arxiv_output_jsonl = "data/raw/arxiv_papers.jsonl"
 arxiv_monthly_output_jsonl = "data/raw/arxiv_monthly_papers.jsonl"
 semantic_scholar_output_jsonl = "data/raw/semantic_scholar_papers.jsonl"
+medarxiv_output_jsonl = "data/raw/medarxiv_papers.jsonl"
+bioarxiv_output_jsonl = "data/raw/bioarxiv_papers.jsonl"
 # Safe request pacing for collection APIs.
 min_request_interval_seconds = 3.5
 max_retries = 8
@@ -63,6 +75,15 @@ fields = [
 [analysis]
 enabled = true
 include_readability = true
+# Select which readability metrics to compute/write.
+readability_metrics = [
+  "avg_words_per_sentence",
+  "avg_syllables_per_word",
+  "flesch_reading_ease",
+  "flesch_kincaid_grade",
+  "dale_chall"
+]
+
 # Defaults follow collection output basename (e.g. arxiv_papers.*).
 # Keep only explicit overrides you need.
 preprocessed_jsonl = ""
@@ -71,3 +92,35 @@ trends_csv = ""
 trends_plot_dir = ""
 # Use "all" to automatically include every numeric feature in yearly trend analysis.
 features = ["all"]
+
+# Configurable syntactic features: each key becomes <key>_count and <key>_per_1k_words.
+[analysis.syntactic_features]
+em_dash = "--"
+semicolon = ";"
+colon = ":"
+
+[analysis.lexicon]
+# Terms used for style ratios.
+hedge_terms = ["may", "might", "could", "suggest", "indicate"]
+certainty_terms = ["demonstrate", "prove", "show", "confirm"]
+
+[analysis.markers]
+# Define your LLM-like vocabulary here.
+llm_marker_phrases = [
+  "in conclusion",
+  "this study",
+  "this paper",
+  "we propose",
+  "we assume",
+]
+llm_marker_words = [
+  "delve",
+  "unparalleled",
+  "invaluable",
+]
+# exact: surface form only, lemma: lemmatized.
+llm_marker_word_matching = "lemma"
+# Backward-compatible aliases if you prefer top-level [analysis] keys:
+# llm_marker_phrases = [...]
+# llm_marker_words = [...]
+# llm_marker_word_matching = "exact"
