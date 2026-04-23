@@ -15,6 +15,7 @@ import requests
 logger = logging.getLogger(__name__)
 
 ATOM_NS = "http://www.w3.org/2005/Atom"
+ARXIV_MAX_START_OFFSET = 10_000
 
 
 @dataclass(slots=True)
@@ -53,6 +54,14 @@ class ArxivClient:
 
         while True:
             if limit is not None and len(papers) >= limit:
+                break
+
+            if start >= ARXIV_MAX_START_OFFSET:
+                logger.warning(
+                    "Reached arXiv start offset cap (%s). Returning partial bucket for query=%s",
+                    ARXIV_MAX_START_OFFSET,
+                    query,
+                )
                 break
 
             batch_size = page_size if limit is None else min(page_size, limit - len(papers))
