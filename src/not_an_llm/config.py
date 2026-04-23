@@ -11,6 +11,8 @@ class CollectionConfig:
     source: str
     queries: list[str]
     arxiv_collection_mode: str
+    medarxiv_collection_mode: str
+    bioarxiv_collection_mode: str
     samples_per_month: int
     year_min: int
     year_max: int
@@ -29,6 +31,9 @@ class AnalysisConfig:
     enabled: bool
     features: list[str]
     include_readability: bool
+    llm_marker_phrases: list[str]
+    llm_marker_words: list[str]
+    llm_marker_word_matching: str
     preprocessed_jsonl: Path
     feature_dataset_jsonl: Path
     trends_csv: Path
@@ -53,6 +58,8 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
     analysis = _require_dict(raw, "analysis")
     source = _load_collection_source(collection)
     arxiv_collection_mode = _load_arxiv_collection_mode(collection)
+    medarxiv_collection_mode = _load_medarxiv_collection_mode(collection)
+    bioarxiv_collection_mode = _load_bioarxiv_collection_mode(collection)
     queries = _load_collection_queries(collection, source)
     output_jsonl = _load_output_jsonl(collection, source, arxiv_collection_mode)
     default_preprocessed, default_feature_dataset, default_trends_csv, default_trends_plot_dir = (
@@ -66,6 +73,8 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             source=source,
             queries=queries,
             arxiv_collection_mode=arxiv_collection_mode,
+            medarxiv_collection_mode=medarxiv_collection_mode,
+            bioarxiv_collection_mode=bioarxiv_collection_mode,
             samples_per_month=int(collection.get("samples_per_month", 5)),
             year_min=int(collection["year_min"]),
             year_max=int(collection["year_max"]),
@@ -82,6 +91,30 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             enabled=bool(analysis["enabled"]),
             features=[str(item) for item in analysis["features"]],
             include_readability=bool(analysis.get("include_readability", True)),
+            llm_marker_phrases=_load_query_list(
+                analysis.get(
+                    "llm_marker_phrases",
+                    [
+                        "overall",
+                        "in conclusion",
+                        "this paper",
+                        "this study",
+                        "we propose",
+                        "we present",
+                        "we demonstrate",
+                        "results show",
+                        "our results",
+                        "in this work",
+                    ],
+                )
+            ),
+            llm_marker_words=_load_query_list(
+                analysis.get(
+                    "llm_marker_words",
+                    ["unparalleled", "invaluable", "delve"],
+                )
+            ),
+            llm_marker_word_matching=_load_marker_word_matching(analysis),
             preprocessed_jsonl=_load_optional_path(analysis.get("preprocessed_jsonl"), default_preprocessed),
             feature_dataset_jsonl=_load_optional_path(analysis.get("feature_dataset_jsonl"), default_feature_dataset),
             trends_csv=_load_optional_path(analysis.get("trends_csv"), default_trends_csv),
@@ -103,6 +136,20 @@ def _load_collection_queries(collection: dict[str, Any], source: str) -> list[st
         queries = _load_query_list(collection.get("arxiv_queries"))
         if queries:
             return queries
+
+    if source == "medarxiv":
+        queries = _load_query_list(collection.get("medarxiv_queries"))
+        if queries:
+            return queries
+        # medRxiv API is date-window based, so a wildcard query means "collect all".
+        return ["*"]
+
+    if source == "bioarxiv":
+        queries = _load_query_list(collection.get("bioarxiv_queries"))
+        if queries:
+            return queries
+        # bioRxiv API is date-window based, so a wildcard query means "collect all".
+        return ["*"]
 
     if source == "semantic_scholar":
         queries = _load_query_list(collection.get("semantic_scholar_queries"))
@@ -134,10 +181,10 @@ def _load_query_list(raw_queries: Any) -> list[str]:
 
 def _load_collection_source(collection: dict[str, Any]) -> str:
     raw_source = str(collection.get("source", "semantic_scholar")).strip().lower()
-    allowed_sources = {"semantic_scholar", "arxiv"}
+    allowed_sources = {"semantic_scholar", "arxiv", "medarxiv", "bioarxiv"}
     if raw_source not in allowed_sources:
         raise ValueError(
-            "collection.source must be one of: semantic_scholar, arxiv"
+            "collection.source must be one of: semantic_scholar, arxiv, medarxiv, bioarxiv"
         )
     return raw_source
 
@@ -147,6 +194,22 @@ def _load_arxiv_collection_mode(collection: dict[str, Any]) -> str:
     allowed_modes = {"full", "monthly"}
     if raw_mode not in allowed_modes:
         raise ValueError("collection.arxiv_collection_mode must be one of: full, monthly")
+    return raw_mode
+
+
+def _load_medarxiv_collection_mode(collection: dict[str, Any]) -> str:
+    raw_mode = str(collection.get("medarxiv_collection_mode", "monthly")).strip().lower()
+    allowed_modes = {"full", "monthly"}
+    if raw_mode not in allowed_modes:
+        raise ValueError("collection.medarxiv_collection_mode must be one of: full, monthly")
+    return raw_mode
+
+
+def _load_bioarxiv_collection_mode(collection: dict[str, Any]) -> str:
+    raw_mode = str(collection.get("bioarxiv_collection_mode", "monthly")).strip().lower()
+    allowed_modes = {"full", "monthly"}
+    if raw_mode not in allowed_modes:
+        raise ValueError("collection.bioarxiv_collection_mode must be one of: full, monthly")
     return raw_mode
 
 
@@ -174,6 +237,16 @@ def _load_output_jsonl(collection: dict[str, Any], source: str, arxiv_collection
         if isinstance(source_specific_path, str) and source_specific_path.strip():
             return Path(source_specific_path.strip())
 
+    if source == "medarxiv":
+        source_specific_path = collection.get("medarxiv_output_jsonl")
+        if isinstance(source_specific_path, str) and source_specific_path.strip():
+            return Path(source_specific_path.strip())
+
+    if source == "bioarxiv":
+        source_specific_path = collection.get("bioarxiv_output_jsonl")
+        if isinstance(source_specific_path, str) and source_specific_path.strip():
+            return Path(source_specific_path.strip())
+
     fallback_path = collection.get("output_jsonl")
     if isinstance(fallback_path, str) and fallback_path.strip():
         return Path(fallback_path.strip())
@@ -181,7 +254,9 @@ def _load_output_jsonl(collection: dict[str, Any], source: str, arxiv_collection
     raise ValueError(
         "collection must define source-specific output path "
         "('arxiv_monthly_output_jsonl'/'arxiv_output_jsonl' for arxiv, "
-        "'semantic_scholar_output_jsonl' for semantic_scholar) or fallback 'output_jsonl'"
+        "'semantic_scholar_output_jsonl' for semantic_scholar, "
+        "'medarxiv_output_jsonl' for medarxiv, "
+        "'bioarxiv_output_jsonl' for bioarxiv) or fallback 'output_jsonl'"
     )
 
 
@@ -189,6 +264,14 @@ def _load_optional_path(raw_value: Any, default: Path) -> Path:
     if isinstance(raw_value, str) and raw_value.strip():
         return Path(raw_value.strip())
     return default
+
+
+def _load_marker_word_matching(analysis: dict[str, Any]) -> str:
+    mode = str(analysis.get("llm_marker_word_matching", "exact")).strip().lower()
+    allowed = {"exact", "stem"}
+    if mode not in allowed:
+        raise ValueError("analysis.llm_marker_word_matching must be one of: exact, stem")
+    return mode
 
 
 def _default_analysis_paths(raw_output_path: Path) -> tuple[Path, Path, Path, Path]:
