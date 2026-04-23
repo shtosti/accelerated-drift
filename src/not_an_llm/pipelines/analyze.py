@@ -27,7 +27,11 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
 
     frame = pd.read_json(input_path, lines=True)
 
-    extractor = FeatureExtractor()
+    extractor = FeatureExtractor(
+        marker_phrases=config.analysis.llm_marker_phrases,
+        marker_words=config.analysis.llm_marker_words,
+        marker_word_matching=config.analysis.llm_marker_word_matching,
+    )
     enriched = extractor.transform(frame)
 
     if config.analysis.include_readability:
