@@ -31,9 +31,13 @@ class AnalysisConfig:
     enabled: bool
     features: list[str]
     include_readability: bool
+    readability_metrics: list[str]
+    syntactic_features: dict[str, str]
     llm_marker_phrases: list[str]
     llm_marker_words: list[str]
     llm_marker_word_matching: str
+    hedge_terms: list[str]
+    certainty_terms: list[str]
     preprocessed_jsonl: Path
     feature_dataset_jsonl: Path
     trends_csv: Path
@@ -56,6 +60,8 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
     project = _require_dict(raw, "project")
     collection = _require_dict(raw, "collection")
     analysis = _require_dict(raw, "analysis")
+    marker_config = analysis.get("markers") if isinstance(analysis.get("markers"), dict) else {}
+    lexicon_config = analysis.get("lexicon") if isinstance(analysis.get("lexicon"), dict) else {}
     source = _load_collection_source(collection)
     arxiv_collection_mode = _load_arxiv_collection_mode(collection)
     medarxiv_collection_mode = _load_medarxiv_collection_mode(collection)
@@ -91,8 +97,12 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             enabled=bool(analysis["enabled"]),
             features=[str(item) for item in analysis["features"]],
             include_readability=bool(analysis.get("include_readability", True)),
+            readability_metrics=_load_readability_metrics(analysis),
+            syntactic_features=_load_syntactic_features(analysis),
             llm_marker_phrases=_load_query_list(
-                analysis.get(
+                marker_config.get(
+                    "llm_marker_phrases",
+                    analysis.get(
                     "llm_marker_phrases",
                     [
                         "overall",
@@ -106,15 +116,31 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
                         "our results",
                         "in this work",
                     ],
+                    ),
                 )
             ),
             llm_marker_words=_load_query_list(
-                analysis.get(
+                marker_config.get(
                     "llm_marker_words",
-                    ["unparalleled", "invaluable", "delve"],
+                    analysis.get(
+                        "llm_marker_words",
+                        ["unparalleled", "invaluable", "delve"],
+                    ),
                 )
             ),
-            llm_marker_word_matching=_load_marker_word_matching(analysis),
+            llm_marker_word_matching=_load_marker_word_matching(analysis, marker_config),
+            hedge_terms=_load_query_list(
+                lexicon_config.get(
+                    "hedge_terms",
+                    analysis.get("hedge_terms", ["may", "might", "could", "suggest", "indicate"]),
+                )
+            ),
+            certainty_terms=_load_query_list(
+                lexicon_config.get(
+                    "certainty_terms",
+                    analysis.get("certainty_terms", ["demonstrate", "prove", "show", "confirm"]),
+                )
+            ),
             preprocessed_jsonl=_load_optional_path(analysis.get("preprocessed_jsonl"), default_preprocessed),
             feature_dataset_jsonl=_load_optional_path(analysis.get("feature_dataset_jsonl"), default_feature_dataset),
             trends_csv=_load_optional_path(analysis.get("trends_csv"), default_trends_csv),
@@ -266,12 +292,70 @@ def _load_optional_path(raw_value: Any, default: Path) -> Path:
     return default
 
 
-def _load_marker_word_matching(analysis: dict[str, Any]) -> str:
-    mode = str(analysis.get("llm_marker_word_matching", "exact")).strip().lower()
-    allowed = {"exact", "stem"}
+def _load_marker_word_matching(analysis: dict[str, Any], marker_config: dict[str, Any]) -> str:
+    mode = str(
+        marker_config.get(
+            "llm_marker_word_matching",
+            analysis.get("llm_marker_word_matching", "exact"),
+        )
+    ).strip().lower()
+    allowed = {"exact", "lemma"}
     if mode not in allowed:
-        raise ValueError("analysis.llm_marker_word_matching must be one of: exact, stem")
+        raise ValueError("analysis.llm_marker_word_matching must be one of: exact, lemma")
     return mode
+
+
+def _load_syntactic_features(analysis: dict[str, Any]) -> dict[str, str]:
+    raw = analysis.get("syntactic_features")
+    if raw is None:
+        return {
+            "em_dash": r"--",
+            "semicolon": r";",
+        }
+
+    if not isinstance(raw, dict):
+        raise ValueError("analysis.syntactic_features must be a table of feature_name = regex_pattern")
+
+    features: dict[str, str] = {}
+    for key, value in raw.items():
+        name = str(key).strip()
+        pattern = str(value).strip()
+        if not name or not pattern:
+            continue
+        features[name] = pattern
+
+    if not features:
+        raise ValueError("analysis.syntactic_features cannot be empty when provided")
+    return features
+
+
+def _load_readability_metrics(analysis: dict[str, Any]) -> list[str]:
+    defaults = [
+        "avg_words_per_sentence",
+        "avg_syllables_per_word",
+        "flesch_reading_ease",
+        "flesch_kincaid_grade",
+        "dale_chall",
+    ]
+    metrics = _load_query_list(analysis.get("readability_metrics", defaults))
+    if not metrics:
+        return defaults
+
+    allowed = {
+        "avg_words_per_sentence",
+        "avg_syllables_per_word",
+        "flesch_reading_ease",
+        "flesch_kincaid_grade",
+        "dale_chall",
+        "gunning_fog",
+        "smog_index",
+    }
+    invalid = [metric for metric in metrics if metric not in allowed]
+    if invalid:
+        raise ValueError(
+            "analysis.readability_metrics contains unsupported metrics: " + ", ".join(invalid)
+        )
+    return metrics
 
 
 def _default_analysis_paths(raw_output_path: Path) -> tuple[Path, Path, Path, Path]:
