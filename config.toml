@@ -10,12 +10,9 @@ source = "arxiv"
 
 # For arXiv, use search_query syntax (https://info.arxiv.org/help/api/user-manual.html).
 arxiv_queries = [
-  "cat:cs.AI", # AI
   "cat:cs.CL", # computation and language
+  "cat:cs.AI", # AI
   "cat:cs.LG", # machine learning
-  # "cat:cs.MA", # multiagent systems
-  # "cat:cs.CY", # computers and society
-  # "cat:cs.IR", # information retrieval
 ]
 
 # For Semantic Scholar, use their query syntax.
@@ -49,9 +46,9 @@ medarxiv_output_jsonl = "data/raw/medarxiv_papers.jsonl"
 bioarxiv_output_jsonl = "data/raw/bioarxiv_papers.jsonl"
 # Safe request pacing for collection APIs.
 min_request_interval_seconds = 3.5
-max_retries = 8
+max_retries = 10
 initial_backoff_seconds = 3.5
-max_backoff_seconds = 90.0
+max_backoff_seconds = 120.0
 backoff_jitter_seconds = 0.25
 
 # Keep fields explicit so moderation is centralized in this file.
@@ -89,9 +86,17 @@ readability_metrics = [
 preprocessed_jsonl = ""
 feature_dataset_jsonl = ""
 trends_csv = ""
+monthly_trends_csv = ""
 trends_plot_dir = ""
 # Use "all" to automatically include every numeric feature in yearly trend analysis.
 features = ["all"]
+
+spacy_features = [
+  "marker_list_of_three",
+  "coordination_count",
+  "clause_depth",
+  "dependency_entropy"
+]
 
 # Configurable syntactic features: each key becomes <key>_count and <key>_per_1k_words.
 [analysis.syntactic_features]
@@ -101,26 +106,34 @@ colon = ":"
 
 [analysis.lexicon]
 # Terms used for style ratios.
-hedge_terms = ["may", "might", "could", "suggest", "indicate"]
-certainty_terms = ["demonstrate", "prove", "show", "confirm"]
+hedge_terms = ["may", "might", "could", "potentially", "suggest", "indicate", "hint"]
+certainty_terms = ["demonstrate", "prove", "confirm", "groundbreaking", "pivotal", "unprecedented"]
 
 [analysis.markers]
 # Define your LLM-like vocabulary here.
-llm_marker_phrases = [
-  "in conclusion",
-  "this study",
-  "this paper",
-  "we propose",
-  "we assume",
-]
+
 llm_marker_words = [
   "delve",
-  "unparalleled",
-  "invaluable",
+  "highlight",
+  "underscore",
+  "enhance",
+  "exhibit",
+  "showcase",
+  "insight",
+  "comprehensive",
+  "crucial",
+  "pivotal",
+  "intricate",
+  "meticulously",
+  "notably",
+  "particularly",
+  "while",
+  "within",
+  "across",
+  "additionally"
 ]
 # exact: surface form only, lemma: lemmatized.
 llm_marker_word_matching = "lemma"
-# Backward-compatible aliases if you prefer top-level [analysis] keys:
-# llm_marker_phrases = [...]
+# Backward-compatible aliases if you prefer top-level [analysis] keys
 # llm_marker_words = [...]
 # llm_marker_word_matching = "exact"
