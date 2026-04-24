@@ -1,0 +1,513 @@
+2026-04-23 17:14:18,321 INFO not_an_llm.pipelines.collect: Starting arxiv collection: queries=1 years=2022-2026 (month-split)
+2026-04-23 17:14:18,321 INFO not_an_llm.pipelines.collect: Resuming from existing output: path=data/raw/arxiv_papers.jsonl existing_unique_papers=221319
+
+Collecting arxiv papers: 221319paper [00:00, ?paper/s]
+Collecting arxiv papers: 221319paper [00:00, ?paper/s, 2022-01]2026-04-23 17:14:18,441 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-01
+2026-04-23 17:14:18,441 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-01 query=cat:cs.AI
+2026-04-23 17:14:28,477 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
+2026-04-23 17:14:42,133 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 2/11). sleeping 7.00s
+2026-04-23 17:15:27,644 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=907 added=0 duplicates=907
+
+Collecting arxiv papers: 221319paper [01:09, ?paper/s, 2022-02]2026-04-23 17:15:27,647 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-02
+2026-04-23 17:15:27,647 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-02 query=cat:cs.AI
+2026-04-23 17:16:20,049 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1105 added=0 duplicates=1105
+
+Collecting arxiv papers: 221319paper [02:01, ?paper/s, 2022-03]2026-04-23 17:16:20,051 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-03
+2026-04-23 17:16:20,051 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-03 query=cat:cs.AI
+2026-04-23 17:17:17,354 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1268 added=0 duplicates=1268
+
+Collecting arxiv papers: 221319paper [02:58, ?paper/s, 2022-04]2026-04-23 17:17:17,356 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-04
+2026-04-23 17:17:17,356 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-04 query=cat:cs.AI
+2026-04-23 17:18:03,133 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1094 added=0 duplicates=1094
+
+Collecting arxiv papers: 221319paper [03:44, ?paper/s, 2022-05]2026-04-23 17:18:03,135 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-05
+2026-04-23 17:18:03,135 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-05 query=cat:cs.AI
+2026-04-23 17:19:07,761 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1432 added=0 duplicates=1432
+
+Collecting arxiv papers: 221319paper [04:49, ?paper/s, 2022-06]2026-04-23 17:19:07,764 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-06
+2026-04-23 17:19:07,764 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-06 query=cat:cs.AI
+2026-04-23 17:20:09,572 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1362 added=0 duplicates=1362
+
+Collecting arxiv papers: 221319paper [05:51, ?paper/s, 2022-07]2026-04-23 17:20:09,574 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-07
+2026-04-23 17:20:09,574 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-07 query=cat:cs.AI
+2026-04-23 17:21:03,625 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1182 added=0 duplicates=1182
+
+Collecting arxiv papers: 221319paper [06:45, ?paper/s, 2022-08]2026-04-23 17:21:03,628 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-08
+2026-04-23 17:21:03,628 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-08 query=cat:cs.AI
+
+Collecting arxiv papers: 221320paper [07:34, 454.38s/paper, 2022-08]
+Collecting arxiv papers: 221322paper [07:34, 117.85s/paper, 2022-08]2026-04-23 17:21:52,959 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=943 added=828 duplicates=115
+
+Collecting arxiv papers: 222147paper [07:34, 117.85s/paper, 2022-09]2026-04-23 17:21:52,961 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-09
+2026-04-23 17:21:52,962 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-09 query=cat:cs.AI
+
+Collecting arxiv papers: 222147paper [07:49, 117.85s/paper, 2022-09]
+Collecting arxiv papers: 222148paper [08:29,  2.98paper/s, 2022-09] 
+Collecting arxiv papers: 222337paper [08:30,  3.94paper/s, 2022-09]
+Collecting arxiv papers: 223167paper [08:30, 10.02paper/s, 2022-09]2026-04-23 17:22:48,670 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1205 added=1034 duplicates=171
+
+Collecting arxiv papers: 223181paper [08:30, 10.02paper/s, 2022-10]2026-04-23 17:22:48,672 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-10
+2026-04-23 17:22:48,672 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-10 query=cat:cs.AI
+
+Collecting arxiv papers: 223181paper [08:49, 10.02paper/s, 2022-10]
+Collecting arxiv papers: 223182paper [09:55,  5.38paper/s, 2022-10]
+Collecting arxiv papers: 223360paper [09:55,  6.78paper/s, 2022-10]2026-04-23 17:24:14,152 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1730 added=1330 duplicates=400
+
+Collecting arxiv papers: 224511paper [09:55,  6.78paper/s, 2022-11]2026-04-23 17:24:14,154 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-11
+2026-04-23 17:24:14,154 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-11 query=cat:cs.AI
+
+Collecting arxiv papers: 224511paper [10:09,  6.78paper/s, 2022-11]
+Collecting arxiv papers: 224512paper [10:58, 11.60paper/s, 2022-11]
+Collecting arxiv papers: 225125paper [10:58, 17.38paper/s, 2022-11]
+Collecting arxiv papers: 225518paper [10:58, 22.65paper/s, 2022-11]2026-04-23 17:25:16,696 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1425 added=1147 duplicates=278
+
+Collecting arxiv papers: 225658paper [10:58, 22.65paper/s, 2022-12]2026-04-23 17:25:16,698 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-12
+2026-04-23 17:25:16,698 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2022-2022 month=2022-12 query=cat:cs.AI
+
+Collecting arxiv papers: 225658paper [11:09, 22.65paper/s, 2022-12]
+Collecting arxiv papers: 225659paper [11:50, 12.67paper/s, 2022-12]
+Collecting arxiv papers: 226278paper [11:50, 21.15paper/s, 2022-12]2026-04-23 17:26:08,894 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1153 added=914 duplicates=239
+
+Collecting arxiv papers: 226572paper [11:50, 21.15paper/s, 2023-01]2026-04-23 17:26:08,897 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-01
+2026-04-23 17:26:08,897 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-01 query=cat:cs.AI
+
+Collecting arxiv papers: 226572paper [12:09, 21.15paper/s, 2023-01]
+Collecting arxiv papers: 226573paper [12:38, 13.92paper/s, 2023-01]
+Collecting arxiv papers: 227431paper [12:38, 26.29paper/s, 2023-01]2026-04-23 17:26:56,609 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1054 added=883 duplicates=171
+
+Collecting arxiv papers: 227455paper [12:38, 26.29paper/s, 2023-02]2026-04-23 17:26:56,611 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-02
+2026-04-23 17:26:56,611 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-02 query=cat:cs.AI
+
+Collecting arxiv papers: 227455paper [12:49, 26.29paper/s, 2023-02]
+Collecting arxiv papers: 227456paper [13:43, 11.40paper/s, 2023-02]
+Collecting arxiv papers: 227562paper [13:43, 12.71paper/s, 2023-02]2026-04-23 17:28:02,282 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1462 added=1196 duplicates=266
+
+Collecting arxiv papers: 228651paper [13:43, 12.71paper/s, 2023-03]2026-04-23 17:28:02,284 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-03
+2026-04-23 17:28:02,285 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-03 query=cat:cs.AI
+
+Collecting arxiv papers: 228651paper [13:59, 12.71paper/s, 2023-03]
+Collecting arxiv papers: 228652paper [14:57, 13.92paper/s, 2023-03]
+Collecting arxiv papers: 229200paper [14:57, 19.95paper/s, 2023-03]2026-04-23 17:29:15,851 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1634 added=1386 duplicates=248
+
+Collecting arxiv papers: 230037paper [14:57, 19.95paper/s, 2023-04]2026-04-23 17:29:15,853 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-04
+2026-04-23 17:29:15,853 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-04 query=cat:cs.AI
+
+Collecting arxiv papers: 230037paper [15:09, 19.95paper/s, 2023-04]
+Collecting arxiv papers: 230038paper [16:07, 15.77paper/s, 2023-04]
+Collecting arxiv papers: 230898paper [16:07, 24.95paper/s, 2023-04]2026-04-23 17:30:25,897 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1352 added=1091 duplicates=261
+
+Collecting arxiv papers: 231128paper [16:07, 24.95paper/s, 2023-05]2026-04-23 17:30:25,899 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-05
+2026-04-23 17:30:25,899 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-05 query=cat:cs.AI
+
+Collecting arxiv papers: 231128paper [16:19, 24.95paper/s, 2023-05]
+Collecting arxiv papers: 231129paper [17:56, 10.70paper/s, 2023-05]
+Collecting arxiv papers: 231518paper [17:56, 13.88paper/s, 2023-05]
+Collecting arxiv papers: 232351paper [17:56, 23.60paper/s, 2023-05]2026-04-23 17:32:14,785 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2382 added=1552 duplicates=830
+
+Collecting arxiv papers: 232680paper [17:56, 23.60paper/s, 2023-06]2026-04-23 17:32:14,789 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-06
+2026-04-23 17:32:14,789 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-06 query=cat:cs.AI
+
+Collecting arxiv papers: 232680paper [18:09, 23.60paper/s, 2023-06]
+Collecting arxiv papers: 232681paper [19:30, 11.32paper/s, 2023-06]
+Collecting arxiv papers: 234071paper [19:30, 24.20paper/s, 2023-06]2026-04-23 17:33:48,947 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1906 added=1457 duplicates=449
+
+Collecting arxiv papers: 234137paper [19:30, 24.20paper/s, 2023-07]2026-04-23 17:33:48,949 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-07
+2026-04-23 17:33:48,949 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-07 query=cat:cs.AI
+
+Collecting arxiv papers: 234137paper [19:49, 24.20paper/s, 2023-07]
+Collecting arxiv papers: 234138paper [20:46, 12.51paper/s, 2023-07]
+Collecting arxiv papers: 234332paper [20:46, 14.32paper/s, 2023-07]
+Collecting arxiv papers: 235256paper [20:46, 26.72paper/s, 2023-07]2026-04-23 17:35:05,172 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1644 added=1302 duplicates=342
+
+Collecting arxiv papers: 235439paper [20:46, 26.72paper/s, 2023-08]2026-04-23 17:35:05,175 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-08
+2026-04-23 17:35:05,175 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-08 query=cat:cs.AI
+
+Collecting arxiv papers: 235439paper [20:59, 26.72paper/s, 2023-08]
+Collecting arxiv papers: 235440paper [22:10, 11.61paper/s, 2023-08]
+Collecting arxiv papers: 235473paper [22:10, 11.93paper/s, 2023-08]
+Collecting arxiv papers: 235985paper [22:10, 19.55paper/s, 2023-08]
+Collecting arxiv papers: 236517paper [22:10, 30.83paper/s, 2023-08]2026-04-23 17:36:29,337 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1809 added=1453 duplicates=356
+
+Collecting arxiv papers: 236892paper [22:10, 30.83paper/s, 2023-09]2026-04-23 17:36:29,340 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-09
+2026-04-23 17:36:29,340 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-09 query=cat:cs.AI
+
+Collecting arxiv papers: 236892paper [22:29, 30.83paper/s, 2023-09]
+Collecting arxiv papers: 236893paper [23:30, 12.36paper/s, 2023-09]
+Collecting arxiv papers: 237632paper [23:30, 21.72paper/s, 2023-09]2026-04-23 17:37:49,012 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1864 added=1395 duplicates=469
+
+Collecting arxiv papers: 238287paper [23:30, 21.72paper/s, 2023-10]2026-04-23 17:37:49,016 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-10
+2026-04-23 17:37:49,016 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-10 query=cat:cs.AI
+
+Collecting arxiv papers: 238287paper [23:49, 21.72paper/s, 2023-10]
+Collecting arxiv papers: 238288paper [25:25, 10.92paper/s, 2023-10]
+Collecting arxiv papers: 238299paper [25:25, 11.00paper/s, 2023-10]
+Collecting arxiv papers: 238714paper [25:25, 15.96paper/s, 2023-10]
+Collecting arxiv papers: 239112paper [25:25, 22.74paper/s, 2023-10]
+Collecting arxiv papers: 239897paper [25:25, 41.82paper/s, 2023-10]2026-04-23 17:39:44,019 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2522 added=1714 duplicates=808
+
+Collecting arxiv papers: 240001paper [25:25, 41.82paper/s, 2023-11]2026-04-23 17:39:44,023 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-11
+2026-04-23 17:39:44,023 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-11 query=cat:cs.AI
+
+Collecting arxiv papers: 240001paper [25:39, 41.82paper/s, 2023-11]
+Collecting arxiv papers: 240002paper [27:16,  9.38paper/s, 2023-11]
+Collecting arxiv papers: 240253paper [27:16, 11.94paper/s, 2023-11]
+Collecting arxiv papers: 241004paper [27:16, 22.91paper/s, 2023-11]2026-04-23 17:41:34,780 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2140 added=1555 duplicates=585
+
+Collecting arxiv papers: 241556paper [27:16, 22.91paper/s, 2023-12]2026-04-23 17:41:34,783 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-12
+2026-04-23 17:41:34,783 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2023-2023 month=2023-12 query=cat:cs.AI
+
+Collecting arxiv papers: 241556paper [27:29, 22.91paper/s, 2023-12]2026-04-23 17:43:04,318 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
+
+Collecting arxiv papers: 241557paper [28:59, 10.90paper/s, 2023-12]2026-04-23 17:43:18,214 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2084 added=1649 duplicates=435
+
+Collecting arxiv papers: 243205paper [28:59, 10.90paper/s, 2024-01]2026-04-23 17:43:18,217 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-01
+2026-04-23 17:43:18,217 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-01 query=cat:cs.AI
+2026-04-23 17:44:19,084 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
+
+Collecting arxiv papers: 243206paper [30:43, 13.35paper/s, 2024-01]
+Collecting arxiv papers: 243277paper [30:43, 13.83paper/s, 2024-01]
+Collecting arxiv papers: 243997paper [30:44, 20.78paper/s, 2024-01]
+Collecting arxiv papers: 244384paper [30:44, 26.08paper/s, 2024-01]2026-04-23 17:45:02,698 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=1957 added=1410 duplicates=547
+
+Collecting arxiv papers: 244615paper [30:44, 26.08paper/s, 2024-02]2026-04-23 17:45:02,701 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-02
+2026-04-23 17:45:02,701 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-02 query=cat:cs.AI
+
+Collecting arxiv papers: 244615paper [30:59, 26.08paper/s, 2024-02]
+Collecting arxiv papers: 244616paper [32:43,  9.16paper/s, 2024-02]
+Collecting arxiv papers: 245218paper [32:43, 14.22paper/s, 2024-02]
+Collecting arxiv papers: 246074paper [32:43, 24.48paper/s, 2024-02]2026-04-23 17:47:01,820 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2756 added=1794 duplicates=962
+
+Collecting arxiv papers: 246409paper [32:43, 24.48paper/s, 2024-03]2026-04-23 17:47:01,824 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-03
+2026-04-23 17:47:01,824 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-03 query=cat:cs.AI
+
+Collecting arxiv papers: 246409paper [32:59, 24.48paper/s, 2024-03]
+Collecting arxiv papers: 246410paper [34:51,  9.46paper/s, 2024-03]
+Collecting arxiv papers: 246600paper [34:51, 10.90paper/s, 2024-03]
+Collecting arxiv papers: 247271paper [34:51, 18.22paper/s, 2024-03]
+Collecting arxiv papers: 247758paper [34:51, 25.78paper/s, 2024-03]2026-04-23 17:49:10,317 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2576 added=1869 duplicates=707
+
+Collecting arxiv papers: 248278paper [34:51, 25.78paper/s, 2024-04]2026-04-23 17:49:10,321 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-04
+2026-04-23 17:49:10,321 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-04 query=cat:cs.AI
+
+Collecting arxiv papers: 248278paper [35:10, 25.78paper/s, 2024-04]2026-04-23 17:50:27,441 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
+2026-04-23 17:50:49,509 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/11). sleeping 10.00s
+2026-04-23 17:51:10,802 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/11). sleeping 14.00s
+2026-04-23 17:51:25,158 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 4/11). sleeping 28.00s
+2026-04-23 17:51:53,470 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 5/11). sleeping 56.00s
+2026-04-23 17:53:05,427 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 6/11). sleeping 112.00s
+
+Collecting arxiv papers: 248279paper [42:17,  3.42paper/s, 2024-04]
+Collecting arxiv papers: 248359paper [42:17,  3.65paper/s, 2024-04]
+Collecting arxiv papers: 248956paper [42:17,  6.13paper/s, 2024-04]
+Collecting arxiv papers: 249622paper [42:17, 10.08paper/s, 2024-04]2026-04-23 17:56:36,298 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2417 added=1727 duplicates=690
+
+Collecting arxiv papers: 250005paper [42:17, 10.08paper/s, 2024-05]2026-04-23 17:56:36,302 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-05
+2026-04-23 17:56:36,302 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-05 query=cat:cs.AI
+
+Collecting arxiv papers: 250005paper [42:30, 10.08paper/s, 2024-05]
+Collecting arxiv papers: 250006paper [44:35,  6.15paper/s, 2024-05]
+Collecting arxiv papers: 250867paper [44:35, 10.94paper/s, 2024-05]2026-04-23 17:58:54,430 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2810 added=2064 duplicates=746
+
+Collecting arxiv papers: 252069paper [44:35, 10.94paper/s, 2024-06]2026-04-23 17:58:54,435 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-06
+2026-04-23 17:58:54,435 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-06 query=cat:cs.AI
+
+Collecting arxiv papers: 252069paper [44:50, 10.94paper/s, 2024-06]2026-04-23 18:02:34,812 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
+2026-04-23 18:03:01,875 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/11). sleeping 10.00s
+2026-04-23 18:03:27,413 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/11). sleeping 14.00s
+2026-04-23 18:03:41,744 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 4/11). sleeping 28.00s
+2026-04-23 18:04:26,194 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 5/11). sleeping 56.00s
+2026-04-23 18:07:00,967 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
+2026-04-23 18:07:04,932 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/11). sleeping 10.00s
+2026-04-23 18:07:15,241 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/11). sleeping 14.00s
+2026-04-23 18:07:46,738 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 4/11). sleeping 28.00s
+2026-04-23 18:08:49,992 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 5/11). sleeping 56.00s
+
+Collecting arxiv papers: 252070paper [56:54,  2.98paper/s, 2024-06]
+Collecting arxiv papers: 252707paper [56:54,  4.03paper/s, 2024-06]
+Collecting arxiv papers: 253316paper [56:55,  5.47paper/s, 2024-06]
+Collecting arxiv papers: 253974paper [56:55,  7.68paper/s, 2024-06]2026-04-23 18:11:13,647 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3251 added=2160 duplicates=1091
+
+Collecting arxiv papers: 254229paper [56:55,  7.68paper/s, 2024-07]2026-04-23 18:11:13,651 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-07
+2026-04-23 18:11:13,651 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-07 query=cat:cs.AI
+
+Collecting arxiv papers: 254229paper [57:10,  7.68paper/s, 2024-07]2026-04-23 18:12:18,118 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
+
+Collecting arxiv papers: 254230paper [1:00:16,  4.53paper/s, 2024-07]
+Collecting arxiv papers: 254578paper [1:00:16,  5.74paper/s, 2024-07]
+Collecting arxiv papers: 255219paper [1:00:16,  8.93paper/s, 2024-07]
+Collecting arxiv papers: 255939paper [1:00:16, 14.04paper/s, 2024-07]2026-04-23 18:14:35,493 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2692 added=1984 duplicates=708
+
+Collecting arxiv papers: 256213paper [1:00:17, 14.04paper/s, 2024-08]2026-04-23 18:14:35,498 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-08
+2026-04-23 18:14:35,498 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-08 query=cat:cs.AI
+
+Collecting arxiv papers: 256213paper [1:00:30, 14.04paper/s, 2024-08]
+Collecting arxiv papers: 256214paper [1:03:42,  5.45paper/s, 2024-08]
+Collecting arxiv papers: 256849paper [1:03:42,  8.42paper/s, 2024-08]
+Collecting arxiv papers: 257458paper [1:03:43, 12.50paper/s, 2024-08]2026-04-23 18:18:01,618 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2385 added=1800 duplicates=585
+
+Collecting arxiv papers: 258013paper [1:03:43, 12.50paper/s, 2024-09]2026-04-23 18:18:01,621 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-09
+2026-04-23 18:18:01,622 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-09 query=cat:cs.AI
+
+Collecting arxiv papers: 258013paper [1:04:00, 12.50paper/s, 2024-09]
+Collecting arxiv papers: 258014paper [1:05:39,  8.42paper/s, 2024-09]
+Collecting arxiv papers: 258265paper [1:05:39, 10.03paper/s, 2024-09]
+Collecting arxiv papers: 258758paper [1:05:40, 14.54paper/s, 2024-09]
+Collecting arxiv papers: 259159paper [1:05:40, 19.78paper/s, 2024-09]
+Collecting arxiv papers: 259542paper [1:05:40, 26.86paper/s, 2024-09]2026-04-23 18:19:58,937 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2650 added=1977 duplicates=673
+
+Collecting arxiv papers: 259990paper [1:05:40, 26.86paper/s, 2024-10]2026-04-23 18:19:58,940 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-10
+2026-04-23 18:19:58,940 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-10 query=cat:cs.AI
+
+Collecting arxiv papers: 259990paper [1:06:00, 26.86paper/s, 2024-10]
+Collecting arxiv papers: 259991paper [1:08:30,  7.01paper/s, 2024-10]
+Collecting arxiv papers: 260489paper [1:08:30, 10.43paper/s, 2024-10]
+Collecting arxiv papers: 261352paper [1:08:30, 18.89paper/s, 2024-10]
+Collecting arxiv papers: 261878paper [1:08:31, 26.19paper/s, 2024-10]
+Collecting arxiv papers: 262324paper [1:08:31, 34.99paper/s, 2024-10]2026-04-23 18:22:49,660 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3815 added=2623 duplicates=1192
+
+Collecting arxiv papers: 262613paper [1:08:31, 34.99paper/s, 2024-11]2026-04-23 18:22:49,666 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-11
+2026-04-23 18:22:49,666 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-11 query=cat:cs.AI
+
+Collecting arxiv papers: 262613paper [1:08:50, 34.99paper/s, 2024-11]
+Collecting arxiv papers: 262614paper [1:10:26, 10.11paper/s, 2024-11]
+Collecting arxiv papers: 262640paper [1:10:26, 10.34paper/s, 2024-11]
+Collecting arxiv papers: 262931paper [1:10:26, 14.27paper/s, 2024-11]
+Collecting arxiv papers: 263289paper [1:10:26, 21.14paper/s, 2024-11]
+Collecting arxiv papers: 263584paper [1:10:26, 29.16paper/s, 2024-11]
+Collecting arxiv papers: 263854paper [1:10:27, 39.56paper/s, 2024-11]
+Collecting arxiv papers: 264200paper [1:10:27, 58.52paper/s, 2024-11]
+Collecting arxiv papers: 264481paper [1:10:27, 77.11paper/s, 2024-11]2026-04-23 18:24:46,376 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2651 added=2044 duplicates=607
+
+Collecting arxiv papers: 264657paper [1:10:27, 77.11paper/s, 2024-12]2026-04-23 18:24:46,380 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-12
+2026-04-23 18:24:46,380 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2024-2024 month=2024-12 query=cat:cs.AI
+
+Collecting arxiv papers: 264657paper [1:10:40, 77.11paper/s, 2024-12]
+Collecting arxiv papers: 264658paper [1:12:44,  6.10paper/s, 2024-12]
+Collecting arxiv papers: 264793paper [1:12:44,  7.41paper/s, 2024-12]
+Collecting arxiv papers: 264981paper [1:12:44,  9.99paper/s, 2024-12]
+Collecting arxiv papers: 265358paper [1:12:45, 17.44paper/s, 2024-12]
+Collecting arxiv papers: 265860paper [1:12:45, 31.57paper/s, 2024-12]
+Collecting arxiv papers: 266473paper [1:12:45, 56.06paper/s, 2024-12]
+Collecting arxiv papers: 266896paper [1:12:45, 79.87paper/s, 2024-12]2026-04-23 18:27:03,784 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3075 added=2330 duplicates=745
+
+Collecting arxiv papers: 266987paper [1:12:45, 79.87paper/s, 2025-01]2026-04-23 18:27:03,790 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-01
+2026-04-23 18:27:03,790 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-01 query=cat:cs.AI
+
+Collecting arxiv papers: 266987paper [1:13:00, 79.87paper/s, 2025-01]2026-04-23 18:29:44,970 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
+2026-04-23 18:30:07,025 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/11). sleeping 10.00s
+2026-04-23 18:30:27,765 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/11). sleeping 14.00s
+2026-04-23 18:30:52,479 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 4/11). sleeping 28.00s
+2026-04-23 18:31:31,437 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 5/11). sleeping 56.00s
+2026-04-23 18:32:27,739 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 6/11). sleeping 112.00s
+2026-04-23 18:34:20,134 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 7/11). sleeping 120.00s
+2026-04-23 18:36:20,468 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 8/11). sleeping 120.00s
+
+Collecting arxiv papers: 266988paper [1:24:27,  1.50paper/s, 2025-01]
+Collecting arxiv papers: 267578paper [1:24:27,  2.68paper/s, 2025-01]2026-04-23 18:38:46,391 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=2485 added=1860 duplicates=625
+
+Collecting arxiv papers: 268847paper [1:24:27,  2.68paper/s, 2025-02]2026-04-23 18:38:46,395 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-02
+2026-04-23 18:38:46,396 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-02 query=cat:cs.AI
+
+Collecting arxiv papers: 268847paper [1:24:40,  2.68paper/s, 2025-02]
+Collecting arxiv papers: 268848paper [1:27:19,  4.23paper/s, 2025-02]
+Collecting arxiv papers: 269475paper [1:27:19,  5.95paper/s, 2025-02]
+Collecting arxiv papers: 270158paper [1:27:19,  8.62paper/s, 2025-02]
+Collecting arxiv papers: 270954paper [1:27:19, 13.05paper/s, 2025-02]2026-04-23 18:41:38,134 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3760 added=2583 duplicates=1177
+
+Collecting arxiv papers: 271430paper [1:27:19, 13.05paper/s, 2025-03]2026-04-23 18:41:38,141 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-03
+2026-04-23 18:41:38,141 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-03 query=cat:cs.AI
+
+Collecting arxiv papers: 271430paper [1:27:30, 13.05paper/s, 2025-03]
+Collecting arxiv papers: 271431paper [1:29:44,  7.81paper/s, 2025-03]
+Collecting arxiv papers: 272073paper [1:29:45, 11.19paper/s, 2025-03]
+Collecting arxiv papers: 272707paper [1:29:45, 15.95paper/s, 2025-03]
+Collecting arxiv papers: 273336paper [1:29:45, 22.69paper/s, 2025-03]
+Collecting arxiv papers: 273945paper [1:29:45, 31.98paper/s, 2025-03]2026-04-23 18:44:03,818 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3406 added=2560 duplicates=846
+
+Collecting arxiv papers: 273990paper [1:29:45, 31.98paper/s, 2025-04]2026-04-23 18:44:03,823 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-04
+2026-04-23 18:44:03,823 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-04 query=cat:cs.AI
+
+Collecting arxiv papers: 273990paper [1:30:00, 31.98paper/s, 2025-04]
+Collecting arxiv papers: 273991paper [1:31:55,  8.57paper/s, 2025-04]
+Collecting arxiv papers: 274043paper [1:31:55,  8.98paper/s, 2025-04]
+Collecting arxiv papers: 274481paper [1:31:55, 14.03paper/s, 2025-04]
+Collecting arxiv papers: 275460paper [1:31:56, 30.14paper/s, 2025-04]
+Collecting arxiv papers: 276259paper [1:31:56, 48.84paper/s, 2025-04]2026-04-23 18:46:14,558 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3029 added=2301 duplicates=728
+
+Collecting arxiv papers: 276291paper [1:31:56, 48.84paper/s, 2025-05]2026-04-23 18:46:14,563 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-05
+2026-04-23 18:46:14,563 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-05 query=cat:cs.AI
+
+Collecting arxiv papers: 276291paper [1:32:10, 48.84paper/s, 2025-05]
+Collecting arxiv papers: 276292paper [1:35:22,  6.30paper/s, 2025-05]
+Collecting arxiv papers: 278971paper [1:35:22, 22.50paper/s, 2025-05]2026-04-23 18:49:40,964 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=4805 added=3494 duplicates=1311
+
+Collecting arxiv papers: 279785paper [1:35:22, 22.50paper/s, 2025-06]2026-04-23 18:49:40,969 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-06
+2026-04-23 18:49:40,969 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-06 query=cat:cs.AI
+
+Collecting arxiv papers: 279785paper [1:35:40, 22.50paper/s, 2025-06]
+Collecting arxiv papers: 279786paper [1:38:14, 11.89paper/s, 2025-06]
+Collecting arxiv papers: 280209paper [1:38:14, 13.99paper/s, 2025-06]
+Collecting arxiv papers: 281180paper [1:38:14, 20.83paper/s, 2025-06]
+Collecting arxiv papers: 281956paper [1:38:14, 28.64paper/s, 2025-06]
+Collecting arxiv papers: 282665paper [1:38:14, 38.80paper/s, 2025-06]2026-04-23 18:52:33,380 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3949 added=2910 duplicates=1039
+
+Collecting arxiv papers: 282695paper [1:38:14, 38.80paper/s, 2025-07]2026-04-23 18:52:33,386 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-07
+2026-04-23 18:52:33,386 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-07 query=cat:cs.AI
+
+Collecting arxiv papers: 282695paper [1:38:30, 38.80paper/s, 2025-07]
+Collecting arxiv papers: 282696paper [1:40:48,  9.46paper/s, 2025-07]
+Collecting arxiv papers: 283187paper [1:40:49, 12.91paper/s, 2025-07]
+Collecting arxiv papers: 283809paper [1:40:49, 19.13paper/s, 2025-07]
+Collecting arxiv papers: 284331paper [1:40:49, 26.56paper/s, 2025-07]
+Collecting arxiv papers: 284787paper [1:40:49, 35.76paper/s, 2025-07]2026-04-23 18:55:08,095 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3474 added=2740 duplicates=734
+
+Collecting arxiv papers: 285435paper [1:40:49, 35.76paper/s, 2025-08]2026-04-23 18:55:08,100 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-08
+2026-04-23 18:55:08,100 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-08 query=cat:cs.AI
+
+Collecting arxiv papers: 285435paper [1:41:00, 35.76paper/s, 2025-08]2026-04-23 18:57:28,033 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
+2026-04-23 18:57:42,309 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/11). sleeping 10.00s
+2026-04-23 18:58:03,220 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/11). sleeping 14.00s
+2026-04-23 18:58:17,549 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 4/11). sleeping 28.00s
+2026-04-23 18:59:11,518 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 5/11). sleeping 56.00s
+2026-04-23 19:00:24,192 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 6/11). sleeping 112.00s
+2026-04-23 19:02:16,630 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 7/11). sleeping 120.00s
+2026-04-23 19:04:32,360 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 8/11). sleeping 120.00s
+
+Collecting arxiv papers: 285436paper [1:53:43,  2.32paper/s, 2025-08]
+Collecting arxiv papers: 286084paper [1:53:43,  3.47paper/s, 2025-08]
+Collecting arxiv papers: 286673paper [1:53:43,  4.95paper/s, 2025-08]
+Collecting arxiv papers: 287158paper [1:53:43,  6.70paper/s, 2025-08]
+Collecting arxiv papers: 288152paper [1:53:43, 11.81paper/s, 2025-08]2026-04-23 19:08:02,215 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3825 added=2965 duplicates=860
+
+Collecting arxiv papers: 288400paper [1:53:43, 11.81paper/s, 2025-09]2026-04-23 19:08:02,221 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-09
+2026-04-23 19:08:02,221 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-09 query=cat:cs.AI
+
+Collecting arxiv papers: 288400paper [1:54:00, 11.81paper/s, 2025-09]
+Collecting arxiv papers: 288401paper [1:56:49,  5.76paper/s, 2025-09]
+Collecting arxiv papers: 288943paper [1:56:50,  8.16paper/s, 2025-09]
+Collecting arxiv papers: 289542paper [1:56:50, 11.94paper/s, 2025-09]
+Collecting arxiv papers: 290300paper [1:56:50, 18.77paper/s, 2025-09]
+Collecting arxiv papers: 290876paper [1:56:50, 26.15paper/s, 2025-09]
+Collecting arxiv papers: 291403paper [1:56:50, 35.74paper/s, 2025-09]2026-04-23 19:11:09,102 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=4260 added=3217 duplicates=1043
+
+Collecting arxiv papers: 291617paper [1:56:50, 35.74paper/s, 2025-10]2026-04-23 19:11:09,109 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-10
+2026-04-23 19:11:09,109 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-10 query=cat:cs.AI
+
+Collecting arxiv papers: 291617paper [1:57:10, 35.74paper/s, 2025-10]2026-04-23 19:14:42,948 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
+2026-04-23 19:15:16,732 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 2/11). sleeping 7.00s
+2026-04-23 19:15:40,406 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/11). sleeping 14.00s
+2026-04-23 19:15:54,807 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 4/11). sleeping 28.00s
+2026-04-23 19:16:23,267 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 5/11). sleeping 56.00s
+2026-04-23 19:17:49,417 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 6/11). sleeping 112.00s
+
+Collecting arxiv papers: 291618paper [2:05:56,  2.70paper/s, 2025-10]
+Collecting arxiv papers: 292356paper [2:05:56,  4.51paper/s, 2025-10]
+Collecting arxiv papers: 292902paper [2:05:57,  6.41paper/s, 2025-10]
+Collecting arxiv papers: 293438paper [2:05:57,  9.08paper/s, 2025-10]2026-04-23 19:20:15,676 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=4844 added=3582 duplicates=1262
+
+Collecting arxiv papers: 295199paper [2:05:57,  9.08paper/s, 2025-11]2026-04-23 19:20:15,682 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-11
+2026-04-23 19:20:15,682 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-11 query=cat:cs.AI
+
+Collecting arxiv papers: 295199paper [2:06:10,  9.08paper/s, 2025-11]
+Collecting arxiv papers: 295200paper [2:08:43,  9.89paper/s, 2025-11]
+Collecting arxiv papers: 295554paper [2:08:43, 11.53paper/s, 2025-11]
+Collecting arxiv papers: 296138paper [2:08:44, 15.39paper/s, 2025-11]
+Collecting arxiv papers: 296628paper [2:08:44, 20.01paper/s, 2025-11]
+Collecting arxiv papers: 297056paper [2:08:44, 25.72paper/s, 2025-11]
+Collecting arxiv papers: 297548paper [2:08:44, 35.13paper/s, 2025-11]
+Collecting arxiv papers: 297946paper [2:08:44, 45.63paper/s, 2025-11]
+Collecting arxiv papers: 298259paper [2:08:45, 57.53paper/s, 2025-11]2026-04-23 19:23:03,498 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3919 added=3208 duplicates=711
+
+Collecting arxiv papers: 298407paper [2:08:45, 57.53paper/s, 2025-12]2026-04-23 19:23:03,504 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-12
+2026-04-23 19:23:03,504 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2025-2025 month=2025-12 query=cat:cs.AI
+
+Collecting arxiv papers: 298407paper [2:09:00, 57.53paper/s, 2025-12]
+Collecting arxiv papers: 298408paper [2:11:07,  7.41paper/s, 2025-12]
+Collecting arxiv papers: 298630paper [2:11:07,  9.38paper/s, 2025-12]
+Collecting arxiv papers: 298907paper [2:11:07, 12.87paper/s, 2025-12]
+Collecting arxiv papers: 299162paper [2:11:07, 17.43paper/s, 2025-12]
+Collecting arxiv papers: 299577paper [2:11:08, 28.06paper/s, 2025-12]
+Collecting arxiv papers: 299851paper [2:11:08, 37.94paper/s, 2025-12]
+Collecting arxiv papers: 300763paper [2:11:08, 85.02paper/s, 2025-12]2026-04-23 19:25:26,775 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3373 added=2731 duplicates=642
+
+Collecting arxiv papers: 301138paper [2:11:08, 85.02paper/s, 2026-01]2026-04-23 19:25:26,781 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-01
+2026-04-23 19:25:26,781 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-01 query=cat:cs.AI
+
+Collecting arxiv papers: 301138paper [2:11:20, 85.02paper/s, 2026-01]
+Collecting arxiv papers: 301139paper [2:14:03,  8.07paper/s, 2026-01]
+Collecting arxiv papers: 301167paper [2:14:03,  8.28paper/s, 2026-01]
+Collecting arxiv papers: 301532paper [2:14:03, 12.21paper/s, 2026-01]
+Collecting arxiv papers: 304313paper [2:14:03, 55.02paper/s, 2026-01]2026-04-23 19:28:22,195 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=4195 added=3181 duplicates=1014
+
+Collecting arxiv papers: 304319paper [2:14:03, 55.02paper/s, 2026-02]2026-04-23 19:28:22,201 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-02
+2026-04-23 19:28:22,201 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-02 query=cat:cs.AI
+
+Collecting arxiv papers: 304319paper [2:14:20, 55.02paper/s, 2026-02]
+Collecting arxiv papers: 304320paper [2:17:16, 10.54paper/s, 2026-02]
+Collecting arxiv papers: 304730paper [2:17:16, 13.00paper/s, 2026-02]
+Collecting arxiv papers: 305589paper [2:17:16, 20.32paper/s, 2026-02]
+Collecting arxiv papers: 306284paper [2:17:16, 28.73paper/s, 2026-02]
+Collecting arxiv papers: 306860paper [2:17:16, 38.68paper/s, 2026-02]
+Collecting arxiv papers: 307413paper [2:17:17, 51.85paper/s, 2026-02]2026-04-23 19:31:35,826 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=4431 added=3520 duplicates=911
+
+Collecting arxiv papers: 307839paper [2:17:17, 51.85paper/s, 2026-03]2026-04-23 19:31:35,832 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-03
+2026-04-23 19:31:35,833 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-03 query=cat:cs.AI
+
+Collecting arxiv papers: 307839paper [2:17:30, 51.85paper/s, 2026-03]
+Collecting arxiv papers: 307840paper [2:20:50,  7.89paper/s, 2026-03]
+Collecting arxiv papers: 308100paper [2:20:50,  9.42paper/s, 2026-03]
+Collecting arxiv papers: 308465paper [2:20:50, 12.47paper/s, 2026-03]
+Collecting arxiv papers: 308820paper [2:20:50, 16.73paper/s, 2026-03]
+Collecting arxiv papers: 309129paper [2:20:50, 21.94paper/s, 2026-03]
+Collecting arxiv papers: 309396paper [2:20:51, 28.39paper/s, 2026-03]
+Collecting arxiv papers: 309653paper [2:20:51, 36.99paper/s, 2026-03]
+Collecting arxiv papers: 310055paper [2:20:51, 56.52paper/s, 2026-03]2026-04-23 19:35:09,948 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=4964 added=3999 duplicates=965
+
+Collecting arxiv papers: 311838paper [2:20:51, 56.52paper/s, 2026-04]2026-04-23 19:35:09,955 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-04
+2026-04-23 19:35:09,955 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-04 query=cat:cs.AI
+
+Collecting arxiv papers: 311838paper [2:21:10, 56.52paper/s, 2026-04]
+Collecting arxiv papers: 311839paper [2:23:19, 15.94paper/s, 2026-04]
+Collecting arxiv papers: 312138paper [2:23:19, 18.56paper/s, 2026-04]
+Collecting arxiv papers: 312412paper [2:23:19, 21.95paper/s, 2026-04]
+Collecting arxiv papers: 312777paper [2:23:20, 28.43paper/s, 2026-04]
+Collecting arxiv papers: 313049paper [2:23:20, 35.26paper/s, 2026-04]
+Collecting arxiv papers: 313471paper [2:23:20, 50.41paper/s, 2026-04]
+Collecting arxiv papers: 314072paper [2:23:20, 81.06paper/s, 2026-04]
+Collecting arxiv papers: 314468paper [2:23:20, 109.24paper/s, 2026-04]2026-04-23 19:37:38,908 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=3416 added=2644 duplicates=772
+
+Collecting arxiv papers: 314482paper [2:23:20, 109.24paper/s, 2026-05]2026-04-23 19:37:38,914 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-05
+2026-04-23 19:37:38,914 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-05 query=cat:cs.AI
+2026-04-23 19:37:41,895 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+
+Collecting arxiv papers: 314482paper [2:23:23, 109.24paper/s, 2026-06]2026-04-23 19:37:41,895 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-06
+2026-04-23 19:37:41,895 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-06 query=cat:cs.AI
+2026-04-23 19:37:45,883 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+
+Collecting arxiv papers: 314482paper [2:23:27, 109.24paper/s, 2026-07]2026-04-23 19:37:45,883 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-07
+2026-04-23 19:37:45,884 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-07 query=cat:cs.AI
+2026-04-23 19:37:49,747 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+
+Collecting arxiv papers: 314482paper [2:23:31, 109.24paper/s, 2026-08]2026-04-23 19:37:49,748 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-08
+2026-04-23 19:37:49,748 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-08 query=cat:cs.AI
+2026-04-23 19:37:53,537 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+
+Collecting arxiv papers: 314482paper [2:23:35, 109.24paper/s, 2026-09]2026-04-23 19:37:53,537 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-09
+2026-04-23 19:37:53,537 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-09 query=cat:cs.AI
+2026-04-23 19:37:57,350 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+
+Collecting arxiv papers: 314482paper [2:23:38, 109.24paper/s, 2026-10]2026-04-23 19:37:57,350 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-10
+2026-04-23 19:37:57,350 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-10 query=cat:cs.AI
+
+Collecting arxiv papers: 314482paper [2:23:40, 109.24paper/s, 2026-10]2026-04-23 19:38:01,181 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+
+Collecting arxiv papers: 314482paper [2:23:42, 109.24paper/s, 2026-11]2026-04-23 19:38:01,181 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-11
+2026-04-23 19:38:01,182 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-11 query=cat:cs.AI
+2026-04-23 19:38:04,969 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+
+Collecting arxiv papers: 314482paper [2:23:46, 109.24paper/s, 2026-12]2026-04-23 19:38:04,969 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2026-12
+2026-04-23 19:38:04,969 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1: years=2026-2026 month=2026-12 query=cat:cs.AI
+2026-04-23 19:38:08,882 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
+
+Collecting arxiv papers: 314482paper [2:23:50, 10.79paper/s, 2026-12] 
+2026-04-23 19:38:08,946 INFO not_an_llm.pipelines.collect: arxiv collection complete: new_papers=93163 total_unique_papers=314482 output=data/raw/arxiv_papers.jsonl
