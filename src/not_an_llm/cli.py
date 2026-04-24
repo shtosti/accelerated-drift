@@ -56,6 +56,7 @@ def main() -> None:
         artifacts = run_analysis(config)
         print(f"Saved feature dataset to {artifacts.feature_dataset_jsonl}")
         print(f"Saved yearly trends to {artifacts.trends_csv}")
+        print(f"Saved monthly trends to {artifacts.monthly_trends_csv}")
         print(f"Saved trend plots to {config.analysis.trends_plot_dir} ({len(artifacts.trends_plot_paths)} files)")
         return
 
