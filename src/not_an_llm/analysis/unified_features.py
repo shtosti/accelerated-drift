@@ -35,17 +35,6 @@ class UnifiedLinguisticFeatures:
         "em_dash": r"--",
         "semicolon": r";",
     })
-    marker_phrases: list[str] = field(default_factory=lambda: [
-        "in conclusion",
-        "this paper",
-        "this study",
-        "we propose",
-        "we present",
-        "we demonstrate",
-        "results show",
-        "our results",
-        "in this work",
-    ])
     marker_words: list[str] = field(default_factory=lambda: [
         "unparalleled",
         "invaluable",
@@ -76,13 +65,11 @@ class UnifiedLinguisticFeatures:
 
     def __post_init__(self) -> None:
         # Normalize term lists
-        self.marker_phrases = [p.strip().lower() for p in self.marker_phrases if p.strip()]
         self.marker_words = [w.strip().lower() for w in self.marker_words if w.strip()]
         self.hedge_terms = [h.strip().lower() for h in self.hedge_terms if h.strip()]
         self.certainty_terms = [c.strip().lower() for c in self.certainty_terms if c.strip()]
 
         # Build sets for O(1) lookup
-        self._marker_phrase_set = set(self.marker_phrases)
         self._marker_word_set = set(self.marker_words)
         self._hedge_set = set(self.hedge_terms)
         self._certainty_set = set(self.certainty_terms)
@@ -93,12 +80,6 @@ class UnifiedLinguisticFeatures:
             normalized_name = _slugify(str(name))
             if normalized_name and pattern.strip():
                 self._syntactic_patterns[normalized_name] = re.compile(pattern.strip())
-
-        # Compile phrase patterns (multi-word patterns on text)
-        self._phrase_patterns = {}
-        for phrase in self.marker_phrases:
-            escaped = re.escape(phrase).replace("\\ ", r"\s+")
-            self._phrase_patterns[phrase] = re.compile(r"\b" + escaped + r"\b")
 
     def extract(self, text: str, doc: Doc) -> dict[str, Any]:
         """Extract all linguistic features from text and spaCy Doc.
@@ -127,13 +108,6 @@ class UnifiedLinguisticFeatures:
             count = len(pattern.findall(text))
             result[f"{pattern_name}_count"] = count
             result[f"{pattern_name}_per_1k_words"] = count / len(alpha_tokens) * 1000.0
-
-        # ============= MARKER PHRASES (text-based for speed) =============
-        for phrase in self.marker_phrases:
-            key = _slugify(phrase)
-            pattern = self._phrase_patterns[phrase]
-            count = len(pattern.findall(text))
-            result[f"marker_phrase_{key}"] = count
 
         # ============= MARKER WORDS (POS-aware) =============
         for marker in self.marker_words:
@@ -201,10 +175,6 @@ class UnifiedLinguisticFeatures:
         for pattern_name in self._syntactic_patterns.keys():
             base[f"{pattern_name}_count"] = 0
             base[f"{pattern_name}_per_1k_words"] = 0.0
-
-        for phrase in self.marker_phrases:
-            key = _slugify(phrase)
-            base[f"marker_phrase_{key}"] = 0
 
         for marker in self.marker_words:
             key = _slugify(marker)
