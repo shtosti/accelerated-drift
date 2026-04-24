@@ -9,152 +9,210 @@ import pandas as pd
 
 
 class TrendAnalyzer:
-    """Aggregate and visualize per-year feature trends."""
+    """Aggregate and visualize per-year feature trends with IQR uncertainty bands."""
 
     def __init__(self, feature_columns: list[str]) -> None:
         self.feature_columns = feature_columns
 
+    # =========================================================
+    # YEARLY AGGREGATION (NOW INCLUDES QUANTILES)
+    # =========================================================
     def aggregate_yearly(self, frame: pd.DataFrame) -> pd.DataFrame:
         df = frame.copy()
+
         if "year" not in df.columns:
-            raise ValueError("Expected a 'year' column in the analyzed dataset.")
+            raise ValueError("Expected a 'year' column in the dataset.")
 
         df["year"] = pd.to_numeric(df["year"], errors="coerce").astype("Int64")
         valid = df.dropna(subset=["year"]).copy()
         valid["year"] = valid["year"].astype(int)
 
-        aggregations: dict[str, str] = {"paper_count": ("text_clean", "size")}
+        aggregations = {"paper_count": ("text_clean", "size")}
+
         for column in self.feature_columns:
             if column not in valid.columns:
                 continue
+
             aggregations[f"{column}_yearly_mean"] = (column, "mean")
             aggregations[f"{column}_yearly_median"] = (column, "median")
 
-        yearly = valid.groupby("year", as_index=False).agg(**aggregations)
-        yearly = yearly.sort_values("year").reset_index(drop=True)
-        return yearly
+            # 🔥 IQR components
+            aggregations[f"{column}_yearly_q25"] = (column, lambda x: x.quantile(0.25))
+            aggregations[f"{column}_yearly_q75"] = (column, lambda x: x.quantile(0.75))
 
+        yearly = valid.groupby("year", as_index=False).agg(**aggregations)
+        return yearly.sort_values("year").reset_index(drop=True)
+
+    # =========================================================
+    # MONTHLY (UNCHANGED)
+    # =========================================================
     def aggregate_monthly(self, frame: pd.DataFrame) -> pd.DataFrame:
         df = frame.copy()
+
         if "year" not in df.columns:
-            raise ValueError("Expected a 'year' column in the analyzed dataset.")
+            raise ValueError("Expected a 'year' column in the dataset.")
 
         month_ts = self._resolve_month_timestamp(df)
+
         valid = df.copy()
         valid["month_ts"] = month_ts
         valid = valid.dropna(subset=["month_ts"]).copy()
 
-        aggregations: dict[str, str] = {"paper_count": ("text_clean", "size")}
+        aggregations = {"paper_count": ("text_clean", "size")}
+
         for column in self.feature_columns:
             if column not in valid.columns:
                 continue
             aggregations[f"{column}_monthly_mean"] = (column, "mean")
-            aggregations[f"{column}_monthly_median"] = (column, "median")
 
         monthly = valid.groupby("month_ts", as_index=False).agg(**aggregations)
-        monthly = monthly.sort_values("month_ts").reset_index(drop=True)
-        return monthly
+        return monthly.sort_values("month_ts").reset_index(drop=True)
 
-    def save_plots(self, yearly: pd.DataFrame, monthly: pd.DataFrame, output_dir: Path) -> list[Path]:
+    # =========================================================
+    # PLOTTING (IQR BAND VERSION)
+    # =========================================================
+    def save_plots(
+        self,
+        yearly: pd.DataFrame,
+        monthly: pd.DataFrame,
+        output_dir: Path
+    ) -> list[Path]:
+
         output_dir.mkdir(parents=True, exist_ok=True)
         paths: list[Path] = []
 
-        plot_columns = [col for col in yearly.columns if col.endswith("_yearly_mean")]
+        plot_columns = [c for c in yearly.columns if c.endswith("_yearly_mean")]
+
+        # =====================================================
+        # SINGLE PLOTS
+        # =====================================================
         for yearly_column in plot_columns:
-            feature_name = yearly_column.removesuffix("_yearly_mean")
-            monthly_column = f"{feature_name}_monthly_mean"
+            feature = yearly_column.removesuffix("_yearly_mean")
 
-            fig, ax = plt.subplots(figsize=(10, 4))
+            q25_col = f"{feature}_yearly_q25"
+            q75_col = f"{feature}_yearly_q75"
+            monthly_col = f"{feature}_monthly_mean"
 
-            if monthly_column in monthly.columns:
+            fig, ax = plt.subplots(figsize=(6, 4))
+
+            # -----------------------------
+            # MONTHLY
+            # -----------------------------
+            if monthly_col in monthly.columns:
                 ax.plot(
                     monthly["month_ts"],
-                    monthly[monthly_column],
-                    marker="o",
-                    markersize=2,
-                    linewidth=1.3,
-                    alpha=0.8,
+                    monthly[monthly_col],
+                    linewidth=1.0,
+                    alpha=0.5,
                     label="Monthly mean",
                 )
 
-            ax.plot(
-                pd.to_datetime(yearly["year"].astype(str) + "-01-01", errors="coerce"),
-                yearly[yearly_column],
-                marker="o",
-                markersize=5,
-                linewidth=1.0,
-                alpha=0.9,
-                label="Yearly mean",
-            )
+            # -----------------------------
+            # YEARLY
+            # -----------------------------
+            x = pd.to_datetime(yearly["year"].astype(str) + "-01-01", errors="coerce")
+            y = yearly[yearly_column]
+
+            # IQR band
+            if q25_col in yearly.columns and q75_col in yearly.columns:
+                q25 = yearly[q25_col]
+                q75 = yearly[q75_col]
+
+                ax.fill_between(
+                    x,
+                    q25,
+                    q75,
+                    alpha=0.25,
+                    label="IQR (25–75%)",
+                )
+
+            # median (more robust than mean for NLP)
+            median_col = f"{feature}_yearly_median"
+            if median_col in yearly.columns:
+                ax.plot(
+                    x,
+                    yearly[median_col],
+                    marker="o",
+                    linewidth=1.2,
+                    label="Median",
+                )
+            else:
+                ax.plot(x, y, marker="o", linewidth=1.2, label="Mean")
 
             ax.set_title(yearly_column)
             ax.set_xlabel("Year")
             ax.set_ylabel("Value")
             ax.xaxis.set_major_locator(mdates.YearLocator())
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
-            ax.minorticks_off()
-            ax.legend(loc="best")
             ax.grid(True, alpha=0.3)
+            ax.legend()
+
             fig.tight_layout()
 
-            out_path = output_dir / f"{yearly_column}.png"
+            out_path = output_dir / f"{yearly_column}_iqr.png"
             fig.savefig(out_path, dpi=150)
             plt.close(fig)
             paths.append(out_path)
 
+        # =====================================================
+        # MULTI-PANEL
+        # =====================================================
         if plot_columns:
-            ncols = 3
+            ncols = 4
             nrows = int(np.ceil(len(plot_columns) / ncols))
-            fig, axes = plt.subplots(nrows, ncols, figsize=(5 * ncols, 3.8 * nrows), squeeze=False)
-            flat_axes = axes.flatten()
 
-            for index, yearly_column in enumerate(plot_columns):
-                feature_name = yearly_column.removesuffix("_yearly_mean")
-                monthly_column = f"{feature_name}_monthly_mean"
-                axis = flat_axes[index]
-                if monthly_column in monthly.columns:
-                    axis.plot(
-                        monthly["month_ts"],
-                        monthly[monthly_column],
-                        marker="o",
-                        markersize=1.5,
-                        linewidth=1.0,
-                        alpha=0.8,
-                    )
-                axis.plot(
-                    pd.to_datetime(yearly["year"].astype(str) + "-01-01", errors="coerce"),
-                    yearly[yearly_column],
-                    marker="o",
-                    markersize=3.5,
-                    linewidth=0.9,
-                    alpha=0.9,
-                )
-                axis.set_title(yearly_column)
-                axis.set_xlabel("Year")
-                axis.xaxis.set_major_locator(mdates.YearLocator())
-                axis.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
-                axis.minorticks_off()
-                axis.grid(True, alpha=0.3)
+            fig, axes = plt.subplots(
+                nrows, ncols,
+                figsize=(5 * ncols, 3.8 * nrows),
+                squeeze=False
+            )
 
-            for index in range(len(plot_columns), len(flat_axes)):
-                flat_axes[index].set_visible(False)
+            axes = axes.flatten()
+
+            for i, yearly_column in enumerate(plot_columns):
+                ax = axes[i]
+
+                feature = yearly_column.removesuffix("_yearly_mean")
+
+                q25_col = f"{feature}_yearly_q25"
+                q75_col = f"{feature}_yearly_q75"
+
+                x = pd.to_datetime(yearly["year"].astype(str) + "-01-01", errors="coerce")
+                y = yearly[yearly_column]
+
+                if q25_col in yearly.columns and q75_col in yearly.columns:
+                    ax.fill_between(x, yearly[q25_col], yearly[q75_col], alpha=0.2)
+
+                ax.plot(x, y, marker="o", linewidth=1.0)
+
+                ax.set_title(yearly_column)
+                ax.xaxis.set_major_locator(mdates.YearLocator())
+                ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+                ax.grid(True, alpha=0.3)
+
+            for j in range(len(plot_columns), len(axes)):
+                axes[j].set_visible(False)
 
             fig.tight_layout()
-            combined_path = output_dir / "all_features_trends.png"
-            fig.savefig(combined_path, dpi=150)
+
+            out_path = output_dir / "all_features_iqr_trends.png"
+            fig.savefig(out_path, dpi=150)
             plt.close(fig)
-            paths.append(combined_path)
+            paths.append(out_path)
 
         return paths
 
+    # =========================================================
+    # TIME RESOLUTION
+    # =========================================================
     def _resolve_month_timestamp(self, frame: pd.DataFrame) -> pd.Series:
         if "publicationDate" in frame.columns:
-            publication_date = pd.to_datetime(frame["publicationDate"], errors="coerce")
-            publication_date = publication_date.dt.to_period("M").dt.to_timestamp()
+            pub = pd.to_datetime(frame["publicationDate"], errors="coerce")
+            pub = pub.dt.to_period("M").dt.to_timestamp()
         else:
-            publication_date = pd.Series(pd.NaT, index=frame.index, dtype="datetime64[ns]")
+            pub = pd.Series(pd.NaT, index=frame.index)
 
-        fallback_year = pd.to_numeric(frame.get("year"), errors="coerce")
-        fallback_year = fallback_year.astype("Int64")
-        fallback_date = pd.to_datetime(fallback_year.astype(str) + "-01-01", errors="coerce")
-        return publication_date.fillna(fallback_date)
+        year = pd.to_numeric(frame.get("year"), errors="coerce").astype("Int64")
+        fallback = pd.to_datetime(year.astype(str) + "-01-01", errors="coerce")
+
+        return pub.fillna(fallback)
