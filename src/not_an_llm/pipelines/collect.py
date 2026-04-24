@@ -223,9 +223,29 @@ def _collect_all_papers_for_queries(
             if key in seen_keys:
                 duplicate_count += 1
                 continue
+
             seen_keys.add(key)
             added_count += 1
-            yield paper
+
+            # -----------------------------
+            # INSERT METADATA
+            # -----------------------------
+            enriched_paper = dict(paper)
+
+            enriched_paper["source_query"] = query
+
+            # arXiv category extraction
+            if config.collection.source == "arxiv":
+                if "cs.CL" in query:
+                    enriched_paper["arxiv_category"] = "cs.CL"
+                elif "cs.AI" in query:
+                    enriched_paper["arxiv_category"] = "cs.AI"
+                elif "cs.LG" in query:
+                    enriched_paper["arxiv_category"] = "cs.LG"
+                else:
+                    enriched_paper["arxiv_category"] = "other"
+
+            yield enriched_paper
 
         logger.info(
             "[%s] Query %s/%s done: fetched=%s added=%s duplicates=%s",
