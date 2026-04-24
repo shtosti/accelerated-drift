@@ -80,7 +80,7 @@ class FeatureExtractor:
         if not hasattr(self, "nlp"):
             raise ValueError("FeatureExtractor requires spaCy model")
 
-        docs = list(self.nlp.pipe(text.tolist(), batch_size=16, n_process=8))
+        docs = list(self.nlp.pipe(text.tolist(), batch_size=128, n_process=16))
 
         # ========================================================
         # regex features
