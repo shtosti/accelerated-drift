@@ -30,17 +30,21 @@ class CollectionConfig:
 class AnalysisConfig:
     enabled: bool
     features: list[str]
+    spacy_features: list[str]
     include_readability: bool
     readability_metrics: list[str]
     syntactic_features: dict[str, str]
-    llm_marker_phrases: list[str]
     llm_marker_words: list[str]
+    llm_marker_sentence_patterns: dict[str, str]
+    enable_list_of_three_marker: bool
+    list_of_three_pattern: str
     llm_marker_word_matching: str
     hedge_terms: list[str]
     certainty_terms: list[str]
     preprocessed_jsonl: Path
     feature_dataset_jsonl: Path
     trends_csv: Path
+    monthly_trends_csv: Path
     trends_plot_dir: Path
 
 
@@ -68,7 +72,13 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
     bioarxiv_collection_mode = _load_bioarxiv_collection_mode(collection)
     queries = _load_collection_queries(collection, source)
     output_jsonl = _load_output_jsonl(collection, source, arxiv_collection_mode)
-    default_preprocessed, default_feature_dataset, default_trends_csv, default_trends_plot_dir = (
+    (
+        default_preprocessed,
+        default_feature_dataset,
+        default_trends_csv,
+        default_monthly_trends_csv,
+        default_trends_plot_dir,
+    ) = (
         _default_analysis_paths(output_jsonl)
     )
 
@@ -96,29 +106,10 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         analysis=AnalysisConfig(
             enabled=bool(analysis["enabled"]),
             features=[str(item) for item in analysis["features"]],
+            spacy_features=_load_query_list(analysis.get("spacy_features", [])),
             include_readability=bool(analysis.get("include_readability", True)),
             readability_metrics=_load_readability_metrics(analysis),
             syntactic_features=_load_syntactic_features(analysis),
-            llm_marker_phrases=_load_query_list(
-                marker_config.get(
-                    "llm_marker_phrases",
-                    analysis.get(
-                    "llm_marker_phrases",
-                    [
-                        "overall",
-                        "in conclusion",
-                        "this paper",
-                        "this study",
-                        "we propose",
-                        "we present",
-                        "we demonstrate",
-                        "results show",
-                        "our results",
-                        "in this work",
-                    ],
-                    ),
-                )
-            ),
             llm_marker_words=_load_query_list(
                 marker_config.get(
                     "llm_marker_words",
@@ -128,6 +119,32 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
                     ),
                 )
             ),
+            llm_marker_sentence_patterns=_load_marker_pattern_map(
+                marker_config.get("llm_marker_sentence_patterns")
+                or analysis.get("llm_marker_sentence_patterns")
+                or {
+                    "not_only_also": r"\bnot\s+only\b[^.!?;:\n]{0,240}\b(?:but\s+)?also\b"
+                }
+            ),
+            enable_list_of_three_marker=bool(
+                marker_config.get(
+                    "enable_list_of_three_marker",
+                    analysis.get("enable_list_of_three_marker", True),
+                )
+            ),
+            list_of_three_pattern=str(
+                marker_config.get(
+                    "list_of_three_pattern",
+                    analysis.get(
+                        "list_of_three_pattern",
+                        (
+                            r"\b[a-z][a-z'-]*(?:\s+[a-z][a-z'-]*){0,3}\s*,\s*"
+                            r"[a-z][a-z'-]*(?:\s+[a-z][a-z'-]*){0,3}\s*,\s*"
+                            r"(?:and|or)\s+[a-z][a-z'-]*(?:\s+[a-z][a-z'-]*){0,3}\b"
+                        ),
+                    ),
+                )
+            ).strip(),
             llm_marker_word_matching=_load_marker_word_matching(analysis, marker_config),
             hedge_terms=_load_query_list(
                 lexicon_config.get(
@@ -144,6 +161,9 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             preprocessed_jsonl=_load_optional_path(analysis.get("preprocessed_jsonl"), default_preprocessed),
             feature_dataset_jsonl=_load_optional_path(analysis.get("feature_dataset_jsonl"), default_feature_dataset),
             trends_csv=_load_optional_path(analysis.get("trends_csv"), default_trends_csv),
+            monthly_trends_csv=_load_optional_path(
+                analysis.get("monthly_trends_csv"), default_monthly_trends_csv
+            ),
             trends_plot_dir=_load_optional_path(analysis.get("trends_plot_dir"), default_trends_plot_dir),
         ),
     )
@@ -203,6 +223,20 @@ def _load_query_list(raw_queries: Any) -> list[str]:
 
     queries = [str(item).strip() for item in raw_queries if str(item).strip()]
     return queries
+
+
+def _load_marker_pattern_map(raw_patterns: Any) -> dict[str, str]:
+    if not isinstance(raw_patterns, dict):
+        return {}
+
+    patterns: dict[str, str] = {}
+    for key, value in raw_patterns.items():
+        name = str(key).strip()
+        pattern = str(value).strip()
+        if not name or not pattern:
+            continue
+        patterns[name] = pattern
+    return patterns
 
 
 def _load_collection_source(collection: dict[str, Any]) -> str:
@@ -358,10 +392,11 @@ def _load_readability_metrics(analysis: dict[str, Any]) -> list[str]:
     return metrics
 
 
-def _default_analysis_paths(raw_output_path: Path) -> tuple[Path, Path, Path, Path]:
+def _default_analysis_paths(raw_output_path: Path) -> tuple[Path, Path, Path, Path, Path]:
     suffix = raw_output_path.suffix or ".jsonl"
     preprocessed = Path("data/processed") / raw_output_path.name
     feature_dataset = Path("data/processed") / f"{raw_output_path.stem}_features{suffix}"
     trends_csv = Path("data/analysis") / f"{raw_output_path.stem}_feature_trends_by_year.csv"
+    monthly_trends_csv = Path("data/analysis") / f"{raw_output_path.stem}_feature_trends_by_month.csv"
     trends_plot_dir = Path("data/analysis/plots") / raw_output_path.stem
-    return preprocessed, feature_dataset, trends_csv, trends_plot_dir
+    return preprocessed, feature_dataset, trends_csv, monthly_trends_csv, trends_plot_dir
