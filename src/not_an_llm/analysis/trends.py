@@ -9,13 +9,13 @@ import pandas as pd
 
 
 class TrendAnalyzer:
-    """Aggregate and visualize per-year feature trends with IQR uncertainty bands."""
+    """Aggregate and visualize per-year feature trends with mean, std, and prevalence."""
 
     def __init__(self, feature_columns: list[str]) -> None:
         self.feature_columns = feature_columns
 
     # =========================================================
-    # YEARLY AGGREGATION (NOW INCLUDES QUANTILES)
+    # YEARLY AGGREGATION (MEAN + STD + PREVALENCE)
     # =========================================================
     def aggregate_yearly(self, frame: pd.DataFrame) -> pd.DataFrame:
         df = frame.copy()
@@ -33,12 +33,17 @@ class TrendAnalyzer:
             if column not in valid.columns:
                 continue
 
-            aggregations[f"{column}_yearly_mean"] = (column, "mean")
-            aggregations[f"{column}_yearly_median"] = (column, "median")
+            # ensure numeric
+            valid[column] = pd.to_numeric(valid[column], errors="coerce")
 
-            # 🔥 IQR components
-            aggregations[f"{column}_yearly_q25"] = (column, lambda x: x.quantile(0.25))
-            aggregations[f"{column}_yearly_q75"] = (column, lambda x: x.quantile(0.75))
+            aggregations[f"{column}_yearly_mean"] = (column, "mean")
+            aggregations[f"{column}_yearly_std"] = (column, "std")
+
+            # prevalence: fraction of papers with feature > 0
+            aggregations[f"{column}_yearly_prevalence"] = (
+                column,
+                lambda x: (x > 0).mean()
+            )
 
         yearly = valid.groupby("year", as_index=False).agg(**aggregations)
         return yearly.sort_values("year").reset_index(drop=True)
@@ -69,7 +74,7 @@ class TrendAnalyzer:
         return monthly.sort_values("month_ts").reset_index(drop=True)
 
     # =========================================================
-    # PLOTTING (IQR BAND VERSION)
+    # PLOTTING (MEAN + STD + PREVALENCE)
     # =========================================================
     def save_plots(
         self,
@@ -89,8 +94,8 @@ class TrendAnalyzer:
         for yearly_column in plot_columns:
             feature = yearly_column.removesuffix("_yearly_mean")
 
-            q25_col = f"{feature}_yearly_q25"
-            q75_col = f"{feature}_yearly_q75"
+            std_col = f"{feature}_yearly_std"
+            prev_col = f"{feature}_yearly_prevalence"
             monthly_col = f"{feature}_monthly_mean"
 
             fig, ax = plt.subplots(figsize=(6, 4))
@@ -113,89 +118,82 @@ class TrendAnalyzer:
             x = pd.to_datetime(yearly["year"].astype(str) + "-01-01", errors="coerce")
             y = yearly[yearly_column]
 
-            # IQR band
-            if q25_col in yearly.columns and q75_col in yearly.columns:
-                q25 = yearly[q25_col]
-                q75 = yearly[q75_col]
+            # remove NaNs
+            mask = ~(y.isna())
+            x = x[mask]
+            y = y[mask]
+
+            # -----------------------------
+            # STD BAND
+            # -----------------------------
+            if std_col in yearly.columns:
+                std = yearly[std_col][mask]
+
+                lower = (y - std).clip(lower=0)
+                upper = y + std
 
                 ax.fill_between(
                     x,
-                    q25,
-                    q75,
+                    lower,
+                    upper,
                     alpha=0.25,
-                    label="IQR (25–75%)",
+                    label="±1 std dev",
                 )
 
-            # median (more robust than mean for NLP)
-            median_col = f"{feature}_yearly_median"
-            if median_col in yearly.columns:
-                ax.plot(
-                    x,
-                    yearly[median_col],
-                    marker="o",
-                    linewidth=1.2,
-                    label="Median",
-                )
-            else:
-                ax.plot(x, y, marker="o", linewidth=1.2, label="Mean")
-
-            ax.set_title(yearly_column)
-            ax.set_xlabel("Year")
-            ax.set_ylabel("Value")
-            ax.xaxis.set_major_locator(mdates.YearLocator())
-            ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
-            ax.grid(True, alpha=0.3)
-            ax.legend()
-
-            fig.tight_layout()
-
-            out_path = output_dir / f"{yearly_column}_iqr.png"
-            fig.savefig(out_path, dpi=150)
-            plt.close(fig)
-            paths.append(out_path)
-
-        # =====================================================
-        # MULTI-PANEL
-        # =====================================================
-        if plot_columns:
-            ncols = 4
-            nrows = int(np.ceil(len(plot_columns) / ncols))
-
-            fig, axes = plt.subplots(
-                nrows, ncols,
-                figsize=(5 * ncols, 3.8 * nrows),
-                squeeze=False
+            # -----------------------------
+            # MEAN LINE
+            # -----------------------------
+            ax.plot(
+                x,
+                y,
+                marker="o",
+                linewidth=1.5,
+                label="Yearly mean",
             )
 
-            axes = axes.flatten()
+            # -----------------------------
+            # PREVALENCE (SECOND AXIS)
+            # -----------------------------
+            if prev_col in yearly.columns:
+                ax2 = ax.twinx()
 
-            for i, yearly_column in enumerate(plot_columns):
-                ax = axes[i]
+                prev = yearly[prev_col][mask]
 
-                feature = yearly_column.removesuffix("_yearly_mean")
+                ax2.plot(
+                    x,
+                    prev,
+                    linestyle="--",
+                    linewidth=1.2,
+                    label="Prevalence",
+                )
 
-                q25_col = f"{feature}_yearly_q25"
-                q75_col = f"{feature}_yearly_q75"
+                ax2.set_ylabel("Prevalence (fraction)")
+                ax2.set_ylim(0, 1)
 
-                x = pd.to_datetime(yearly["year"].astype(str) + "-01-01", errors="coerce")
-                y = yearly[yearly_column]
+            # -----------------------------
+            # FORMATTING
+            # -----------------------------
+            ax.set_title(feature)
+            ax.set_xlabel("Year")
+            ax.set_ylabel("Value")
 
-                if q25_col in yearly.columns and q75_col in yearly.columns:
-                    ax.fill_between(x, yearly[q25_col], yearly[q75_col], alpha=0.2)
+            ax.xaxis.set_major_locator(mdates.YearLocator())
+            ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
 
-                ax.plot(x, y, marker="o", linewidth=1.0)
+            ax.grid(True, alpha=0.3)
 
-                ax.set_title(yearly_column)
-                ax.xaxis.set_major_locator(mdates.YearLocator())
-                ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
-                ax.grid(True, alpha=0.3)
+            # combined legend
+            lines, labels = ax.get_legend_handles_labels()
+            if prev_col in yearly.columns:
+                lines2, labels2 = ax2.get_legend_handles_labels()
+                lines += lines2
+                labels += labels2
 
-            for j in range(len(plot_columns), len(axes)):
-                axes[j].set_visible(False)
+            ax.legend(lines, labels)
 
             fig.tight_layout()
 
-            out_path = output_dir / "all_features_iqr_trends.png"
+            out_path = output_dir / f"{feature}_mean_std_prevalence.png"
             fig.savefig(out_path, dpi=150)
             plt.close(fig)
             paths.append(out_path)
