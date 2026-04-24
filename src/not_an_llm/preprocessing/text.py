@@ -39,7 +39,8 @@ class TextPreprocessor:
         text_raw = (df["title"].str.strip() + " " + df["abstract"].str.strip()).str.strip()
         df["text_raw"] = text_raw
         df["text_clean"] = text_raw.apply(self.normalize_text)
-        docs = list(self.nlp.pipe(df["text_clean"].tolist(), batch_size=128))
+        docs = list(self.nlp.pipe(df["text_clean"].tolist(), batch_size=128, n_process=8))
+        df["doc"] = docs
         df["text_lemma"] = self._extract_lemmas(docs)
         df["word_count"] = self._word_counts(docs)
         df["sentence_count"] = self._sentence_counts(docs)
