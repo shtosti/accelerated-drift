@@ -2,3 +2,5 @@ Based on "Delving into LLM-assisted Writing in Biomedical Publications Through E
 
 **Motivation**. The study was done 2 years ago. What has changed since then? Has there been a rebounce due to increased awareness to the LLM-ese markers and a real worry that one's text might be branded as LLM?
 
+**Milestones**. The idea is that there is feedback loop from research and the press. Analysis of the LLM-like writing makes researchers aware of the telltale signs of LLM generated-text, regardless of whether they use LLMs at all, or whether they use them for shameless slop, spell- and grammar-checks, or machine translation into the non-native English language.
+
