@@ -31,6 +31,8 @@ def run_preprocessing(config: AppConfig) -> Path:
     total_rows = 0
     for chunk_index, raw_chunk in enumerate(chunk_iter):
         preprocessed_chunk = preprocessor.preprocess_dataframe(raw_chunk)
+        if "doc" in preprocessed_chunk.columns:
+            preprocessed_chunk = preprocessed_chunk.drop(columns=["doc"])
         preprocessed_chunk.to_json(
             output_path,
             orient="records",
