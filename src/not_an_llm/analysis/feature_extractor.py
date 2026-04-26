@@ -97,7 +97,7 @@ class FeatureExtractor:
         df["dependency_entropy"] = [self._dependency_entropy_doc(doc) for doc in docs]
         df["dependency_length"] = [self._dependency_length_doc(doc) for doc in docs]
         df["dependency_length_norm"] = [self._dependency_length_doc_normalized(doc) for doc in docs]
-
+        df["dependency_distribution"] = [self._dependency_distribution_doc(doc) for doc in docs]
         df["coordination_count"] = [self._coordination_count_doc(doc) for doc in docs]
         df["coordination_density"] = df["coordination_count"] / (df["sentence_count"] + 1)
 
@@ -147,6 +147,7 @@ class FeatureExtractor:
             "doc_id": doc_id,
             "dependency_entropy": self._dependency_entropy_doc(doc),
             "clause_depth": self._clause_depth_doc(doc),
+            "dependency_distribution": self._dependency_distribution_doc(doc),
             "dependency_length": self._dependency_length_doc(doc),
             "dependency_length_norm": self._dependency_length_doc_normalized(doc),
             "deepest_sentence": self._deepest_sentence(doc),
@@ -230,12 +231,18 @@ class FeatureExtractor:
         def depth(t):
             return 1 + max((depth(c) for c in t.children), default=0)
         return max((depth(s.root) for s in doc.sents), default=0)
+    
+    def _dependency_distribution_doc(self, doc):
+        deps = [t.dep_ for t in doc if t.dep_ != "punct"]
+        return dict(Counter(deps))
 
     def _coordination_count_doc(self, doc):
         return sum(
             1 for t in doc
             if t.dep_ == "cc"
         )
+    
+
 
     def _count_list_of_three_doc(self, doc):
         seen = set()
