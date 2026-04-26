@@ -35,6 +35,9 @@ class AnalysisConfig:
     readability_metrics: list[str]
     syntactic_features: dict[str, str]
     llm_marker_words: list[str]
+    llm_marker_verbs: list[str]
+    llm_marker_adjectives: list[str]
+    llm_marker_phrases: list[str]
     llm_marker_sentence_patterns: dict[str, str]
     enable_list_of_three_marker: bool
     list_of_three_pattern: str
@@ -110,14 +113,37 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             include_readability=bool(analysis.get("include_readability", True)),
             readability_metrics=_load_readability_metrics(analysis),
             syntactic_features=_load_syntactic_features(analysis),
-            llm_marker_words=_load_query_list(
-                marker_config.get(
-                    "llm_marker_words",
-                    analysis.get(
-                        "llm_marker_words",
-                        ["unparalleled", "invaluable", "delve"],
-                    ),
-                )
+            llm_marker_words=_load_lexicon_terms(
+                lexicon_config,
+                marker_config,
+                analysis,
+                "markers",
+                ["unparalleled", "invaluable", "delve"],
+                "llm_marker_words",
+            ),
+            llm_marker_verbs=_load_lexicon_terms(
+                lexicon_config,
+                marker_config,
+                analysis,
+                "verbs",
+                ["delve", "underscore", "showcase", "enhance", "exhibit", "garner", "align"],
+                "llm_marker_verbs",
+            ),
+            llm_marker_adjectives=_load_lexicon_terms(
+                lexicon_config,
+                marker_config,
+                analysis,
+                "adjectives",
+                ["crucial", "pivotal", "comprehensive", "intricate", "potential"],
+                "llm_marker_adjectives",
+            ),
+            llm_marker_phrases=_load_lexicon_terms(
+                lexicon_config,
+                marker_config,
+                analysis,
+                "phrases",
+                ["meticulously delve", "intricate web", "comprehensive chapter", "deep dive", "intricate interplay", "essential insight"],
+                "llm_marker_phrases",
             ),
             llm_marker_sentence_patterns=_load_marker_pattern_map(
                 marker_config.get("llm_marker_sentence_patterns")
@@ -223,6 +249,26 @@ def _load_query_list(raw_queries: Any) -> list[str]:
 
     queries = [str(item).strip() for item in raw_queries if str(item).strip()]
     return queries
+
+
+def _load_lexicon_terms(
+    lexicon_config: dict[str, Any],
+    legacy_config: dict[str, Any],
+    analysis: dict[str, Any],
+    key: str,
+    default: list[str],
+    legacy_key: str | None = None,
+) -> list[str]:
+    legacy_name = legacy_key or key
+    return _load_query_list(
+        lexicon_config.get(
+            key,
+            legacy_config.get(
+                legacy_name,
+                analysis.get(legacy_name, default),
+            ),
+        )
+    )
 
 
 def _load_marker_pattern_map(raw_patterns: Any) -> dict[str, str]:

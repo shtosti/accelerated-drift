@@ -5,7 +5,7 @@ from pathlib import Path
 import spacy
 import pandas as pd
 
-from not_an_llm.analysis.feature_extractor import FeatureExtractor
+from not_an_llm.analysis.feature_extractor import FeatureExtractor, _slugify
 from not_an_llm.analysis.readability import ReadabilityAnalyzer
 from not_an_llm.analysis.trends import TrendAnalyzer
 from not_an_llm.config import AppConfig
@@ -54,6 +54,54 @@ def _resolve_analysis_paths(config: AppConfig):
     return feature_dataset, trends_csv, monthly_csv, plot_dir
 
 
+def _build_marker_group_specs(config: AppConfig) -> tuple[dict[str, dict[str, object]], set[str]]:
+    group_specs: dict[str, dict[str, object]] = {}
+    summary_features: set[str] = set()
+
+    group_definitions = {
+        "marker_words": (
+            "Marker words",
+            "word",
+            config.analysis.llm_marker_words,
+            "marker_words_total_per_1k_words",
+            "marker_words_total",
+        ),
+        "marker_verbs": (
+            "Marker verbs",
+            "verb",
+            config.analysis.llm_marker_verbs,
+            "marker_verbs_total_per_1k_words",
+            "marker_verbs_total",
+        ),
+        "marker_adjectives": (
+            "Marker adjectives",
+            "adjective",
+            config.analysis.llm_marker_adjectives,
+            "marker_adjectives_total_per_1k_words",
+            "marker_adjectives_total",
+        ),
+        "marker_phrases": (
+            "Marker phrases",
+            "phrase",
+            config.analysis.llm_marker_phrases,
+            "marker_phrases_total_per_1k_words",
+            "marker_phrases_total",
+        ),
+    }
+
+    for group_name, (label, prefix, terms, rate_feature, count_feature) in group_definitions.items():
+        group_specs[group_name] = {
+            "label": label,
+            "rate_feature": rate_feature,
+            "count_feature": count_feature,
+        }
+        summary_features.add(rate_feature)
+        summary_features.add(count_feature)
+
+    summary_features.add("marker_density")
+    return group_specs, summary_features
+
+
 # =========================================================
 # MAIN PIPELINE
 # =========================================================
@@ -92,6 +140,9 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         nlp=nlp,
         syntactic_features=config.analysis.syntactic_features,
         marker_words=config.analysis.llm_marker_words,
+        marker_verbs=config.analysis.llm_marker_verbs,
+        marker_adjectives=config.analysis.llm_marker_adjectives,
+        marker_phrases=config.analysis.llm_marker_phrases,
         enable_list_of_three_marker=config.analysis.enable_list_of_three_marker,
         marker_word_matching=config.analysis.llm_marker_word_matching,
         hedges=config.analysis.hedge_terms,
@@ -140,6 +191,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     feature_columns = _resolve_feature_columns(config, enriched)
 
     trend_analyzer = TrendAnalyzer(feature_columns)
+    marker_group_specs, summary_features = _build_marker_group_specs(config)
 
     yearly = trend_analyzer.aggregate_yearly(enriched)
     monthly = trend_analyzer.aggregate_monthly(enriched)
@@ -162,7 +214,23 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     }
 
     trend_plots = trend_analyzer.save_plots(
-        yearly, monthly, plot_dir, llm_events
+        yearly,
+        monthly,
+        plot_dir,
+        llm_events,
+        exclude_features=summary_features,
+    )
+
+    trend_plots.extend(
+        trend_analyzer.save_grouped_word_plots(
+            yearly=yearly,
+            monthly=monthly,
+            output_dir=plot_dir,
+            group_specs=marker_group_specs,
+            events=llm_events,
+            smoothing_window=3,
+            exclude_features=summary_features,
+        )
     )
 
     dep_plot_path = trend_analyzer.save_dependency_distribution_plot(
@@ -183,6 +251,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         output_dir=plot_dir,
         events=llm_events,
         smoothing_window=3,
+        exclude_features=summary_features,
     )
 
     trend_plots.append(stacked_plot_path)

@@ -33,6 +33,39 @@ class FeatureExtractor:
         ]
     )
 
+    marker_verbs: list[str] = field(
+        default_factory=lambda: [
+            "delve",
+            "underscore",
+            "showcase",
+            "enhance",
+            "exhibit",
+            "garner",
+            "align",
+        ]
+    )
+
+    marker_adjectives: list[str] = field(
+        default_factory=lambda: [
+            "crucial",
+            "pivotal",
+            "comprehensive",
+            "intricate",
+            "potential",
+        ]
+    )
+
+    marker_phrases: list[str] = field(
+        default_factory=lambda: [
+            "meticulously delve",
+            "intricate web",
+            "comprehensive chapter",
+            "deep dive",
+            "intricate interplay",
+            "essential insight",
+        ]
+    )
+
     enable_list_of_three_marker: bool = True
     marker_word_matching: str = "exact"
 
@@ -51,6 +84,9 @@ class FeatureExtractor:
 
     def __post_init__(self) -> None:
         self.marker_words = [w.strip().lower() for w in self.marker_words if w.strip()]
+        self.marker_verbs = [w.strip().lower() for w in self.marker_verbs if w.strip()]
+        self.marker_adjectives = [w.strip().lower() for w in self.marker_adjectives if w.strip()]
+        self.marker_phrases = [w.strip().lower() for w in self.marker_phrases if w.strip()]
         self.hedges = [w.strip().lower() for w in self.hedges if w.strip()]
         self.certainty_terms = [w.strip().lower() for w in self.certainty_terms if w.strip()]
 
@@ -73,9 +109,11 @@ class FeatureExtractor:
             df["word_count"] = df["text_clean"].fillna("").astype(str).str.split().str.len()
 
         text = df["text_clean"].fillna("").astype(str)
+        text_lower = text.str.lower()
         words = df["word_count"].fillna(0).astype(float) + 1.0
 
         lemma_text = df["text_lemma"].fillna("").astype(str) if "text_lemma" in df.columns else None
+        lemma_lower = lemma_text.str.lower() if lemma_text is not None else None
 
         if not hasattr(self, "nlp"):
             raise ValueError("FeatureExtractor requires spaCy model")
@@ -106,12 +144,31 @@ class FeatureExtractor:
         # ========================================================
         # marker words
         # ========================================================
-        for marker in self.marker_words:
-            key = _slugify(marker)
-            df[f"word_{key}"] = text.apply(lambda v: v.lower().split().count(marker))
+        group_specs = [
+            ("marker_words", "word", self.marker_words, self.marker_word_matching),
+            ("marker_verbs", "verb", self.marker_verbs, self.marker_word_matching),
+            ("marker_adjectives", "adjective", self.marker_adjectives, self.marker_word_matching),
+            ("marker_phrases", "phrase", self.marker_phrases, "exact"),
+        ]
 
-        marker_cols = [c for c in df.columns if c.startswith("word_")]
-        df["marker_density"] = df[marker_cols].sum(axis=1) / words if marker_cols else 0.0
+        for group_name, prefix, terms, matching_mode in group_specs:
+            group_total = pd.Series(0, index=df.index, dtype="float64")
+            for term in terms:
+                key = _slugify(term)
+                column_name = f"{prefix}_{key}"
+                counts = self._count_term_occurrences(
+                    text_lower,
+                    lemma_lower,
+                    term,
+                    matching_mode,
+                )
+                df[column_name] = counts
+                group_total = group_total + counts
+
+            df[f"{group_name}_total"] = group_total
+            df[f"{group_name}_total_per_1k_words"] = group_total / words * 1000.0
+
+        df["marker_density"] = df["marker_words_total_per_1k_words"]
 
         # ========================================================
         # hedges / certainty
@@ -138,6 +195,22 @@ class FeatureExtractor:
             self._write_jsonl(debug_objects, debug_path)
 
         return df
+
+    def _count_term_occurrences(
+        self,
+        text_lower: pd.Series,
+        lemma_lower: pd.Series | None,
+        term: str,
+        matching_mode: str,
+    ) -> pd.Series:
+        if " " in term:
+            pattern = re.compile(rf"\b{re.escape(term)}\b")
+            return text_lower.apply(lambda value: len(pattern.findall(value)))
+
+        if matching_mode == "lemma" and lemma_lower is not None:
+            return lemma_lower.apply(lambda value: value.split().count(term))
+
+        return text_lower.apply(lambda value: value.split().count(term))
 
     # =========================================================
     # DEBUG OBJECTS
