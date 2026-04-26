@@ -10,3 +10,5 @@ Based on "Delving into LLM-assisted Writing in Biomedical Publications Through E
     - the current "LLM shift" is driven by style-affecting verbs and adjectives (e.g., notably, crucial, comprehensive) rather than content nouns. --> "Crucially,", "enhance", etc.
     - style-affecting verbs and adjectives that create a "didactic" or "flowery" tone
     - find `sentence connectors`!
+
+**Implementation note**. The analysis pipeline now loads `analysis.lexicon` groups separately and emits per-term plus per-group trends for markers, verbs, adjectives, and phrases.
