@@ -14,10 +14,10 @@ class TrendAnalyzer:
     def __init__(self, feature_columns: list[str]) -> None:
         self.feature_columns = feature_columns
         self.colors = {
-            "monthly": "#409B61",
-            "yearly": "#8E4479",
+            "monthly": "#1E9B4C",
+            "yearly": "#9B4D8C",
             "ci": "#55A868",
-            "events": "#5168FF",
+            "events": "#484A59",
             "dependencies": [
                 "#4C72B0", "#DD8452", "#55A868", "#C44E52",
                 "#8172B3", "#937860", "#DA8BC3", "#8C8C8C",
@@ -33,6 +33,15 @@ class TrendAnalyzer:
     def _add_event_lines(self, ax, event_dates: dict[str, pd.Timestamp]) -> None:
         for d in event_dates.values():
             ax.axvline(d, linestyle="--", alpha=0.7)
+
+    def _filter_plot_features(
+        self,
+        features: list[str],
+        exclude_features: set[str] | None = None,
+    ) -> list[str]:
+        if not exclude_features:
+            return features
+        return [feature for feature in features if feature not in exclude_features]
 
     # =========================================================
     # YEARLY AGGREGATION (MEAN + STD + COUNT FOR CI)
@@ -99,6 +108,7 @@ class TrendAnalyzer:
         output_dir: Path,
         events: dict[str, str] | None = None,
         smoothing_window: int | None = None,
+        exclude_features: set[str] | None = None,
     ) -> Path:
 
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -108,6 +118,7 @@ class TrendAnalyzer:
             for c in yearly.columns
             if c.endswith("_yearly_mean")
         ]
+        features = self._filter_plot_features(features, exclude_features)
 
         if not features:
             raise ValueError("No features found to plot.")
@@ -153,7 +164,7 @@ class TrendAnalyzer:
                     monthly["month_ts"],
                     y_m,
                     color = self.colors["monthly"],
-                    alpha=0.9,
+                    alpha=1.0,
                     linewidth=1.0,
                     label="Monthly",
                 )
@@ -199,7 +210,7 @@ class TrendAnalyzer:
                 marker="o",
                 color = self.colors["yearly"],
                 linewidth=1.0,
-                alpha=0.9,
+                alpha=1.0,
                 label="Yearly mean (raw)",
             )
 
@@ -243,11 +254,126 @@ class TrendAnalyzer:
 
         fig.tight_layout()
 
-        out_path = output_dir / "stacked_word_trends_with_events_ci.png"
+        out_path = output_dir / "stacked_word_trends_with_events.png"
         fig.savefig(out_path, dpi=150)
         plt.close(fig)
 
         return out_path
+
+    def save_grouped_word_plots(
+        self,
+        yearly: pd.DataFrame,
+        monthly: pd.DataFrame,
+        output_dir: Path,
+        group_specs: dict[str, dict[str, object]],
+        events: dict[str, str] | None = None,
+        smoothing_window: int | None = None,
+        exclude_features: set[str] | None = None,
+    ) -> list[Path]:
+
+        output_dir.mkdir(parents=True, exist_ok=True)
+        paths: list[Path] = []
+
+        if events is None:
+            events = {
+                "ChatGPT": "2022-11-30",
+                "GPT-4": "2023-03-14",
+                "AI detection": "2023-06-01",
+                "Delve paper": "2024-01-15",
+            }
+
+        event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
+
+        for group_name, spec in group_specs.items():
+            label = str(spec.get("label", group_name))
+            rate_feature = str(spec.get("rate_feature", "")).strip()
+            if not rate_feature or rate_feature not in yearly.columns:
+                continue
+
+            if exclude_features and rate_feature in exclude_features:
+                continue
+
+            yearly_col = f"{rate_feature}_yearly_mean"
+            monthly_col = f"{rate_feature}_monthly_mean"
+
+            if yearly_col not in yearly.columns:
+                continue
+
+            fig, ax = plt.subplots(figsize=(10, 4))
+
+            if monthly_col in monthly.columns:
+                y_m = monthly[monthly_col]
+                if smoothing_window:
+                    y_m = y_m.rolling(smoothing_window, center=True).mean()
+                ax.plot(
+                    monthly["month_ts"],
+                    y_m,
+                    color=self.colors["monthly"],
+                    linewidth=1.2,
+                    alpha=1.0,
+                    label="Monthly mean",
+                )
+
+            x = pd.to_datetime(yearly["year"].astype(str) + "-01-01")
+            y = yearly[yearly_col]
+
+            if smoothing_window:
+                y_plot = pd.Series(y).rolling(smoothing_window, center=True).mean()
+            else:
+                y_plot = y
+
+            ax.plot(
+                x,
+                y,
+                marker="o",
+                linewidth=1.8,
+                color=self.colors["yearly"],
+                label="Yearly mean",
+            )
+
+            ax.plot(
+                x,
+                y_plot,
+                linewidth=2.4,
+                alpha=0.9,
+                color=self.colors["ci"],
+                label="Smoothed trend",
+            )
+
+            for d in event_dates.values():
+                ax.axvline(d, linestyle="--", alpha=0.7, color=self.colors["events"])
+
+            ax.set_title(label)
+            ax.set_ylabel("Mean count per 1k words")
+            ax.set_xlabel("Year")
+
+            ax.xaxis.set_major_locator(mdates.YearLocator())
+            ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+            ax.grid(True, alpha=0.3)
+
+            top_y = ax.get_ylim()[1]
+            for event_label, d in event_dates.items():
+                ax.text(
+                    d,
+                    top_y,
+                    event_label,
+                    rotation=90,
+                    va="bottom",
+                    fontsize=8,
+                    alpha=0.8,
+                )
+
+            ax.legend()
+            self._format_xticks(ax)
+
+            fig.tight_layout()
+
+            out_path = output_dir / f"{group_name}_trend.png"
+            fig.savefig(out_path, dpi=150)
+            plt.close(fig)
+            paths.append(out_path)
+
+        return paths
 
     def save_dependency_distribution_plot(
         self,
@@ -352,13 +478,18 @@ class TrendAnalyzer:
         yearly: pd.DataFrame,
         monthly: pd.DataFrame,
         output_dir: Path,
-        events: dict[str, str] | None = None
+        events: dict[str, str] | None = None,
+        exclude_features: set[str] | None = None,
     ) -> list[Path]:
 
         output_dir.mkdir(parents=True, exist_ok=True)
         paths: list[Path] = []
 
         plot_columns = [c for c in yearly.columns if c.endswith("_yearly_mean")]
+        plot_columns = [
+            column for column in plot_columns
+            if column.removesuffix("_yearly_mean") not in (exclude_features or set())
+        ]
         event_dates = (
         {k: pd.to_datetime(v) for k, v in events.items()}
         if events else {}
@@ -380,8 +511,9 @@ class TrendAnalyzer:
                 ax.plot(
                     monthly["month_ts"],
                     monthly[monthly_col],
+                    color=self.colors["monthly"],
                     linewidth=1.0,
-                    alpha=0.4,
+                    alpha=1.0,
                     label="Monthly mean",
                 )
 
@@ -417,6 +549,7 @@ class TrendAnalyzer:
                 y,
                 marker="o",
                 linewidth=1.5,
+                color=self.colors["yearly"],
                 label="Yearly mean",
             )
             ax.set_xlabel("Year")
@@ -437,7 +570,7 @@ class TrendAnalyzer:
 
             fig.tight_layout()
 
-            out_path = output_dir / f"{feature}_mean_ci.png"
+            out_path = output_dir / f"{feature}_mean.png"
             fig.savefig(out_path, dpi=150)
             plt.close(fig)
             paths.append(out_path)

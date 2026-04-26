@@ -107,31 +107,57 @@ colon = ":"
 [analysis.lexicon]
 # Terms used for style ratios.
 hedge_terms = ["may", "might", "could", "potentially", "suggest", "indicate", "hint"]
-certainty_terms = ["demonstrate", "prove", "confirm", "groundbreaking", "pivotal", "unprecedented"]
+certainty_terms = ["demonstrate", "prove", "confirm", "groundbreaking", "pivotal", "unprecedented", "transformative", "invaluable", "unparalleled", "comprehensive"]
 
-[analysis.markers]
-# Define your LLM-like vocabulary here.
-
-llm_marker_words = [
-  "delve",
-  "highlight",
-  "underscore",
-  "enhance",
-  "exhibit",
-  "showcase",
+markers = [
+  "finding",
+  "interplay",
+  "realm",
   "insight",
-  "comprehensive",
-  "crucial",
-  "pivotal",
-  "intricate",
-  "meticulously",
   "notably",
   "particularly",
+  "meticulously",
   "while",
   "within",
   "across",
   "additionally"
 ]
+
+verbs = [
+  "delve",
+  "underscore",
+  "showcase",
+  "enhance",
+  "exhibit",
+  "garner",
+  "align",
+  "foster"
+]
+
+adjectives = [
+  "crucial",
+  "pivotal",
+  "comprehensive",
+  "intricate",
+  "potential"
+]
+
+phrases = [
+  "meticulously delve",
+  "intricate web",
+  "comprehensive chapter",
+  "deep dive",
+  "intricate interplay",
+  "essential insight"
+]
+
+# markers
+sequential_markers = ["additionally", "furthermore", "moreover", "subsequently", "further"]
+causal_markers = ["hence", "thus", "consequently", "accordingly", "thereby"]
+contrast_markers = ["however", "nonetheless", "nevertheless", "conversely", "alternatively"]
+emphasis_markers = ["notably", "crucially", "remarkably", "particularly", "importantly"]
+summary_markers = ["overall", "collectively", "ultimately", "in summary", "taken together"]
+
 # exact: surface form only, lemma: lemmatized.
 llm_marker_word_matching = "lemma"
 # Backward-compatible aliases if you prefer top-level [analysis] keys
