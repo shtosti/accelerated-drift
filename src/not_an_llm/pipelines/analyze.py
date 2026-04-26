@@ -19,6 +19,44 @@ class AnalysisArtifacts:
     trends_plot_paths: list[Path]
 
 
+# =========================================================
+# PATH RESOLUTION (AUTO BY SOURCE)
+# =========================================================
+def _resolve_analysis_paths(config: AppConfig):
+    source = config.collection.source
+    base_dir = Path(config.data_dir) / "analysis"
+
+    base_dir.mkdir(parents=True, exist_ok=True)
+
+    def _maybe(path_value: str, default: Path) -> Path:
+        return Path(path_value) if path_value else default
+
+    feature_dataset = _maybe(
+        config.analysis.feature_dataset_jsonl,
+        base_dir / f"{source}.jsonl",
+    )
+
+    trends_csv = _maybe(
+        config.analysis.trends_csv,
+        base_dir / f"{source}_trends_by_year.csv",
+    )
+
+    monthly_csv = _maybe(
+        config.analysis.monthly_trends_csv,
+        base_dir / f"{source}_trends_by_month.csv",
+    )
+
+    plot_dir = _maybe(
+        config.analysis.trends_plot_dir,
+        base_dir / f"{source}_plots",
+    )
+
+    return feature_dataset, trends_csv, monthly_csv, plot_dir
+
+
+# =========================================================
+# MAIN PIPELINE
+# =========================================================
 def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     input_path = config.analysis.preprocessed_jsonl
     if not input_path.exists():
@@ -26,12 +64,27 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
             f"Preprocessed dataset not found at {input_path}. Run preprocess first."
         )
 
+    # -------------------------
+    # RESOLVE OUTPUT PATHS
+    # -------------------------
+    (
+        enriched_output_path,
+        trends_csv,
+        monthly_trends_csv,
+        plot_dir,
+    ) = _resolve_analysis_paths(config)
+
+    print("Saving feature dataset to:", enriched_output_path)
+    print("Saving yearly trends to:", trends_csv)
+    print("Saving monthly trends to:", monthly_trends_csv)
+    print("Saving plots to:", plot_dir)
+
     # =========================
-    # LOAD SPACY (LIGHTWEIGHT)
+    # LOAD SPACY
     # =========================
     nlp = spacy.load(
         "en_core_web_sm",
-        disable=["ner", "textcat"]  # saves memory
+        disable=["ner", "textcat"]
     )
     nlp.max_length = 2_000_000
 
@@ -54,10 +107,8 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     # =========================
     chunks = pd.read_json(input_path, lines=True, chunksize=2000)
 
-    enriched_output_path = config.analysis.feature_dataset_jsonl
     enriched_output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # overwrite file if exists
     if enriched_output_path.exists():
         enriched_output_path.unlink()
 
@@ -70,7 +121,6 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         if readability:
             enriched_chunk = readability.transform(enriched_chunk)
 
-        # write incrementally to disk (prevents OOM)
         enriched_chunk.to_json(
             enriched_output_path,
             orient="records",
@@ -83,27 +133,59 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         collected_frames.append(enriched_chunk)
 
     # =========================
-    # CONCAT FOR TREND ANALYSIS
+    # CONCAT FOR ANALYSIS
     # =========================
     enriched = pd.concat(collected_frames, ignore_index=True)
 
     feature_columns = _resolve_feature_columns(config, enriched)
 
     trend_analyzer = TrendAnalyzer(feature_columns)
+
     yearly = trend_analyzer.aggregate_yearly(enriched)
     monthly = trend_analyzer.aggregate_monthly(enriched)
 
-    trends_csv = config.analysis.trends_csv
+    # =========================
+    # SAVE TABLES
+    # =========================
     trends_csv.parent.mkdir(parents=True, exist_ok=True)
     yearly.to_csv(trends_csv, index=False)
 
-    monthly_trends_csv = config.analysis.monthly_trends_csv
     monthly_trends_csv.parent.mkdir(parents=True, exist_ok=True)
     monthly.to_csv(monthly_trends_csv, index=False)
 
+    # =========================
+    # PLOTS
+    # =========================
+    llm_events = {
+        "ChatGPT release": "2022-11-30",
+        # "Delve study": "2024-01-15",
+    }
+
     trend_plots = trend_analyzer.save_plots(
-        yearly, monthly, config.analysis.trends_plot_dir
+        yearly, monthly, plot_dir, llm_events
     )
+
+    dep_plot_path = trend_analyzer.save_dependency_distribution_plot(
+        df=enriched,
+        output_dir=plot_dir,
+        events=llm_events,
+    )
+
+    trend_plots.append(dep_plot_path)
+
+    # -------------------------
+    # EVENT-STACKED PLOT
+    # -------------------------
+
+    stacked_plot_path = trend_analyzer.save_stacked_word_plots(
+        yearly=yearly,
+        monthly=monthly,
+        output_dir=plot_dir,
+        events=llm_events,
+        smoothing_window=3,
+    )
+
+    trend_plots.append(stacked_plot_path)
 
     return AnalysisArtifacts(
         feature_dataset_jsonl=enriched_output_path,
@@ -113,6 +195,9 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     )
 
 
+# =========================================================
+# FEATURE SELECTION
+# =========================================================
 def _resolve_feature_columns(config: AppConfig, frame: pd.DataFrame) -> list[str]:
     metadata_exclusions = {
         "year",
