@@ -209,6 +209,7 @@ __marimo__/
 # heavy data
 data/raw/*.jsonl
 data/processed/*.jsonl
+data/analyzed/*.jsonl
 slurm.sh
 slurm_analyze.sh
 slurm_collect.sh
