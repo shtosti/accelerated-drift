@@ -39,11 +39,11 @@ arxiv_collection_mode = "full" # full or monthly
 medarxiv_collection_mode = "full" # full or monthly
 bioarxiv_collection_mode = "full" # full or monthly
 samples_per_month = 2 # used only when *_collection_mode = "monthly"
-arxiv_output_jsonl = "data/raw/arxiv_papers.jsonl"
-arxiv_monthly_output_jsonl = "data/raw/arxiv_monthly_papers.jsonl"
-semantic_scholar_output_jsonl = "data/raw/semantic_scholar_papers.jsonl"
-medarxiv_output_jsonl = "data/raw/medarxiv_papers.jsonl"
-bioarxiv_output_jsonl = "data/raw/bioarxiv_papers.jsonl"
+arxiv_output_jsonl = "data/raw/arxiv.jsonl"
+arxiv_monthly_output_jsonl = "data/raw/arxiv_monthly.jsonl"
+semantic_scholar_output_jsonl = "data/raw/semantic_scholar.jsonl"
+medarxiv_output_jsonl = "data/raw/medarxiv.jsonl"
+bioarxiv_output_jsonl = "data/raw/bioarxiv.jsonl"
 # Safe request pacing for collection APIs.
 min_request_interval_seconds = 3.5
 max_retries = 10
@@ -81,9 +81,9 @@ readability_metrics = [
   "dale_chall"
 ]
 
-# Defaults follow collection output basename (e.g. arxiv_papers.*).
+# Defaults follow collection output basename (e.g. arxiv.*).
 # Keep only explicit overrides you need.
-preprocessed_jsonl = ""
+preprocessed_jsonl = "data/processed/arxiv_mini.jsonl"
 feature_dataset_jsonl = ""
 trends_csv = ""
 monthly_trends_csv = ""
