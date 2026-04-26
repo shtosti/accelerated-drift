@@ -395,7 +395,7 @@ def _load_readability_metrics(analysis: dict[str, Any]) -> list[str]:
 def _default_analysis_paths(raw_output_path: Path) -> tuple[Path, Path, Path, Path, Path]:
     suffix = raw_output_path.suffix or ".jsonl"
     preprocessed = Path("data/processed") / raw_output_path.name
-    feature_dataset = Path("data/processed") / f"{raw_output_path.stem}_features{suffix}"
+    feature_dataset = Path("data/analyzed") / f"{raw_output_path.stem}{suffix}"
     trends_csv = Path("data/analysis") / f"{raw_output_path.stem}_feature_trends_by_year.csv"
     monthly_trends_csv = Path("data/analysis") / f"{raw_output_path.stem}_feature_trends_by_month.csv"
     trends_plot_dir = Path("data/analysis/plots") / raw_output_path.stem
