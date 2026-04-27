@@ -66,6 +66,26 @@ class FeatureExtractor:
         ]
     )
 
+    sequential_markers: list[str] = field(
+        default_factory=lambda: ["additionally", "furthermore", "moreover", "subsequently", "further"]
+    )
+
+    causal_markers: list[str] = field(
+        default_factory=lambda: ["hence", "thus", "consequently", "accordingly", "thereby"]
+    )
+
+    contrast_markers: list[str] = field(
+        default_factory=lambda: ["however", "nonetheless", "nevertheless", "conversely", "alternatively"]
+    )
+
+    emphasis_markers: list[str] = field(
+        default_factory=lambda: ["notably", "crucially", "remarkably", "particularly", "importantly"]
+    )
+
+    summary_markers: list[str] = field(
+        default_factory=lambda: ["overall", "collectively", "ultimately", "in summary", "taken together"]
+    )
+
     enable_list_of_three_marker: bool = True
     marker_word_matching: str = "exact"
 
@@ -87,6 +107,11 @@ class FeatureExtractor:
         self.marker_verbs = [w.strip().lower() for w in self.marker_verbs if w.strip()]
         self.marker_adjectives = [w.strip().lower() for w in self.marker_adjectives if w.strip()]
         self.marker_phrases = [w.strip().lower() for w in self.marker_phrases if w.strip()]
+        self.sequential_markers = [w.strip().lower() for w in self.sequential_markers if w.strip()]
+        self.causal_markers = [w.strip().lower() for w in self.causal_markers if w.strip()]
+        self.contrast_markers = [w.strip().lower() for w in self.contrast_markers if w.strip()]
+        self.emphasis_markers = [w.strip().lower() for w in self.emphasis_markers if w.strip()]
+        self.summary_markers = [w.strip().lower() for w in self.summary_markers if w.strip()]
         self.hedges = [w.strip().lower() for w in self.hedges if w.strip()]
         self.certainty_terms = [w.strip().lower() for w in self.certainty_terms if w.strip()]
 
@@ -128,7 +153,7 @@ class FeatureExtractor:
             df[f"{_slugify(name)}_per_1k_words"] = df[f"{_slugify(name)}_count"] / words * 1000.0
 
         # ========================================================
-        # syntactic structure
+        # syntactic structure (raw)
         # ========================================================
         df["sentence_count"] = [len(list(doc.sents)) for doc in docs]
         df["clause_depth"] = [self._clause_depth_doc(doc) for doc in docs]
@@ -138,8 +163,18 @@ class FeatureExtractor:
         df["dependency_distribution"] = [self._dependency_distribution_doc(doc) for doc in docs]
         df["coordination_count"] = [self._coordination_count_doc(doc) for doc in docs]
         df["coordination_density"] = df["coordination_count"] / (df["sentence_count"] + 1)
-
+        df["sentence_depth_std"] = [self._sentence_depth_std_doc(doc) for doc in docs]
         df["list_of_three"] = [self._count_list_of_three_doc(doc) for doc in docs]
+
+        # ========================================================
+        # syntactic structure (normalized for scale-invariance)
+        # ========================================================
+        df["clause_depth_per_sentence"] = df["clause_depth"] / (df["sentence_count"] + 1.0)
+        df["dependency_entropy_normalized"] = [self._normalize_dependency_entropy_doc(doc) for doc in docs]
+        df["coordination_count_per_1k_words"] = df["coordination_count"] / words * 1000.0
+        sentence_depth_means = [self._sentence_depth_mean_doc(doc) for doc in docs]
+        df["sentence_depth_cv"] = df["sentence_depth_std"] / (pd.Series(sentence_depth_means) + 1e-8)
+        df["list_of_three_per_1k_words"] = df["list_of_three"] / words * 1000.0
 
         # ========================================================
         # marker words
@@ -149,6 +184,11 @@ class FeatureExtractor:
             ("marker_verbs", "verb", self.marker_verbs, self.marker_word_matching),
             ("marker_adjectives", "adjective", self.marker_adjectives, self.marker_word_matching),
             ("marker_phrases", "phrase", self.marker_phrases, "exact"),
+            ("sequential_markers", "sequential_marker", self.sequential_markers, self.marker_word_matching),
+            ("causal_markers", "causal_marker", self.causal_markers, self.marker_word_matching),
+            ("contrast_markers", "contrast_marker", self.contrast_markers, self.marker_word_matching),
+            ("emphasis_markers", "emphasis_marker", self.emphasis_markers, self.marker_word_matching),
+            ("summary_markers", "summary_marker", self.summary_markers, self.marker_word_matching),
         ]
 
         for group_name, prefix, terms, matching_mode in group_specs:
@@ -304,6 +344,48 @@ class FeatureExtractor:
         def depth(t):
             return 1 + max((depth(c) for c in t.children), default=0)
         return max((depth(s.root) for s in doc.sents), default=0)
+
+    def _sentence_depth_std_doc(self, doc):
+        """Compute standard deviation of dependency tree depth across sentences.
+        Low variance = homogeneous complexity (LLM-like).
+        High variance = spiky complexity (human-like).
+        """
+        def depth(t):
+            return 1 + max((depth(c) for c in t.children), default=0)
+        
+        sentence_depths = [depth(s.root) for s in doc.sents]
+        if len(sentence_depths) < 2:
+            return 0.0
+        return float(pd.Series(sentence_depths).std())
+
+    def _sentence_depth_mean_doc(self, doc):
+        """Compute mean dependency tree depth across sentences.
+        Used for calculating coefficient of variation.
+        """
+        def depth(t):
+            return 1 + max((depth(c) for c in t.children), default=0)
+        
+        sentence_depths = [depth(s.root) for s in doc.sents]
+        if not sentence_depths:
+            return 0.0
+        return float(pd.Series(sentence_depths).mean())
+    
+    def _normalize_dependency_entropy_doc(self, doc):
+        """Normalize Shannon entropy to [0, 1] by dividing by log(# dep types).
+        This accounts for documents with different syntactic diversity ceilings.
+        """
+        deps = [t.dep_ for t in doc if t.dep_ != "punct"]
+        if not deps:
+            return 0.0
+        
+        c = Counter(deps)
+        n_types = len(c)
+        if n_types <= 1:
+            return 0.0
+        
+        raw_entropy = self._dependency_entropy_doc(doc)
+        max_entropy = math.log(n_types)
+        return raw_entropy / max_entropy if max_entropy > 0 else 0.0
     
     def _dependency_distribution_doc(self, doc):
         deps = [t.dep_ for t in doc if t.dep_ != "punct"]

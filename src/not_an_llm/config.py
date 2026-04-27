@@ -38,6 +38,11 @@ class AnalysisConfig:
     llm_marker_verbs: list[str]
     llm_marker_adjectives: list[str]
     llm_marker_phrases: list[str]
+    sequential_markers: list[str]
+    causal_markers: list[str]
+    contrast_markers: list[str]
+    emphasis_markers: list[str]
+    summary_markers: list[str]
     llm_marker_sentence_patterns: dict[str, str]
     enable_list_of_three_marker: bool
     list_of_three_pattern: str
@@ -144,6 +149,46 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
                 "phrases",
                 ["meticulously delve", "intricate web", "comprehensive chapter", "deep dive", "intricate interplay", "essential insight"],
                 "llm_marker_phrases",
+            ),
+            sequential_markers=_load_lexicon_terms(
+                lexicon_config,
+                marker_config,
+                analysis,
+                "sequential_markers",
+                ["additionally", "furthermore", "moreover", "subsequently", "further"],
+                "sequential_markers",
+            ),
+            causal_markers=_load_lexicon_terms(
+                lexicon_config,
+                marker_config,
+                analysis,
+                "causal_markers",
+                ["hence", "thus", "consequently", "accordingly", "thereby"],
+                "causal_markers",
+            ),
+            contrast_markers=_load_lexicon_terms(
+                lexicon_config,
+                marker_config,
+                analysis,
+                "contrast_markers",
+                ["however", "nonetheless", "nevertheless", "conversely", "alternatively"],
+                "contrast_markers",
+            ),
+            emphasis_markers=_load_lexicon_terms(
+                lexicon_config,
+                marker_config,
+                analysis,
+                "emphasis_markers",
+                ["notably", "crucially", "remarkably", "particularly", "importantly"],
+                "emphasis_markers",
+            ),
+            summary_markers=_load_lexicon_terms(
+                lexicon_config,
+                marker_config,
+                analysis,
+                "summary_markers",
+                ["overall", "collectively", "ultimately", "in summary", "taken together"],
+                "summary_markers",
             ),
             llm_marker_sentence_patterns=_load_marker_pattern_map(
                 marker_config.get("llm_marker_sentence_patterns")
