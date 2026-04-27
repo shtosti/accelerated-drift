@@ -1,0 +1,129 @@
+[project]
+name = "not-an-llm"
+data_dir = "data"
+
+[external]
+# Select one external dataset: hc3 or mage.
+dataset = "hc3"
+
+# HC3 settings + outputs.
+hc3_subset = "finance"
+# Optional subset filter for HC3.
+# Available HC3 subsets: all, reddit_eli5, wiki_csai, open_qa, finance, medicine
+# Leave empty to load all subsets
+# hc3_subsets = ["wiki_csai"]
+hc3_split = "train"
+hc3_pair_output_jsonl = "data/external/hc3/pairs.jsonl"
+hc3_feature_output_jsonl = "data/external/hc3/pair_features.jsonl"
+hc3_comparison_csv = "data/external/hc3/human_vs_ai_comparison.csv"
+hc3_comparison_plot = "data/external/hc3/human_vs_ai_top_differences.png"
+
+# MAGE settings + outputs.
+mage_split = "validation"
+# Optional subset selectors for MAGE.
+# `mage_domains` filters by source family prefix (examples: xsum, roct, hswag, eli5, wp, yelp, squad, tldr, cmv, sci_gen).
+# `mage_include_sources` keeps only exact src names.
+# `mage_exclude_sources` removes exact src names.
+# Leave empty to use all available sources in the selected split.
+mage_domains = ["cmv"]
+mage_include_sources = []
+mage_exclude_sources = []
+mage_pair_output_jsonl = "data/external/mage/pairs_validation.jsonl"
+mage_feature_output_jsonl = "data/external/mage/pair_features_validation.jsonl"
+mage_comparison_csv = "data/external/mage/human_vs_ai_comparison_validation.csv"
+mage_comparison_plot = "data/external/mage/human_vs_ai_top_differences_validation.png"
+
+
+[analysis]
+enabled = true
+include_readability = true
+# Select which readability metrics to compute/write.
+readability_metrics = [
+  "avg_words_per_sentence",
+  "avg_syllables_per_word",
+  "flesch_reading_ease",
+  "flesch_kincaid_grade",
+  "dale_chall"
+]
+
+# Not used by external-preprocess/external-analyze, but kept for shared parser compatibility.
+preprocessed_jsonl = "data/processed/external_placeholder.jsonl"
+feature_dataset_jsonl = ""
+trends_csv = ""
+monthly_trends_csv = ""
+trends_plot_dir = ""
+# Use "all" to automatically include every numeric feature in yearly trend analysis.
+features = ["all"]
+
+spacy_features = [
+  "marker_list_of_three",
+  "coordination_count",
+  "clause_depth",
+  "dependency_entropy"
+]
+
+# Configurable syntactic features: each key becomes <key>_count and <key>_per_1k_words.
+[analysis.syntactic_features]
+em_dash = "--"
+semicolon = ";"
+colon = ":"
+
+[analysis.lexicon]
+# Terms used for style ratios.
+hedge_terms = ["may", "might", "could", "potentially", "suggest", "indicate", "hint"]
+certainty_terms = ["demonstrate", "prove", "confirm", "groundbreaking", "pivotal", "unprecedented", "transformative", "invaluable", "unparalleled", "comprehensive"]
+
+markers = [
+  "finding",
+  "interplay",
+  "realm",
+  "insight",
+  "notably",
+  "particularly",
+  "meticulously",
+  "while",
+  "within",
+  "across",
+  "additionally"
+]
+
+verbs = [
+  "delve",
+  "underscore",
+  "showcase",
+  "enhance",
+  "exhibit",
+  "garner",
+  "align",
+  "foster"
+]
+
+adjectives = [
+  "crucial",
+  "pivotal",
+  "comprehensive",
+  "intricate",
+  "potential"
+]
+
+phrases = [
+  "meticulously delve",
+  "intricate web",
+  "comprehensive chapter",
+  "deep dive",
+  "intricate interplay",
+  "essential insight"
+]
+
+# markers
+sequential_markers = ["additionally", "furthermore", "moreover", "subsequently", "further"]
+causal_markers = ["hence", "thus", "consequently", "accordingly", "thereby"]
+contrast_markers = ["however", "nonetheless", "nevertheless", "conversely", "alternatively"]
+emphasis_markers = ["notably", "crucially", "remarkably", "particularly", "importantly"]
+summary_markers = ["overall", "collectively", "ultimately", "in summary", "taken together"]
+
+# exact: surface form only, lemma: lemmatized.
+llm_marker_word_matching = "lemma"
+# Backward-compatible aliases if you prefer top-level [analysis] keys
+# llm_marker_words = [...]
+# llm_marker_word_matching = "exact"
