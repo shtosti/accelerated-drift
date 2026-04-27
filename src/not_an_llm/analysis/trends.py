@@ -290,9 +290,6 @@ class TrendAnalyzer:
             if not rate_feature or rate_feature not in yearly.columns:
                 continue
 
-            if exclude_features and rate_feature in exclude_features:
-                continue
-
             yearly_col = f"{rate_feature}_yearly_mean"
             monthly_col = f"{rate_feature}_monthly_mean"
 

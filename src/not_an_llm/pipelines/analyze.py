@@ -87,6 +87,41 @@ def _build_marker_group_specs(config: AppConfig) -> tuple[dict[str, dict[str, ob
             "marker_phrases_total_per_1k_words",
             "marker_phrases_total",
         ),
+        "sequential_markers": (
+            "Sequential markers",
+            "sequential_marker",
+            config.analysis.sequential_markers,
+            "sequential_markers_total_per_1k_words",
+            "sequential_markers_total",
+        ),
+        "causal_markers": (
+            "Causal markers",
+            "causal_marker",
+            config.analysis.causal_markers,
+            "causal_markers_total_per_1k_words",
+            "causal_markers_total",
+        ),
+        "contrast_markers": (
+            "Contrast markers",
+            "contrast_marker",
+            config.analysis.contrast_markers,
+            "contrast_markers_total_per_1k_words",
+            "contrast_markers_total",
+        ),
+        "emphasis_markers": (
+            "Emphasis markers",
+            "emphasis_marker",
+            config.analysis.emphasis_markers,
+            "emphasis_markers_total_per_1k_words",
+            "emphasis_markers_total",
+        ),
+        "summary_markers": (
+            "Summary markers",
+            "summary_marker",
+            config.analysis.summary_markers,
+            "summary_markers_total_per_1k_words",
+            "summary_markers_total",
+        ),
     }
 
     for group_name, (label, prefix, terms, rate_feature, count_feature) in group_definitions.items():
@@ -143,6 +178,11 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         marker_verbs=config.analysis.llm_marker_verbs,
         marker_adjectives=config.analysis.llm_marker_adjectives,
         marker_phrases=config.analysis.llm_marker_phrases,
+        sequential_markers=config.analysis.sequential_markers,
+        causal_markers=config.analysis.causal_markers,
+        contrast_markers=config.analysis.contrast_markers,
+        emphasis_markers=config.analysis.emphasis_markers,
+        summary_markers=config.analysis.summary_markers,
         enable_list_of_three_marker=config.analysis.enable_list_of_three_marker,
         marker_word_matching=config.analysis.llm_marker_word_matching,
         hedges=config.analysis.hedge_terms,
@@ -229,7 +269,6 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
             group_specs=marker_group_specs,
             events=llm_events,
             smoothing_window=3,
-            exclude_features=summary_features,
         )
     )
 
