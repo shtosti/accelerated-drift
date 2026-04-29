@@ -1,0 +1,8 @@
+Checked 1 package in 6ms
+2026-04-29 21:02:24,251 INFO not_an_llm.pipelines.analyze: Using 4 workers
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:104: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  yearly = df.groupby("year", as_index=False).agg(**agg)
+2026-04-29 21:03:10,502 INFO not_an_llm.pipelines.analyze: Generating grouped pre/post diff plot...
+2026-04-29 21:03:11,192 INFO not_an_llm.pipelines.analyze: Saved grouped pre/post diff plot to data/analysis/plots/arxiv_mini/pre_post_diff.png
+2026-04-29 21:03:11,192 INFO not_an_llm.pipelines.analyze: Generating per-group pre/post diff plots...
+2026-04-29 21:03:12,135 INFO not_an_llm.pipelines.analyze: Saved 7 per-group diff plots
