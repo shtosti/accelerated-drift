@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import logging
 import spacy
 import pandas as pd
 
@@ -9,6 +10,9 @@ from not_an_llm.analysis.feature_extractor import FeatureExtractor, _slugify
 from not_an_llm.analysis.readability import ReadabilityAnalyzer
 from not_an_llm.analysis.trends import TrendAnalyzer
 from not_an_llm.config import AppConfig
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(slots=True)
@@ -234,6 +238,13 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     marker_group_specs, summary_features = _build_marker_group_specs(config)
 
     yearly = trend_analyzer.aggregate_yearly(enriched)
+    logger.info("Generating grouped pre/post diff plot...")
+    diff_plot_path = trend_analyzer.save_pre_post_diff_plot(
+        yearly,
+        output_dir=plot_dir,
+    )
+    logger.info("Saved grouped pre/post diff plot to %s", diff_plot_path)
+
     monthly = trend_analyzer.aggregate_monthly(enriched)
 
     # =========================
