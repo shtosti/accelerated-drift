@@ -39,6 +39,19 @@ class CollectionConfig:
     max_backoff_seconds: float
     backoff_jitter_seconds: float
 
+    @property
+    def output_jsonl(self) -> Path:
+        if self.source == "arxiv":
+            return self.arxiv_output_jsonl
+        if self.source == "medarxiv":
+            return self.medarxiv_output_jsonl
+        if self.source == "biorxiv":
+            return self.biorxiv_output_jsonl
+        if self.source == "semantic_scholar":
+            return self.semantic_scholar_output_jsonl
+
+        raise ValueError(f"Unknown collection source: {self.source}")
+
 
 @dataclass(slots=True)
 class AnalysisConfig:
@@ -153,13 +166,20 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         backoff_jitter_seconds=float(collection.get("backoff_jitter_seconds", 0.25)),
     )
 
+    default_preprocessed = Path("data/processed/" + source + ".jsonl")
+    preprocessed_jsonl = _load_optional_path(analysis, "preprocessed_jsonl", default_preprocessed)
+
     (
-        default_preprocessed,
         default_feature_dataset,
         default_trends_csv,
         default_monthly_trends_csv,
         default_trends_plot_dir,
-    ) = _default_analysis_paths(Path("data/raw/" + source + ".jsonl"))
+    ) = _default_analysis_paths(preprocessed_jsonl)
+
+    feature_dataset_jsonl = _load_optional_path(analysis, "feature_dataset_jsonl", default_feature_dataset)
+    trends_csv = _load_optional_path(analysis, "trends_csv", default_trends_csv)
+    monthly_trends_csv = _load_optional_path(analysis, "monthly_trends_csv", default_monthly_trends_csv)
+    trends_plot_dir = _load_optional_path(analysis, "trends_plot_dir", default_trends_plot_dir)
 
     return AppConfig(
         project_name=str(project["name"]),
@@ -194,11 +214,11 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             hedge_terms=_load_query_list(analysis.get("hedge_terms", [])),
             certainty_terms=_load_query_list(analysis.get("certainty_terms", [])),
 
-            preprocessed_jsonl=default_preprocessed,
-            feature_dataset_jsonl=default_feature_dataset,
-            trends_csv=default_trends_csv,
-            monthly_trends_csv=default_monthly_trends_csv,
-            trends_plot_dir=default_trends_plot_dir,
+            preprocessed_jsonl=preprocessed_jsonl,
+            feature_dataset_jsonl=feature_dataset_jsonl,
+            trends_csv=trends_csv,
+            monthly_trends_csv=monthly_trends_csv,
+            trends_plot_dir=trends_plot_dir,
         ),
 
         external=None,
@@ -219,6 +239,14 @@ def _load_query_list(raw: Any) -> list[str]:
     if not isinstance(raw, list):
         return []
     return [str(x).strip() for x in raw if str(x).strip()]
+
+
+def _load_optional_path(section: dict[str, Any], key: str, default: Path) -> Path:
+    value = section.get(key)
+    if value is None:
+        return default
+    value_str = str(value).strip()
+    return Path(value_str) if value_str else default
 
 
 def _load_collection_source(collection: dict[str, Any]) -> str:
@@ -263,7 +291,6 @@ def _load_readability_metrics(analysis: dict[str, Any]) -> list[str]:
 
 def _default_analysis_paths(path: Path):
     return (
-        Path("data/processed/" + path.name),
         Path("data/analyzed/" + path.name),
         Path("data/analysis/" + path.stem + "_year.csv"),
         Path("data/analysis/" + path.stem + "_month.csv"),
