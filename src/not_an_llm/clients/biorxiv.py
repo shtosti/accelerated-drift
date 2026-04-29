@@ -87,7 +87,7 @@ class BiorxivClient:
                 if limit is not None and len(papers) >= limit:
                     break
 
-            if len(collection) < 100:
+            if not collection:
                 break
 
             cursor += len(collection)
@@ -169,41 +169,44 @@ def _normalize_record(item: dict[str, Any]) -> dict[str, Any] | None:
     doi = str(item.get("doi", "")).strip()
     title = str(item.get("title", "")).strip()
     abstract = str(item.get("abstract", "")).strip()
-    date_text = str(item.get("date", "")).strip()
 
+    date_text = str(item.get("date", "")).strip()
     if not date_text:
         return None
 
     try:
         published_at = datetime.strptime(date_text, "%Y-%m-%d")
-    except ValueError:
-        return None
+    except Exception:
+        return None  # still OK, but now explicit
 
     authors_text = str(item.get("authors", "")).strip()
-    authors = [{"name": name.strip()} for name in authors_text.split(";") if name.strip()]
+    authors = [
+        {"name": a.strip()}
+        for a in authors_text.split(";")
+        if a.strip()
+    ]
+
     category = str(item.get("category", "")).strip()
     version = str(item.get("version", "")).strip()
 
-    url = f"https://www.biorxiv.org/content/{doi}v{version}" if doi and version else None
+    url = (
+        f"https://www.biorxiv.org/content/{doi}v{version}"
+        if doi and version
+        else None
+    )
 
     return {
-        "paperId": doi or f"biorxiv:{title}|{published_at.date().isoformat()}",
+        "paperId": doi or f"biorxiv:{title}|{published_at.date()}",
         "title": title,
         "abstract": abstract,
         "year": published_at.year,
+        "month": published_at.month,
         "authors": authors,
         "venue": "bioRxiv",
         "publicationDate": published_at.date().isoformat(),
-        "citationCount": None,
-        "influentialCitationCount": None,
         "fieldsOfStudy": [category] if category else [],
-        "publicationTypes": ["preprint"],
-        "journal": None,
-        "isOpenAccess": True,
-        "externalIds": {"DOI": doi} if doi else {},
         "url": url,
-        "tldr": None,
-        "source": "bioarxiv",
+        "source": "biorxiv",
     }
 
 
