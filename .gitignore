@@ -221,3 +221,4 @@ logs/analyze_external_*.out
 slurm_preprocess_external.sh
 slurm_analyze_external.sh
 slurm_preprocess_mini.sh
+slurm_analyze_mini.sh
