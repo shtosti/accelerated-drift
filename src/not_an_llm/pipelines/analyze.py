@@ -5,11 +5,16 @@ from pathlib import Path
 import logging
 import spacy
 import pandas as pd
+import os
+from concurrent.futures import ProcessPoolExecutor
 
 from not_an_llm.analysis.feature_extractor import FeatureExtractor, _slugify
 from not_an_llm.analysis.readability import ReadabilityAnalyzer
 from not_an_llm.analysis.trends import TrendAnalyzer
 from not_an_llm.config import AppConfig
+
+from .feature_groups import FEATURE_GROUPS
+from .label_map import LABEL_MAP
 
 
 logger = logging.getLogger(__name__)
@@ -24,10 +29,11 @@ class AnalysisArtifacts:
 
 
 # =========================================================
-# PATH RESOLUTION (AUTO BY SOURCE)
+# PATH RESOLUTION
 # =========================================================
 def _resolve_analysis_paths(config: AppConfig):
-    source = config.collection.source
+    # Derive output names from the preprocessed input file basename to distinguish mini/full runs
+    input_stem = config.analysis.preprocessed_jsonl.stem
     base_dir = Path(config.data_dir) / "analysis"
 
     base_dir.mkdir(parents=True, exist_ok=True)
@@ -37,28 +43,31 @@ def _resolve_analysis_paths(config: AppConfig):
 
     feature_dataset = _maybe(
         config.analysis.feature_dataset_jsonl,
-        base_dir / f"{source}.jsonl",
+        base_dir / f"{input_stem}.jsonl",
     )
 
     trends_csv = _maybe(
         config.analysis.trends_csv,
-        base_dir / f"{source}_trends_by_year.csv",
+        base_dir / f"{input_stem}_trends_by_year.csv",
     )
 
     monthly_csv = _maybe(
         config.analysis.monthly_trends_csv,
-        base_dir / f"{source}_trends_by_month.csv",
+        base_dir / f"{input_stem}_trends_by_month.csv",
     )
 
     plot_dir = _maybe(
         config.analysis.trends_plot_dir,
-        base_dir / f"{source}_plots",
+        base_dir / f"{input_stem}_plots",
     )
 
     return feature_dataset, trends_csv, monthly_csv, plot_dir
 
 
-def _build_marker_group_specs(config: AppConfig) -> tuple[dict[str, dict[str, object]], set[str]]:
+# =========================================================
+# MARKER GROUPS
+# =========================================================
+def _build_marker_group_specs(config: AppConfig):
     group_specs: dict[str, dict[str, object]] = {}
     summary_features: set[str] = set()
 
@@ -142,37 +151,16 @@ def _build_marker_group_specs(config: AppConfig) -> tuple[dict[str, dict[str, ob
 
 
 # =========================================================
-# MAIN PIPELINE
+# WORKER (PARALLEL CHUNK PROCESSING)
 # =========================================================
-def run_analysis(config: AppConfig) -> AnalysisArtifacts:
-    input_path = config.analysis.preprocessed_jsonl
-    if not input_path.exists():
-        raise FileNotFoundError(
-            f"Preprocessed dataset not found at {input_path}. Run preprocess first."
-        )
+def _process_chunk_worker(args):
+    chunk, config = args
 
-    # -------------------------
-    # RESOLVE OUTPUT PATHS
-    # -------------------------
-    (
-        enriched_output_path,
-        trends_csv,
-        monthly_trends_csv,
-        plot_dir,
-    ) = _resolve_analysis_paths(config)
+    import spacy
+    from not_an_llm.analysis.feature_extractor import FeatureExtractor
+    from not_an_llm.analysis.readability import ReadabilityAnalyzer
 
-    print("Saving feature dataset to:", enriched_output_path)
-    print("Saving yearly trends to:", trends_csv)
-    print("Saving monthly trends to:", monthly_trends_csv)
-    print("Saving plots to:", plot_dir)
-
-    # =========================
-    # LOAD SPACY
-    # =========================
-    nlp = spacy.load(
-        "en_core_web_sm",
-        disable=["ner", "textcat"]
-    )
+    nlp = spacy.load("en_core_web_sm", disable=["ner", "textcat"])
     nlp.max_length = 2_000_000
 
     feature_extractor = FeatureExtractor(
@@ -197,40 +185,75 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     if config.analysis.include_readability:
         readability = ReadabilityAnalyzer(metrics=config.analysis.readability_metrics)
 
+    enriched = feature_extractor.transform(chunk)
+
+    if readability:
+        enriched = readability.transform(enriched)
+
+    return enriched
+
+
+# =========================================================
+# MAIN PIPELINE
+# =========================================================
+def run_analysis(config: AppConfig) -> AnalysisArtifacts:
+    input_path = config.analysis.preprocessed_jsonl
+    if not input_path.exists():
+        raise FileNotFoundError(
+            f"Preprocessed dataset not found at {input_path}. Run preprocess first."
+        )
+
+    (
+        enriched_output_path,
+        trends_csv,
+        monthly_trends_csv,
+        plot_dir,
+    ) = _resolve_analysis_paths(config)
+
+    print("Saving feature dataset to:", enriched_output_path)
+    print("Saving yearly trends to:", trends_csv)
+    print("Saving monthly trends to:", monthly_trends_csv)
+    print("Saving plots to:", plot_dir)
+
     # =========================
-    # STREAM DATA IN CHUNKS
+    # CHUNK LOADING
     # =========================
     chunks = pd.read_json(input_path, lines=True, chunksize=2000)
+    chunks_list = list(chunks)
 
     enriched_output_path.parent.mkdir(parents=True, exist_ok=True)
 
     if enriched_output_path.exists():
         enriched_output_path.unlink()
 
-    first_chunk = True
-    collected_frames = []
+    # =========================
+    # PARALLEL EXECUTION
+    # =========================
+    num_workers = 4
+    logger.info(f"Using {num_workers} workers")
 
-    for chunk in chunks:
-        enriched_chunk = feature_extractor.transform(chunk)
+    results = []
 
-        if readability:
-            enriched_chunk = readability.transform(enriched_chunk)
-
-        enriched_chunk.to_json(
-            enriched_output_path,
-            orient="records",
-            lines=True,
-            force_ascii=False,
-            mode="w" if first_chunk else "a"
-        )
-        first_chunk = False
-
-        collected_frames.append(enriched_chunk)
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        for i, enriched_chunk in enumerate(
+            executor.map(_process_chunk_worker, [(c, config) for c in chunks_list])
+        ):
+            enriched_chunk.to_json(
+                enriched_output_path,
+                orient="records",
+                lines=True,
+                force_ascii=False,
+                mode="w" if i == 0 else "a",
+            )
+            results.append(enriched_chunk)
 
     # =========================
-    # CONCAT FOR ANALYSIS
+    # CONCAT
     # =========================
-    enriched = pd.concat(collected_frames, ignore_index=True)
+    enriched = pd.concat(results, ignore_index=True)
+    for col in enriched.columns:
+        if col.endswith("_per_1k_words"):
+            enriched[col] = pd.to_numeric(enriched[col], errors="coerce").fillna(0.0)
 
     feature_columns = _resolve_feature_columns(config, enriched)
 
@@ -238,12 +261,65 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     marker_group_specs, summary_features = _build_marker_group_specs(config)
 
     yearly = trend_analyzer.aggregate_yearly(enriched)
+
     logger.info("Generating grouped pre/post diff plot...")
     diff_plot_path = trend_analyzer.save_pre_post_diff_plot(
         yearly,
         output_dir=plot_dir,
     )
     logger.info("Saved grouped pre/post diff plot to %s", diff_plot_path)
+
+    logger.info("Generating per-group pre/post diff plots...")
+    if hasattr(trend_analyzer, "save_grouped_feature_diffs"):
+        grouped_diff_plots = trend_analyzer.save_grouped_feature_diffs(
+            yearly,
+            output_dir=plot_dir,
+        )
+        logger.info("Saved %d per-group diff plots", len(grouped_diff_plots))
+    else:
+        # Backwards-compatible fallback: compute grouped diffs inline and save plots
+        logger.warning("TrendAnalyzer lacks 'save_grouped_feature_diffs'; using fallback implementation.")
+        from not_an_llm.analysis.trends import save_grouped_difference_plot
+
+        grouped_diff_plots = {}
+        pre = yearly[yearly["year"] <= 2022]
+        post = yearly[yearly["year"] >= 2023]
+
+        for group_name, members in FEATURE_GROUPS.items():
+            rows = []
+            valid_cols = []
+            for m in members:
+                col = f"{m}_yearly_mean"
+                if col not in yearly.columns:
+                    continue
+                valid_cols.append(col)
+                pre_vals = pd.to_numeric(pre[col], errors="coerce")
+                post_vals = pd.to_numeric(post[col], errors="coerce")
+                if pre_vals.dropna().empty or post_vals.dropna().empty:
+                    continue
+                rows.append({"feature": m, "diff": float(post_vals.mean() - pre_vals.mean())})
+
+            if not rows:
+                continue
+
+            df = pd.DataFrame(rows)
+            if valid_cols:
+                pre_total = pre[valid_cols].mean().mean()
+                post_total = post[valid_cols].mean().mean()
+                df = pd.concat([df, pd.DataFrame([{"feature": f"{group_name}_TOTAL", "diff": float(post_total - pre_total)}])], ignore_index=True)
+
+            df = df.sort_values("diff")
+            out_path = plot_dir / f"{group_name}_diff.png"
+            save_grouped_difference_plot(
+                df,
+                out_path,
+                "feature",
+                "diff",
+                "Post - Pre mean",
+                LABEL_MAP,
+            )
+            grouped_diff_plots[group_name] = out_path
+        logger.info("Saved %d per-group diff plots (fallback)", len(grouped_diff_plots))
 
     monthly = trend_analyzer.aggregate_monthly(enriched)
 
@@ -261,7 +337,6 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     # =========================
     llm_events = {
         "ChatGPT release": "2022-11-30",
-        # "Delve study": "2024-01-15",
     }
 
     trend_plots = trend_analyzer.save_plots(
@@ -291,10 +366,6 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
 
     trend_plots.append(dep_plot_path)
 
-    # -------------------------
-    # EVENT-STACKED PLOT
-    # -------------------------
-
     stacked_plot_path = trend_analyzer.save_stacked_word_plots(
         yearly=yearly,
         monthly=monthly,
@@ -315,7 +386,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
 
 
 # =========================================================
-# FEATURE SELECTION
+# FEATURE SELECTION (UNCHANGED)
 # =========================================================
 def _resolve_feature_columns(config: AppConfig, frame: pd.DataFrame) -> list[str]:
     metadata_exclusions = {
@@ -335,9 +406,63 @@ def _resolve_feature_columns(config: AppConfig, frame: pd.DataFrame) -> list[str
 
     requested = [item.strip() for item in config.analysis.features if item.strip()]
     if not requested or requested == ["all"]:
-        return [column for column in numeric_cols if not _is_metadata_like(column)]
+        return [column for column in numeric_cols if _is_canonical_analysis_feature(column)]
 
-    return [column for column in requested if column in frame.columns]
+    return [
+        column
+        for column in requested
+        if column in frame.columns and _is_canonical_analysis_feature(column)
+    ]
+
+
+def _is_canonical_analysis_feature(column_name: str) -> bool:
+    excluded = {
+        "word_count",
+        "sentence_count",
+        "paper_count",
+        "marker_density",
+        # "coordination_density",
+        # "clause_depth_per_sentence",
+        # "dependency_entropy_normalized",
+        # "dependency_length_norm",
+        # "sentence_depth_cv",
+        # "coordination_count_per_1k_words",
+        # "list_of_three_per_1k_words",
+    }
+
+    if column_name in excluded:
+        return False
+
+    if column_name in {
+        "clause_depth",
+        "clause_depth_std",
+        "dependency_entropy",
+        "dependency_length",
+        "dependency_length_std",
+        "coordination_count",
+        "coordination_per_sentence_std",
+        "sentence_depth_std",
+        "list_of_three",
+        "avg_words_per_sentence",
+        "avg_syllables_per_word",
+        "flesch_reading_ease",
+        "flesch_kincaid_grade",
+        "dale_chall",
+        "hedge_ratio",
+        "certainty_ratio",
+    }:
+        return True
+
+    if column_name.endswith("_total_per_1k_words"):
+        return True
+
+    if column_name.endswith("_per_1k_words") and not column_name.endswith("_count_per_1k_words"):
+        return True
+    
+    if column_name.startswith("verb_") or column_name.startswith("adjective_") or column_name.startswith("word_") or column_name.startswith("phrase_"):
+        return True
+
+    return False
 
 
 def _is_metadata_like(column_name: str) -> bool:

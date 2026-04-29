@@ -143,24 +143,27 @@ class FeatureExtractor:
         if not hasattr(self, "nlp"):
             raise ValueError("FeatureExtractor requires spaCy model")
 
-        docs = list(self.nlp.pipe(text.tolist(), batch_size=128, n_process=4))
+        docs = list(self.nlp.pipe(text.tolist(), batch_size=128, n_process=1))
 
         # ========================================================
         # regex features (vectorized)
         # ========================================================
         for name, pattern in self.syntactic_features.items():
             df[f"{_slugify(name)}_count"] = text.str.count(pattern)
-            df[f"{_slugify(name)}_per_1k_words"] = df[f"{_slugify(name)}_count"] / words * 1000.0
+            df[f"{_slugify(name)}_per_1k_words"] = (df[f"{_slugify(name)}_count"] / words * 1000.0).astype(float)
 
         # ========================================================
         # SINGLE PASS OVER DOCS
         # ========================================================
         sentence_counts = []
         clause_depths = []
+        clause_depth_stds = []
         dependency_entropies = []
         dependency_lengths = []
+        dependency_length_stds = []
         dependency_distributions = []
         coordination_counts = []
+        coordination_per_sentence_stds = []
         sentence_depth_stds = []
         list_of_three_counts = []
 
@@ -174,9 +177,11 @@ class FeatureExtractor:
             if sent_depths:
                 std_depth = float(pd.Series(sent_depths).std()) if len(sent_depths) > 1 else 0.0
                 clause_depth = max(sent_depths)
+                clause_depth_std = float(pd.Series(sent_depths).std()) if len(sent_depths) > 1 else 0.0
             else:
                 std_depth = 0.0
                 clause_depth = 0
+                clause_depth_std = 0.0
 
             # ---- dependency stats
             deps = [t.dep_ for t in doc if t.dep_ != "punct"]
@@ -187,15 +192,22 @@ class FeatureExtractor:
             else:
                 entropy = 0.0
 
-            # ---- dependency length
+            # ---- dependency length (per doc + per sentence std)
             lengths = [abs(t.i - t.head.i) for t in doc if t.head != t]
             dep_len = sum(lengths) / len(lengths) if lengths else 0.0
 
-            sent_norm_vals = []
+            sent_dep_lengths = []
+            sent_coord_counts = []
             for sent in doc.sents:
                 l = [abs(t.i - t.head.i) for t in sent if t.head != t]
                 if l:
-                    sent_norm_vals.append(sum(l) / len(l))
+                    sent_dep_lengths.append(sum(l) / len(l))
+                
+                coord_in_sent = sum(1 for t in sent if t.dep_ == "cc")
+                sent_coord_counts.append(coord_in_sent)
+
+            dep_len_std = float(pd.Series(sent_dep_lengths).std()) if len(sent_dep_lengths) > 1 else 0.0
+            coord_per_sent_std = float(pd.Series(sent_coord_counts).std()) if len(sent_coord_counts) > 1 else 0.0
 
             # ---- coordination
             coord_count = sum(1 for t in doc if t.dep_ == "cc")
@@ -216,10 +228,13 @@ class FeatureExtractor:
             # ---- append
             sentence_counts.append(len(sent_depths))
             clause_depths.append(clause_depth)
+            clause_depth_stds.append(clause_depth_std)
             dependency_entropies.append(entropy)
             dependency_lengths.append(dep_len)
+            dependency_length_stds.append(dep_len_std)
             dependency_distributions.append(dict(Counter(deps)))
             coordination_counts.append(coord_count)
+            coordination_per_sentence_stds.append(coord_per_sent_std)
             sentence_depth_stds.append(std_depth)
             list_of_three_counts.append(lot_count)
 
@@ -228,12 +243,16 @@ class FeatureExtractor:
         # ========================================================
         df["sentence_count"] = sentence_counts
         df["clause_depth"] = clause_depths
+        df["clause_depth_std"] = clause_depth_stds
         df["dependency_entropy"] = dependency_entropies
         df["dependency_length"] = dependency_lengths
+        df["dependency_length_std"] = dependency_length_stds
         df["dependency_distribution"] = dependency_distributions
         df["coordination_count"] = coordination_counts
+        df["coordination_per_sentence_std"] = coordination_per_sentence_stds
         df["sentence_depth_std"] = sentence_depth_stds
         df["list_of_three"] = list_of_three_counts
+        df["list_of_three_per_1k_words"] = (df["list_of_three"] / words * 1000.0).astype(float)
 
         # ========================================================
         # marker words
@@ -259,9 +278,12 @@ class FeatureExtractor:
                     term,
                     matching_mode,
                 )
-                group_total = group_total + counts
+                slug = _slugify(term)
+                df[f"{prefix}_{slug}_per_1k_words"] = (counts / words * 1000.0).astype(float)
 
-            df[f"{group_name}_total_per_1k_words"] = group_total / words * 1000.0
+                group_total += counts
+
+            df[f"{group_name}_total_per_1k_words"] = (group_total / words * 1000.0).astype(float)
 
         # ========================================================
         # hedges / certainty
