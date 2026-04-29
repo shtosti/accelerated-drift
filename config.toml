@@ -3,7 +3,7 @@ name = "not-an-llm"
 data_dir = "data"
 
 [collection]
-# Data source: semantic_scholar, arxiv, medarxiv, or bioarxiv
+# Data source: semantic_scholar, arxiv, medarxiv, or biorxiv
 source = "arxiv"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
@@ -30,20 +30,21 @@ medarxiv_queries = ["*"]
 
 # For bioRxiv, query is a local text filter over title/abstract/category.
 # Use ["*"] to collect all records in the date range.
-bioarxiv_queries = ["*"]
+biorxiv_queries = ["*"]
 
 year_min = 2015
 year_max = 2026
 page_size = 100
 arxiv_collection_mode = "full" # full or monthly
 medarxiv_collection_mode = "full" # full or monthly
-bioarxiv_collection_mode = "full" # full or monthly
+biorxiv_collection_mode = "full" # full or monthly
 samples_per_month = 2 # used only when *_collection_mode = "monthly"
 arxiv_output_jsonl = "data/raw/arxiv.jsonl"
 arxiv_monthly_output_jsonl = "data/raw/arxiv_monthly.jsonl"
 semantic_scholar_output_jsonl = "data/raw/semantic_scholar.jsonl"
 medarxiv_output_jsonl = "data/raw/medarxiv.jsonl"
-bioarxiv_output_jsonl = "data/raw/bioarxiv.jsonl"
+biorxiv_output_jsonl = "data/raw/biorxiv.jsonl"
+biorxiv_monthly_output_jsonl = "data/raw/biorxiv_monthly.jsonl"
 # Safe request pacing for collection APIs.
 min_request_interval_seconds = 3.5
 max_retries = 10
@@ -81,9 +82,8 @@ readability_metrics = [
   "dale_chall"
 ]
 
-# Defaults follow collection output basename (e.g. arxiv.*).
-# Keep only explicit overrides you need.
-preprocessed_jsonl = "data/processed/arxiv_mini.jsonl"
+# Full run config. Use config_mini.toml for the mini run.
+preprocessed_jsonl = "data/processed/arxiv.jsonl"
 feature_dataset_jsonl = ""
 trends_csv = ""
 monthly_trends_csv = ""
