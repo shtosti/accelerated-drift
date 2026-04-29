@@ -39,7 +39,7 @@ arxiv_collection_mode = "full" # full or monthly
 medarxiv_collection_mode = "full" # full or monthly
 biorxiv_collection_mode = "full" # full or monthly
 samples_per_month = 2 # used only when *_collection_mode = "monthly"
-arxiv_output_jsonl = "data/raw/arxiv.jsonl"
+arxiv_output_jsonl = "data/raw/arxiv_mini.jsonl"
 arxiv_monthly_output_jsonl = "data/raw/arxiv_monthly.jsonl"
 semantic_scholar_output_jsonl = "data/raw/semantic_scholar.jsonl"
 medarxiv_output_jsonl = "data/raw/medarxiv.jsonl"
@@ -82,8 +82,9 @@ readability_metrics = [
   "dale_chall"
 ]
 
-# Full run config. Use config_mini.toml for the mini run.
-preprocessed_jsonl = "data/processed/arxiv.jsonl"
+# Full/mini output names are derived from the preprocessed input basename.
+# This mini config points at the mini preprocessed dataset.
+preprocessed_jsonl = "data/processed/arxiv_mini.jsonl"
 feature_dataset_jsonl = ""
 trends_csv = ""
 monthly_trends_csv = ""
@@ -157,9 +158,3 @@ causal_markers = ["hence", "thus", "consequently", "accordingly", "thereby"]
 contrast_markers = ["however", "nonetheless", "nevertheless", "conversely", "alternatively"]
 emphasis_markers = ["notably", "crucially", "remarkably", "particularly", "importantly"]
 summary_markers = ["overall", "collectively", "ultimately", "in summary", "taken together"]
-
-# exact: surface form only, lemma: lemmatized.
-llm_marker_word_matching = "lemma"
-# Backward-compatible aliases if you prefer top-level [analysis] keys
-# llm_marker_words = [...]
-# llm_marker_word_matching = "exact"
