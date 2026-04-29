@@ -16,6 +16,19 @@ from not_an_llm.config import AppConfig
 logger = logging.getLogger(__name__)
 
 
+def _get_output_path(config: AppConfig) -> Path:
+    source = config.collection.source
+
+    if source == "arxiv":
+        return config.collection.arxiv_output_jsonl
+    if source == "medarxiv":
+        return config.collection.medarxiv_output_jsonl
+    if source == "biorxiv":
+        return config.collection.biorxiv_output_jsonl
+    if source == "semantic_scholar":
+        return config.collection.semantic_scholar_output_jsonl
+
+    raise ValueError(f"Unknown source: {source}")
 
 def run_collection(config: AppConfig) -> Path:
     if config.collection.source == "arxiv":
@@ -30,17 +43,17 @@ def run_collection(config: AppConfig) -> Path:
             return _run_monthly_arxiv_collection(config)
         return _run_full_arxiv_collection(config)
 
-    if config.collection.source == "bioarxiv":
-        mode = config.collection.bioarxiv_collection_mode
+    if config.collection.source == "biorxiv":
+        mode = config.collection.biorxiv_collection_mode
         if mode == "monthly":
-            return _run_monthly_arxiv_collection(config)
-        return _run_full_arxiv_collection(config)
+            return _run_monthly_biorxiv_collection(config)
+        return _run_full_biorxiv_collection(config)
 
     return _run_query_based_collection(config)
 
 
 def _run_full_arxiv_collection(config: AppConfig) -> Path:
-    output_path = config.collection.output_jsonl
+    output_path = _get_output_path(config)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     seen_keys, existing_total = _load_existing_keys(output_path)
@@ -103,7 +116,7 @@ def _run_full_arxiv_collection(config: AppConfig) -> Path:
 
 
 def _run_monthly_arxiv_collection(config: AppConfig) -> Path:
-    output_path = config.collection.output_jsonl
+    output_path = _get_output_path(config)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     seen_keys, existing_total, month_counts = _load_existing_monthly_state(
@@ -168,6 +181,97 @@ def _run_monthly_arxiv_collection(config: AppConfig) -> Path:
         output_path,
     )
 
+    return output_path
+
+def _run_full_biorxiv_collection(config: AppConfig) -> Path:
+    output_path = _get_output_path(config)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    seen_keys, _ = _load_existing_keys(output_path)
+
+    client = BiorxivClient()
+
+    new_count = 0
+    with output_path.open("a", encoding="utf-8") as f:
+        for query in config.collection.queries:
+            papers = client.search_papers(
+                query=query,
+                fields=config.collection.fields,
+                year_min=config.collection.year_min,
+                year_max=config.collection.year_max,
+                limit=None,
+                page_size=config.collection.page_size,
+            )
+
+            for p in papers:
+                key = _paper_key(p)
+                if key in seen_keys:
+                    continue
+                seen_keys.add(key)
+
+                f.write(json.dumps(p, ensure_ascii=False) + "\n")
+                new_count += 1
+
+    logger.info("biorxiv full collection done: new=%s", new_count)
+    return output_path
+
+def _run_monthly_biorxiv_collection(config: AppConfig) -> Path:
+    output_path = _get_output_path(config)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    seen_keys, existing_total, month_counts = _load_existing_monthly_state(
+        output_path,
+        year_min=config.collection.year_min,
+        year_max=config.collection.year_max,
+    )
+
+    client = BiorxivClient()
+
+    month_plan = _build_month_plan(
+        config.collection.year_min,
+        config.collection.year_max,
+    )
+
+    new_count = 0
+
+    with tqdm(desc="Collecting monthly biorxiv", initial=existing_total, unit="paper") as progress:
+        with output_path.open("a", encoding="utf-8") as f:
+            for year, month in month_plan:
+                existing_month = month_counts.get((year, month), 0)
+                needed = max(0, config.collection.samples_per_month - existing_month)
+
+                if needed == 0:
+                    continue
+
+                for query in config.collection.queries:
+                    papers = client.search_papers(
+                        query=query,
+                        fields=config.collection.fields,
+                        year_min=config.collection.year_min,
+                        year_max=config.collection.year_max,
+                        limit=needed,
+                        page_size=config.collection.page_size,
+                        published_year=year,
+                        published_month=month,
+                    )
+
+                    for paper in papers:
+                        key = _paper_key(paper)
+                        if key in seen_keys:
+                            continue
+
+                        seen_keys.add(key)
+
+                        f.write(json.dumps(paper, ensure_ascii=False) + "\n")
+                        new_count += 1
+                        progress.update(1)
+
+                        if new_count >= needed:
+                            break
+
+                f.flush()
+
+    logger.info("biorxiv monthly collection done: new=%s", new_count)
     return output_path
 
 
@@ -267,7 +371,7 @@ def _run_query_based_collection(config: AppConfig) -> Path:
         config.collection.year_max,
     )
 
-    output_path = config.collection.output_jsonl
+    output_path = _get_output_path(config)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     seen_keys, existing_count = _load_existing_keys(output_path)
@@ -553,6 +657,6 @@ def _build_collection_client(config: AppConfig) -> SemanticScholarClient | Arxiv
         return ArxivClient(**common_kwargs)
     if source == "medarxiv":
         return MedarxivClient(**common_kwargs)
-    if source == "bioarxiv":
+    if source == "biorxiv":
         return BiorxivClient(**common_kwargs)
     return SemanticScholarClient(**common_kwargs)
