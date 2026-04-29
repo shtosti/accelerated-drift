@@ -1,151 +1,111 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Optional
 
-import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+from .label_map import LABEL_MAP
+from .feature_groups import FEATURE_GROUPS
 
 
 class TrendAnalyzer:
     """Aggregate and visualize per-year feature trends with mean + confidence intervals."""
 
-    def __init__(self, feature_columns: list[str]) -> None:
+    def __init__(
+        self,
+        feature_columns: list[str],
+        label_map: dict[str, str] | None = None,
+    ) -> None:
         self.feature_columns = feature_columns
+        self.label_map = label_map if label_map is not None else LABEL_MAP
+
         self.colors = {
             "monthly": "#1E9B4C",
             "yearly": "#9B4D8C",
-            "ci": "#55A868",
             "events": "#484A59",
-            "dependencies": [
-                "#4C72B0", "#DD8452", "#55A868", "#C44E52",
-                "#8172B3", "#937860", "#DA8BC3", "#8C8C8C",
-                "#CCB974", "#64B5CD"
-            ]
         }
 
+    # =========================================================
+    # LABELS
+    # =========================================================
+    def _pretty_label(self, feature: str) -> str:
+        return self.label_map.get(feature, feature)
+
+    # =========================================================
+    # UTILS
+    # =========================================================
     def _format_xticks(self, ax):
         for label in ax.get_xticklabels():
             label.set_rotation(45)
             label.set_ha("right")
 
+    def _resolve_month_timestamp(self, df: pd.DataFrame) -> pd.Series:
+        if "publicationDate" in df.columns:
+            return pd.to_datetime(df["publicationDate"], errors="coerce").dt.to_period("M").dt.to_timestamp()
+        return pd.to_datetime(df["year"], format="%Y", errors="coerce")
+
     def _add_event_lines(self, ax, event_dates: dict[str, pd.Timestamp]) -> None:
-        for d in event_dates.values():
-            ax.axvline(d, linestyle="--", alpha=0.7)
+        for label, d in event_dates.items():
+            ax.axvline(d, linestyle="--", alpha=0.7, color="black")
 
-    def _filter_plot_features(
-        self,
-        features: list[str],
-        exclude_features: set[str] | None = None,
-    ) -> list[str]:
-        if not exclude_features:
+    def _filter_features(self, features, exclude=None):
+        if not exclude:
             return features
-        return [feature for feature in features if feature not in exclude_features]
-
-    def save_pre_post_diff_plot(self, yearly: pd.DataFrame, output_dir: Path) -> Path:
-        plot_columns = [c for c in yearly.columns if c.endswith("_yearly_mean")]
-        rows: list[dict[str, object]] = []
-
-        pre_years = yearly[yearly["year"] <= 2022]
-        post_years = yearly[yearly["year"] >= 2023]
-
-        for yearly_column in plot_columns:
-            feature = yearly_column.removesuffix("_yearly_mean")
-
-            if yearly_column not in yearly.columns:
-                continue
-
-            pre_values = pd.to_numeric(pre_years[yearly_column], errors="coerce")
-            post_values = pd.to_numeric(post_years[yearly_column], errors="coerce")
-
-            if pre_values.dropna().empty or post_values.dropna().empty:
-                continue
-
-            pre_mean = float(pre_values.mean())
-            post_mean = float(post_values.mean())
-
-            rows.append(
-                {
-                    "feature": feature,
-                    "pre_mean": pre_mean,
-                    "post_mean": post_mean,
-                    "diff_post_minus_pre": post_mean - pre_mean,
-                }
-            )
-
-        comparison = pd.DataFrame(rows)
-        if comparison.empty:
-            raise ValueError("No yearly features available for pre/post comparison.")
-
-        output_path = output_dir / "pre_post_feature_diff.png"
-        return save_grouped_difference_plot(
-            comparison,
-            output_path=output_path,
-            feature_column="feature",
-            diff_column="diff_post_minus_pre",
-            title="Pre/Post feature shifts",
-            xlabel="Post - pre mean",
-            top_n=25,
-        )
+        return [f for f in features if f not in exclude]
 
     # =========================================================
-    # YEARLY AGGREGATION (MEAN + STD + COUNT FOR CI)
+    # YEARLUY/MONTHLY AGGREGATION
     # =========================================================
-    def aggregate_yearly(self, frame: pd.DataFrame) -> pd.DataFrame:
-        df = frame.copy()
 
-        if "year" not in df.columns:
-            raise ValueError("Expected a 'year' column in the dataset.")
-
-        df["year"] = pd.to_numeric(df["year"], errors="coerce").astype("Int64")
-        valid = df.dropna(subset=["year"]).copy()
-        valid["year"] = valid["year"].astype(int)
-
-        aggregations = {
-            "paper_count": ("text_clean", "size")
-        }
-
-        for column in self.feature_columns:
-            if column not in valid.columns:
-                continue
-
-            valid[column] = pd.to_numeric(valid[column], errors="coerce")
-
-            aggregations[f"{column}_yearly_mean"] = (column, "mean")
-            aggregations[f"{column}_yearly_std"] = (column, "std")
-            aggregations[f"{column}_yearly_n"] = (column, "count")
-
-        yearly = valid.groupby("year", as_index=False).agg(**aggregations)
-        return yearly.sort_values("year").reset_index(drop=True)
-
-    # =========================================================
-    # MONTHLY
-    # =========================================================
     def aggregate_monthly(self, frame: pd.DataFrame) -> pd.DataFrame:
         df = frame.copy()
 
         if "year" not in df.columns:
-            raise ValueError("Expected a 'year' column in the dataset.")
+            raise ValueError("Expected a 'year' column.")
 
         month_ts = self._resolve_month_timestamp(df)
 
-        valid = df.copy()
-        valid["month_ts"] = month_ts
-        valid = valid.dropna(subset=["month_ts"]).copy()
+        df = df.copy()
+        df["month_ts"] = month_ts
+        df = df.dropna(subset=["month_ts"])
 
-        aggregations = {"paper_count": ("text_clean", "size")}
+        agg = {"paper_count": ("text_clean", "size")}
 
-        for column in self.feature_columns:
-            if column not in valid.columns:
-                continue
-            aggregations[f"{column}_monthly_mean"] = (column, "mean")
+        for c in self.feature_columns:
+            if c in df.columns:
+                agg[f"{c}_monthly_mean"] = (c, "mean")
 
-        monthly = valid.groupby("month_ts", as_index=False).agg(**aggregations)
+        monthly = df.groupby("month_ts", as_index=False).agg(**agg)
         return monthly.sort_values("month_ts").reset_index(drop=True)
 
+    def aggregate_yearly(self, frame: pd.DataFrame) -> pd.DataFrame:
+        df = frame.copy()
+
+        if "year" not in df.columns:
+            raise ValueError("Expected a 'year' column.")
+
+        df["year"] = pd.to_numeric(df["year"], errors="coerce").astype("Int64")
+        df = df.dropna(subset=["year"]).copy()
+        df["year"] = df["year"].astype(int)
+
+        agg = {"paper_count": ("text_clean", "size")}
+
+        for c in self.feature_columns:
+            if c not in df.columns:
+                continue
+            df[c] = pd.to_numeric(df[c], errors="coerce")
+            agg[f"{c}_yearly_mean"] = (c, "mean")
+            agg[f"{c}_yearly_std"] = (c, "std")
+            agg[f"{c}_yearly_n"] = (c, "count")
+
+        yearly = df.groupby("year", as_index=False).agg(**agg)
+        return yearly.sort_values("year").reset_index(drop=True)
+
     # =========================================================
-    # STACKED WORD PLOTS WITH EVENTS + CI
+    # STACKED PLOTS
     # =========================================================
     def save_stacked_word_plots(
         self,
@@ -164,148 +124,170 @@ class TrendAnalyzer:
             for c in yearly.columns
             if c.endswith("_yearly_mean")
         ]
-        features = self._filter_plot_features(features, exclude_features)
 
-        if not features:
-            raise ValueError("No features found to plot.")
+        features = self._filter_features(features, exclude_features)
 
-        if events is None:
-            events = {
-                "ChatGPT": "2022-11-30",
-                "GPT-4": "2023-03-14",
-                "AI detection": "2023-06-01",
-                "Delve paper": "2024-01-15",
-            }
+        events = events or {
+            "ChatGPT": "2022-11-30",
+            "Delve": "2024-01-15",
+        }
 
         event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
 
-        n = len(features)
-        fig, axes = plt.subplots(
-            nrows=n,
-            ncols=1,
-            figsize=(12, 2.5 * n),
-            sharex=True
-        )
-
-        if n == 1:
+        fig, axes = plt.subplots(len(features), 1, figsize=(12, 2.5 * len(features)))
+        if len(features) == 1:
             axes = [axes]
 
         for ax, feature in zip(axes, features):
 
-            yearly_col = f"{feature}_yearly_mean"
-            std_col = f"{feature}_yearly_std"
-            n_col = f"{feature}_yearly_n"
-            monthly_col = f"{feature}_monthly_mean"
+            ycol = f"{feature}_yearly_mean"
+            mcol = f"{feature}_monthly_mean"
 
-            # -----------------------------
-            # MONTHLY
-            # -----------------------------
-            if monthly_col in monthly.columns:
-                y_m = monthly[monthly_col]
-
+            if mcol in monthly.columns:
+                y_m = monthly[mcol]
                 if smoothing_window:
                     y_m = y_m.rolling(smoothing_window, center=True).mean()
 
-                ax.plot(
-                    monthly["month_ts"],
-                    y_m,
-                    color = self.colors["monthly"],
-                    alpha=1.0,
-                    linewidth=1.0,
-                    label="Monthly",
-                )
+                ax.plot(monthly["month_ts"], y_m, color="green", label="Monthly")
 
-            # -----------------------------
-            # YEARLY
-            # -----------------------------
             x = pd.to_datetime(yearly["year"].astype(str) + "-01-01")
-            y = yearly[yearly_col]
+            y = yearly[ycol]
 
-            if smoothing_window:
-                y_plot = pd.Series(y).rolling(smoothing_window, center=True).mean()
-            else:
-                y_plot = y
+            ax.plot(x, y, marker="o", color="purple", label="Yearly")
 
-            # # -----------------------------
-            # # CONFIDENCE INTERVAL (95%)
-            # # -----------------------------
-            # if std_col in yearly.columns and n_col in yearly.columns:
-            #     std = yearly[std_col]
-            #     n_vals = yearly[n_col].replace(0, np.nan)
+            self._add_event_lines(ax, event_dates)
 
-            #     se = std / np.sqrt(n_vals)
-            #     ci = 1.96 * se
-
-            #     lower = y_plot - ci
-            #     upper = y_plot + ci
-
-            #     ax.fill_between(
-            #         x,
-            #         lower,
-            #         upper,
-            #         alpha=0.15,
-            #         label="95% CI",
-            #     )
-
-            # -----------------------------
-            # LINES
-            # -----------------------------
-            ax.plot(
-                x,
-                y,
-                marker="o",
-                color = self.colors["yearly"],
-                linewidth=1.0,
-                alpha=1.0,
-                label="Yearly mean (raw)",
-            )
-
-            # ax.plot(
-            #     x,
-            #     y_plot,
-            #     linewidth=2.0,
-            #     label="Smoothed trend",
-            # )
-
-            # -----------------------------
-            # EVENTS
-            # -----------------------------
-            for d in event_dates.values():
-                ax.axvline(d, linestyle="--", alpha=0.7, color=self.colors["events"])
-
-            ax.set_ylabel(feature)
-            ax.grid(alpha=0.9)
-
-        # -----------------------------
-        # EVENT LABELS
-        # -----------------------------
-        top_ax = axes[0]
-        for label, d in event_dates.items():
-            top_ax.text(
-                d,
-                top_ax.get_ylim()[1],
-                label,
-                rotation=90,
-                va="bottom",
-                fontsize=8,
-                alpha=0.8,
-            )
+            ax.set_ylabel(self._pretty_label(feature))
+            ax.grid(alpha=0.3)
 
         axes[-1].set_xlabel("Year")
-        axes[-1].xaxis.set_major_locator(mdates.YearLocator())
-        axes[-1].xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
-
         for ax in axes:
             self._format_xticks(ax)
 
         fig.tight_layout()
 
-        out_path = output_dir / "stacked_word_trends_with_events.png"
+        out_path = output_dir / "stacked_trends.png"
         fig.savefig(out_path, dpi=150)
         plt.close(fig)
 
         return out_path
 
+    # =========================================================
+    # PRE/POST GLOBAL DIFF
+    # =========================================================
+    def save_pre_post_diff_plot(self, yearly: pd.DataFrame, output_dir: Path) -> Path:
+
+        cols = [c for c in yearly.columns if c.endswith("_yearly_mean")]
+
+        pre = yearly[yearly["year"] <= 2022]
+        post = yearly[yearly["year"] >= 2023]
+
+        rows = []
+
+        for col in cols:
+            feature = col.replace("_yearly_mean", "")
+
+            pre_vals = pd.to_numeric(pre[col], errors="coerce")
+            post_vals = pd.to_numeric(post[col], errors="coerce")
+
+            if pre_vals.dropna().empty or post_vals.dropna().empty:
+                continue
+
+            rows.append({
+                "feature": feature,
+                "diff": post_vals.mean() - pre_vals.mean()
+            })
+
+        df = pd.DataFrame(rows).sort_values("diff")
+
+        return save_grouped_difference_plot(
+            df,
+            output_dir / "pre_post_diff.png",
+            "feature",
+            "diff",
+            "Post - Pre mean",
+            self.label_map,
+        )
+
+    # =========================================================
+    # GROUPED DIFFS (THIS IS YOUR MAIN REQUEST)
+    # =========================================================
+    def save_grouped_feature_diffs(
+        self,
+        yearly: pd.DataFrame,
+        output_dir: Path,
+        groups: dict[str, list[str]] = FEATURE_GROUPS,
+        pre_cut: int = 2022,
+        post_cut: int = 2023,
+    ) -> dict[str, Path]:
+
+        output_dir.mkdir(parents=True, exist_ok=True)
+        outputs = {}
+
+        pre = yearly[yearly["year"] <= pre_cut]
+        post = yearly[yearly["year"] >= post_cut]
+
+        for group_name, features in groups.items():
+
+            rows = []
+            valid_cols = []
+
+            for f in features:
+                col = f"{f}_yearly_mean"
+                if col not in yearly.columns:
+                    continue
+
+                valid_cols.append(col)
+
+                pre_vals = pd.to_numeric(pre[col], errors="coerce")
+                post_vals = pd.to_numeric(post[col], errors="coerce")
+
+                if pre_vals.dropna().empty or post_vals.dropna().empty:
+                    continue
+
+                rows.append({
+                    "feature": f,
+                    "diff": post_vals.mean() - pre_vals.mean()
+                })
+
+            df = pd.DataFrame(rows)
+
+            if df.empty:
+                continue
+
+            # TOTAL (correct pooled mean)
+            if valid_cols:
+                pre_total = pre[valid_cols].mean().mean()
+                post_total = post[valid_cols].mean().mean()
+
+                df = pd.concat([
+                    df,
+                    pd.DataFrame([{
+                        "feature": f"{group_name}_TOTAL",
+                        "diff": post_total - pre_total
+                    }])
+                ])
+
+            df = df.sort_values("diff")
+
+            out_path = output_dir / f"{group_name}_diff.png"
+
+            save_grouped_difference_plot(
+                df,
+                out_path,
+                "feature",
+                "diff",
+                "Post - Pre mean",
+                self.label_map,
+            )
+
+            outputs[group_name] = out_path
+
+        return outputs
+
+    # =========================================================
+    # GROUPED WORD PLOTS
+    # =========================================================
     def save_grouped_word_plots(
         self,
         yearly: pd.DataFrame,
@@ -316,17 +298,15 @@ class TrendAnalyzer:
         smoothing_window: int | None = None,
         exclude_features: set[str] | None = None,
     ) -> list[Path]:
-
         output_dir.mkdir(parents=True, exist_ok=True)
         paths: list[Path] = []
 
-        if events is None:
-            events = {
-                "ChatGPT": "2022-11-30",
-                "GPT-4": "2023-03-14",
-                "AI detection": "2023-06-01",
-                "Delve paper": "2024-01-15",
-            }
+        events = events or {
+            "ChatGPT": "2022-11-30",
+            "GPT-4": "2023-03-14",
+            "AI detection": "2023-06-01",
+            "Delve paper": "2024-01-15",
+        }
 
         event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
 
@@ -339,23 +319,13 @@ class TrendAnalyzer:
             yearly_col = f"{rate_feature}_yearly_mean"
             monthly_col = f"{rate_feature}_monthly_mean"
 
-            if yearly_col not in yearly.columns:
-                continue
-
             fig, ax = plt.subplots(figsize=(10, 4))
 
             if monthly_col in monthly.columns:
                 y_m = monthly[monthly_col]
                 if smoothing_window:
                     y_m = y_m.rolling(smoothing_window, center=True).mean()
-                ax.plot(
-                    monthly["month_ts"],
-                    y_m,
-                    color=self.colors["monthly"],
-                    linewidth=1.2,
-                    alpha=1.0,
-                    label="Monthly mean",
-                )
+                ax.plot(monthly["month_ts"], y_m, color=self.colors["monthly"], linewidth=1.2, alpha=1.0, label="Monthly mean")
 
             x = pd.to_datetime(yearly["year"].astype(str) + "-01-01")
             y = yearly[yearly_col]
@@ -365,46 +335,21 @@ class TrendAnalyzer:
             else:
                 y_plot = y
 
-            ax.plot(
-                x,
-                y,
-                marker="o",
-                linewidth=1.8,
-                color=self.colors["yearly"],
-                label="Yearly mean",
-            )
+            ax.plot(x, y, marker="o", linewidth=1.8, color=self.colors["yearly"], label="Yearly mean")
+            ax.plot(x, y_plot, linewidth=2.4, alpha=0.9, color=self.colors.get("ci", self.colors["yearly"]))
 
-            ax.plot(
-                x,
-                y_plot,
-                linewidth=2.4,
-                alpha=0.9,
-                color=self.colors["ci"],
-                label="Smoothed trend",
-            )
+            self._add_event_lines(ax, event_dates)
 
-            for d in event_dates.values():
-                ax.axvline(d, linestyle="--", alpha=0.7, color=self.colors["events"])
-
-            ax.set_title(label)
+            # ax.set_title(label)
             ax.set_ylabel("Mean count per 1k words")
             ax.set_xlabel("Year")
-
-            ax.xaxis.set_major_locator(mdates.YearLocator())
-            ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+            ax.xaxis.set_major_locator(plt.matplotlib.dates.YearLocator())
+            ax.xaxis.set_major_formatter(plt.matplotlib.dates.DateFormatter("%Y"))
             ax.grid(True, alpha=0.3)
 
             top_y = ax.get_ylim()[1]
             for event_label, d in event_dates.items():
-                ax.text(
-                    d,
-                    top_y,
-                    event_label,
-                    rotation=90,
-                    va="bottom",
-                    fontsize=8,
-                    alpha=0.8,
-                )
+                ax.text(d, top_y, event_label, rotation=90, va="bottom", fontsize=8, alpha=0.8)
 
             ax.legend()
             self._format_xticks(ax)
@@ -418,104 +363,9 @@ class TrendAnalyzer:
 
         return paths
 
-    def save_dependency_distribution_plot(
-        self,
-        df: pd.DataFrame,
-        output_dir: Path,
-        events: dict[str, str] | None = None,
-    ) -> Path:
-
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        # -----------------------------
-        # EXPAND dependency distributions
-        # -----------------------------
-        dep_df = df["dependency_distribution"].apply(pd.Series).fillna(0)
-        dep_df["year"] = df["year"]
-
-        # -----------------------------
-        # AGGREGATE per year
-        # -----------------------------
-        dep_yearly = dep_df.groupby("year").sum(numeric_only=True)
-
-        # -----------------------------
-        # SELECT top dependencies
-        # -----------------------------
-        top_deps = dep_yearly.sum().sort_values(ascending=False).head(15).index
-
-        dep_plot = dep_yearly[top_deps].copy()
-        dep_plot["OTHER"] = dep_yearly.drop(columns=top_deps).sum(axis=1)
-
-        # -----------------------------
-        # NORMALIZE (sum = 1 per year)
-        # -----------------------------
-        dep_plot = dep_plot.div(dep_plot.sum(axis=1), axis=0)
-
-        # -----------------------------
-        # SORT for stable plotting
-        # -----------------------------
-        dep_plot = dep_plot.sort_index()
-        dep_plot = dep_plot[dep_plot.mean().sort_values(ascending=False).index]
-
-        # -----------------------------
-        # PLOT
-        # -----------------------------
-        fig, ax = plt.subplots(figsize=(10, 5))
-
-        dep_plot.plot(
-            kind="bar",
-            stacked=True,
-            ax=ax,
-            width=0.9,
-        )
-
-        ax.set_ylabel("Proportion")
-        ax.set_xlabel("Year")
-        ax.set_title("Dependency Distribution Over Time")
-
-        # -----------------------------
-        # EVENTS
-        # -----------------------------
-        if events:
-            event_years = {k: pd.to_datetime(v).year for k, v in events.items()}
-            years = dep_plot.index.tolist()
-
-            for label, year in event_years.items():
-                if year in years:
-                    x_pos = years.index(year)
-                    ax.axvline(x=x_pos, linestyle="--", alpha=0.7, color=self.colors["events"])
-                    ax.text(
-                        x_pos,
-                        1.02,
-                        label,
-                        va="bottom",
-                        fontsize=8,
-                    )
-
-        # -----------------------------
-        # LEGEND
-        # -----------------------------
-        ax.legend(
-            loc="upper left",
-            bbox_to_anchor=(1.02, 1),
-            fontsize=8,
-            title="Dependency",
-        )
-
-        self._format_xticks(ax)
-
-        plt.tight_layout()
-
-        # -----------------------------
-        # SAVE
-        # -----------------------------
-        out_path = output_dir / "dependency_distribution_stacked.png"
-        fig.savefig(out_path, dpi=150, bbox_inches="tight")
-        plt.close(fig)
-
-        return out_path
-    
-
+    # =========================================================
+    # GENERIC PLOTS (single-feature mean plots)
+    # =========================================================
     def save_plots(
         self,
         yearly: pd.DataFrame,
@@ -524,91 +374,36 @@ class TrendAnalyzer:
         events: dict[str, str] | None = None,
         exclude_features: set[str] | None = None,
     ) -> list[Path]:
-
         output_dir.mkdir(parents=True, exist_ok=True)
         paths: list[Path] = []
 
         plot_columns = [c for c in yearly.columns if c.endswith("_yearly_mean")]
-        plot_columns = [
-            column for column in plot_columns
-            if column.removesuffix("_yearly_mean") not in (exclude_features or set())
-        ]
-        event_dates = (
-        {k: pd.to_datetime(v) for k, v in events.items()}
-        if events else {}
-        )
+        plot_columns = [column for column in plot_columns if column.removesuffix("_yearly_mean") not in (exclude_features or set())]
+
+        event_dates = {k: pd.to_datetime(v) for k, v in (events or {}).items()}
 
         for yearly_column in plot_columns:
             feature = yearly_column.removesuffix("_yearly_mean")
-
-            std_col = f"{feature}_yearly_std"
-            n_col = f"{feature}_yearly_n"
             monthly_col = f"{feature}_monthly_mean"
 
-            fig, ax = plt.subplots(figsize=(5, 4))
+            fig, ax = plt.subplots(figsize=(6, 4))
 
-            # -----------------------------
-            # MONTHLY
-            # -----------------------------
             if monthly_col in monthly.columns:
-                ax.plot(
-                    monthly["month_ts"],
-                    monthly[monthly_col],
-                    color=self.colors["monthly"],
-                    linewidth=1.0,
-                    alpha=1.0,
-                    label="Monthly mean",
-                )
+                ax.plot(monthly["month_ts"], monthly[monthly_col], color=self.colors["monthly"], linewidth=1.0, alpha=1.0, label="Monthly mean")
 
             x = pd.to_datetime(yearly["year"].astype(str) + "-01-01")
             y = yearly[yearly_column]
 
-            # # -----------------------------
-            # # CONFIDENCE INTERVAL
-            # # -----------------------------
-            # if std_col in yearly.columns and n_col in yearly.columns:
-            #     std = yearly[std_col]
-            #     n_vals = yearly[n_col].replace(0, np.nan)
-
-            #     se = std / np.sqrt(n_vals)
-            #     ci = 1.96 * se
-
-            #     lower = y - ci
-            #     upper = y + ci
-
-            #     ax.fill_between(
-            #         x,
-            #         lower,
-            #         upper,
-            #         alpha=0.15,
-            #         label="95% CI",
-            #     )
-
-            # -----------------------------
-            # LINE
-            # -----------------------------
-            ax.plot(
-                x,
-                y,
-                marker="o",
-                linewidth=1.5,
-                color=self.colors["yearly"],
-                label="Yearly mean",
-            )
-            ax.set_xlabel("Year")
+            ax.plot(x, y, marker="o", linewidth=1.5, color=self.colors["yearly"], label="Yearly mean")
 
             self._add_event_lines(ax, event_dates)
 
-            ax.set_title(feature)
-            # ax.set_xlabel("Year")
-            # ax.set_ylabel("Value")
-
-            ax.xaxis.set_major_locator(mdates.YearLocator())
-            ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
-
+            ax.set_xlabel("Year")
+            ax.set_ylabel(self._pretty_label(feature))
+            ax.xaxis.set_major_locator(plt.matplotlib.dates.YearLocator())
+            ax.xaxis.set_major_formatter(plt.matplotlib.dates.DateFormatter("%Y"))
             ax.grid(True, alpha=0.3)
             ax.legend()
-
             self._format_xticks(ax)
 
             fig.tight_layout()
@@ -621,83 +416,105 @@ class TrendAnalyzer:
         return paths
 
     # =========================================================
-    # MONTHLY
+    # DEPENDENCY DISTRIBUTION (stacked bars)
     # =========================================================
-    def aggregate_monthly(self, frame: pd.DataFrame) -> pd.DataFrame:
-        df = frame.copy()
+    def save_dependency_distribution_plot(self, df: pd.DataFrame, output_dir: Path, events: dict[str, str] | None = None) -> Path:
+        output_dir.mkdir(parents=True, exist_ok=True)
 
-        if "year" not in df.columns:
-            raise ValueError("Expected a 'year' column in the dataset.")
+        if "dependency_distribution" not in df.columns:
+            raise ValueError("Expected 'dependency_distribution' column in dataframe")
 
-        month_ts = self._resolve_month_timestamp(df)
+        dep_df = df["dependency_distribution"].apply(pd.Series).fillna(0)
+        dep_df["year"] = df["year"]
 
-        valid = df.copy()
-        valid["month_ts"] = month_ts
-        valid = valid.dropna(subset=["month_ts"]).copy()
+        dep_yearly = dep_df.groupby("year").sum(numeric_only=True)
 
-        aggregations = {"paper_count": ("text_clean", "size")}
+        top_deps = dep_yearly.sum().sort_values(ascending=False).head(15).index
+        dep_plot = dep_yearly[top_deps].copy()
+        dep_plot["OTHER"] = dep_yearly.drop(columns=top_deps).sum(axis=1)
 
-        for column in self.feature_columns:
-            if column not in valid.columns:
-                continue
-            aggregations[f"{column}_monthly_mean"] = (column, "mean")
+        dep_plot = dep_plot.div(dep_plot.sum(axis=1), axis=0)
+        dep_plot = dep_plot.sort_index()
+        dep_plot = dep_plot[dep_plot.mean().sort_values(ascending=False).index]
 
-        monthly = valid.groupby("month_ts", as_index=False).agg(**aggregations)
-        return monthly.sort_values("month_ts").reset_index(drop=True)
+        fig, ax = plt.subplots(figsize=(10, 5))
+        dep_plot.plot(kind="bar", stacked=True, ax=ax, width=0.9)
 
-    # =========================================================
-    # TIME RESOLUTION
-    # =========================================================
-    def _resolve_month_timestamp(self, frame: pd.DataFrame) -> pd.Series:
-        if "publicationDate" in frame.columns:
-            pub = pd.to_datetime(frame["publicationDate"], errors="coerce")
-            pub = pub.dt.to_period("M").dt.to_timestamp()
-        else:
-            pub = pd.Series(pd.NaT, index=frame.index)
+        ax.set_ylabel("Proportion")
+        ax.set_xlabel("Year")
+        # ax.set_title("Dependency Distribution Over Time")
 
-        year = pd.to_numeric(frame.get("year"), errors="coerce").astype("Int64")
-        fallback = pd.to_datetime(year.astype(str) + "-01-01", errors="coerce")
+        if events:
+            event_years = {k: pd.to_datetime(v).year for k, v in events.items()}
+            years = dep_plot.index.tolist()
+            for label, year in event_years.items():
+                if year in years:
+                    x_pos = years.index(year)
+                    color = "k" if "gpt" in label.lower() else self.colors["events"]
+                    ax.axvline(x=x_pos, linestyle="--", alpha=0.7, color=color)
+                    ax.text(x_pos, 1.02, label, rotation=90, va="bottom", fontsize=8)
 
-        return pub.fillna(fallback)
+        ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1), fontsize=8, title="Dependency")
+        self._format_xticks(ax)
+        plt.tight_layout()
+
+        out_path = output_dir / "dependency_distribution_stacked.png"
+        fig.savefig(out_path, dpi=150, bbox_inches="tight")
+        plt.close(fig)
+        return out_path
 
 
+# =========================================================
+# PLOTTING FUNCTION
+# =========================================================
 def save_grouped_difference_plot(
-    comparison: pd.DataFrame,
+    df: pd.DataFrame,
     output_path: Path,
     feature_column: str,
     diff_column: str,
-    title: str,
     xlabel: str,
-    top_n: int = 20,
+    label_map: dict[str, str],
+    top_n: int = 50,
 ) -> Path:
-    if feature_column not in comparison.columns:
-        raise ValueError(f"Missing feature column: {feature_column}")
-    if diff_column not in comparison.columns:
-        raise ValueError(f"Missing diff column: {diff_column}")
 
-    plot_df = comparison[[feature_column, diff_column]].copy()
-    plot_df = plot_df.dropna(subset=[feature_column, diff_column])
-    if plot_df.empty:
-        raise ValueError("No comparison rows available for plotting.")
+    def _pretty_diff_label(feature: str) -> str:
+        mapped = label_map.get(feature)
+        if mapped:
+            # Remove markdown-style quoting for cleaner axis labels.
+            return mapped.replace("`", "")
 
-    plot_df[diff_column] = pd.to_numeric(plot_df[diff_column], errors="coerce")
-    plot_df = plot_df.dropna(subset=[diff_column])
-    plot_df = plot_df.sort_values(diff_column, key=lambda series: series.abs(), ascending=False).head(top_n)
-    plot_df = plot_df.sort_values(diff_column, ascending=True)
+        if feature.endswith("_TOTAL"):
+            group = feature.removesuffix("_TOTAL").replace("_", " ")
+            return f"{group} total"
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+        cleaned = feature
+        cleaned = cleaned.removesuffix("_per_1k_words")
+        cleaned = cleaned.removesuffix("_total")
 
-    fig, ax = plt.subplots(figsize=(10, max(4, 0.35 * len(plot_df) + 1.5)))
-    colors = ["#943F8B" if value < 0 else "#54A066" for value in plot_df[diff_column]]
+        for prefix in ("word_", "verb_", "adjective_", "phrase_"):
+            if cleaned.startswith(prefix):
+                cleaned = cleaned[len(prefix):]
+                break
 
-    ax.barh(plot_df[feature_column].astype(str), plot_df[diff_column], color=colors)
-    ax.axvline(0, color="#333333", linewidth=1)
-    ax.set_title(title)
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel("")
-    ax.grid(axis="x", alpha=0.25)
+        return cleaned.replace("_", " ")
+
+    df = df.dropna().copy()
+    df = df.sort_values(diff_column, key=lambda s: s.abs(), ascending=False).head(top_n)
+    df = df.sort_values(diff_column)
+
+    df["label"] = df[feature_column].astype(str).map(_pretty_diff_label)
+
+    fig, ax = plt.subplots(figsize=(10, max(4, 0.35 * len(df))))
+
+    colors = ["#943F8B" if v < 0 else "#54A066" for v in df[diff_column]]
+
+    ax.barh(df["label"], df[diff_column], color=colors)
+    ax.axvline(0, color="black", linewidth=1)
+
+    # ax.set_xlabel(xlabel)
+    ax.grid(axis="x", alpha=0.3)
+
     fig.tight_layout()
-
     fig.savefig(output_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
 

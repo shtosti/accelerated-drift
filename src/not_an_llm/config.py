@@ -131,6 +131,7 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
     collection = _require_dict(raw, "collection")
     analysis = _require_dict(raw, "analysis")
     external = raw.get("external") if isinstance(raw.get("external"), dict) else None
+    lexicon = analysis.get("lexicon") if isinstance(analysis.get("lexicon"), dict) else {}
 
     source = _load_collection_source(collection)
 
@@ -194,16 +195,16 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             readability_metrics=_load_readability_metrics(analysis),
             syntactic_features=_load_syntactic_features(analysis),
 
-            llm_marker_words=_load_query_list(analysis.get("markers", [])),
-            llm_marker_verbs=_load_query_list(analysis.get("verbs", [])),
-            llm_marker_adjectives=_load_query_list(analysis.get("adjectives", [])),
-            llm_marker_phrases=_load_query_list(analysis.get("phrases", [])),
+            llm_marker_words=_load_query_list(lexicon.get("markers", analysis.get("markers", []))),
+            llm_marker_verbs=_load_query_list(lexicon.get("verbs", analysis.get("verbs", []))),
+            llm_marker_adjectives=_load_query_list(lexicon.get("adjectives", analysis.get("adjectives", []))),
+            llm_marker_phrases=_load_query_list(lexicon.get("phrases", analysis.get("phrases", []))),
 
-            sequential_markers=_load_query_list(analysis.get("sequential_markers", [])),
-            causal_markers=_load_query_list(analysis.get("causal_markers", [])),
-            contrast_markers=_load_query_list(analysis.get("contrast_markers", [])),
-            emphasis_markers=_load_query_list(analysis.get("emphasis_markers", [])),
-            summary_markers=_load_query_list(analysis.get("summary_markers", [])),
+            sequential_markers=_load_query_list(lexicon.get("sequential_markers", analysis.get("sequential_markers", []))),
+            causal_markers=_load_query_list(lexicon.get("causal_markers", analysis.get("causal_markers", []))),
+            contrast_markers=_load_query_list(lexicon.get("contrast_markers", analysis.get("contrast_markers", []))),
+            emphasis_markers=_load_query_list(lexicon.get("emphasis_markers", analysis.get("emphasis_markers", []))),
+            summary_markers=_load_query_list(lexicon.get("summary_markers", analysis.get("summary_markers", []))),
 
             llm_marker_sentence_patterns={},
 
@@ -211,8 +212,8 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             list_of_three_pattern=r"",
             llm_marker_word_matching="lemma",
 
-            hedge_terms=_load_query_list(analysis.get("hedge_terms", [])),
-            certainty_terms=_load_query_list(analysis.get("certainty_terms", [])),
+            hedge_terms=_load_query_list(lexicon.get("hedge_terms", analysis.get("hedge_terms", []))),
+            certainty_terms=_load_query_list(lexicon.get("certainty_terms", analysis.get("certainty_terms", []))),
 
             preprocessed_jsonl=preprocessed_jsonl,
             feature_dataset_jsonl=feature_dataset_jsonl,
