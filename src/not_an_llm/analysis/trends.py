@@ -43,6 +43,52 @@ class TrendAnalyzer:
             return features
         return [feature for feature in features if feature not in exclude_features]
 
+    def save_pre_post_diff_plot(self, yearly: pd.DataFrame, output_dir: Path) -> Path:
+        plot_columns = [c for c in yearly.columns if c.endswith("_yearly_mean")]
+        rows: list[dict[str, object]] = []
+
+        pre_years = yearly[yearly["year"] <= 2022]
+        post_years = yearly[yearly["year"] >= 2023]
+
+        for yearly_column in plot_columns:
+            feature = yearly_column.removesuffix("_yearly_mean")
+
+            if yearly_column not in yearly.columns:
+                continue
+
+            pre_values = pd.to_numeric(pre_years[yearly_column], errors="coerce")
+            post_values = pd.to_numeric(post_years[yearly_column], errors="coerce")
+
+            if pre_values.dropna().empty or post_values.dropna().empty:
+                continue
+
+            pre_mean = float(pre_values.mean())
+            post_mean = float(post_values.mean())
+
+            rows.append(
+                {
+                    "feature": feature,
+                    "pre_mean": pre_mean,
+                    "post_mean": post_mean,
+                    "diff_post_minus_pre": post_mean - pre_mean,
+                }
+            )
+
+        comparison = pd.DataFrame(rows)
+        if comparison.empty:
+            raise ValueError("No yearly features available for pre/post comparison.")
+
+        output_path = output_dir / "pre_post_feature_diff.png"
+        return save_grouped_difference_plot(
+            comparison,
+            output_path=output_path,
+            feature_column="feature",
+            diff_column="diff_post_minus_pre",
+            title="Pre/Post feature shifts",
+            xlabel="Post - pre mean",
+            top_n=25,
+        )
+
     # =========================================================
     # YEARLY AGGREGATION (MEAN + STD + COUNT FOR CI)
     # =========================================================
@@ -613,3 +659,46 @@ class TrendAnalyzer:
         fallback = pd.to_datetime(year.astype(str) + "-01-01", errors="coerce")
 
         return pub.fillna(fallback)
+
+
+def save_grouped_difference_plot(
+    comparison: pd.DataFrame,
+    output_path: Path,
+    feature_column: str,
+    diff_column: str,
+    title: str,
+    xlabel: str,
+    top_n: int = 20,
+) -> Path:
+    if feature_column not in comparison.columns:
+        raise ValueError(f"Missing feature column: {feature_column}")
+    if diff_column not in comparison.columns:
+        raise ValueError(f"Missing diff column: {diff_column}")
+
+    plot_df = comparison[[feature_column, diff_column]].copy()
+    plot_df = plot_df.dropna(subset=[feature_column, diff_column])
+    if plot_df.empty:
+        raise ValueError("No comparison rows available for plotting.")
+
+    plot_df[diff_column] = pd.to_numeric(plot_df[diff_column], errors="coerce")
+    plot_df = plot_df.dropna(subset=[diff_column])
+    plot_df = plot_df.sort_values(diff_column, key=lambda series: series.abs(), ascending=False).head(top_n)
+    plot_df = plot_df.sort_values(diff_column, ascending=True)
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    fig, ax = plt.subplots(figsize=(10, max(4, 0.35 * len(plot_df) + 1.5)))
+    colors = ["#943F8B" if value < 0 else "#54A066" for value in plot_df[diff_column]]
+
+    ax.barh(plot_df[feature_column].astype(str), plot_df[diff_column], color=colors)
+    ax.axvline(0, color="#333333", linewidth=1)
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel("")
+    ax.grid(axis="x", alpha=0.25)
+    fig.tight_layout()
+
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+    return output_path
