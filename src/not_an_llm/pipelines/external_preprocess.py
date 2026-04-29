@@ -34,7 +34,7 @@ def _preprocess_text_pairs(
 
     all_raw_texts = human_texts + ai_texts
     all_clean_texts = [preprocessor.normalize_text(text) for text in all_raw_texts]
-    docs = list(preprocessor.nlp.pipe(all_clean_texts, batch_size=128, n_process=4))
+    docs = list(preprocessor.nlp.pipe(all_clean_texts, batch_size=128, n_process=1))
 
     human_docs = docs[: len(human_texts)]
     ai_docs = docs[len(human_texts) :]
