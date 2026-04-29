@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import logging
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +11,11 @@ import spacy
 
 from not_an_llm.analysis.feature_extractor import FeatureExtractor
 from not_an_llm.analysis.readability import ReadabilityAnalyzer
+from not_an_llm.analysis.trends import save_grouped_difference_plot
 from not_an_llm.config import AppConfig
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(slots=True)
@@ -120,34 +125,18 @@ def _build_comparison_table(enriched: pd.DataFrame, feature_columns: list[str]) 
 
 
 def _save_top_diff_plot(comparison: pd.DataFrame, output_path: Path, top_n: int = 20) -> Path:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    view = comparison.dropna(subset=["diff_ai_minus_human"]).head(top_n).copy()
-    if view.empty:
-        fig, ax = plt.subplots(figsize=(8, 3))
-        ax.text(0.5, 0.5, "No comparable numeric features found", ha="center", va="center")
-        ax.axis("off")
-        fig.tight_layout()
-        fig.savefig(output_path, dpi=150)
-        plt.close(fig)
-        return output_path
-
-    # view = view.sort_values("feature", ascending=True)
-    view = comparison.head(top_n).iloc[::-1]
-
-    fig, ax = plt.subplots(figsize=(10, max(4, 0.3 * len(view))))
-    colors = ["#AD298E" if x > 0 else "#329857" for x in view["diff_ai_minus_human"]]
-
-    ax.barh(view["feature"], view["diff_ai_minus_human"], color=colors)
-    ax.axvline(0, color="#333333", linewidth=1)
-    ax.set_title("Top feature shifts: AI - Human")
-    ax.set_xlabel("Mean difference")
-    ax.grid(axis="x", alpha=0.3)
-
-    fig.tight_layout()
-    fig.savefig(output_path, dpi=150)
-    plt.close(fig)
-    return output_path
+    logger.info("Generating grouped external diff plot...")
+    saved_path = save_grouped_difference_plot(
+        comparison,
+        output_path=output_path,
+        feature_column="feature",
+        diff_column="diff_ai_minus_human",
+        title="Top feature shifts: AI - Human",
+        xlabel="Mean difference",
+        top_n=top_n,
+    )
+    logger.info("Saved grouped external diff plot to %s", saved_path)
+    return saved_path
 
 
 def run_external_analysis(
