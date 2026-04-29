@@ -214,3 +214,10 @@ slurm.sh
 slurm_analyze.sh
 slurm_collect.sh
 slurm_preprocess.sh
+logs/preprocessing_external_*.err
+logs/preprocessing_external_*.out
+logs/analyze_external_*.err
+logs/analyze_external_*.out
+slurm_preprocess_external.sh
+slurm_analyze_external.sh
+slurm_preprocess_mini.sh
