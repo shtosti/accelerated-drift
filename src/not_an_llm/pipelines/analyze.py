@@ -222,6 +222,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     chunks_list = list(chunks)
 
     enriched_output_path.parent.mkdir(parents=True, exist_ok=True)
+    plot_dir.mkdir(parents=True, exist_ok=True)
 
     if enriched_output_path.exists():
         enriched_output_path.unlink()
@@ -262,6 +263,22 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
 
     yearly = trend_analyzer.aggregate_yearly(enriched)
 
+    # =========================
+    # STATISTICAL ANALYSIS
+    # =========================
+    logger.info("Computing statistical summaries...")
+
+    stats_df = trend_analyzer.compute_all_stats(yearly)
+
+    stats_path = plot_dir / "feature_stats.csv"
+    stats_df.to_csv(stats_path, index=False)
+
+    logger.info("Saved statistical summary to %s", stats_path)
+
+    # =========================
+    # PRE/POST DIFF PLOTS
+    # =========================
+
     logger.info("Generating grouped pre/post diff plot...")
     diff_plot_path = trend_analyzer.save_pre_post_diff_plot(
         yearly,
@@ -297,16 +314,16 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
                 post_vals = pd.to_numeric(post[col], errors="coerce")
                 if pre_vals.dropna().empty or post_vals.dropna().empty:
                     continue
-                rows.append({"feature": m, "diff": float(post_vals.mean() - pre_vals.mean())})
+                pre_mean = float(pre_vals.mean())
+                post_mean = float(post_vals.mean())
+                scale = abs(pre_mean) + abs(post_mean)
+                pct_change = 0.0 if scale == 0.0 else 200.0 * (post_mean - pre_mean) / scale
+                rows.append({"feature": m, "diff": pct_change})
 
             if not rows:
                 continue
 
             df = pd.DataFrame(rows)
-            if valid_cols:
-                pre_total = pre[valid_cols].mean().mean()
-                post_total = post[valid_cols].mean().mean()
-                df = pd.concat([df, pd.DataFrame([{"feature": f"{group_name}_TOTAL", "diff": float(post_total - pre_total)}])], ignore_index=True)
 
             df = df.sort_values("diff")
             out_path = plot_dir / f"{group_name}_diff.png"
@@ -315,7 +332,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
                 out_path,
                 "feature",
                 "diff",
-                "Post - Pre mean",
+                "Percent change (%)",
                 LABEL_MAP,
             )
             grouped_diff_plots[group_name] = out_path
