@@ -13,6 +13,7 @@ dependencies = [
     "pandas>=3.0.2",
     "requests>=2.33.1",
     "ruptures>=1.1.10",
+    "scikit-learn>=1.8.0",
     "spacy>=3.8.14",
     "statsmodels>=0.14.6",
     "textstat>=0.7.13",
