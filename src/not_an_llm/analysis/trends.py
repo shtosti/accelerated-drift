@@ -6,9 +6,28 @@ from typing import Optional
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy import stats
+from sklearn.linear_model import LinearRegression
+import ruptures as rpt
 
 from .label_map import LABEL_MAP
 from .feature_groups import FEATURE_GROUPS
+
+
+def _symmetric_percent_change(pre_value: float, post_value: float) -> float:
+    """Return a stable percentage change between two means.
+
+    Uses the symmetric percentage change formula so rare or near-zero
+    baselines do not explode to infinity:
+    200 * (post - pre) / (|post| + |pre|)
+    """
+
+    pre_value = float(pre_value)
+    post_value = float(post_value)
+    scale = abs(pre_value) + abs(post_value)
+    if scale == 0.0:
+        return 0.0
+    return 200.0 * (post_value - pre_value) / scale
 
 
 class TrendAnalyzer:
@@ -103,6 +122,95 @@ class TrendAnalyzer:
 
         yearly = df.groupby("year", as_index=False).agg(**agg)
         return yearly.sort_values("year").reset_index(drop=True)
+    
+    def _compute_stats(self, yearly: pd.DataFrame, feature: str, pre_cut=2022, post_cut=2023):
+        col = f"{feature}_yearly_mean"
+        if col not in yearly.columns:
+            return None
+
+        df = yearly[["year", col]].dropna().copy()
+
+        pre = df[df["year"] <= pre_cut][col]
+        post = df[df["year"] >= post_cut][col]
+
+        if len(pre) < 2 or len(post) < 2:
+            return None
+
+        # ---------------------------
+        # 1. t-test
+        # ---------------------------
+        t_stat, p_val = stats.ttest_ind(pre, post, equal_var=False)
+
+        # ---------------------------
+        # 2. Cohen's d
+        # ---------------------------
+        def cohens_d(a, b):
+            n1, n2 = len(a), len(b)
+            s1, s2 = np.var(a, ddof=1), np.var(b, ddof=1)
+            pooled = np.sqrt(((n1 - 1)*s1 + (n2 - 1)*s2) / (n1 + n2 - 2))
+            if pooled == 0:
+                return 0.0
+            return (np.mean(b) - np.mean(a)) / pooled
+
+        d = cohens_d(pre, post)
+
+        # ---------------------------
+        # 3. regression slope
+        # ---------------------------
+        X = df["year"].values.reshape(-1, 1)
+        y = df[col].values
+
+        reg = LinearRegression().fit(X, y)
+        slope = reg.coef_[0]
+
+        # slope significance (approx)
+        _, slope_p = stats.pearsonr(df["year"], y)
+
+        # ---------------------------
+        # 4. change point (ruptures)
+        # ---------------------------
+        try:
+            algo = rpt.Pelt(model="l2").fit(y)
+            cps = algo.predict(pen=1)
+            cp_year = df["year"].iloc[cps[0]-1] if cps else None
+        except Exception:
+            cp_year = None
+
+        # ---------------------------
+        # symmetric %
+        # ---------------------------
+        diff = _symmetric_percent_change(pre.mean(), post.mean())
+
+        return {
+            "feature": feature,
+            "diff": diff,
+            "p_value": p_val,
+            "cohens_d": d,
+            "slope": slope,
+            "slope_p": slope_p,
+            "change_point": cp_year,
+        }
+
+    def compute_all_stats(self, yearly: pd.DataFrame) -> pd.DataFrame:
+        features = [
+            c.removesuffix("_yearly_mean")
+            for c in yearly.columns
+            if c.endswith("_yearly_mean")
+        ]
+
+        rows = []
+        for f in features:
+            res = self._compute_stats(yearly, f)
+            if res:
+                rows.append(res)
+
+        df = pd.DataFrame(rows)
+
+        # optional: multiple testing correction
+        if not df.empty:
+            df["p_adj"] = np.minimum(df["p_value"] * len(df), 1.0)
+
+        return df.sort_values("p_value")
 
     # =========================================================
     # STACKED PLOTS
@@ -195,7 +303,7 @@ class TrendAnalyzer:
 
             rows.append({
                 "feature": feature,
-                "diff": post_vals.mean() - pre_vals.mean()
+                "diff": _symmetric_percent_change(pre_vals.mean(), post_vals.mean())
             })
 
         df = pd.DataFrame(rows).sort_values("diff")
@@ -205,7 +313,7 @@ class TrendAnalyzer:
             output_dir / "pre_post_diff.png",
             "feature",
             "diff",
-            "Post - Pre mean",
+            "Percent change (%)",
             self.label_map,
         )
 
@@ -247,26 +355,13 @@ class TrendAnalyzer:
 
                 rows.append({
                     "feature": f,
-                    "diff": post_vals.mean() - pre_vals.mean()
+                    "diff": _symmetric_percent_change(pre_vals.mean(), post_vals.mean())
                 })
 
             df = pd.DataFrame(rows)
 
             if df.empty:
                 continue
-
-            # TOTAL (correct pooled mean)
-            if valid_cols:
-                pre_total = pre[valid_cols].mean().mean()
-                post_total = post[valid_cols].mean().mean()
-
-                df = pd.concat([
-                    df,
-                    pd.DataFrame([{
-                        "feature": f"{group_name}_TOTAL",
-                        "diff": post_total - pre_total
-                    }])
-                ])
 
             df = df.sort_values("diff")
 
@@ -277,7 +372,7 @@ class TrendAnalyzer:
                 out_path,
                 "feature",
                 "diff",
-                "Post - Pre mean",
+                "Percent change (%)",
                 self.label_map,
             )
 
@@ -319,7 +414,7 @@ class TrendAnalyzer:
             yearly_col = f"{rate_feature}_yearly_mean"
             monthly_col = f"{rate_feature}_monthly_mean"
 
-            fig, ax = plt.subplots(figsize=(10, 4))
+            fig, ax = plt.subplots(figsize=(8, 4))
 
             if monthly_col in monthly.columns:
                 y_m = monthly[monthly_col]
@@ -504,7 +599,11 @@ def save_grouped_difference_plot(
 
     df["label"] = df[feature_column].astype(str).map(_pretty_diff_label)
 
-    fig, ax = plt.subplots(figsize=(10, max(4, 0.35 * len(df))))
+    # Fixed bar height per data point for consistent appearance across plots
+    bar_height_inches = 0.25  # inches per bar
+    num_bars = len(df)
+    fig_height = num_bars * bar_height_inches + 1.5  # 1.5 inches for margins, labels, etc.
+    fig, ax = plt.subplots(figsize=(8, max(4, fig_height)))
 
     colors = ["#943F8B" if v < 0 else "#54A066" for v in df[diff_column]]
 
@@ -515,6 +614,7 @@ def save_grouped_difference_plot(
     ax.grid(axis="x", alpha=0.3)
 
     fig.tight_layout()
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
 
