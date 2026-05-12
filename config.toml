@@ -72,6 +72,7 @@ fields = [
 
 [analysis]
 enabled = true
+generate_plots = false
 include_readability = true
 # Select which readability metrics to compute/write.
 readability_metrics = [
@@ -88,6 +89,7 @@ feature_dataset_jsonl = ""
 trends_csv = ""
 monthly_trends_csv = ""
 trends_plot_dir = ""
+# Default plot output directory is data/visuals/<dataset_stem>/ when left empty.
 # Use "all" to automatically include every numeric feature in yearly trend analysis.
 features = ["all"]
 
