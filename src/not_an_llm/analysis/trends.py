@@ -164,7 +164,11 @@ class TrendAnalyzer:
         slope = reg.coef_[0]
 
         # slope significance (approx)
-        _, slope_p = stats.pearsonr(df["year"], y)
+        # _, slope_p = stats.pearsonr(df["year"], y)
+        if np.std(y) == 0:
+            slope_p = 1.0
+        else:
+            _, slope_p = stats.pearsonr(df["year"], y)
 
         # ---------------------------
         # 4. change point (ruptures)
@@ -308,6 +312,8 @@ class TrendAnalyzer:
 
         df = pd.DataFrame(rows).sort_values("diff")
 
+        stats_df = self.compute_all_stats(yearly)
+
         return save_grouped_difference_plot(
             df,
             output_dir / "pre_post_diff.png",
@@ -315,6 +321,7 @@ class TrendAnalyzer:
             "diff",
             "Percent change (%)",
             self.label_map,
+            stats_df=stats_df,
         )
 
     # =========================================================
@@ -331,6 +338,8 @@ class TrendAnalyzer:
 
         output_dir.mkdir(parents=True, exist_ok=True)
         outputs = {}
+
+        stats_df = self.compute_all_stats(yearly)
 
         pre = yearly[yearly["year"] <= pre_cut]
         post = yearly[yearly["year"] >= post_cut]
@@ -374,6 +383,7 @@ class TrendAnalyzer:
                 "diff",
                 "Percent change (%)",
                 self.label_map,
+                stats_df = stats_df
             )
 
             outputs[group_name] = out_path
@@ -570,6 +580,7 @@ def save_grouped_difference_plot(
     xlabel: str,
     label_map: dict[str, str],
     top_n: int = 50,
+    stats_df: pd.DataFrame | None = None,
 ) -> Path:
 
     def _pretty_diff_label(feature: str) -> str:
@@ -594,6 +605,10 @@ def save_grouped_difference_plot(
         return cleaned.replace("_", " ")
 
     df = df.dropna().copy()
+    # if stats_df is not None and not stats_df.empty:
+    #     df = df.merge(stats_df, on="feature", how="left")
+    stats_df = stats_df.drop(columns=["diff"], errors="ignore")
+    df = df.merge(stats_df, on="feature", how="left")
     df = df.sort_values(diff_column, key=lambda s: s.abs(), ascending=False).head(top_n)
     df = df.sort_values(diff_column)
 
@@ -609,6 +624,35 @@ def save_grouped_difference_plot(
 
     ax.barh(df["label"], df[diff_column], color=colors)
     ax.axvline(0, color="black", linewidth=1)
+
+    # # ---------------------------
+    # # ADD STATS ANNOTATIONS
+    # # ---------------------------
+    # if stats_df is not None and not df.empty:
+
+    #     for i, row in df.iterrows():
+    #         txt = []
+
+    #         if "p_adj" in row and pd.notna(row["p_adj"]):
+    #             txt.append(f"p={row['p_adj']:.3f}")
+
+    #         if "change_point" in row and pd.notna(row["change_point"]):
+    #             txt.append(f"cp={int(row['change_point'])}")
+
+    #         if "cohens_d" in row and pd.notna(row["cohens_d"]):
+    #             txt.append(f"d={row['cohens_d']:.2f}")
+
+    #         if txt:
+    #             label = " | ".join(txt)
+
+    #             ax.text(
+    #                 row[diff_column],
+    #                 i,
+    #                 " " + label,
+    #                 va="center",
+    #                 fontsize=8,
+    #                 alpha=0.8
+    #             )
 
     # ax.set_xlabel(xlabel)
     ax.grid(axis="x", alpha=0.3)
