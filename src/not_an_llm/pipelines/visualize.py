@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import json
 import logging
 import pandas as pd
 
@@ -52,24 +53,12 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
     # =========================
     # LOAD DATA
     # =========================
-    enriched = pd.read_json(feature_dataset_path, lines=True)
+    enriched = _load_dependency_distribution(feature_dataset_path)
     yearly = pd.read_csv(trends_csv_path)
     monthly = pd.read_csv(monthly_trends_csv_path)
 
-    # Ensure year/month columns are present and typed correctly.
+    # Ensure year is int
     yearly["year"] = yearly["year"].astype(int)
-
-    if "year" not in monthly.columns or "month" not in monthly.columns:
-        if "month_ts" in monthly.columns:
-            monthly["month_ts"] = pd.to_datetime(monthly["month_ts"], errors="coerce")
-            monthly["year"] = monthly["month_ts"].dt.year
-            monthly["month"] = monthly["month_ts"].dt.month
-        else:
-            raise ValueError(
-                "Monthly trends CSV is missing required columns. "
-                "Expected 'year' and 'month', or 'month_ts' to derive them."
-            )
-
     monthly["year"] = monthly["year"].astype(int)
     monthly["month"] = monthly["month"].astype(int)
 
@@ -288,6 +277,33 @@ def _build_marker_group_specs(config: AppConfig):
 
     summary_features.add("marker_density")
     return group_specs, summary_features
+
+
+def _load_dependency_distribution(path: Path) -> pd.DataFrame:
+    """Load only the fields needed for dependency distribution plotting.
+
+    The full analyzed JSONL includes large text columns that are unnecessary
+    for visualization. This avoids blowing up memory by reading only year and
+    dependency_distribution.
+    """
+    rows = []
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if "year" in record and "dependency_distribution" in record:
+                rows.append(
+                    {
+                        "year": record["year"],
+                        "dependency_distribution": record["dependency_distribution"],
+                    }
+                )
+
+    return pd.DataFrame(rows)
 
 
 # =========================================================

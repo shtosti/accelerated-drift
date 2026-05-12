@@ -1,0 +1,7 @@
+--- Python runtime info ---
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/bin/python
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/bin/python
+Loading feature dataset from: data/analyzed/arxiv.jsonl
+Loading yearly trends from: data/analysis/arxiv_year.csv
+Loading monthly trends from: data/analysis/arxiv_month.csv
+Saving plots to: data/visuals/arxiv
