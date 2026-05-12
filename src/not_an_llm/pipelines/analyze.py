@@ -278,65 +278,65 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     # =========================
     # PRE/POST DIFF PLOTS
     # =========================
-
-    logger.info("Generating grouped pre/post diff plot...")
-    diff_plot_path = trend_analyzer.save_pre_post_diff_plot(
-        yearly,
-        output_dir=plot_dir,
-    )
-    logger.info("Saved grouped pre/post diff plot to %s", diff_plot_path)
-
-    logger.info("Generating per-group pre/post diff plots...")
-    if hasattr(trend_analyzer, "save_grouped_feature_diffs"):
-        grouped_diff_plots = trend_analyzer.save_grouped_feature_diffs(
+    if config.analysis.generate_plots:
+        logger.info("Generating grouped pre/post diff plot...")
+        diff_plot_path = trend_analyzer.save_pre_post_diff_plot(
             yearly,
             output_dir=plot_dir,
         )
-        logger.info("Saved %d per-group diff plots", len(grouped_diff_plots))
-    else:
-        # Backwards-compatible fallback: compute grouped diffs inline and save plots
-        logger.warning("TrendAnalyzer lacks 'save_grouped_feature_diffs'; using fallback implementation.")
-        from not_an_llm.analysis.trends import save_grouped_difference_plot
+        logger.info("Saved grouped pre/post diff plot to %s", diff_plot_path)
 
-        grouped_diff_plots = {}
-        pre = yearly[yearly["year"] <= 2022]
-        post = yearly[yearly["year"] >= 2023]
-
-        for group_name, members in FEATURE_GROUPS.items():
-            rows = []
-            valid_cols = []
-            for m in members:
-                col = f"{m}_yearly_mean"
-                if col not in yearly.columns:
-                    continue
-                valid_cols.append(col)
-                pre_vals = pd.to_numeric(pre[col], errors="coerce")
-                post_vals = pd.to_numeric(post[col], errors="coerce")
-                if pre_vals.dropna().empty or post_vals.dropna().empty:
-                    continue
-                pre_mean = float(pre_vals.mean())
-                post_mean = float(post_vals.mean())
-                scale = abs(pre_mean) + abs(post_mean)
-                pct_change = 0.0 if scale == 0.0 else 200.0 * (post_mean - pre_mean) / scale
-                rows.append({"feature": m, "diff": pct_change})
-
-            if not rows:
-                continue
-
-            df = pd.DataFrame(rows)
-
-            df = df.sort_values("diff")
-            out_path = plot_dir / f"{group_name}_diff.png"
-            save_grouped_difference_plot(
-                df,
-                out_path,
-                "feature",
-                "diff",
-                "Percent change (%)",
-                LABEL_MAP,
+        logger.info("Generating per-group pre/post diff plots...")
+        if hasattr(trend_analyzer, "save_grouped_feature_diffs"):
+            grouped_diff_plots = trend_analyzer.save_grouped_feature_diffs(
+                yearly,
+                output_dir=plot_dir,
             )
-            grouped_diff_plots[group_name] = out_path
-        logger.info("Saved %d per-group diff plots (fallback)", len(grouped_diff_plots))
+            logger.info("Saved %d per-group diff plots", len(grouped_diff_plots))
+        else:
+            # Backwards-compatible fallback: compute grouped diffs inline and save plots
+            logger.warning("TrendAnalyzer lacks 'save_grouped_feature_diffs'; using fallback implementation.")
+            from not_an_llm.analysis.trends import save_grouped_difference_plot
+
+            grouped_diff_plots = {}
+            pre = yearly[yearly["year"] <= 2022]
+            post = yearly[yearly["year"] >= 2023]
+
+            for group_name, members in FEATURE_GROUPS.items():
+                rows = []
+                valid_cols = []
+                for m in members:
+                    col = f"{m}_yearly_mean"
+                    if col not in yearly.columns:
+                        continue
+                    valid_cols.append(col)
+                    pre_vals = pd.to_numeric(pre[col], errors="coerce")
+                    post_vals = pd.to_numeric(post[col], errors="coerce")
+                    if pre_vals.dropna().empty or post_vals.dropna().empty:
+                        continue
+                    pre_mean = float(pre_vals.mean())
+                    post_mean = float(post_vals.mean())
+                    scale = abs(pre_mean) + abs(post_mean)
+                    pct_change = 0.0 if scale == 0.0 else 200.0 * (post_mean - pre_mean) / scale
+                    rows.append({"feature": m, "diff": pct_change})
+
+                if not rows:
+                    continue
+
+                df = pd.DataFrame(rows)
+
+                df = df.sort_values("diff")
+                out_path = plot_dir / f"{group_name}_diff.png"
+                save_grouped_difference_plot(
+                    df,
+                    out_path,
+                    "feature",
+                    "diff",
+                    "Percent change (%)",
+                    LABEL_MAP,
+                )
+                grouped_diff_plots[group_name] = out_path
+            logger.info("Saved %d per-group diff plots (fallback)", len(grouped_diff_plots))
 
     monthly = trend_analyzer.aggregate_monthly(enriched)
 
@@ -352,47 +352,49 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     # =========================
     # PLOTS
     # =========================
-    llm_events = {
-        "ChatGPT release": "2022-11-30",
-    }
+    trend_plots = []
+    if config.analysis.generate_plots:
+        llm_events = {
+            "ChatGPT release": "2022-11-30",
+        }
 
-    trend_plots = trend_analyzer.save_plots(
-        yearly,
-        monthly,
-        plot_dir,
-        llm_events,
-        exclude_features=summary_features,
-    )
+        trend_plots = trend_analyzer.save_plots(
+            yearly,
+            monthly,
+            plot_dir,
+            llm_events,
+            exclude_features=summary_features,
+        )
 
-    trend_plots.extend(
-        trend_analyzer.save_grouped_word_plots(
+        trend_plots.extend(
+            trend_analyzer.save_grouped_word_plots(
+                yearly=yearly,
+                monthly=monthly,
+                output_dir=plot_dir,
+                group_specs=marker_group_specs,
+                events=llm_events,
+                smoothing_window=3,
+            )
+        )
+
+        dep_plot_path = trend_analyzer.save_dependency_distribution_plot(
+            df=enriched,
+            output_dir=plot_dir,
+            events=llm_events,
+        )
+
+        trend_plots.append(dep_plot_path)
+
+        stacked_plot_path = trend_analyzer.save_stacked_word_plots(
             yearly=yearly,
             monthly=monthly,
             output_dir=plot_dir,
-            group_specs=marker_group_specs,
             events=llm_events,
             smoothing_window=3,
+            exclude_features=summary_features,
         )
-    )
 
-    dep_plot_path = trend_analyzer.save_dependency_distribution_plot(
-        df=enriched,
-        output_dir=plot_dir,
-        events=llm_events,
-    )
-
-    trend_plots.append(dep_plot_path)
-
-    stacked_plot_path = trend_analyzer.save_stacked_word_plots(
-        yearly=yearly,
-        monthly=monthly,
-        output_dir=plot_dir,
-        events=llm_events,
-        smoothing_window=3,
-        exclude_features=summary_features,
-    )
-
-    trend_plots.append(stacked_plot_path)
+        trend_plots.append(stacked_plot_path)
 
     return AnalysisArtifacts(
         feature_dataset_jsonl=enriched_output_path,

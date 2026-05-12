@@ -88,6 +88,8 @@ class AnalysisConfig:
     monthly_trends_csv: Path
     trends_plot_dir: Path
 
+    generate_plots: bool
+
 
 @dataclass(slots=True)
 class ExternalConfig:
@@ -220,6 +222,8 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             trends_csv=trends_csv,
             monthly_trends_csv=monthly_trends_csv,
             trends_plot_dir=trends_plot_dir,
+
+            generate_plots=bool(analysis.get("generate_plots", True)),
         ),
 
         external=None,
@@ -295,5 +299,5 @@ def _default_analysis_paths(path: Path):
         Path("data/analyzed/" + path.name),
         Path("data/analysis/" + path.stem + "_year.csv"),
         Path("data/analysis/" + path.stem + "_month.csv"),
-        Path("data/analysis/plots/" + path.stem),
+        Path("data/visuals/" + path.stem),
     )

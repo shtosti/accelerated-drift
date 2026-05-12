@@ -24,19 +24,57 @@ Edit the matching file to control:
 
 ## Run
 
+### Full pipeline (with plots)
+
 Full run:
 1. Collect papers:
 	uv run python main.py --config config.toml collect
 2. Preprocess text:
 	uv run python main.py --config config.toml preprocess
-3. Analyze features/readability and save yearly trends:
+3. Analyze features/readability and save yearly trends with plots:
 	uv run python main.py --config config.toml analyze
 
-Mini run:
+### Separated analysis and plotting workflow
+
+The analysis step can be separated from plot generation for efficiency. This is useful when:
+- Running analysis on a compute cluster without graphics support
+- Iterating on plots without recomputing analysis
+- Distributing analysis and visualization across different machines
+
+**Key configuration:**
+- Set `generate_plots = false` in config to skip plotting during analysis (already set in config.toml)
+- The `visualize` command regenerates plots from previously computed analysis data
+
+**Workflow:**
+
+1. **Run analysis only (no plots):**
+	uv run python main.py --config config.toml analyze
+	
+   This produces:
+   - Feature dataset: `data/analyzed/arxiv.jsonl` (features for each document)
+   - Yearly trends: `data/analysis/arxiv_year.csv`
+   - Monthly trends: `data/analysis/arxiv_month.csv`
+
+2. **Generate plots separately:**
+	uv run python main.py --config config.toml visualize
+	
+   This reads the precomputed trend CSVs and generates all plots in `data/visuals/<dataset_stem>/`.
+   
+   Benefits:
+   - No need to rerun expensive feature extraction
+   - Plots can be regenerated with different styling by modifying `src/not_an_llm/analysis/trends.py`
+   - Can be run on a machine with graphics libraries after analysis completes
+
+### Mini dataset workflow
+
 1. Preprocess the mini dataset:
 	uv run python main.py --config config_mini.toml preprocess
-2. Analyze the mini dataset:
+2. Analyze the mini dataset (no plots):
 	uv run python main.py --config config_mini.toml analyze
+3. Generate plots for mini dataset:
+	uv run python main.py --config config_mini.toml visualize
+
+### Other utilities
 
 Show built-in hypotheses:
 	uv run python main.py --config config.toml show-hypotheses
@@ -62,12 +100,14 @@ Collection sources:
 - [config_mini.toml](config_mini.toml): mini-run moderation file
 - [main.py](main.py): root entrypoint
 - [src/not_an_llm/config.py](src/not_an_llm/config.py): typed config loading
+- [src/not_an_llm/cli.py](src/not_an_llm/cli.py): CLI commands (collect, preprocess, analyze, visualize)
 - [src/not_an_llm/clients/semantic_scholar.py](src/not_an_llm/clients/semantic_scholar.py): API client
 - [src/not_an_llm/clients/arxiv.py](src/not_an_llm/clients/arxiv.py): arXiv API client
 - [src/not_an_llm/clients/medarxiv.py](src/not_an_llm/clients/medarxiv.py): medRxiv API client
 - [src/not_an_llm/pipelines/collect.py](src/not_an_llm/pipelines/collect.py): ingestion pipeline
 - [src/not_an_llm/pipelines/preprocess.py](src/not_an_llm/pipelines/preprocess.py): preprocessing pipeline
-- [src/not_an_llm/pipelines/analyze.py](src/not_an_llm/pipelines/analyze.py): feature/readability analysis pipeline
+- [src/not_an_llm/pipelines/analyze.py](src/not_an_llm/pipelines/analyze.py): feature/readability analysis pipeline (respects generate_plots flag)
+- [src/not_an_llm/pipelines/visualize.py](src/not_an_llm/pipelines/visualize.py): plot generation pipeline (reads precomputed analysis data)
 - [src/not_an_llm/pipelines/external_preprocess.py](src/not_an_llm/pipelines/external_preprocess.py): HC3/MAGE paired human/AI preprocessing pipelines
 - [src/not_an_llm/pipelines/external_analyze.py](src/not_an_llm/pipelines/external_analyze.py): non-temporal external human-vs-AI comparison pipeline
 - [src/not_an_llm/preprocessing/text.py](src/not_an_llm/preprocessing/text.py): text preprocessing class

@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class ExternalAnalysisArtifacts:
     feature_dataset_jsonl: Path
     comparison_csv: Path
-    comparison_plot: Path
+    comparison_plot: Path | None
 
 
 def _cohens_d(human: pd.Series, ai: pd.Series) -> float:

@@ -1,0 +1,357 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+import logging
+import pandas as pd
+
+from not_an_llm.analysis.trends import TrendAnalyzer
+from not_an_llm.config import AppConfig
+
+from .feature_groups import FEATURE_GROUPS
+from .label_map import LABEL_MAP
+
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass(slots=True)
+class VisualizationArtifacts:
+    trends_plot_paths: list[Path]
+
+
+# =========================================================
+# MAIN PIPELINE
+# =========================================================
+def run_visualization(config: AppConfig) -> VisualizationArtifacts:
+    feature_dataset_path = config.analysis.feature_dataset_jsonl
+    trends_csv_path = config.analysis.trends_csv
+    monthly_trends_csv_path = config.analysis.monthly_trends_csv
+    plot_dir = config.analysis.trends_plot_dir
+
+    if not feature_dataset_path.exists():
+        raise FileNotFoundError(
+            f"Feature dataset not found at {feature_dataset_path}. Run analyze first."
+        )
+
+    if not trends_csv_path.exists():
+        raise FileNotFoundError(
+            f"Trends CSV not found at {trends_csv_path}. Run analyze first."
+        )
+
+    if not monthly_trends_csv_path.exists():
+        raise FileNotFoundError(
+            f"Monthly trends CSV not found at {monthly_trends_csv_path}. Run analyze first."
+        )
+
+    print("Loading feature dataset from:", feature_dataset_path)
+    print("Loading yearly trends from:", trends_csv_path)
+    print("Loading monthly trends from:", monthly_trends_csv_path)
+    print("Saving plots to:", plot_dir)
+
+    # =========================
+    # LOAD DATA
+    # =========================
+    enriched = pd.read_json(feature_dataset_path, lines=True)
+    yearly = pd.read_csv(trends_csv_path)
+    monthly = pd.read_csv(monthly_trends_csv_path)
+
+    # Ensure year/month columns are present and typed correctly.
+    yearly["year"] = yearly["year"].astype(int)
+
+    if "year" not in monthly.columns or "month" not in monthly.columns:
+        if "month_ts" in monthly.columns:
+            monthly["month_ts"] = pd.to_datetime(monthly["month_ts"], errors="coerce")
+            monthly["year"] = monthly["month_ts"].dt.year
+            monthly["month"] = monthly["month_ts"].dt.month
+        else:
+            raise ValueError(
+                "Monthly trends CSV is missing required columns. "
+                "Expected 'year' and 'month', or 'month_ts' to derive them."
+            )
+
+    monthly["year"] = monthly["year"].astype(int)
+    monthly["month"] = monthly["month"].astype(int)
+
+    plot_dir.mkdir(parents=True, exist_ok=True)
+
+    feature_columns = _resolve_feature_columns(config, enriched)
+
+    trend_analyzer = TrendAnalyzer(feature_columns)
+    marker_group_specs, summary_features = _build_marker_group_specs(config)
+
+    # =========================
+    # STATISTICAL ANALYSIS
+    # =========================
+    logger.info("Computing statistical summaries...")
+
+    stats_df = trend_analyzer.compute_all_stats(yearly)
+
+    stats_path = plot_dir / "feature_stats.csv"
+    stats_df.to_csv(stats_path, index=False)
+
+    logger.info("Saved statistical summary to %s", stats_path)
+
+    # =========================
+    # PRE/POST DIFF PLOTS
+    # =========================
+    logger.info("Generating grouped pre/post diff plot...")
+    diff_plot_path = trend_analyzer.save_pre_post_diff_plot(
+        yearly,
+        output_dir=plot_dir,
+    )
+    logger.info("Saved grouped pre/post diff plot to %s", diff_plot_path)
+
+    logger.info("Generating per-group pre/post diff plots...")
+    if hasattr(trend_analyzer, "save_grouped_feature_diffs"):
+        grouped_diff_plots = trend_analyzer.save_grouped_feature_diffs(
+            yearly,
+            output_dir=plot_dir,
+        )
+        logger.info("Saved %d per-group diff plots", len(grouped_diff_plots))
+    else:
+        # Backwards-compatible fallback: compute grouped diffs inline and save plots
+        logger.warning("TrendAnalyzer lacks 'save_grouped_feature_diffs'; using fallback implementation.")
+        from not_an_llm.analysis.trends import save_grouped_difference_plot
+
+        grouped_diff_plots = {}
+        pre = yearly[yearly["year"] <= 2022]
+        post = yearly[yearly["year"] >= 2023]
+
+        for group_name, members in FEATURE_GROUPS.items():
+            rows = []
+            valid_cols = []
+            for m in members:
+                col = f"{m}_yearly_mean"
+                if col not in yearly.columns:
+                    continue
+                valid_cols.append(col)
+                pre_vals = pd.to_numeric(pre[col], errors="coerce")
+                post_vals = pd.to_numeric(post[col], errors="coerce")
+                if pre_vals.dropna().empty or post_vals.dropna().empty:
+                    continue
+                pre_mean = float(pre_vals.mean())
+                post_mean = float(post_vals.mean())
+                scale = abs(pre_mean) + abs(post_mean)
+                pct_change = 0.0 if scale == 0.0 else 200.0 * (post_mean - pre_mean) / scale
+                rows.append({"feature": m, "diff": pct_change})
+
+            if not rows:
+                continue
+
+            df = pd.DataFrame(rows)
+
+            df = df.sort_values("diff")
+            out_path = plot_dir / f"{group_name}_diff.png"
+            save_grouped_difference_plot(
+                df,
+                out_path,
+                "feature",
+                "diff",
+                "Percent change (%)",
+                LABEL_MAP,
+            )
+            grouped_diff_plots[group_name] = out_path
+        logger.info("Saved %d per-group diff plots (fallback)", len(grouped_diff_plots))
+
+    # =========================
+    # PLOTS
+    # =========================
+    llm_events = {
+        "ChatGPT release": "2022-11-30",
+    }
+
+    trend_plots = trend_analyzer.save_plots(
+        yearly,
+        monthly,
+        plot_dir,
+        llm_events,
+        exclude_features=summary_features,
+    )
+
+    trend_plots.extend(
+        trend_analyzer.save_grouped_word_plots(
+            yearly=yearly,
+            monthly=monthly,
+            output_dir=plot_dir,
+            group_specs=marker_group_specs,
+            events=llm_events,
+            smoothing_window=3,
+        )
+    )
+
+    dep_plot_path = trend_analyzer.save_dependency_distribution_plot(
+        df=enriched,
+        output_dir=plot_dir,
+        events=llm_events,
+    )
+
+    trend_plots.append(dep_plot_path)
+
+    stacked_plot_path = trend_analyzer.save_stacked_word_plots(
+        yearly=yearly,
+        monthly=monthly,
+        output_dir=plot_dir,
+        events=llm_events,
+        smoothing_window=3,
+        exclude_features=summary_features,
+    )
+
+    trend_plots.append(stacked_plot_path)
+
+    return VisualizationArtifacts(
+        trends_plot_paths=trend_plots,
+    )
+
+
+# =========================================================
+# MARKER GROUPS
+# =========================================================
+def _build_marker_group_specs(config: AppConfig):
+    group_specs: dict[str, dict[str, object]] = {}
+    summary_features: set[str] = set()
+
+    group_definitions = {
+        "marker_words": (
+            "Marker words",
+            "word",
+            config.analysis.llm_marker_words,
+            "marker_words_total_per_1k_words",
+            "marker_words_total",
+        ),
+        "marker_verbs": (
+            "Marker verbs",
+            "verb",
+            config.analysis.llm_marker_verbs,
+            "marker_verbs_total_per_1k_words",
+            "marker_verbs_total",
+        ),
+        "marker_adjectives": (
+            "Marker adjectives",
+            "adjective",
+            config.analysis.llm_marker_adjectives,
+            "marker_adjectives_total_per_1k_words",
+            "marker_adjectives_total",
+        ),
+        "marker_phrases": (
+            "Marker phrases",
+            "phrase",
+            config.analysis.llm_marker_phrases,
+            "marker_phrases_total_per_1k_words",
+            "marker_phrases_total",
+        ),
+        "sequential_markers": (
+            "Sequential markers",
+            "sequential_marker",
+            config.analysis.sequential_markers,
+            "sequential_markers_total_per_1k_words",
+            "sequential_markers_total",
+        ),
+        "causal_markers": (
+            "Causal markers",
+            "causal_marker",
+            config.analysis.causal_markers,
+            "causal_markers_total_per_1k_words",
+            "causal_markers_total",
+        ),
+        "contrast_markers": (
+            "Contrast markers",
+            "contrast_marker",
+            config.analysis.contrast_markers,
+            "contrast_markers_total_per_1k_words",
+            "contrast_markers_total",
+        ),
+        "emphasis_markers": (
+            "Emphasis markers",
+            "emphasis_marker",
+            config.analysis.emphasis_markers,
+            "emphasis_markers_total_per_1k_words",
+            "emphasis_markers_total",
+        ),
+        "summary_markers": (
+            "Summary markers",
+            "summary_marker",
+            config.analysis.summary_markers,
+            "summary_markers_total_per_1k_words",
+            "summary_markers_total",
+        ),
+    }
+
+    for group_name, (label, prefix, terms, rate_feature, count_feature) in group_definitions.items():
+        group_specs[group_name] = {
+            "label": label,
+            "rate_feature": rate_feature,
+            "count_feature": count_feature,
+        }
+        summary_features.add(rate_feature)
+        summary_features.add(count_feature)
+
+    summary_features.add("marker_density")
+    return group_specs, summary_features
+
+
+# =========================================================
+# FEATURE SELECTION (UNCHANGED)
+# =========================================================
+def _resolve_feature_columns(config: AppConfig, frame: pd.DataFrame) -> list[str]:
+    metadata_exclusions = {
+        "year",
+        "paperId",
+        "citationCount",
+        "influentialCitationCount",
+        "isOpenAccess",
+    }
+
+    numeric_cols = [
+        column
+        for column in frame.columns
+        if pd.api.types.is_numeric_dtype(frame[column])
+        and column not in metadata_exclusions
+    ]
+
+    requested = [item.strip() for item in config.analysis.features if item.strip()]
+    if not requested or requested == ["all"]:
+        return [column for column in numeric_cols if _is_canonical_analysis_feature(column)]
+
+    return [
+        column
+        for column in requested
+        if column in frame.columns and _is_canonical_analysis_feature(column)
+    ]
+
+
+def _is_canonical_analysis_feature(column_name: str) -> bool:
+    excluded = {
+        "word_count",
+        "sentence_count",
+        "paper_count",
+        "marker_density",
+        # "coordination_density",
+        # "clause_depth_per_sentence",
+        # "dependency_entropy_normalized",
+        # "dependency_length_norm",
+        # "sentence_depth_cv",
+        # "coordination_count_per_1k_words",
+        # "list_of_three_per_1k_words",
+    }
+
+    if column_name in excluded:
+        return False
+
+    if column_name in {
+        "clause_depth",
+        "dependency_entropy",
+        "dependency_length",
+        "coordination_count",
+        "sentence_depth_std",
+        "list_of_three",
+    }:
+        return True
+
+    if column_name.endswith("_total_per_1k_words"):
+        return True
+
+    if column_name.endswith("_per_1k_words") and not column_name.endswith("_count_per_1k_words"):
+        return True
+
+    return False

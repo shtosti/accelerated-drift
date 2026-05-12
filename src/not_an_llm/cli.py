@@ -20,6 +20,7 @@ from not_an_llm.pipelines.external_preprocess import (
     run_mage_preprocessing,
 )
 from not_an_llm.pipelines.preprocess import run_preprocessing
+from not_an_llm.pipelines.visualize import run_visualization
 
 
 
@@ -35,6 +36,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("collect", help="Download Semantic Scholar papers to JSONL.")
     subparsers.add_parser("preprocess", help="Preprocess raw title/abstract text and save JSONL.")
     subparsers.add_parser("analyze", help="Run feature and readability analysis with yearly trends.")
+    subparsers.add_parser("visualize", help="Generate plots from previously computed analysis data.")
     subparsers.add_parser("show-hypotheses", help="Print default feature-shift hypotheses.")
 
     subparsers.add_parser(
@@ -158,6 +160,11 @@ def main() -> None:
         print(f"Saved trend plots to {config.analysis.trends_plot_dir} ({len(artifacts.trends_plot_paths)} files)")
         return
 
+    if args.command == "visualize":
+        artifacts = run_visualization(config)
+        print(f"Saved trend plots to {config.analysis.trends_plot_dir} ({len(artifacts.trends_plot_paths)} files)")
+        return
+
     if args.command == "show-hypotheses":
         payload = [asdict(item) for item in default_hypotheses()]
         print(json.dumps(payload, indent=2))
@@ -172,7 +179,8 @@ def main() -> None:
         artifacts = run_configured_external_analysis(config)
         print(f"Saved external feature dataset to {artifacts.feature_dataset_jsonl}")
         print(f"Saved human-vs-ai comparison table to {artifacts.comparison_csv}")
-        print(f"Saved top-differences plot to {artifacts.comparison_plot}")
+        if artifacts.comparison_plot:
+            print(f"Saved top-differences plot to {artifacts.comparison_plot}")
         return
 
     if args.command == "hc3-preprocess":

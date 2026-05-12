@@ -98,6 +98,8 @@ class TrendAnalyzer:
                 agg[f"{c}_monthly_mean"] = (c, "mean")
 
         monthly = df.groupby("month_ts", as_index=False).agg(**agg)
+        monthly["year"] = monthly["month_ts"].dt.year.astype(int)
+        monthly["month"] = monthly["month_ts"].dt.month.astype(int)
         return monthly.sort_values("month_ts").reset_index(drop=True)
 
     def aggregate_yearly(self, frame: pd.DataFrame) -> pd.DataFrame:
