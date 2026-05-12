@@ -6,7 +6,7 @@
 #SBATCH --partition=epyc2
 #SBATCH --qos=job_gratis
 #SBATCH --cpus-per-task=2
-#SBATCH --mem=2G
+#SBATCH --mem=64G
 #SBATCH --time=00:30:00
 #SBATCH --ntasks=1
 #SBATCH --nodes=1

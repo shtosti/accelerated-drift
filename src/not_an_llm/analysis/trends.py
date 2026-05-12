@@ -417,6 +417,10 @@ class TrendAnalyzer:
 
         event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
 
+        month_ts = None
+        if "month_ts" in monthly.columns:
+            month_ts = pd.to_datetime(monthly["month_ts"], errors="coerce")
+
         for group_name, spec in group_specs.items():
             label = str(spec.get("label", group_name))
             rate_feature = str(spec.get("rate_feature", "")).strip()
@@ -428,11 +432,11 @@ class TrendAnalyzer:
 
             fig, ax = plt.subplots(figsize=(8, 4))
 
-            if monthly_col in monthly.columns:
+            if monthly_col in monthly.columns and month_ts is not None:
                 y_m = monthly[monthly_col]
                 if smoothing_window:
                     y_m = y_m.rolling(smoothing_window, center=True).mean()
-                ax.plot(monthly["month_ts"], y_m, color=self.colors["monthly"], linewidth=1.2, alpha=1.0, label="Monthly mean")
+                ax.plot(month_ts, y_m, color=self.colors["monthly"], linewidth=1.2, alpha=1.0, label="Monthly mean")
 
             x = pd.to_datetime(yearly["year"].astype(str) + "-01-01")
             y = yearly[yearly_col]
@@ -489,14 +493,18 @@ class TrendAnalyzer:
 
         event_dates = {k: pd.to_datetime(v) for k, v in (events or {}).items()}
 
+        month_ts = None
+        if "month_ts" in monthly.columns:
+            month_ts = pd.to_datetime(monthly["month_ts"], errors="coerce")
+
         for yearly_column in plot_columns:
             feature = yearly_column.removesuffix("_yearly_mean")
             monthly_col = f"{feature}_monthly_mean"
 
             fig, ax = plt.subplots(figsize=(6, 4))
 
-            if monthly_col in monthly.columns:
-                ax.plot(monthly["month_ts"], monthly[monthly_col], color=self.colors["monthly"], linewidth=1.0, alpha=1.0, label="Monthly mean")
+            if monthly_col in monthly.columns and month_ts is not None:
+                ax.plot(month_ts, monthly[monthly_col], color=self.colors["monthly"], linewidth=1.0, alpha=1.0, label="Monthly mean")
 
             x = pd.to_datetime(yearly["year"].astype(str) + "-01-01")
             y = yearly[yearly_column]

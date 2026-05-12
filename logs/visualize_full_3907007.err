@@ -1,0 +1,48 @@
+2026-05-12 15:59:41,830 INFO not_an_llm.pipelines.visualize: Computing statistical summaries...
+2026-05-12 15:59:43,154 INFO not_an_llm.pipelines.visualize: Saved statistical summary to data/visuals/arxiv/feature_stats.csv
+2026-05-12 15:59:43,154 INFO not_an_llm.pipelines.visualize: Generating grouped pre/post diff plot...
+2026-05-12 15:59:44,789 INFO not_an_llm.pipelines.visualize: Saved grouped pre/post diff plot to data/visuals/arxiv/pre_post_diff.png
+2026-05-12 15:59:44,790 INFO not_an_llm.pipelines.visualize: Generating per-group pre/post diff plots...
+2026-05-12 15:59:45,983 INFO not_an_llm.pipelines.visualize: Saved 6 per-group diff plots
+2026-05-12 16:02:00,525 INFO matplotlib.category: Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2026-05-12 16:02:00,530 INFO matplotlib.category: Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:270: UserWarning: This axis already has a converter set and is updating to a potentially incompatible converter
+  ax.plot(x, y, marker="o", color="purple", label="Yearly")
+Traceback (most recent call last):
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/main.py", line 13, in <module>
+    main()
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/cli.py", line 164, in main
+    artifacts = run_visualization(config)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/pipelines/visualize.py", line 180, in run_visualization
+    stacked_plot_path = trend_analyzer.save_stacked_word_plots(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py", line 270, in save_stacked_word_plots
+    ax.plot(x, y, marker="o", color="purple", label="Yearly")
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/matplotlib/axes/_axes.py", line 1777, in plot
+    lines = [*self._get_lines(self, *args, data=data, **kwargs)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/matplotlib/axes/_base.py", line 297, in __call__
+    yield from self._plot_args(
+               ^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/matplotlib/axes/_base.py", line 489, in _plot_args
+    axes.xaxis.update_units(x)
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/matplotlib/axis.py", line 1759, in update_units
+    self._update_axisinfo()
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/matplotlib/axis.py", line 1771, in _update_axisinfo
+    info = self._converter.axisinfo(self.units, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/matplotlib/dates.py", line 1828, in axisinfo
+    return self._get_converter().axisinfo(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/matplotlib/dates.py", line 1745, in axisinfo
+    majloc = AutoDateLocator(tz=tz,
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/matplotlib/dates.py", line 1279, in __init__
+    super().__init__(tz=tz)
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/matplotlib/dates.py", line 1078, in __init__
+    self.tz = _get_tzinfo(tz)
+              ^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/matplotlib/dates.py", line 224, in _get_tzinfo
+    raise TypeError(f"tz must be string or tzinfo subclass, not {tz!r}.")
+TypeError: tz must be string or tzinfo subclass, not <matplotlib.category.UnitData object at 0x7f89f24fddd0>.
