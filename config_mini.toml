@@ -4,7 +4,7 @@ data_dir = "data"
 
 [collection]
 # Data source: semantic_scholar, arxiv, medarxiv, or biorxiv
-source = "arxiv"
+source = "medarxiv"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
 
@@ -85,12 +85,11 @@ readability_metrics = [
 
 # Full/mini output names are derived from the preprocessed input basename.
 # This mini config points at the mini preprocessed dataset.
-preprocessed_jsonl = "data/processed/arxiv_mini.jsonl"
+preprocessed_jsonl = "data/processed/medarxiv_mini.jsonl"
 feature_dataset_jsonl = ""
 trends_csv = ""
 monthly_trends_csv = ""
 trends_plot_dir = ""
-# Default plot output directory is data/visuals/<dataset_stem>/ when left empty.
 # Use "all" to automatically include every numeric feature in yearly trend analysis.
 features = ["all"]
 
