@@ -377,13 +377,22 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
             )
         )
 
-        dep_plot_path = trend_analyzer.save_dependency_distribution_plot(
+        word_stack_plot_path = trend_analyzer.save_word_prefix_stack_plot(
+            yearly=yearly,
+            monthly=monthly,
+            output_dir=plot_dir,
+            events=llm_events,
+            smoothing_window=3,
+        )
+        trend_plots.append(word_stack_plot_path)
+
+        dep_plot_paths = trend_analyzer.save_dependency_distribution_plot(
             df=enriched,
             output_dir=plot_dir,
             events=llm_events,
         )
 
-        trend_plots.append(dep_plot_path)
+        trend_plots.extend(dep_plot_paths)
 
         stacked_plot_path = trend_analyzer.save_stacked_word_plots(
             yearly=yearly,

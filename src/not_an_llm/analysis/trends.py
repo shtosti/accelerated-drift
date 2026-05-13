@@ -51,7 +51,8 @@ class TrendAnalyzer:
     # LABELS
     # =========================================================
     def _pretty_label(self, feature: str) -> str:
-        return self.label_map.get(feature, feature)
+        mapped = self.label_map.get(feature, feature)
+        return mapped.replace("`", "")
 
     # =========================================================
     # UTILS
@@ -125,6 +126,91 @@ class TrendAnalyzer:
         yearly = df.groupby("year", as_index=False).agg(**agg)
         return yearly.sort_values("year").reset_index(drop=True)
     
+    def _compute_its(self, df: pd.DataFrame, value_col: str, intervention_year: int = 2022):
+        """Compute Interrupted Time Series regression.
+        
+        Fits: y = β₀ + β₁*time + β₂*intervention + β₃*time_since_intervention
+        
+        Where:
+          - β₀ = baseline level
+          - β₁ = pre-intervention slope
+          - β₂ = level shift at intervention (immediate jump)
+          - β₃ = slope change post-intervention (combined post-slope = β₁ + β₃)
+        
+        Returns dict with ITS parameters and p-values for interpretation:
+          - its_pre_slope: slope before intervention
+          - its_level_shift: immediate level change at intervention  
+          - its_slope_change: change in slope after intervention
+          - And their respective p-values and significance flags
+        """
+        try:
+            # Prepare data
+            years = df["year"].values
+            y = df[value_col].values
+            
+            # Create predictor variables for piecewise linear regression
+            # Time encoded as years from start (0-indexed)
+            time = years - years.min()
+            
+            # Intervention indicator: 1 if year >= intervention_year, else 0
+            intervention = (years >= intervention_year).astype(int)
+            
+            # Time since intervention: 0 before intervention, then positive after
+            time_since_intervention = np.maximum(0, years - intervention_year)
+            
+            # Design matrix: [1, time, intervention, time_since_intervention]
+            X = np.column_stack([
+                np.ones(len(years)),
+                time,
+                intervention,
+                time_since_intervention
+            ])
+            
+            # Fit piecewise linear regression
+            reg = LinearRegression().fit(X, y)
+            
+            _, pre_slope, level_shift, slope_change = reg.coef_
+            
+            # Compute standard errors and t-statistics
+            y_pred = reg.predict(X)
+            residuals = y - y_pred
+            mse = np.mean(residuals**2)
+            
+            # Standard errors (simplified)
+            var_covar = mse * np.linalg.inv(X.T @ X)
+            std_errors = np.sqrt(np.diag(var_covar))
+            
+            _, se_pre_slope, se_level_shift, se_slope_change = std_errors
+            
+            # Compute t-statistics and p-values
+            t_pre_slope = pre_slope / se_pre_slope if se_pre_slope > 0 else 0
+            t_level_shift = level_shift / se_level_shift if se_level_shift > 0 else 0
+            t_slope_change = slope_change / se_slope_change if se_slope_change > 0 else 0
+            
+            df_resid = len(y) - 4  # degrees of freedom
+            p_pre_slope = 2 * (1 - stats.t.cdf(abs(t_pre_slope), df_resid)) if df_resid > 0 else 1.0
+            p_level_shift = 2 * (1 - stats.t.cdf(abs(t_level_shift), df_resid)) if df_resid > 0 else 1.0
+            p_slope_change = 2 * (1 - stats.t.cdf(abs(t_slope_change), df_resid)) if df_resid > 0 else 1.0
+            
+            # Compute R-squared
+            ss_res = np.sum(residuals**2)
+            ss_tot = np.sum((y - np.mean(y))**2)
+            r_squared = 1 - (ss_res / ss_tot) if ss_tot > 0 else 0
+            
+            return {
+                "its_pre_slope": pre_slope,
+                "its_pre_slope_p": p_pre_slope,
+                "its_level_shift": level_shift,
+                "its_level_shift_p": p_level_shift,
+                "its_slope_change": slope_change,
+                "its_slope_change_p": p_slope_change,
+                "its_post_slope": pre_slope + slope_change,
+                "its_r_squared": r_squared,
+            }
+        except Exception as e:
+            # Return None or empty dict if ITS computation fails
+            return None
+
     def _compute_stats(self, yearly: pd.DataFrame, feature: str, pre_cut=2022, post_cut=2023):
         col = f"{feature}_yearly_mean"
         if col not in yearly.columns:
@@ -187,7 +273,12 @@ class TrendAnalyzer:
         # ---------------------------
         diff = _symmetric_percent_change(pre.mean(), post.mean())
 
-        return {
+        # ---------------------------
+        # 5. Interrupted Time Series (ITS) regression
+        # ---------------------------
+        its_stats = self._compute_its(df, col, intervention_year=2022)
+
+        result = {
             "feature": feature,
             "diff": diff,
             "p_value": p_val,
@@ -196,6 +287,12 @@ class TrendAnalyzer:
             "slope_p": slope_p,
             "change_point": cp_year,
         }
+        
+        # Add ITS results if available
+        if its_stats:
+            result.update(its_stats)
+        
+        return result
 
     def compute_all_stats(self, yearly: pd.DataFrame) -> pd.DataFrame:
         features = [
@@ -248,26 +345,32 @@ class TrendAnalyzer:
 
         event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
 
-        fig, axes = plt.subplots(len(features), 1, figsize=(12, 2.5 * len(features)))
+        # Ensure monthly has proper datetime month_ts before plotting.
+        monthly = monthly.copy()
+        if "month_ts" in monthly.columns:
+            monthly["month_ts"] = pd.to_datetime(monthly["month_ts"], errors="coerce")
+
+        fig, axes = plt.subplots(len(features), 1, figsize=(6, 1.5 * len(features)))
         if len(features) == 1:
             axes = [axes]
+
+        x = pd.to_datetime(yearly["year"].astype(str) + "-01-01")
 
         for ax, feature in zip(axes, features):
 
             ycol = f"{feature}_yearly_mean"
             mcol = f"{feature}_monthly_mean"
 
-            if mcol in monthly.columns:
+            # Plot yearly first to establish datetime x-axis converter.
+            y = yearly[ycol]
+            ax.plot(x, y, marker="o", color="purple", label="Yearly")
+
+            if mcol in monthly.columns and "month_ts" in monthly.columns:
                 y_m = monthly[mcol]
                 if smoothing_window:
                     y_m = y_m.rolling(smoothing_window, center=True).mean()
 
                 ax.plot(monthly["month_ts"], y_m, color="green", label="Monthly")
-
-            x = pd.to_datetime(yearly["year"].astype(str) + "-01-01")
-            y = yearly[ycol]
-
-            ax.plot(x, y, marker="o", color="purple", label="Yearly")
 
             self._add_event_lines(ax, event_dates)
 
@@ -282,6 +385,88 @@ class TrendAnalyzer:
 
         out_path = output_dir / "stacked_trends.png"
         fig.savefig(out_path, dpi=150)
+        plt.close(fig)
+
+        return out_path
+
+    # =========================================================
+    # STACKED WORD-PREFIX PLOTS
+    def save_word_prefix_stack_plot(
+        self,
+        yearly: pd.DataFrame,
+        monthly: pd.DataFrame,
+        output_dir: Path,
+        prefix: str = "word_",
+        events: dict[str, str] | None = None,
+        smoothing_window: int | None = None,
+    ) -> Path:
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        features = [
+            c.removesuffix("_yearly_mean")
+            for c in yearly.columns
+            if c.endswith("_yearly_mean") and c.removesuffix("_yearly_mean").startswith(prefix)
+        ]
+        if not features:
+            raise ValueError(f"No yearly features found with prefix '{prefix}'")
+
+        # Ensure monthly has proper datetime month_ts before plotting.
+        monthly = monthly.copy()
+        if "month_ts" not in monthly.columns:
+            if "year" in monthly.columns and "month" in monthly.columns:
+                monthly["month_ts"] = pd.to_datetime(
+                    monthly["year"].astype(str) + "-" + monthly["month"].astype(str).str.zfill(2) + "-01",
+                    errors="coerce",
+                )
+            else:
+                raise ValueError("monthly DataFrame must have month_ts, or both year and month columns")
+        else:
+            monthly["month_ts"] = pd.to_datetime(monthly["month_ts"], errors="coerce")
+
+        events = events or {
+            "ChatGPT": "2022-11-30",
+            "Delve": "2024-01-15",
+        }
+
+        event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
+
+        fig, axes = plt.subplots(
+            len(features),
+            1,
+            figsize=(6, 1.5 * len(features)),
+            sharex=True,
+        )
+        if len(features) == 1:
+            axes = [axes]
+
+        x = pd.to_datetime(yearly["year"].astype(str) + "-01-01")
+
+        for ax, feature in zip(axes, features):
+            ycol = f"{feature}_yearly_mean"
+            mcol = f"{feature}_monthly_mean"
+
+            # Plot yearly first to establish datetime x-axis converter.
+            y = yearly[ycol]
+            ax.plot(x, y, marker="o", linewidth=1.6, color=self.colors["yearly"], label="Yearly")
+
+            if mcol in monthly.columns:
+                y_m = monthly[mcol]
+                if smoothing_window:
+                    y_m = y_m.rolling(smoothing_window, center=True).mean()
+                ax.plot(monthly["month_ts"], y_m, color=self.colors["monthly"], linewidth=1.0, alpha=0.8, label="Monthly")
+
+            self._add_event_lines(ax, event_dates)
+            ax.set_ylabel(self._pretty_label(feature))
+            ax.grid(alpha=0.3)
+            ax.legend(loc="upper left", fontsize=8)
+
+        axes[-1].set_xlabel("Year")
+        self._format_xticks(axes[-1])
+
+        fig.tight_layout()
+
+        out_path = output_dir / "word_prefix_stack.png"
+        fig.savefig(out_path, dpi=150, bbox_inches="tight")
         plt.close(fig)
 
         return out_path
@@ -430,7 +615,7 @@ class TrendAnalyzer:
             yearly_col = f"{rate_feature}_yearly_mean"
             monthly_col = f"{rate_feature}_monthly_mean"
 
-            fig, ax = plt.subplots(figsize=(8, 4))
+            fig, ax = plt.subplots(figsize=(6, 3))
 
             if monthly_col in monthly.columns and month_ts is not None:
                 y_m = monthly[monthly_col]
@@ -460,7 +645,7 @@ class TrendAnalyzer:
 
             top_y = ax.get_ylim()[1]
             for event_label, d in event_dates.items():
-                ax.text(d, top_y, event_label, rotation=90, va="bottom", fontsize=8, alpha=0.8)
+                ax.text(d, top_y, event_label, rotation=90, va="bottom", fontsize=10, alpha=0.8)
 
             ax.legend()
             self._format_xticks(ax)
@@ -533,7 +718,15 @@ class TrendAnalyzer:
     # =========================================================
     # DEPENDENCY DISTRIBUTION (stacked bars)
     # =========================================================
-    def save_dependency_distribution_plot(self, df: pd.DataFrame, output_dir: Path, events: dict[str, str] | None = None) -> Path:
+    def save_dependency_distribution_plot(
+        self,
+        df: pd.DataFrame,
+        output_dir: Path,
+        events: dict[str, str] | None = None,
+        top_n: int = 10,
+        pre_cut: int = 2022,
+        post_cut: int = 2023,
+    ) -> list[Path]:
         output_dir.mkdir(parents=True, exist_ok=True)
 
         if "dependency_distribution" not in df.columns:
@@ -543,40 +736,78 @@ class TrendAnalyzer:
         dep_df["year"] = df["year"]
 
         dep_yearly = dep_df.groupby("year").sum(numeric_only=True)
+        if dep_yearly.empty:
+            raise ValueError("No dependency distribution rows found")
 
-        top_deps = dep_yearly.sum().sort_values(ascending=False).head(15).index
-        dep_plot = dep_yearly[top_deps].copy()
-        dep_plot["OTHER"] = dep_yearly.drop(columns=top_deps).sum(axis=1)
+        # Compute proportions for each dependency role.
+        dep_yearly_prop = dep_yearly.div(dep_yearly.sum(axis=1), axis=0).fillna(0.0)
 
-        dep_plot = dep_plot.div(dep_plot.sum(axis=1), axis=0)
-        dep_plot = dep_plot.sort_index()
-        dep_plot = dep_plot[dep_plot.mean().sort_values(ascending=False).index]
+        pre = dep_yearly.loc[dep_yearly.index <= pre_cut].sum(numeric_only=True)
+        post = dep_yearly.loc[dep_yearly.index >= post_cut].sum(numeric_only=True)
 
-        fig, ax = plt.subplots(figsize=(10, 5))
-        dep_plot.plot(kind="bar", stacked=True, ax=ax, width=0.9)
+        if pre.sum() == 0 or post.sum() == 0:
+            raise ValueError("Insufficient pre- or post-period dependency counts for diff plot")
 
-        ax.set_ylabel("Proportion")
-        ax.set_xlabel("Year")
-        # ax.set_title("Dependency Distribution Over Time")
+        pre_prop = pre / pre.sum()
+        post_prop = post / post.sum()
+
+        diff_df = pd.DataFrame(
+            {
+                "feature": dep_yearly.columns,
+                "pre_prop": pre_prop.values,
+                "post_prop": post_prop.values,
+                "diff_pct": 100.0 * (post_prop.values - pre_prop.values),
+            }
+        )
+        diff_df = diff_df.dropna(subset=["diff_pct"]).copy()
+        diff_df["abs_diff"] = diff_df["diff_pct"].abs()
+        diff_df = diff_df.sort_values("abs_diff", ascending=False).head(top_n)
+        diff_df = diff_df.sort_values("diff_pct")
+
+        # Save diff plot
+        diff_fig, diff_ax = plt.subplots(figsize=(6, 0.15 * len(diff_df) + 0.3))
+        colors = ["#943F8B" if v < 0 else "#54A066" for v in diff_df["diff_pct"]]
+        diff_ax.barh(diff_df["feature"], diff_df["diff_pct"], color=colors)
+        diff_ax.axvline(0, color="black", linewidth=1)
+        diff_ax.set_xlabel("Change in role proportion (percentage points)")
+        # diff_ax.set_title("Top dependency role proportion changes after 2023")
+        diff_ax.grid(axis="x", alpha=0.3)
+        self._format_xticks(diff_ax)
+        diff_out_path = output_dir / "dependency_distribution_diff.png"
+        diff_fig.tight_layout()
+        diff_fig.savefig(diff_out_path, dpi=150, bbox_inches="tight")
+        plt.close(diff_fig)
+
+        # Save yearly role trend plot for the top changed roles
+        top_roles = diff_df["feature"].tolist()
+        plot_yearly = dep_yearly_prop[top_roles].copy()
+        plot_yearly = plot_yearly.sort_index()
+
+        year_ts = pd.to_datetime(plot_yearly.index.astype(str) + "-01-01")
+
+        trend_fig, trend_ax = plt.subplots(figsize=(7, 0.15 * len(top_roles) + 0.3))
+        for role in top_roles:
+            trend_ax.plot(year_ts, plot_yearly[role], marker="o", linewidth=1.6, label=role)
 
         if events:
-            event_years = {k: pd.to_datetime(v).year for k, v in events.items()}
-            years = dep_plot.index.tolist()
-            for label, year in event_years.items():
-                if year in years:
-                    x_pos = years.index(year)
-                    color = "k" if "gpt" in label.lower() else self.colors["events"]
-                    ax.axvline(x=x_pos, linestyle="--", alpha=0.7, color=color)
-                    ax.text(x_pos, 1.02, label, rotation=90, va="bottom", fontsize=8)
+            event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
+            self._add_event_lines(trend_ax, event_dates)
+            top_y = trend_ax.get_ylim()[1]
+            for label, d in event_dates.items():
+                trend_ax.text(d, top_y, label, rotation=0, va="bottom", fontsize=10, alpha=0.8)
 
-        ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1), fontsize=8, title="Dependency")
-        self._format_xticks(ax)
-        plt.tight_layout()
+        trend_ax.set_xlabel("Year")
+        trend_ax.set_ylabel("Dependency role proportion")
+        # trend_ax.set_title("Dependency role trends over years")
+        trend_ax.grid(alpha=0.3)
+        trend_ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5), fontsize=8)
+        self._format_xticks(trend_ax)
+        trend_out_path = output_dir / "dependency_distribution_trends.png"
+        trend_fig.tight_layout()
+        trend_fig.savefig(trend_out_path, dpi=150, bbox_inches="tight")
+        plt.close(trend_fig)
 
-        out_path = output_dir / "dependency_distribution_stacked.png"
-        fig.savefig(out_path, dpi=150, bbox_inches="tight")
-        plt.close(fig)
-        return out_path
+        return [diff_out_path, trend_out_path]
 
 
 # =========================================================
@@ -628,7 +859,7 @@ def save_grouped_difference_plot(
     bar_height_inches = 0.25  # inches per bar
     num_bars = len(df)
     fig_height = num_bars * bar_height_inches + 1.5  # 1.5 inches for margins, labels, etc.
-    fig, ax = plt.subplots(figsize=(8, max(4, fig_height)))
+    fig, ax = plt.subplots(figsize=(6, max(3, fig_height)))
 
     colors = ["#943F8B" if v < 0 else "#54A066" for v in df[diff_column]]
 

@@ -57,10 +57,20 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
     yearly = pd.read_csv(trends_csv_path)
     monthly = pd.read_csv(monthly_trends_csv_path)
 
-    # Ensure year is int
-    yearly["year"] = yearly["year"].astype(int)
-    monthly["year"] = monthly["year"].astype(int)
-    monthly["month"] = monthly["month"].astype(int)
+    # Ensure year/month columns exist in monthly trend data.
+    if "month_ts" in monthly.columns and ("year" not in monthly.columns or "month" not in monthly.columns):
+        monthly["month_ts"] = pd.to_datetime(monthly["month_ts"], errors="coerce")
+        monthly["year"] = monthly["month_ts"].dt.year
+        monthly["month"] = monthly["month_ts"].dt.month
+
+    if "year" in yearly.columns:
+        yearly["year"] = yearly["year"].astype(int)
+
+    if "year" in monthly.columns:
+        monthly["year"] = monthly["year"].astype(int)
+
+    if "month" in monthly.columns:
+        monthly["month"] = monthly["month"].astype(int)
 
     plot_dir.mkdir(parents=True, exist_ok=True)
 
@@ -169,13 +179,22 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
         )
     )
 
-    dep_plot_path = trend_analyzer.save_dependency_distribution_plot(
+    word_stack_plot_path = trend_analyzer.save_word_prefix_stack_plot(
+        yearly=yearly,
+        monthly=monthly,
+        output_dir=plot_dir,
+        events=llm_events,
+        smoothing_window=3,
+    )
+    trend_plots.append(word_stack_plot_path)
+
+    dep_plot_paths = trend_analyzer.save_dependency_distribution_plot(
         df=enriched,
         output_dir=plot_dir,
         events=llm_events,
     )
 
-    trend_plots.append(dep_plot_path)
+    trend_plots.extend(dep_plot_paths)
 
     stacked_plot_path = trend_analyzer.save_stacked_word_plots(
         yearly=yearly,
