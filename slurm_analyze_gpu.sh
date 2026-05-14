@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name="analysis_mini_gpu"
-#SBATCH --output=logs/analysis_mini_gpu_%j.out
-#SBATCH --error=logs/analysis_mini_gpu_%j.err
+#SBATCH --job-name="analysis_gpu"
+#SBATCH --output=logs/analysis_gpu_%j.out
+#SBATCH --error=logs/analysis_gpu_%j.err
 #SBATCH --partition=gpu-invest
 #SBATCH --qos=job_gpu_preemptable
 #SBATCH --gres=gpu:a100:1
