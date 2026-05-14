@@ -364,7 +364,7 @@ def _save_topic_prevalence(
             ax.plot(pd.to_datetime(monthly_pivot.index), monthly_pivot[label], marker=".", label=label)
         ax.set_xlabel("Month")
         ax.set_ylabel("Topic prevalence (%)")
-        ax.set_title("Topic prevalence by month")
+        # ax.set_title("Topic prevalence by month")
         ax.legend(loc="best", fontsize=8)
         ax.grid(alpha=0.3)
         _format_xticks(ax)
@@ -406,7 +406,7 @@ def _save_topic_trend_plots(
     event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
 
     for feature in feature_columns:
-        fig, ax = plt.subplots(figsize=(10, 6))
+        fig, ax = plt.subplots(figsize=(6, 4))
 
         # Plot line for each topic
         for topic_id, topic_data in grouped.groupby("topic_id"):
@@ -454,7 +454,7 @@ def _save_topic_cluster_plot(
 
     plot_dir.mkdir(parents=True, exist_ok=True)
     
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(6, 4))
     
     # Get unique topics (excluding noise)
     topics = sorted(embeddings_2d['topic_id'].unique())
@@ -494,7 +494,7 @@ def _save_topic_cluster_plot(
     
     ax.set_xlabel('UMAP Dimension 1')
     ax.set_ylabel('UMAP Dimension 2')
-    ax.set_title('Topic Clusters (UMAP 2D Projection)')
+    # ax.set_title('Topic Clusters (UMAP 2D Projection)')
     ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=8)
     ax.grid(alpha=0.3)
     
