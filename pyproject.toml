@@ -5,6 +5,7 @@ description = "Collect Semantic Scholar papers and analyze writing-feature shift
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "bertopic>=0.17.4",
     "datasets==2.21.0",
     "ipykernel>=7.2.0",
     "jupyter>=1.1.1",

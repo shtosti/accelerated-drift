@@ -89,6 +89,10 @@ class AnalysisConfig:
     trends_plot_dir: Path
 
     generate_plots: bool
+    topic_modeling_enabled: bool
+    topic_modeling_num_topics: int
+    topic_modeling_top_n_terms: int
+    topic_modeling_use_bertopic: bool
 
 
 @dataclass(slots=True)
@@ -223,7 +227,11 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             monthly_trends_csv=monthly_trends_csv,
             trends_plot_dir=trends_plot_dir,
 
-            generate_plots=bool(analysis.get("generate_plots", True)),
+                    generate_plots=bool(analysis.get("generate_plots", True)),
+            topic_modeling_enabled=bool(analysis.get("topic_modeling_enabled", False)),
+            topic_modeling_num_topics=int(analysis.get("topic_modeling_num_topics", 8)),
+            topic_modeling_top_n_terms=int(analysis.get("topic_modeling_top_n_terms", 5)),
+            topic_modeling_use_bertopic=bool(analysis.get("topic_modeling_use_bertopic", False)),
         ),
 
         external=None,
@@ -299,5 +307,5 @@ def _default_analysis_paths(path: Path):
         Path("data/analyzed/" + path.name),
         Path("data/analysis/" + path.stem + "_year.csv"),
         Path("data/analysis/" + path.stem + "_month.csv"),
-        Path("data/visuals/" + path.stem),
+        Path("data/analysis/plots/" + path.stem),
     )
