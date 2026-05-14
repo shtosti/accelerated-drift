@@ -130,13 +130,29 @@ All plots are saved to `data/visuals/<dataset_stem>/` or the configured `trends_
    - Vertical stack of all `word_` prefix feature trends.
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
-7. `dependency_distribution_diff.png`
-   - Change plot showing the top dependency roles by proportional change before vs after 2023.
-   - Sorted by absolute percentage-point change and rendered in descending order.
+7. `verb_prefix_stack.png`
+   - Vertical stack of all `verb_` prefix feature trends.
+   - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
-8. `dependency_distribution_trends.png`
-   - Line chart showing yearly changes for the top dependency roles selected by their pre/post change.
-   - Useful for spotting fluctuations over time.
+8. `adjective_prefix_stack.png`
+   - Vertical stack of all `adjective_` prefix feature trends.
+   - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
+
+9. `readability_stack.png`
+   - Vertical stack of all readability features (avg_words_per_sentence, avg_syllables_per_word, flesch_reading_ease, flesch_kincaid_grade, dale_chall).
+   - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
+
+10. `punctuation_stack.png`
+   - TODO add
+
+11. `dependency_distribution_diff.png`
+    - Change plot showing the top dependency roles by proportional change before vs after 2023.
+    - Sorted by absolute percentage-point change and rendered in descending order.
+
+
+12. `dependency_distribution_trends.png`
+    - Line chart showing yearly changes for the top dependency roles selected by their pre/post change.
+    - Useful for spotting fluctuations over time.
 
 ### Additional plot generation in `analyze`
 
