@@ -5,6 +5,7 @@ from pathlib import Path
 import logging
 import spacy
 import pandas as pd
+import matplotlib.pyplot as plt
 import os
 from concurrent.futures import ProcessPoolExecutor
 
@@ -187,9 +188,6 @@ def _assign_topics(
 
     start_time = time.time()
     embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device=device)
-
-    # Use GPU-optimized embedding model
-    embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device=device)
     vectorizer_model = TfidfVectorizer(
         stop_words="english",
         ngram_range=(1, 2),
@@ -204,6 +202,7 @@ def _assign_topics(
         nr_topics=num_topics,
         top_n_words=top_terms,
         min_topic_size=2,  # Minimum documents per topic
+        random_state=42,  # For deterministic results
         calculate_probabilities=False,
         verbose=False,
     )
@@ -239,16 +238,22 @@ def _assign_topics(
 
     labels = [int(t) if t != -1 else -1 for t in topics]
 
+    # Add an explicit label for noise/unassigned documents
+    topic_labels[-1] = topic_labels.get(-1, "noise")
+
     enriched = enriched.copy()
     enriched["topic_id"] = labels
-    enriched["topic_label"] = [topic_labels.get(int(t), f"topic_{t}") for t in labels]
+    enriched["topic_label"] = [topic_labels.get(int(t), "noise") for t in labels]
 
+    analysis_dir = Path(config.data_dir) / "analysis"
+    analysis_dir.mkdir(parents=True, exist_ok=True)
+    topic_labels_path = analysis_dir / f"{config.analysis.preprocessed_jsonl.stem}_topic_labels.csv"
     pd.DataFrame(
         {
             "topic_id": list(topic_labels.keys()),
             "topic_label": list(topic_labels.values()),
         }
-    ).to_csv(plot_dir / "topic_labels.csv", index=False)
+    ).to_csv(topic_labels_path, index=False)
 
     return enriched, topic_labels
 
@@ -256,9 +261,12 @@ def _assign_topics(
 def _save_topic_prevalence(
     enriched: pd.DataFrame,
     plot_dir: Path,
+    analysis_dir: Path,
+    input_stem: str,
     topic_labels: dict[int, str],
 ) -> list[Path]:
     plot_dir.mkdir(parents=True, exist_ok=True)
+    analysis_dir.mkdir(parents=True, exist_ok=True)
     paths: list[Path] = []
 
     if "year" not in enriched.columns:
@@ -280,19 +288,19 @@ def _save_topic_prevalence(
     yearly["pct"] = yearly["count"] / yearly["total"] * 100
     yearly["topic_label"] = yearly["topic_id"].map(topic_labels)
 
-    yearly_csv = plot_dir / "topic_prevalence_yearly.csv"
+    yearly_csv = analysis_dir / f"{input_stem}_topic_prevalence_yearly.csv"
     yearly.to_csv(yearly_csv, index=False)
     paths.append(yearly_csv)
 
     yearly_pivot = yearly.pivot(index="year", columns="topic_label", values="pct").fillna(0.0)
     
     # Line plot
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(6, 4))
     for label in yearly_pivot.columns:
         ax.plot(yearly_pivot.index, yearly_pivot[label], marker="o", label=label)
     ax.set_xlabel("Year")
     ax.set_ylabel("Topic prevalence (%)")
-    ax.set_title("Topic prevalence by year (line plot)")
+    # ax.set_title("Topic prevalence by year (line plot)")
     ax.legend(loc="best", fontsize=8)
     ax.grid(alpha=0.3)
     _format_xticks(ax)
@@ -303,7 +311,7 @@ def _save_topic_prevalence(
     paths.append(trend_path)
 
     # Stacked area plot
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(6, 4))
     ax.stackplot(
         yearly_pivot.index,
         *[yearly_pivot[col] for col in yearly_pivot.columns],
@@ -312,7 +320,7 @@ def _save_topic_prevalence(
     )
     ax.set_xlabel("Year")
     ax.set_ylabel("Topic prevalence (%)")
-    ax.set_title("Topic evolution over time (stacked area)")
+    # ax.set_title("Topic evolution over time (stacked area)")
     ax.legend(loc="upper left", fontsize=8)
     ax.grid(alpha=0.3, axis="y")
     _format_xticks(ax)
@@ -331,12 +339,12 @@ def _save_topic_prevalence(
         monthly["pct"] = monthly["count"] / monthly["total"] * 100
         monthly["topic_label"] = monthly["topic_id"].map(topic_labels)
 
-        monthly_csv = plot_dir / "topic_prevalence_monthly.csv"
+        monthly_csv = analysis_dir / f"{input_stem}_topic_prevalence_monthly.csv"
         monthly.to_csv(monthly_csv, index=False)
         paths.append(monthly_csv)
 
         monthly_pivot = monthly.pivot(index="month_ts", columns="topic_label", values="pct").fillna(0.0)
-        fig, ax = plt.subplots(figsize=(10, 6))
+        fig, ax = plt.subplots(figsize=(6, 6))
         for label in monthly_pivot.columns:
             ax.plot(pd.to_datetime(monthly_pivot.index), monthly_pivot[label], marker=".", label=label)
         ax.set_xlabel("Month")
@@ -350,6 +358,73 @@ def _save_topic_prevalence(
         fig.savefig(monthly_path, dpi=150)
         plt.close(fig)
         paths.append(monthly_path)
+
+    return paths
+
+
+def _save_topic_trend_plots(
+    enriched: pd.DataFrame,
+    plot_dir: Path,
+    topic_labels: dict[int, str],
+    events: dict[str, str],
+) -> list[Path]:
+    """Create trend plots for each feature showing lines for each topic."""
+    plot_dir.mkdir(parents=True, exist_ok=True)
+    paths: list[Path] = []
+
+    if "year" not in enriched.columns:
+        return paths
+
+    # Get all numeric feature columns (excluding metadata)
+    feature_columns = [
+        col for col in enriched.columns
+        if col.endswith("_per_1k_words") and pd.api.types.is_numeric_dtype(enriched[col])
+    ]
+
+    if not feature_columns:
+        return paths
+
+    # Group by year and topic, compute means
+    grouped = enriched.groupby(["year", "topic_id"])[feature_columns].mean().reset_index()
+    grouped["topic_label"] = grouped["topic_id"].map(topic_labels)
+
+    event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
+
+    for feature in feature_columns:
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        # Plot line for each topic
+        for topic_id, topic_data in grouped.groupby("topic_id"):
+            topic_label = topic_labels.get(topic_id, f"topic_{topic_id}")
+            topic_years = topic_data["year"]
+            topic_values = topic_data[feature]
+
+            ax.plot(
+                topic_years,
+                topic_values,
+                marker="o",
+                linewidth=1.5,
+                label=topic_label,
+                alpha=0.8
+            )
+
+        # Add event lines
+        for event_name, event_date in event_dates.items():
+            if event_date.year in grouped["year"].values:
+                ax.axvline(x=event_date.year, color="red", linestyle="--", alpha=0.7, label=event_name)
+
+        ax.set_xlabel("Year")
+        ax.set_ylabel(f"{feature.replace('_per_1k_words', '').replace('_', ' ').title()}")
+        ax.set_title(f"{feature.replace('_per_1k_words', '').replace('_', ' ').title()} by Topic")
+        ax.legend(loc="best", fontsize=8)
+        ax.grid(alpha=0.3)
+        _format_xticks(ax)
+
+        plot_path = plot_dir / f"{feature}_by_topic.png"
+        fig.tight_layout()
+        fig.savefig(plot_path, dpi=150)
+        plt.close(fig)
+        paths.append(plot_path)
 
     return paths
 
@@ -383,11 +458,27 @@ def _run_topic_analysis(
         for t in unique_labels
     }
 
-    paths = _save_topic_prevalence(enriched, plot_dir, topic_labels)
+    analysis_dir = Path(config.data_dir) / "analysis"
+    analysis_dir.mkdir(parents=True, exist_ok=True)
+    analysis_topic_base = analysis_dir / f"{config.analysis.preprocessed_jsonl.stem}_topics"
+    analysis_topic_base.mkdir(parents=True, exist_ok=True)
+
+    paths = _save_topic_prevalence(
+        enriched,
+        plot_dir,
+        analysis_dir,
+        config.analysis.preprocessed_jsonl.stem,
+        topic_labels,
+    )
+
+    # Add topic trend plots
+    paths.extend(_save_topic_trend_plots(enriched, plot_dir, topic_labels, events))
 
     for topic_id in unique_labels:
-        topic_dir = plot_dir / f"topic_{topic_id}"
-        topic_dir.mkdir(parents=True, exist_ok=True)
+        plot_topic_dir = plot_dir / f"topic_{topic_id}"
+        plot_topic_dir.mkdir(parents=True, exist_ok=True)
+        analysis_topic_dir = analysis_topic_base / f"topic_{topic_id}"
+        analysis_topic_dir.mkdir(parents=True, exist_ok=True)
 
         topic_subset = enriched[enriched["topic_id"] == topic_id]
         if topic_subset.empty:
@@ -395,19 +486,19 @@ def _run_topic_analysis(
 
         topic_yearly = trend_analyzer.aggregate_yearly(topic_subset)
         topic_monthly = trend_analyzer.aggregate_monthly(topic_subset)
-        topic_yearly.to_csv(topic_dir / "trends_by_year.csv", index=False)
-        topic_monthly.to_csv(topic_dir / "trends_by_month.csv", index=False)
+        topic_yearly.to_csv(analysis_topic_dir / "trends_by_year.csv", index=False)
+        topic_monthly.to_csv(analysis_topic_dir / "trends_by_month.csv", index=False)
 
         stats_df = trend_analyzer.compute_all_stats(topic_yearly)
-        stats_df.to_csv(topic_dir / "feature_stats.csv", index=False)
-        paths.append(topic_dir / "feature_stats.csv")
+        stats_df.to_csv(analysis_topic_dir / "feature_stats.csv", index=False)
+        paths.append(analysis_topic_dir / "feature_stats.csv")
 
         # Always generate topic-level visualizations for cross-topic comparison
         paths.extend(
             trend_analyzer.save_plots(
                 topic_yearly,
                 topic_monthly,
-                topic_dir,
+                plot_topic_dir,
                 events,
                 exclude_features=summary_features,
             )
@@ -416,14 +507,14 @@ def _run_topic_analysis(
             paths.extend(
                 trend_analyzer.save_grouped_feature_diffs(
                     topic_yearly,
-                    output_dir=topic_dir,
+                    output_dir=plot_topic_dir,
                 ).values()
             )
         paths.extend(
             trend_analyzer.save_grouped_word_plots(
                 yearly=topic_yearly,
                 monthly=topic_monthly,
-                output_dir=topic_dir,
+                output_dir=plot_topic_dir,
                 group_specs=group_specs,
                 events=events,
                 smoothing_window=3,
@@ -433,7 +524,7 @@ def _run_topic_analysis(
             trend_analyzer.save_word_prefix_stack_plot(
                 yearly=topic_yearly,
                 monthly=topic_monthly,
-                output_dir=topic_dir,
+                output_dir=plot_topic_dir,
                 events=events,
                 smoothing_window=3,
             )
@@ -441,7 +532,7 @@ def _run_topic_analysis(
         paths.extend(
             trend_analyzer.save_dependency_distribution_plot(
                 df=topic_subset,
-                output_dir=topic_dir,
+                output_dir=plot_topic_dir,
                 events=events,
             )
         )
@@ -449,7 +540,7 @@ def _run_topic_analysis(
             trend_analyzer.save_stacked_word_plots(
                 yearly=topic_yearly,
                 monthly=topic_monthly,
-                output_dir=topic_dir,
+                output_dir=plot_topic_dir,
                 events=events,
                 smoothing_window=3,
                 exclude_features=summary_features,
