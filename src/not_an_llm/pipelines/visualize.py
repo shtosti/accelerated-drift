@@ -188,6 +188,42 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
     )
     trend_plots.append(word_stack_plot_path)
 
+    verb_stack_plot_path = trend_analyzer.save_verb_prefix_stack_plot(
+        yearly=yearly,
+        monthly=monthly,
+        output_dir=plot_dir,
+        events=llm_events,
+        smoothing_window=3,
+    )
+    trend_plots.append(verb_stack_plot_path)
+
+    adjective_stack_plot_path = trend_analyzer.save_adjective_prefix_stack_plot(
+        yearly=yearly,
+        monthly=monthly,
+        output_dir=plot_dir,
+        events=llm_events,
+        smoothing_window=3,
+    )
+    trend_plots.append(adjective_stack_plot_path)
+
+    readability_stack_plot_path = trend_analyzer.save_readability_stack_plot(
+        yearly=yearly,
+        monthly=monthly,
+        output_dir=plot_dir,
+        events=llm_events,
+        smoothing_window=3,
+    )
+    trend_plots.append(readability_stack_plot_path)
+
+    punctuation_stack_plot_path = trend_analyzer.save_punctuation_stack_plot(
+        yearly=yearly,
+        monthly=monthly,
+        output_dir=plot_dir,
+        events=llm_events,
+        smoothing_window=3,
+    )
+    trend_plots.append(punctuation_stack_plot_path)
+
     dep_plot_paths = trend_analyzer.save_dependency_distribution_plot(
         df=enriched,
         output_dir=plot_dir,
