@@ -34,31 +34,35 @@ class AnalysisArtifacts:
 def _resolve_analysis_paths(config: AppConfig):
     # Derive output names from the preprocessed input file basename to distinguish mini/full runs
     input_stem = config.analysis.preprocessed_jsonl.stem
-    base_dir = Path(config.data_dir) / "analysis"
+    analysis_dir = Path(config.data_dir) / "analysis"
+    visuals_dir = Path(config.data_dir) / "visuals"
 
-    base_dir.mkdir(parents=True, exist_ok=True)
+    analysis_dir.mkdir(parents=True, exist_ok=True)
 
-    def _maybe(path_value: str, default: Path) -> Path:
-        return Path(path_value) if path_value else default
+    def _maybe(path_value: Path, default: Path) -> Path:
+        # Use default if path_value is empty or matches the old analysis/plots default
+        if not path_value or str(path_value).startswith("data/visuals"):
+            return default
+        return path_value
 
     feature_dataset = _maybe(
         config.analysis.feature_dataset_jsonl,
-        base_dir / f"{input_stem}.jsonl",
+        analysis_dir / f"{input_stem}.jsonl",
     )
 
     trends_csv = _maybe(
         config.analysis.trends_csv,
-        base_dir / f"{input_stem}_trends_by_year.csv",
+        analysis_dir / f"{input_stem}_trends_by_year.csv",
     )
 
     monthly_csv = _maybe(
         config.analysis.monthly_trends_csv,
-        base_dir / f"{input_stem}_trends_by_month.csv",
+        analysis_dir / f"{input_stem}_trends_by_month.csv",
     )
 
     plot_dir = _maybe(
         config.analysis.trends_plot_dir,
-        base_dir / f"{input_stem}_plots",
+        visuals_dir / input_stem,
     )
 
     return feature_dataset, trends_csv, monthly_csv, plot_dir
@@ -148,6 +152,311 @@ def _build_marker_group_specs(config: AppConfig):
 
     summary_features.add("marker_density")
     return group_specs, summary_features
+
+
+def _format_xticks(ax):
+    for label in ax.get_xticklabels():
+        label.set_rotation(45)
+        label.set_ha("right")
+
+
+def _assign_topics(
+    enriched: pd.DataFrame,
+    config: AppConfig,
+    plot_dir: Path,
+) -> tuple[pd.DataFrame, dict[int, str]]:
+    if not config.analysis.topic_modeling_enabled:
+        return enriched, {}
+
+    if "text_clean" not in enriched.columns:
+        raise ValueError("Topic modeling requires a 'text_clean' column.")
+
+    texts = enriched["text_clean"].fillna("").astype(str).tolist()
+    num_topics = config.analysis.topic_modeling_num_topics
+    top_terms = config.analysis.topic_modeling_top_n_terms
+
+    from bertopic import BERTopic
+    from sentence_transformers import SentenceTransformer
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    import torch
+    import time
+
+    # Check for GPU availability
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    logger.info(f"Using device: {device} for topic modeling ({len(texts)} documents, {num_topics} topics)")
+
+    start_time = time.time()
+    embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device=device)
+
+    # Use GPU-optimized embedding model
+    embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device=device)
+    vectorizer_model = TfidfVectorizer(
+        stop_words="english",
+        ngram_range=(1, 2),
+        max_df=0.85,
+        min_df=5,
+    )
+
+    topic_model = BERTopic(
+        embedding_model=embedding_model,
+        vectorizer_model=vectorizer_model,
+        language="english",
+        nr_topics=num_topics,
+        top_n_words=top_terms,
+        min_topic_size=2,  # Minimum documents per topic
+        calculate_probabilities=False,
+        verbose=False,
+    )
+
+    try:
+        topics, _ = topic_model.fit_transform(texts)
+        embedding_time = time.time() - start_time
+        logger.info(f"Topic modeling completed in {embedding_time:.2f} seconds")
+        
+        unique_topics = sorted(set(t for t in topics if t != -1))
+        logger.info(f"Created {len(unique_topics)} topics (requested {num_topics})")
+        
+        if len(unique_topics) != num_topics:
+            logger.warning(f"BERTopic created {len(unique_topics)} topics instead of requested {num_topics}")
+            if len(unique_topics) < num_topics:
+                logger.warning("Consider reducing nr_topics or adjusting min_topic_size")
+        
+        # Extract topic labels from fitted model
+        stop_words = set(vectorizer_model.get_stop_words() or [])
+        topic_labels: dict[int, str] = {}
+        for topic_id in unique_topics:
+            terms = [term for term, _ in topic_model.get_topic(topic_id) if term.isalpha() and term.lower() not in stop_words]
+            if not terms:
+                terms = [term for term, _ in topic_model.get_topic(topic_id)]
+            topic_labels[topic_id] = ", ".join(terms[:top_terms]) or f"topic_{topic_id}"
+            
+    except Exception as e:
+        logger.error(f"Topic modeling failed: {e}")
+        # Fallback: assign all documents to topic 0
+        topics = [0] * len(texts)
+        topic_labels = {0: "fallback_topic"}
+        logger.warning("Using fallback topic assignment")
+
+    labels = [int(t) if t != -1 else -1 for t in topics]
+
+    enriched = enriched.copy()
+    enriched["topic_id"] = labels
+    enriched["topic_label"] = [topic_labels.get(int(t), f"topic_{t}") for t in labels]
+
+    pd.DataFrame(
+        {
+            "topic_id": list(topic_labels.keys()),
+            "topic_label": list(topic_labels.values()),
+        }
+    ).to_csv(plot_dir / "topic_labels.csv", index=False)
+
+    return enriched, topic_labels
+
+
+def _save_topic_prevalence(
+    enriched: pd.DataFrame,
+    plot_dir: Path,
+    topic_labels: dict[int, str],
+) -> list[Path]:
+    plot_dir.mkdir(parents=True, exist_ok=True)
+    paths: list[Path] = []
+
+    if "year" not in enriched.columns:
+        raise ValueError("Topic prevalence requires a 'year' column.")
+
+    df = enriched.copy()
+    if "month_ts" not in df.columns and "year" in df.columns and "month" in df.columns:
+        df["month_ts"] = pd.to_datetime(
+            df["year"].astype(str) + "-" + df["month"].astype(str).str.zfill(2) + "-01",
+            errors="coerce",
+        )
+
+    df["count"] = 1
+    yearly = (
+        df.groupby(["year", "topic_id"], as_index=False)["count"].sum()
+    )
+    totals = df.groupby("year", as_index=False)["count"].sum().rename(columns={"count": "total"})
+    yearly = yearly.merge(totals, on="year")
+    yearly["pct"] = yearly["count"] / yearly["total"] * 100
+    yearly["topic_label"] = yearly["topic_id"].map(topic_labels)
+
+    yearly_csv = plot_dir / "topic_prevalence_yearly.csv"
+    yearly.to_csv(yearly_csv, index=False)
+    paths.append(yearly_csv)
+
+    yearly_pivot = yearly.pivot(index="year", columns="topic_label", values="pct").fillna(0.0)
+    
+    # Line plot
+    fig, ax = plt.subplots(figsize=(10, 6))
+    for label in yearly_pivot.columns:
+        ax.plot(yearly_pivot.index, yearly_pivot[label], marker="o", label=label)
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Topic prevalence (%)")
+    ax.set_title("Topic prevalence by year (line plot)")
+    ax.legend(loc="best", fontsize=8)
+    ax.grid(alpha=0.3)
+    _format_xticks(ax)
+    trend_path = plot_dir / "topic_prevalence_yearly.png"
+    fig.tight_layout()
+    fig.savefig(trend_path, dpi=150)
+    plt.close(fig)
+    paths.append(trend_path)
+
+    # Stacked area plot
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.stackplot(
+        yearly_pivot.index,
+        *[yearly_pivot[col] for col in yearly_pivot.columns],
+        labels=yearly_pivot.columns,
+        alpha=0.8,
+    )
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Topic prevalence (%)")
+    ax.set_title("Topic evolution over time (stacked area)")
+    ax.legend(loc="upper left", fontsize=8)
+    ax.grid(alpha=0.3, axis="y")
+    _format_xticks(ax)
+    stacked_path = plot_dir / "topic_evolution_stacked_yearly.png"
+    fig.tight_layout()
+    fig.savefig(stacked_path, dpi=150)
+    plt.close(fig)
+    paths.append(stacked_path)
+
+    if "month_ts" in enriched.columns:
+        monthly = (
+            df.groupby(["month_ts", "topic_id"], as_index=False)["count"].sum()
+        )
+        month_totals = df.groupby("month_ts", as_index=False)["count"].sum().rename(columns={"count": "total"})
+        monthly = monthly.merge(month_totals, on="month_ts")
+        monthly["pct"] = monthly["count"] / monthly["total"] * 100
+        monthly["topic_label"] = monthly["topic_id"].map(topic_labels)
+
+        monthly_csv = plot_dir / "topic_prevalence_monthly.csv"
+        monthly.to_csv(monthly_csv, index=False)
+        paths.append(monthly_csv)
+
+        monthly_pivot = monthly.pivot(index="month_ts", columns="topic_label", values="pct").fillna(0.0)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        for label in monthly_pivot.columns:
+            ax.plot(pd.to_datetime(monthly_pivot.index), monthly_pivot[label], marker=".", label=label)
+        ax.set_xlabel("Month")
+        ax.set_ylabel("Topic prevalence (%)")
+        ax.set_title("Topic prevalence by month")
+        ax.legend(loc="best", fontsize=8)
+        ax.grid(alpha=0.3)
+        _format_xticks(ax)
+        monthly_path = plot_dir / "topic_prevalence_monthly.png"
+        fig.tight_layout()
+        fig.savefig(monthly_path, dpi=150)
+        plt.close(fig)
+        paths.append(monthly_path)
+
+    return paths
+
+
+def _run_topic_analysis(
+    enriched: pd.DataFrame,
+    config: AppConfig,
+    plot_dir: Path,
+    trend_analyzer: TrendAnalyzer,
+    group_specs: dict[str, dict[str, object]],
+    summary_features: set[str],
+    events: dict[str, str],
+) -> list[Path]:
+    logger.info("Starting topic analysis...")
+    if not config.analysis.topic_modeling_enabled:
+        logger.info("Topic modeling disabled, skipping topic analysis")
+        return []
+    
+    if "topic_id" not in enriched.columns:
+        logger.error("topic_id column missing from enriched data, skipping topic analysis")
+        return []
+
+    logger.info(f"Running topic analysis for {enriched['topic_id'].nunique()} topics")
+
+    plot_dir = plot_dir / "topics"
+    plot_dir.mkdir(parents=True, exist_ok=True)
+
+    unique_labels = sorted(enriched["topic_id"].dropna().unique())
+    topic_labels = {
+        int(t): enriched.loc[enriched["topic_id"] == int(t), "topic_label"].iloc[0]
+        for t in unique_labels
+    }
+
+    paths = _save_topic_prevalence(enriched, plot_dir, topic_labels)
+
+    for topic_id in unique_labels:
+        topic_dir = plot_dir / f"topic_{topic_id}"
+        topic_dir.mkdir(parents=True, exist_ok=True)
+
+        topic_subset = enriched[enriched["topic_id"] == topic_id]
+        if topic_subset.empty:
+            continue
+
+        topic_yearly = trend_analyzer.aggregate_yearly(topic_subset)
+        topic_monthly = trend_analyzer.aggregate_monthly(topic_subset)
+        topic_yearly.to_csv(topic_dir / "trends_by_year.csv", index=False)
+        topic_monthly.to_csv(topic_dir / "trends_by_month.csv", index=False)
+
+        stats_df = trend_analyzer.compute_all_stats(topic_yearly)
+        stats_df.to_csv(topic_dir / "feature_stats.csv", index=False)
+        paths.append(topic_dir / "feature_stats.csv")
+
+        # Always generate topic-level visualizations for cross-topic comparison
+        paths.extend(
+            trend_analyzer.save_plots(
+                topic_yearly,
+                topic_monthly,
+                topic_dir,
+                events,
+                exclude_features=summary_features,
+            )
+        )
+        if hasattr(trend_analyzer, "save_grouped_feature_diffs"):
+            paths.extend(
+                trend_analyzer.save_grouped_feature_diffs(
+                    topic_yearly,
+                    output_dir=topic_dir,
+                ).values()
+            )
+        paths.extend(
+            trend_analyzer.save_grouped_word_plots(
+                yearly=topic_yearly,
+                monthly=topic_monthly,
+                output_dir=topic_dir,
+                group_specs=group_specs,
+                events=events,
+                smoothing_window=3,
+            )
+        )
+        paths.append(
+            trend_analyzer.save_word_prefix_stack_plot(
+                yearly=topic_yearly,
+                monthly=topic_monthly,
+                output_dir=topic_dir,
+                events=events,
+                smoothing_window=3,
+            )
+        )
+        paths.extend(
+            trend_analyzer.save_dependency_distribution_plot(
+                df=topic_subset,
+                output_dir=topic_dir,
+                events=events,
+            )
+        )
+        paths.append(
+            trend_analyzer.save_stacked_word_plots(
+                yearly=topic_yearly,
+                monthly=topic_monthly,
+                output_dir=topic_dir,
+                events=events,
+                smoothing_window=3,
+                exclude_features=summary_features,
+            )
+        )
+
+    return paths
 
 
 # =========================================================
@@ -256,6 +565,16 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         if col.endswith("_per_1k_words"):
             enriched[col] = pd.to_numeric(enriched[col], errors="coerce").fillna(0.0)
 
+    enriched, topic_labels = _assign_topics(enriched, config, plot_dir)
+
+    enriched.to_json(
+        enriched_output_path,
+        orient="records",
+        lines=True,
+        force_ascii=False,
+        mode="w",
+    )
+
     feature_columns = _resolve_feature_columns(config, enriched)
 
     trend_analyzer = TrendAnalyzer(feature_columns)
@@ -352,12 +671,12 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     # =========================
     # PLOTS
     # =========================
+    llm_events = {
+        "ChatGPT release": "2022-11-30",
+    }
+
     trend_plots = []
     if config.analysis.generate_plots:
-        llm_events = {
-            "ChatGPT release": "2022-11-30",
-        }
-
         trend_plots = trend_analyzer.save_plots(
             yearly,
             monthly,
@@ -404,6 +723,18 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         )
 
         trend_plots.append(stacked_plot_path)
+
+    if config.analysis.topic_modeling_enabled:
+        topic_paths = _run_topic_analysis(
+            enriched=enriched,
+            config=config,
+            plot_dir=plot_dir,
+            trend_analyzer=trend_analyzer,
+            group_specs=marker_group_specs,
+            summary_features=summary_features,
+            events=llm_events,
+        )
+        trend_plots.extend(topic_paths)
 
     return AnalysisArtifacts(
         feature_dataset_jsonl=enriched_output_path,
