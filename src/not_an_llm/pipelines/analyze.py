@@ -6,6 +6,7 @@ import logging
 import spacy
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 from concurrent.futures import ProcessPoolExecutor
 
@@ -165,9 +166,9 @@ def _assign_topics(
     enriched: pd.DataFrame,
     config: AppConfig,
     plot_dir: Path,
-) -> tuple[pd.DataFrame, dict[int, str]]:
+) -> tuple[pd.DataFrame, dict[int, str], pd.DataFrame | None]:
     if not config.analysis.topic_modeling_enabled:
-        return enriched, {}
+        return enriched, {}, None
 
     if "text_clean" not in enriched.columns:
         raise ValueError("Topic modeling requires a 'text_clean' column.")
@@ -181,6 +182,8 @@ def _assign_topics(
     from sklearn.feature_extraction.text import TfidfVectorizer
     import torch
     import time
+    import umap
+    import hdbscan
 
     # Check for GPU availability
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -201,9 +204,8 @@ def _assign_topics(
         language="english",
         nr_topics=num_topics,
         top_n_words=top_terms,
-        min_topic_size=2,  # Minimum documents per topic
-        random_state=42,  # For deterministic results
-        calculate_probabilities=False,
+        min_topic_size=5,  # Minimum documents per topic
+        calculate_probabilities=True,
         verbose=False,
     )
 
@@ -255,7 +257,20 @@ def _assign_topics(
         }
     ).to_csv(topic_labels_path, index=False)
 
-    return enriched, topic_labels
+    # Extract 2D embeddings for cluster visualization
+    embeddings_2d = None
+    try:
+        if hasattr(topic_model, 'umap_model') and hasattr(topic_model.umap_model, 'embedding_'):
+            embeddings_2d = pd.DataFrame(
+                topic_model.umap_model.embedding_,
+                columns=['x', 'y']
+            )
+            embeddings_2d['topic_id'] = labels
+            embeddings_2d['topic_label'] = [topic_labels.get(int(t), "noise") for t in labels]
+    except Exception as e:
+        logger.warning(f"Could not extract 2D embeddings: {e}")
+
+    return enriched, topic_labels, embeddings_2d
 
 
 def _save_topic_prevalence(
@@ -429,6 +444,68 @@ def _save_topic_trend_plots(
     return paths
 
 
+def _save_topic_cluster_plot(
+    embeddings_2d: pd.DataFrame,
+    plot_dir: Path,
+) -> Path | None:
+    """Create a 2D cluster plot showing spatial distribution of topics."""
+    if embeddings_2d is None or embeddings_2d.empty:
+        return None
+
+    plot_dir.mkdir(parents=True, exist_ok=True)
+    
+    fig, ax = plt.subplots(figsize=(8, 6))
+    
+    # Get unique topics (excluding noise)
+    topics = sorted(embeddings_2d['topic_id'].unique())
+    topics = [t for t in topics if t != -1]  # Exclude noise
+    
+    # Create color map
+    colors = plt.cm.tab10(np.linspace(0, 1, len(topics)))
+    color_map = dict(zip(topics, colors))
+    
+    # Plot noise points first (light gray)
+    noise_data = embeddings_2d[embeddings_2d['topic_id'] == -1]
+    if not noise_data.empty:
+        ax.scatter(
+            noise_data['x'], 
+            noise_data['y'], 
+            c='lightgray', 
+            alpha=0.5, 
+            s=20, 
+            label='noise'
+        )
+    
+    # Plot each topic
+    for topic_id in topics:
+        topic_data = embeddings_2d[embeddings_2d['topic_id'] == topic_id]
+        if not topic_data.empty:
+            topic_label = topic_data['topic_label'].iloc[0]
+            ax.scatter(
+                topic_data['x'], 
+                topic_data['y'], 
+                c=[color_map[topic_id]], 
+                alpha=0.7, 
+                s=30, 
+                label=f'{topic_id}: {topic_label}',
+                edgecolors='black',
+                linewidth=0.5
+            )
+    
+    ax.set_xlabel('UMAP Dimension 1')
+    ax.set_ylabel('UMAP Dimension 2')
+    ax.set_title('Topic Clusters (UMAP 2D Projection)')
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=8)
+    ax.grid(alpha=0.3)
+    
+    plot_path = plot_dir / "topic_clusters.png"
+    fig.tight_layout()
+    fig.savefig(plot_path, dpi=150, bbox_inches='tight')
+    plt.close(fig)
+    
+    return plot_path
+
+
 def _run_topic_analysis(
     enriched: pd.DataFrame,
     config: AppConfig,
@@ -437,6 +514,7 @@ def _run_topic_analysis(
     group_specs: dict[str, dict[str, object]],
     summary_features: set[str],
     events: dict[str, str],
+    embeddings_2d: pd.DataFrame | None = None,
 ) -> list[Path]:
     logger.info("Starting topic analysis...")
     if not config.analysis.topic_modeling_enabled:
@@ -473,6 +551,11 @@ def _run_topic_analysis(
 
     # Add topic trend plots
     paths.extend(_save_topic_trend_plots(enriched, plot_dir, topic_labels, events))
+
+    # Add cluster plot
+    cluster_plot_path = _save_topic_cluster_plot(embeddings_2d, plot_dir)
+    if cluster_plot_path:
+        paths.append(cluster_plot_path)
 
     for topic_id in unique_labels:
         plot_topic_dir = plot_dir / f"topic_{topic_id}"
@@ -656,7 +739,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         if col.endswith("_per_1k_words"):
             enriched[col] = pd.to_numeric(enriched[col], errors="coerce").fillna(0.0)
 
-    enriched, topic_labels = _assign_topics(enriched, config, plot_dir)
+    enriched, topic_labels, embeddings_2d = _assign_topics(enriched, config, plot_dir)
 
     enriched.to_json(
         enriched_output_path,
@@ -824,6 +907,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
             group_specs=marker_group_specs,
             summary_features=summary_features,
             events=llm_events,
+            embeddings_2d=embeddings_2d,
         )
         trend_plots.extend(topic_paths)
 
