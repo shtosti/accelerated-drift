@@ -72,11 +72,11 @@ fields = [
 
 [analysis]
 enabled = true
-generate_plots = false
+generate_plots = true
 include_readability = true
 topic_modeling_enabled = true
 topic_modeling_num_topics = 8
-topic_modeling_top_n_terms = 5
+topic_modeling_top_n_terms = 8
 topic_modeling_use_bertopic = true
 # Select which readability metrics to compute/write.
 readability_metrics = [
