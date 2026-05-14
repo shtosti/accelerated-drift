@@ -148,6 +148,10 @@ class TrendAnalyzer:
             years = df["year"].values
             y = df[value_col].values
             
+            # Need at least 4 data points for 4 parameters
+            if len(years) < 4:
+                return None
+            
             # Create predictor variables for piecewise linear regression
             # Time encoded as years from start (0-indexed)
             time = years - years.min()
@@ -171,21 +175,23 @@ class TrendAnalyzer:
             
             _, pre_slope, level_shift, slope_change = reg.coef_
             
-            # Compute standard errors and t-statistics
+            # Compute standard errors and t-statistics using pseudo-inverse for robustness
             y_pred = reg.predict(X)
             residuals = y - y_pred
-            mse = np.mean(residuals**2)
+            ss_res = np.sum(residuals**2)
+            mse = ss_res / (len(y) - 4) if len(y) > 4 else np.mean(residuals**2)
             
-            # Standard errors (simplified)
-            var_covar = mse * np.linalg.inv(X.T @ X)
-            std_errors = np.sqrt(np.diag(var_covar))
+            # Use pseudo-inverse for robustness
+            XtX_inv = np.linalg.pinv(X.T @ X)
+            var_covar = mse * XtX_inv
+            std_errors = np.sqrt(np.abs(np.diag(var_covar)))  # abs to handle numerical issues
             
             _, se_pre_slope, se_level_shift, se_slope_change = std_errors
             
             # Compute t-statistics and p-values
-            t_pre_slope = pre_slope / se_pre_slope if se_pre_slope > 0 else 0
-            t_level_shift = level_shift / se_level_shift if se_level_shift > 0 else 0
-            t_slope_change = slope_change / se_slope_change if se_slope_change > 0 else 0
+            t_pre_slope = pre_slope / se_pre_slope if se_pre_slope > 1e-10 else 0
+            t_level_shift = level_shift / se_level_shift if se_level_shift > 1e-10 else 0
+            t_slope_change = slope_change / se_slope_change if se_slope_change > 1e-10 else 0
             
             df_resid = len(y) - 4  # degrees of freedom
             p_pre_slope = 2 * (1 - stats.t.cdf(abs(t_pre_slope), df_resid)) if df_resid > 0 else 1.0
@@ -193,22 +199,22 @@ class TrendAnalyzer:
             p_slope_change = 2 * (1 - stats.t.cdf(abs(t_slope_change), df_resid)) if df_resid > 0 else 1.0
             
             # Compute R-squared
-            ss_res = np.sum(residuals**2)
             ss_tot = np.sum((y - np.mean(y))**2)
-            r_squared = 1 - (ss_res / ss_tot) if ss_tot > 0 else 0
+            r_squared = 1 - (ss_res / ss_tot) if ss_tot > 1e-10 else 0
             
             return {
-                "its_pre_slope": pre_slope,
-                "its_pre_slope_p": p_pre_slope,
-                "its_level_shift": level_shift,
-                "its_level_shift_p": p_level_shift,
-                "its_slope_change": slope_change,
-                "its_slope_change_p": p_slope_change,
-                "its_post_slope": pre_slope + slope_change,
-                "its_r_squared": r_squared,
+                "its_pre_slope": float(pre_slope),
+                "its_pre_slope_p": float(p_pre_slope),
+                "its_level_shift": float(level_shift),
+                "its_level_shift_p": float(p_level_shift),
+                "its_slope_change": float(slope_change),
+                "its_slope_change_p": float(p_slope_change),
+                "its_post_slope": float(pre_slope + slope_change),
+                "its_r_squared": float(r_squared),
             }
         except Exception as e:
-            # Return None or empty dict if ITS computation fails
+            # Silently return None if ITS computation fails
+            # This can happen with constant-valued features or numerical issues
             return None
 
     def _compute_stats(self, yearly: pd.DataFrame, feature: str, pre_cut=2022, post_cut=2023):

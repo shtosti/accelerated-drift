@@ -307,5 +307,5 @@ def _default_analysis_paths(path: Path):
         Path("data/analyzed/" + path.name),
         Path("data/analysis/" + path.stem + "_year.csv"),
         Path("data/analysis/" + path.stem + "_month.csv"),
-        Path("data/analysis/plots/" + path.stem),
+        Path("data/visuals/" + path.stem),
     )
