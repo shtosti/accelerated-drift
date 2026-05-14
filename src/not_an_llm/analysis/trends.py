@@ -350,7 +350,7 @@ class TrendAnalyzer:
         if "month_ts" in monthly.columns:
             monthly["month_ts"] = pd.to_datetime(monthly["month_ts"], errors="coerce")
 
-        fig, axes = plt.subplots(len(features), 1, figsize=(6, 1.5 * len(features)))
+        fig, axes = plt.subplots(len(features), 1, figsize=(6, 2.5 * len(features)))
         if len(features) == 1:
             axes = [axes]
 
@@ -433,7 +433,7 @@ class TrendAnalyzer:
         fig, axes = plt.subplots(
             len(features),
             1,
-            figsize=(6, 1.5 * len(features)),
+            figsize=(6, 2.5 * len(features)),
             sharex=True,
         )
         if len(features) == 1:
@@ -466,6 +466,192 @@ class TrendAnalyzer:
         fig.tight_layout()
 
         out_path = output_dir / "word_prefix_stack.png"
+        fig.savefig(out_path, dpi=150, bbox_inches="tight")
+        plt.close(fig)
+
+        return out_path
+
+    def save_verb_prefix_stack_plot(
+        self,
+        yearly: pd.DataFrame,
+        monthly: pd.DataFrame,
+        output_dir: Path,
+        prefix: str = "verb_",
+        events: dict[str, str] | None = None,
+        smoothing_window: int | None = None,
+    ) -> Path:
+        return self.save_word_prefix_stack_plot(
+            yearly=yearly,
+            monthly=monthly,
+            output_dir=output_dir,
+            prefix=prefix,
+            events=events,
+            smoothing_window=smoothing_window,
+        )
+
+    def save_adjective_prefix_stack_plot(
+        self,
+        yearly: pd.DataFrame,
+        monthly: pd.DataFrame,
+        output_dir: Path,
+        prefix: str = "adjective_",
+        events: dict[str, str] | None = None,
+        smoothing_window: int | None = None,
+    ) -> Path:
+        return self.save_word_prefix_stack_plot(
+            yearly=yearly,
+            monthly=monthly,
+            output_dir=output_dir,
+            prefix=prefix,
+            events=events,
+            smoothing_window=smoothing_window,
+        )
+    
+    def save_punctuation_stack_plot(
+        self,
+        yearly: pd.DataFrame,
+        monthly: pd.DataFrame,
+        output_dir: Path,
+        events: dict[str, str] | None = None,
+        smoothing_window: int | None = None,
+    ) -> Path:
+        from .feature_groups import FEATURE_GROUPS
+        
+        features = FEATURE_GROUPS.get("punctuation", [])
+        if not features:
+            raise ValueError("No punctuation features found in FEATURE_GROUPS")
+
+        # Ensure monthly has proper datetime month_ts before plotting.
+        monthly = monthly.copy()
+        if "month_ts" not in monthly.columns:
+            if "year" in monthly.columns and "month" in monthly.columns:
+                monthly["month_ts"] = pd.to_datetime(
+                    monthly["year"].astype(str) + "-" + monthly["month"].astype(str).str.zfill(2) + "-01",
+                    errors="coerce",
+                )
+            else:
+                raise ValueError("monthly DataFrame must have month_ts, or both year and month columns")
+        else:
+            monthly["month_ts"] = pd.to_datetime(monthly["month_ts"], errors="coerce")
+
+        events = events or {
+            "ChatGPT": "2022-11-30",
+            "Delve": "2024-01-15",
+        }
+
+        event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
+
+        fig, axes = plt.subplots(
+            len(features),
+            1,
+            figsize=(6, 2.5 * len(features)),
+            sharex=True
+        )
+        if len(features) == 1:
+            axes = [axes]
+
+        x = pd.to_datetime(yearly["year"].astype(str) + "-01-01")
+
+        for ax, feature in zip(axes, features):
+            ycol = f"{feature}_yearly_mean"
+            mcol = f"{feature}_monthly_mean"
+
+            # Plot yearly first to establish datetime x-axis converter.
+            y = yearly[ycol]
+            ax.plot(x, y, marker="o", linewidth=1.6, color=self.colors["yearly"], label="Yearly")
+
+            if mcol in monthly.columns:
+                y_m = monthly[mcol]
+                if smoothing_window:
+                    y_m = y_m.rolling(smoothing_window, center=True).mean()
+                ax.plot(monthly["month_ts"], y_m, color=self.colors["monthly"], linewidth=1.0, alpha=0.8, label="Monthly")
+
+            self._add_event_lines(ax, event_dates)
+            ax.set_ylabel(self._pretty_label(feature))
+            ax.grid(alpha=0.3)
+            ax.legend(loc="upper left", fontsize=8)
+
+        axes[-1].set_xlabel("Year")
+        self._format_xticks(axes[-1])
+
+        fig.tight_layout()
+
+        out_path = output_dir / "punctuation_stack.png"
+        fig.savefig(out_path, dpi=200, bbox_inches="tight")
+        plt.close(fig)
+
+        return out_path
+
+    def save_readability_stack_plot(
+        self,
+        yearly: pd.DataFrame,
+        monthly: pd.DataFrame,
+        output_dir: Path,
+        events: dict[str, str] | None = None,
+        smoothing_window: int | None = None,
+    ) -> Path:
+        from .feature_groups import FEATURE_GROUPS
+        
+        features = FEATURE_GROUPS.get("readability", [])
+        if not features:
+            raise ValueError("No readability features found in FEATURE_GROUPS")
+
+        # Ensure monthly has proper datetime month_ts before plotting.
+        monthly = monthly.copy()
+        if "month_ts" not in monthly.columns:
+            if "year" in monthly.columns and "month" in monthly.columns:
+                monthly["month_ts"] = pd.to_datetime(
+                    monthly["year"].astype(str) + "-" + monthly["month"].astype(str).str.zfill(2) + "-01",
+                    errors="coerce",
+                )
+            else:
+                raise ValueError("monthly DataFrame must have month_ts, or both year and month columns")
+        else:
+            monthly["month_ts"] = pd.to_datetime(monthly["month_ts"], errors="coerce")
+
+        events = events or {
+            "ChatGPT": "2022-11-30",
+            "Delve": "2024-01-15",
+        }
+
+        event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
+
+        fig, axes = plt.subplots(
+            len(features),
+            1,
+            figsize=(6, 2.5 * len(features)),
+            sharex=True,
+        )
+        if len(features) == 1:
+            axes = [axes]
+
+        x = pd.to_datetime(yearly["year"].astype(str) + "-01-01")
+
+        for ax, feature in zip(axes, features):
+            ycol = f"{feature}_yearly_mean"
+            mcol = f"{feature}_monthly_mean"
+
+            # Plot yearly first to establish datetime x-axis converter.
+            y = yearly[ycol]
+            ax.plot(x, y, marker="o", linewidth=1.6, color=self.colors["yearly"], label="Yearly")
+
+            if mcol in monthly.columns:
+                y_m = monthly[mcol]
+                if smoothing_window:
+                    y_m = y_m.rolling(smoothing_window, center=True).mean()
+                ax.plot(monthly["month_ts"], y_m, color=self.colors["monthly"], linewidth=1.0, alpha=0.8, label="Monthly")
+
+            self._add_event_lines(ax, event_dates)
+            ax.set_ylabel(self._pretty_label(feature), rotation=90, labelpad=10)
+            ax.grid(alpha=0.3)
+            ax.legend(loc="upper left", fontsize=8)
+
+        axes[-1].set_xlabel("Year")
+        self._format_xticks(axes[-1])
+
+        fig.tight_layout()
+
+        out_path = output_dir / "readability_stack.png"
         fig.savefig(out_path, dpi=150, bbox_inches="tight")
         plt.close(fig)
 
@@ -686,7 +872,7 @@ class TrendAnalyzer:
             feature = yearly_column.removesuffix("_yearly_mean")
             monthly_col = f"{feature}_monthly_mean"
 
-            fig, ax = plt.subplots(figsize=(6, 4))
+            fig, ax = plt.subplots(figsize=(6, 3))
 
             if monthly_col in monthly.columns and month_ts is not None:
                 ax.plot(month_ts, monthly[monthly_col], color=self.colors["monthly"], linewidth=1.0, alpha=1.0, label="Monthly mean")
