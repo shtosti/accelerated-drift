@@ -238,15 +238,19 @@ def _assign_topics(
         umap_model=umap_model,
         hdbscan_model=hdbscan_model,
         language="english",
-        nr_topics=num_topics,
+        nr_topics="auto",
         top_n_words=top_terms,
-        min_topic_size=5,  # Minimum documents per topic
+        min_topic_size=1,  # Minimum documents per topic
         calculate_probabilities=True,
         verbose=False,
     )
 
     try:
         topics, _ = topic_model.fit_transform(texts, embeddings=embeddings)
+        if config.analysis.topic_modeling_reduce_topics:
+            topic_model.reduce_topics(texts, nr_topics=num_topics)
+            topics = topic_model.topics_
+            
         embedding_time = time.time() - start_time
         logger.info(f"Topic modeling completed in {embedding_time:.2f} seconds")
         
@@ -319,6 +323,49 @@ def _assign_topics(
     return enriched, topic_labels, embeddings_2d
 
 
+from pathlib import Path
+import matplotlib.pyplot as plt
+
+
+def save_legend_only(ax, output_path: Path, ncol: int = 1):
+    """
+    Save legend from an axis as a standalone image.
+    """
+
+    handles, labels = ax.get_legend_handles_labels()
+
+    if not handles:
+        return
+
+    # Create separate legend figure
+    fig_legend = plt.figure(figsize=(4, 2))
+    ax_legend = fig_legend.add_subplot(111)
+    ax_legend.axis("off")
+
+    legend = ax_legend.legend(
+        handles,
+        labels,
+        loc="center",
+        frameon=False,
+        ncol=ncol,
+        fontsize=8,
+    )
+
+    # Resize figure tightly around legend
+    fig_legend.canvas.draw()
+    bbox = legend.get_window_extent().transformed(
+        fig_legend.dpi_scale_trans.inverted()
+    )
+
+    fig_legend.savefig(
+        output_path,
+        dpi=250,
+        bbox_inches=bbox
+    )
+
+    plt.close(fig_legend)
+
+
 def _save_topic_prevalence(
     enriched: pd.DataFrame,
     plot_dir: Path,
@@ -362,7 +409,11 @@ def _save_topic_prevalence(
     ax.set_xlabel("Year")
     ax.set_ylabel("Topic prevalence (%)")
     # ax.set_title("Topic prevalence by year (line plot)")
-    ax.legend(loc="best", fontsize=8)
+    legend = ax.legend(loc="best", fontsize=8)
+    legend_path = plot_dir / "topic_prevalence_legend.png"
+    save_legend_only(ax, legend_path)
+    legend.remove()
+
     ax.grid(alpha=0.3)
     _format_xticks(ax)
     trend_path = plot_dir / "topic_prevalence_yearly.png"
@@ -382,7 +433,11 @@ def _save_topic_prevalence(
     ax.set_xlabel("Year")
     ax.set_ylabel("Topic prevalence (%)")
     # ax.set_title("Topic evolution over time (stacked area)")
-    ax.legend(loc="upper left", fontsize=8)
+    legend = ax.legend(loc="best", fontsize=8)
+    legend_path = plot_dir / "topic_evolution_stacked_legend.png"
+    save_legend_only(ax, legend_path)
+    legend.remove()
+
     ax.grid(alpha=0.3, axis="y")
     _format_xticks(ax)
     stacked_path = plot_dir / "topic_evolution_stacked_yearly.png"
@@ -411,7 +466,10 @@ def _save_topic_prevalence(
         ax.set_xlabel("Month")
         ax.set_ylabel("Topic prevalence (%)")
         # ax.set_title("Topic prevalence by month")
-        ax.legend(loc="best", fontsize=8)
+        legend = ax.legend(loc="best", fontsize=8)
+        legend_path = plot_dir / "topic_prevalence_monthly_legend.png"
+        save_legend_only(ax, legend_path)
+        legend.remove()
         ax.grid(alpha=0.3)
         _format_xticks(ax)
         monthly_path = plot_dir / "topic_prevalence_monthly.png"
@@ -477,7 +535,11 @@ def _save_topic_trend_plots(
         ax.set_xlabel("Year")
         ax.set_ylabel(f"{feature.replace('_per_1k_words', '').replace('_', ' ').title()}")
         ax.set_title(f"{feature.replace('_per_1k_words', '').replace('_', ' ').title()} by Topic")
-        ax.legend(loc="best", fontsize=8)
+        legend = ax.legend(loc="best", fontsize=8)
+        legend_path = plot_dir / f"{feature}_by_topic_legend.png"
+        save_legend_only(ax, legend_path)
+        legend.remove()
+
         ax.grid(alpha=0.3)
         _format_xticks(ax)
 
@@ -541,7 +603,11 @@ def _save_topic_cluster_plot(
     ax.set_xlabel('UMAP Dimension 1')
     ax.set_ylabel('UMAP Dimension 2')
     # ax.set_title('Topic Clusters (UMAP 2D Projection)')
-    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=8)
+    legend = ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=8)
+    legend_path = plot_dir / "topic_clusters_legend.png"
+    save_legend_only(ax, legend_path)
+    legend.remove()
+    
     ax.grid(alpha=0.3)
     
     plot_path = plot_dir / "topic_clusters.png"
