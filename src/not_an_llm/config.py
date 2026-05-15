@@ -93,6 +93,8 @@ class AnalysisConfig:
     topic_modeling_num_topics: int
     topic_modeling_top_n_terms: int
     topic_modeling_use_bertopic: bool
+    topic_modeling_num_workers: int
+    topic_modeling_embedding_batch_size: int
 
 
 @dataclass(slots=True)
@@ -227,11 +229,13 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             monthly_trends_csv=monthly_trends_csv,
             trends_plot_dir=trends_plot_dir,
 
-                    generate_plots=bool(analysis.get("generate_plots", True)),
+            generate_plots=bool(analysis.get("generate_plots", True)),
             topic_modeling_enabled=bool(analysis.get("topic_modeling_enabled", False)),
             topic_modeling_num_topics=int(analysis.get("topic_modeling_num_topics", 8)),
             topic_modeling_top_n_terms=int(analysis.get("topic_modeling_top_n_terms", 5)),
             topic_modeling_use_bertopic=bool(analysis.get("topic_modeling_use_bertopic", False)),
+            topic_modeling_num_workers=int(analysis.get("topic_modeling_num_workers", 0)),
+            topic_modeling_embedding_batch_size=int(analysis.get("topic_modeling_embedding_batch_size", 64)),
         ),
 
         external=None,

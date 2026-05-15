@@ -6,7 +6,7 @@
 #SBATCH --partition=gpu-invest
 #SBATCH --qos=job_gpu_preemptable
 #SBATCH --gres=gpu:a100:1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=16
 #SBATCH --mem=80G
 #SBATCH --time=05:00:00
 #SBATCH --ntasks=1
