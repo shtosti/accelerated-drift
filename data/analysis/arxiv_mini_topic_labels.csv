@@ -1,0 +1,9 @@
+topic_id,topic_label
+0,"language, llms, speech, text, training, dialogue"
+1,"policy, reinforcement, game, robot, ai, planning, action"
+2,"image, images, deep, neural, training, video"
+3,"causal, inference, logic, belief, bayesian, variables, semantics, program"
+4,"privacy, adversarial, fairness, llms, detection, tuning, security"
+5,"scheduling, swarm, instances, transportation, assignment, pareto, vehicle, optimum"
+6,"inconsistency, fuzzy, pairwise, comparisons, allocation, people, criteria"
+-1,noise
