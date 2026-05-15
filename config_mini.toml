@@ -4,7 +4,7 @@ data_dir = "data"
 
 [collection]
 # Data source: semantic_scholar, arxiv, medarxiv, or biorxiv
-source = "medarxiv"
+source = "arxiv"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
 
@@ -75,8 +75,8 @@ enabled = true
 generate_plots = true
 include_readability = true
 topic_modeling_enabled = true
-topic_modeling_num_topics = 10
-topic_modeling_top_n_terms = 6
+topic_modeling_num_topics = 5
+topic_modeling_top_n_terms = 5
 topic_modeling_use_bertopic = true
 topic_modeling_num_workers = 0
 topic_modeling_embedding_batch_size = 128
@@ -90,7 +90,7 @@ readability_metrics = [
 ]
 
 # Full run config. Use config_mini.toml for the mini run.
-preprocessed_jsonl = "data/processed/medarxiv.jsonl"
+preprocessed_jsonl = "data/processed/arxiv_mini.jsonl"
 feature_dataset_jsonl = ""
 trends_csv = ""
 monthly_trends_csv = ""
