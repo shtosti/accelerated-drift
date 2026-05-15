@@ -190,11 +190,14 @@ def _assign_topics(
     device = "cuda" if torch.cuda.is_available() else "cpu"
     num_workers = config.analysis.topic_modeling_num_workers or multiprocessing.cpu_count()
     num_workers = max(1, min(num_workers, multiprocessing.cpu_count()))
+    
+    # UMAP/numba has a hard limit of 16 threads
+    umap_n_jobs = min(num_workers, 16)
 
     logger.info(
         f"Using device: {device} for topic modeling ({len(texts)} documents, {num_topics} topics)"
     )
-    logger.info(f"Using up to {num_workers} workers for BERTopic preprocessing and clustering")
+    logger.info(f"Using {umap_n_jobs} threads for UMAP, {num_workers} workers for HDBSCAN")
 
     start_time = time.time()
     embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device=device)
@@ -209,8 +212,8 @@ def _assign_topics(
     vectorizer_model = TfidfVectorizer(
         stop_words="english",
         ngram_range=(1, 2),
-        max_df=0.85,
-        min_df=5,
+        max_df=0.95,
+        min_df=1,
     )
 
     umap_model = umap.UMAP(
@@ -219,7 +222,7 @@ def _assign_topics(
         min_dist=0.0,
         metric='cosine',
         random_state=42,
-        n_jobs=num_workers,
+        n_jobs=umap_n_jobs,
     )
     hdbscan_model = hdbscan.HDBSCAN(
         min_cluster_size=5,
@@ -227,7 +230,6 @@ def _assign_topics(
         cluster_selection_method='eom',
         prediction_data=True,
         core_dist_n_jobs=num_workers,
-        random_state=42,
     )
 
     topic_model = BERTopic(
@@ -276,7 +278,9 @@ def _assign_topics(
             topic_labels[target_topic_id] = ", ".join(terms[:top_terms]) or f"topic_{target_topic_id}"
 
     except Exception as e:
+        import traceback
         logger.error(f"Topic modeling failed: {e}")
+        logger.error(f"Full traceback:\n{traceback.format_exc()}")
         # Fallback: assign all documents to topic 0
         topics = [0] * len(texts)
         topic_labels = {0: "fallback_topic"}
@@ -401,7 +405,7 @@ def _save_topic_prevalence(
         paths.append(monthly_csv)
 
         monthly_pivot = monthly.pivot(index="month_ts", columns="topic_label", values="pct").fillna(0.0)
-        fig, ax = plt.subplots(figsize=(6, 6))
+        fig, ax = plt.subplots(figsize=(6, 4))
         for label in monthly_pivot.columns:
             ax.plot(pd.to_datetime(monthly_pivot.index), monthly_pivot[label], marker=".", label=label)
         ax.set_xlabel("Month")
@@ -496,7 +500,7 @@ def _save_topic_cluster_plot(
 
     plot_dir.mkdir(parents=True, exist_ok=True)
     
-    fig, ax = plt.subplots(figsize=(6, 4))
+    fig, ax = plt.subplots(figsize=(5, 5))
     
     # Get unique topics (excluding noise)
     topics = sorted(embeddings_2d['topic_id'].unique())
@@ -755,7 +759,10 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     # =========================
     # PARALLEL EXECUTION
     # =========================
-    num_workers = 4
+    import multiprocessing
+
+    num_workers = config.analysis.topic_modeling_num_workers or multiprocessing.cpu_count()
+    num_workers = max(1, min(num_workers, multiprocessing.cpu_count()))
     logger.info(f"Using {num_workers} workers")
 
     results = []
