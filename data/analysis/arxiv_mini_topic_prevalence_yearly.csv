@@ -1,13 +1,25 @@
 year,topic_id,count,total,pct,topic_label
-2015,0,180,180,100.0,fallback_topic
-2016,0,180,180,100.0,fallback_topic
-2017,0,180,180,100.0,fallback_topic
-2018,0,180,180,100.0,fallback_topic
-2019,0,180,180,100.0,fallback_topic
-2020,0,180,180,100.0,fallback_topic
-2021,0,180,180,100.0,fallback_topic
-2022,0,180,180,100.0,fallback_topic
-2023,0,180,180,100.0,fallback_topic
-2024,0,180,180,100.0,fallback_topic
-2025,0,180,180,100.0,fallback_topic
-2026,0,60,60,100.0,fallback_topic
+2015,0,138,180,76.66666666666667,"patients, physics, cognition, observation"
+2015,1,42,180,23.333333333333332,"neutrosophic, ocr, authorship, flood, itemset"
+2016,0,136,180,75.55555555555556,"patients, physics, cognition, observation"
+2016,1,44,180,24.444444444444443,"neutrosophic, ocr, authorship, flood, itemset"
+2017,0,144,180,80.0,"patients, physics, cognition, observation"
+2017,1,36,180,20.0,"neutrosophic, ocr, authorship, flood, itemset"
+2018,0,153,180,85.0,"patients, physics, cognition, observation"
+2018,1,27,180,15.0,"neutrosophic, ocr, authorship, flood, itemset"
+2019,0,154,180,85.55555555555556,"patients, physics, cognition, observation"
+2019,1,26,180,14.444444444444443,"neutrosophic, ocr, authorship, flood, itemset"
+2020,0,148,180,82.22222222222221,"patients, physics, cognition, observation"
+2020,1,32,180,17.77777777777778,"neutrosophic, ocr, authorship, flood, itemset"
+2021,0,153,180,85.0,"patients, physics, cognition, observation"
+2021,1,27,180,15.0,"neutrosophic, ocr, authorship, flood, itemset"
+2022,0,143,180,79.44444444444444,"patients, physics, cognition, observation"
+2022,1,37,180,20.555555555555554,"neutrosophic, ocr, authorship, flood, itemset"
+2023,0,131,180,72.77777777777777,"patients, physics, cognition, observation"
+2023,1,49,180,27.22222222222222,"neutrosophic, ocr, authorship, flood, itemset"
+2024,0,121,180,67.22222222222223,"patients, physics, cognition, observation"
+2024,1,59,180,32.77777777777778,"neutrosophic, ocr, authorship, flood, itemset"
+2025,0,125,180,69.44444444444444,"patients, physics, cognition, observation"
+2025,1,55,180,30.555555555555557,"neutrosophic, ocr, authorship, flood, itemset"
+2026,0,40,60,66.66666666666666,"patients, physics, cognition, observation"
+2026,1,20,60,33.33333333333333,"neutrosophic, ocr, authorship, flood, itemset"
