@@ -184,13 +184,28 @@ def _assign_topics(
     import time
     import umap
     import hdbscan
+    import multiprocessing
 
     # Check for GPU availability
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    logger.info(f"Using device: {device} for topic modeling ({len(texts)} documents, {num_topics} topics)")
+    num_workers = config.analysis.topic_modeling_num_workers or multiprocessing.cpu_count()
+    num_workers = max(1, min(num_workers, multiprocessing.cpu_count()))
+
+    logger.info(
+        f"Using device: {device} for topic modeling ({len(texts)} documents, {num_topics} topics)"
+    )
+    logger.info(f"Using up to {num_workers} workers for BERTopic preprocessing and clustering")
 
     start_time = time.time()
     embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device=device)
+    logger.info("Encoding document embeddings...")
+    embeddings = embedding_model.encode(
+        texts,
+        batch_size=config.analysis.topic_modeling_embedding_batch_size,
+        show_progress_bar=True,
+        convert_to_numpy=True,
+    )
+
     vectorizer_model = TfidfVectorizer(
         stop_words="english",
         ngram_range=(1, 2),
@@ -198,9 +213,28 @@ def _assign_topics(
         min_df=5,
     )
 
+    umap_model = umap.UMAP(
+        n_neighbors=15,
+        n_components=2,
+        min_dist=0.0,
+        metric='cosine',
+        random_state=42,
+        n_jobs=num_workers,
+    )
+    hdbscan_model = hdbscan.HDBSCAN(
+        min_cluster_size=5,
+        metric='euclidean',
+        cluster_selection_method='eom',
+        prediction_data=True,
+        core_dist_n_jobs=num_workers,
+        random_state=42,
+    )
+
     topic_model = BERTopic(
         embedding_model=embedding_model,
         vectorizer_model=vectorizer_model,
+        umap_model=umap_model,
+        hdbscan_model=hdbscan_model,
         language="english",
         nr_topics=num_topics,
         top_n_words=top_terms,
@@ -210,38 +244,46 @@ def _assign_topics(
     )
 
     try:
-        topics, _ = topic_model.fit_transform(texts)
+        topics, _ = topic_model.fit_transform(texts, embeddings=embeddings)
         embedding_time = time.time() - start_time
         logger.info(f"Topic modeling completed in {embedding_time:.2f} seconds")
         
-        unique_topics = sorted(set(t for t in topics if t != -1))
-        logger.info(f"Created {len(unique_topics)} topics (requested {num_topics})")
-        
-        if len(unique_topics) != num_topics:
-            logger.warning(f"BERTopic created {len(unique_topics)} topics instead of requested {num_topics}")
-            if len(unique_topics) < num_topics:
+        original_topics = sorted(set(topics))
+        has_noise = -1 in original_topics
+        topic_id_map = {topic_id: topic_id for topic_id in original_topics if topic_id != -1}
+        if has_noise:
+            next_topic_id = max(topic_id_map.keys(), default=-1) + 1
+            topic_id_map[-1] = next_topic_id
+        actual_topics = sorted(topic_id_map.values())
+
+        logger.info(f"Created {len(actual_topics)} topics (requested {num_topics})")
+        if len(actual_topics) != num_topics:
+            logger.warning(f"BERTopic created {len(actual_topics)} topics instead of requested {num_topics}")
+            if len(actual_topics) < num_topics:
                 logger.warning("Consider reducing nr_topics or adjusting min_topic_size")
-        
-        # Extract topic labels from fitted model
+
+        # Extract topic labels from fitted model, including remapped outliers if present
         stop_words = set(vectorizer_model.get_stop_words() or [])
         topic_labels: dict[int, str] = {}
-        for topic_id in unique_topics:
-            terms = [term for term, _ in topic_model.get_topic(topic_id) if term.isalpha() and term.lower() not in stop_words]
+        for target_topic_id in actual_topics:
+            source_topic_id = -1 if has_noise and topic_id_map.get(-1) == target_topic_id else target_topic_id
+            terms = [
+                term for term, _ in topic_model.get_topic(source_topic_id)
+                if term.isalpha() and term.lower() not in stop_words
+            ]
             if not terms:
-                terms = [term for term, _ in topic_model.get_topic(topic_id)]
-            topic_labels[topic_id] = ", ".join(terms[:top_terms]) or f"topic_{topic_id}"
-            
+                terms = [term for term, _ in topic_model.get_topic(source_topic_id)]
+            topic_labels[target_topic_id] = ", ".join(terms[:top_terms]) or f"topic_{target_topic_id}"
+
     except Exception as e:
         logger.error(f"Topic modeling failed: {e}")
         # Fallback: assign all documents to topic 0
         topics = [0] * len(texts)
         topic_labels = {0: "fallback_topic"}
+        topic_id_map = {0: 0}
         logger.warning("Using fallback topic assignment")
 
-    labels = [int(t) if t != -1 else -1 for t in topics]
-
-    # Add an explicit label for noise/unassigned documents
-    topic_labels[-1] = topic_labels.get(-1, "noise")
+    labels = [topic_id_map.get(int(t), int(t)) for t in topics]
 
     enriched = enriched.copy()
     enriched["topic_id"] = labels

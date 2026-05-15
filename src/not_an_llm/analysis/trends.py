@@ -316,9 +316,10 @@ class TrendAnalyzer:
         df = pd.DataFrame(rows)
 
         # optional: multiple testing correction
-        if not df.empty:
-            df["p_adj"] = np.minimum(df["p_value"] * len(df), 1.0)
+        if df.empty:
+            return df
 
+        df["p_adj"] = np.minimum(df["p_value"] * len(df), 1.0)
         return df.sort_values("p_value")
 
     # =========================================================
@@ -957,7 +958,7 @@ class TrendAnalyzer:
         diff_df = diff_df.sort_values("diff_pct")
 
         # Save diff plot
-        diff_fig, diff_ax = plt.subplots(figsize=(6, 0.15 * len(diff_df) + 0.3))
+        diff_fig, diff_ax = plt.subplots(figsize=(6, 1.5 * len(diff_df) + 0.3))
         colors = ["#943F8B" if v < 0 else "#54A066" for v in diff_df["diff_pct"]]
         diff_ax.barh(diff_df["feature"], diff_df["diff_pct"], color=colors)
         diff_ax.axvline(0, color="black", linewidth=1)
@@ -977,7 +978,7 @@ class TrendAnalyzer:
 
         year_ts = pd.to_datetime(plot_yearly.index.astype(str) + "-01-01")
 
-        trend_fig, trend_ax = plt.subplots(figsize=(7, 0.15 * len(top_roles) + 0.3))
+        trend_fig, trend_ax = plt.subplots(figsize=(7, 1.5 * len(top_roles) + 0.3))
         for role in top_roles:
             trend_ax.plot(year_ts, plot_yearly[role], marker="o", linewidth=1.6, label=role)
 
