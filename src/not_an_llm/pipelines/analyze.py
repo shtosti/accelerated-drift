@@ -247,9 +247,8 @@ def _assign_topics(
 
     try:
         topics, _ = topic_model.fit_transform(texts, embeddings=embeddings)
-        if config.analysis.topic_modeling_reduce_topics:
-            topic_model.reduce_topics(texts, nr_topics=num_topics)
-            topics = topic_model.topics_
+        topic_model.reduce_topics(texts, nr_topics=num_topics)
+        topics = topic_model.topics_
             
         embedding_time = time.time() - start_time
         logger.info(f"Topic modeling completed in {embedding_time:.2f} seconds")
