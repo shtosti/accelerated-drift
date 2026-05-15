@@ -402,7 +402,7 @@ def _save_topic_prevalence(
     yearly_pivot = yearly.pivot(index="year", columns="topic_label", values="pct").fillna(0.0)
     
     # Line plot
-    fig, ax = plt.subplots(figsize=(6, 4))
+    fig, ax = plt.subplots(figsize=(5, 3))
     for label in yearly_pivot.columns:
         ax.plot(yearly_pivot.index, yearly_pivot[label], marker="o", label=label)
     ax.set_xlabel("Year")
@@ -422,7 +422,7 @@ def _save_topic_prevalence(
     paths.append(trend_path)
 
     # Stacked area plot
-    fig, ax = plt.subplots(figsize=(6, 4))
+    fig, ax = plt.subplots(figsize=(5, 3))
     ax.stackplot(
         yearly_pivot.index,
         *[yearly_pivot[col] for col in yearly_pivot.columns],
@@ -459,7 +459,7 @@ def _save_topic_prevalence(
         paths.append(monthly_csv)
 
         monthly_pivot = monthly.pivot(index="month_ts", columns="topic_label", values="pct").fillna(0.0)
-        fig, ax = plt.subplots(figsize=(6, 4))
+        fig, ax = plt.subplots(figsize=(5, 3))
         for label in monthly_pivot.columns:
             ax.plot(pd.to_datetime(monthly_pivot.index), monthly_pivot[label], marker=".", label=label)
         ax.set_xlabel("Month")
@@ -509,7 +509,7 @@ def _save_topic_trend_plots(
     event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
 
     for feature in feature_columns:
-        fig, ax = plt.subplots(figsize=(6, 4))
+        fig, ax = plt.subplots(figsize=(5, 4))
 
         # Plot line for each topic
         for topic_id, topic_data in grouped.groupby("topic_id"):
@@ -532,8 +532,8 @@ def _save_topic_trend_plots(
                 ax.axvline(x=event_date.year, color="red", linestyle="--", alpha=0.7, label=event_name)
 
         ax.set_xlabel("Year")
-        ax.set_ylabel(f"{feature.replace('_per_1k_words', '').replace('_', ' ').title()}")
-        ax.set_title(f"{feature.replace('_per_1k_words', '').replace('_', ' ').title()} by Topic")
+        ax.set_ylabel(f"{feature.replace('_per_1k_words', '').replace('_', ' ').replace('Word', '').title()}")
+        # ax.set_title(f"{feature.replace('_per_1k_words', '').replace('_', ' ').title()} by Topic")
         legend = ax.legend(loc="best", fontsize=8)
         legend_path = plot_dir / f"{feature}_by_topic_legend.png"
         save_legend_only(ax, legend_path)
