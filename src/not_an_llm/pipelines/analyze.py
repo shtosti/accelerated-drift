@@ -402,7 +402,7 @@ def _save_topic_prevalence(
     yearly_pivot = yearly.pivot(index="year", columns="topic_label", values="pct").fillna(0.0)
     
     # Line plot
-    fig, ax = plt.subplots(figsize=(5, 3))
+    fig, ax = plt.subplots(figsize=(5, 4))
     for label in yearly_pivot.columns:
         ax.plot(yearly_pivot.index, yearly_pivot[label], marker="o", label=label)
     ax.set_xlabel("Year")
@@ -422,7 +422,7 @@ def _save_topic_prevalence(
     paths.append(trend_path)
 
     # Stacked area plot
-    fig, ax = plt.subplots(figsize=(5, 3))
+    fig, ax = plt.subplots(figsize=(5, 4))
     ax.stackplot(
         yearly_pivot.index,
         *[yearly_pivot[col] for col in yearly_pivot.columns],
