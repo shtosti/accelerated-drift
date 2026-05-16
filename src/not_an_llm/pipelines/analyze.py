@@ -229,7 +229,7 @@ def _assign_topics(
         metric='euclidean',
         cluster_selection_method='eom',
         prediction_data=True,
-        core_dist_n_jobs=num_workers,
+        core_dist_n_jobs=16,
     )
 
     topic_model = BERTopic(
@@ -240,14 +240,14 @@ def _assign_topics(
         language="english",
         nr_topics="auto",
         top_n_words=top_terms,
-        min_topic_size=1,  # Minimum documents per topic
-        calculate_probabilities=True,
+        min_topic_size=max(10, len(texts) // 100),  # Minimum documents per topic
+        calculate_probabilities=False,
         verbose=False,
     )
 
     try:
         topics, _ = topic_model.fit_transform(texts, embeddings=embeddings)
-        topic_model.reduce_topics(texts, nr_topics=num_topics)
+        # topic_model.reduce_topics(texts, nr_topics=num_topics)
         topics = topic_model.topics_
             
         embedding_time = time.time() - start_time
@@ -854,6 +854,21 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
             enriched[col] = pd.to_numeric(enriched[col], errors="coerce").fillna(0.0)
 
     enriched, topic_labels, embeddings_2d = _assign_topics(enriched, config, plot_dir)
+    # =========================================================
+    # TOPIC FREQUENCY FILTER (≥1% of dataset)
+    # =========================================================
+    topic_counts = enriched["topic_id"].value_counts()
+    total = len(enriched)
+
+    valid_topics = topic_counts[topic_counts / total >= 0.03].index
+    enriched = enriched[enriched["topic_id"].isin(valid_topics)].copy()
+    topic_labels = {k: v for k, v in topic_labels.items() if k in valid_topics}
+    if embeddings_2d is not None:
+        embeddings_2d = embeddings_2d[embeddings_2d["topic_id"].isin(valid_topics)].copy()
+    topic_labels = {
+        int(t): enriched.loc[enriched["topic_id"] == int(t), "topic_label"].iloc[0]
+        for t in enriched["topic_id"].unique()
+    }
 
     enriched.to_json(
         enriched_output_path,
