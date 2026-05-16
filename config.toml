@@ -75,11 +75,11 @@ enabled = true
 generate_plots = true
 include_readability = true
 topic_modeling_enabled = true
-topic_modeling_num_topics = 10
-topic_modeling_top_n_terms = 6
+topic_modeling_num_topics = 8
+topic_modeling_top_n_terms = 8
 topic_modeling_use_bertopic = true
 topic_modeling_num_workers = 0
-topic_modeling_embedding_batch_size = 128
+topic_modeling_embedding_batch_size = 256
 # Select which readability metrics to compute/write.
 readability_metrics = [
   "avg_words_per_sentence",
