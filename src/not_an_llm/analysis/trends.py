@@ -228,7 +228,15 @@ class TrendAnalyzer:
         post = df[df["year"] >= post_cut][col]
 
         if len(pre) < 2 or len(post) < 2:
-            return None
+            return {
+                "feature": feature,
+                "diff": np.nan,
+                "p_value": np.nan,
+                "cohens_d": np.nan,
+                "slope": np.nan,
+                "slope_p": np.nan,
+                "change_point": np.nan,
+            }
 
         # ---------------------------
         # 1. t-test
@@ -283,6 +291,17 @@ class TrendAnalyzer:
         # 5. Interrupted Time Series (ITS) regression
         # ---------------------------
         its_stats = self._compute_its(df, col, intervention_year=2022)
+        if its_stats is None:
+            its_stats = {
+                "its_pre_slope": np.nan,
+                "its_pre_slope_p": np.nan,
+                "its_level_shift": np.nan,
+                "its_level_shift_p": np.nan,
+                "its_slope_change": np.nan,
+                "its_slope_change_p": np.nan,
+                "its_post_slope": np.nan,
+                "its_r_squared": np.nan,
+            }
 
         result = {
             "feature": feature,
@@ -310,14 +329,17 @@ class TrendAnalyzer:
         rows = []
         for f in features:
             res = self._compute_stats(yearly, f)
-            if res:
+
+            if res is None:
+                rows.append({"feature": f})  # <-- keep feature, but empty stats
+            else:
+                res["feature"] = f
                 rows.append(res)
 
         df = pd.DataFrame(rows)
 
-        # optional: multiple testing correction
         if df.empty:
-            return df
+            return pd.DataFrame(columns=["feature"])
 
         df["p_adj"] = np.minimum(df["p_value"] * len(df), 1.0)
         return df.sort_values("p_value")
@@ -1039,12 +1061,11 @@ def save_grouped_difference_plot(
         return cleaned.replace("_", " ")
 
     df = df.dropna().copy()
-    # if stats_df is not None and not stats_df.empty:
-    #     df = df.merge(stats_df, on="feature", how="left")
-    stats_df = stats_df.drop(columns=["diff"], errors="ignore")
-    df = df.merge(stats_df, on="feature", how="left")
-    df = df.sort_values(diff_column, key=lambda s: s.abs(), ascending=False).head(top_n)
-    df = df.sort_values(diff_column)
+    if stats_df is not None and not stats_df.empty and "feature" in stats_df.columns:
+        stats_df = stats_df.drop(columns=["diff"], errors="ignore")
+        df = df.merge(stats_df, on="feature", how="left")
+        df = df.sort_values(diff_column, key=lambda s: s.abs(), ascending=False).head(top_n)
+        df = df.sort_values(diff_column)
 
     df["label"] = df[feature_column].astype(str).map(_pretty_diff_label)
 
