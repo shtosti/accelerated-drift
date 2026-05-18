@@ -190,6 +190,10 @@ def _build_merge_plan(
             final_topic_map[int(source_topic_id)] = final_topic_id
         final_topic_labels[final_topic_id] = _merged_label(members, counts, topic_labels)
 
+    missing_topics = sorted(set(counts) - set(final_topic_map))
+    if missing_topics:
+        raise RuntimeError(f"Topic merge planning lost source topics: {missing_topics}")
+
     merge_plan = _merge_events_to_frame(events, final_topic_map, counts, total)
     return final_topic_map, final_topic_labels, merge_plan
 
@@ -275,9 +279,18 @@ def _merge_by_hierarchy(
             ):
                 continue
 
-            new_cluster_id = int(row["parent_id"])
+            new_cluster_id = _next_cluster_id(active)
             merged_members = set().union(*(active[cluster_id] for cluster_id in cluster_ids))
-            _record_merge_event(events, reason, cluster_ids, merged_members, counts, total, row.get("distance"))
+            _record_merge_event(
+                events,
+                reason,
+                cluster_ids,
+                merged_members,
+                counts,
+                total,
+                row.get("distance"),
+                hierarchy_parent_id=row.get("parent_id"),
+            )
             for cluster_id in cluster_ids:
                 active.pop(cluster_id, None)
             active[new_cluster_id] = merged_members
@@ -335,6 +348,7 @@ def _record_merge_event(
     counts: dict[int, int],
     total: int,
     distance: object,
+    hierarchy_parent_id: object | None = None,
 ) -> None:
     source_topic_ids = sorted(merged_members)
     merged_count = _cluster_count(merged_members, counts)
@@ -347,8 +361,13 @@ def _record_merge_event(
             "merged_abstract_count": merged_count,
             "merged_abstract_share": merged_count / total if total else 0.0,
             "hierarchy_distance": distance,
+            "hierarchy_parent_id": hierarchy_parent_id,
         }
     )
+
+
+def _next_cluster_id(active: dict[int, set[int]]) -> int:
+    return max(active.keys(), default=-1) + 1
 
 
 def _merge_events_to_frame(
