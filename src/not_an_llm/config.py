@@ -97,6 +97,8 @@ class AnalysisConfig:
     topic_modeling_embedding_batch_size: int
     topic_modeling_min_topic_share: float
     topic_modeling_min_topic_count: int
+    topic_modeling_merge_under_threshold: bool
+    topic_modeling_max_final_topics: int
 
 
 @dataclass(slots=True)
@@ -240,6 +242,8 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             topic_modeling_embedding_batch_size=int(analysis.get("topic_modeling_embedding_batch_size", 64)),
             topic_modeling_min_topic_share=float(analysis.get("topic_modeling_min_topic_share", 0.01)),
             topic_modeling_min_topic_count=int(analysis.get("topic_modeling_min_topic_count", 30)),
+            topic_modeling_merge_under_threshold=bool(analysis.get("topic_modeling_merge_under_threshold", True)),
+            topic_modeling_max_final_topics=int(analysis.get("topic_modeling_max_final_topics", 0)),
         ),
 
         external=None,

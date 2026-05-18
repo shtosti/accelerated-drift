@@ -116,5 +116,15 @@ Collection sources:
 - [src/not_an_llm/analysis/trends.py](src/not_an_llm/analysis/trends.py): yearly trend aggregation and plotting
 - [src/not_an_llm/analysis/topic_modeling/](src/not_an_llm/analysis/topic_modeling/): BERTopic fitting, topic selection thresholds, hierarchical merge candidates, and topic-level reports
 - [src/not_an_llm/analysis/features.py](src/not_an_llm/analysis/features.py): analysis hypotheses scaffold
+
+### Topic Modeling Control
+
+Topic modeling intentionally starts granular and then collapses topics into statistically usable groups:
+
+1. BERTopic discovers the initial topics.
+2. The pipeline records initial topic sizes in `data/analysis/<stem>_initial_topic_selection.csv`.
+3. Topics below `topic_modeling_min_topic_count` or `topic_modeling_min_topic_share` are merged upward through BERTopic's hierarchy when `topic_modeling_merge_under_threshold = true`.
+4. If more than `topic_modeling_max_final_topics` groups remain, the closest hierarchical groups continue merging until the final count is at or below that maximum.
+5. The final topic groups are saved in `data/analysis/<stem>_topic_selection.csv`, with the merge audit trail in `data/analysis/<stem>_topic_merge_plan.csv`.
 - [documents/ARCHITECTURE.md](documents/ARCHITECTURE.md): brief module map
 - [documents/RESEARCH_PLAN.md](documents/RESEARCH_PLAN.md): brief study logic

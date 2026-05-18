@@ -41,7 +41,18 @@ def run_topic_modeling(
         result.embeddings_2d,
         min_share=config.analysis.topic_modeling_min_topic_share,
         min_count=config.analysis.topic_modeling_min_topic_count,
+        merge_candidates=result.merge_candidates,
+        merge_under_threshold=config.analysis.topic_modeling_merge_under_threshold,
+        max_final_topics=config.analysis.topic_modeling_max_final_topics,
     )
+    initial_selection_path = analysis_dir / f"{input_stem}_initial_topic_selection.csv"
+    selection.initial_summary.to_csv(initial_selection_path, index=False)
+    paths.append(initial_selection_path)
+
+    merge_plan_path = analysis_dir / f"{input_stem}_topic_merge_plan.csv"
+    selection.merge_plan.to_csv(merge_plan_path, index=False)
+    paths.append(merge_plan_path)
+
     selection_path = analysis_dir / f"{input_stem}_topic_selection.csv"
     selection.summary.to_csv(selection_path, index=False)
     paths.append(selection_path)
