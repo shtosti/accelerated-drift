@@ -20,7 +20,7 @@ def save_legend_only(ax, output_path: Path, ncol: int = 1):
     if not handles:
         return
 
-    fig_legend = plt.figure(figsize=(4, 3))
+    fig_legend = plt.figure(figsize=(4, 5))
     ax_legend = fig_legend.add_subplot(111)
     ax_legend.axis("off")
     legend = ax_legend.legend(
@@ -71,7 +71,7 @@ def save_topic_prevalence(
     paths.append(yearly_csv)
 
     yearly_count_pivot = yearly.pivot(index="year", columns="topic_label", values="count").fillna(0)
-    fig, ax = plt.subplots(figsize=(5, 4))
+    fig, ax = plt.subplots(figsize=(4, 3))
     bottom = np.zeros(len(yearly_count_pivot.index))
     for label in yearly_count_pivot.columns:
         values = yearly_count_pivot[label].to_numpy()
@@ -92,7 +92,7 @@ def save_topic_prevalence(
 
     yearly_pivot = yearly.pivot(index="year", columns="topic_label", values="pct").fillna(0.0)
 
-    fig, ax = plt.subplots(figsize=(5, 4))
+    fig, ax = plt.subplots(figsize=(4, 3))
     for label in yearly_pivot.columns:
         ax.plot(yearly_pivot.index, yearly_pivot[label], marker="o", label=label, alpha=0.8, linewidth=1)
     ax.set_xlabel("Year")
@@ -108,7 +108,7 @@ def save_topic_prevalence(
     plt.close(fig)
     paths.append(trend_path)
 
-    fig, ax = plt.subplots(figsize=(5, 4))
+    fig, ax = plt.subplots(figsize=(4, 3))
     ax.stackplot(
         yearly_pivot.index,
         *[yearly_pivot[col] for col in yearly_pivot.columns],
@@ -140,7 +140,7 @@ def save_topic_prevalence(
         paths.append(monthly_csv)
 
         monthly_pivot = monthly.pivot(index="month_ts", columns="topic_label", values="pct").fillna(0.0)
-        fig, ax = plt.subplots(figsize=(5, 3))
+        fig, ax = plt.subplots(figsize=(4, 3))
         for label in monthly_pivot.columns:
             ax.plot(pd.to_datetime(monthly_pivot.index), monthly_pivot[label], marker=".", label=label)
         ax.set_xlabel("Month")
@@ -184,7 +184,7 @@ def save_topic_trend_plots(
     event_dates = {name: pd.to_datetime(value) for name, value in events.items()}
 
     for feature in feature_columns:
-        fig, ax = plt.subplots(figsize=(5, 4))
+        fig, ax = plt.subplots(figsize=(4, 3))
         for topic_id, topic_data in grouped.groupby("topic_id"):
             topic_label = topic_labels.get(topic_id, f"topic_{topic_id}")
             ax.plot(
@@ -222,12 +222,12 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
         return None
 
     plot_dir.mkdir(parents=True, exist_ok=True)
-    fig, ax = plt.subplots(figsize=(5, 5))
+    fig, ax = plt.subplots(figsize=(4, 4))
 
     topic_sizes = embeddings_2d["topic_id"].value_counts()
     topics = [topic for topic in topic_sizes.index.tolist() if topic != -1]
     topics = sorted(topics, key=lambda topic: topic_sizes[topic], reverse=True)
-    color_map = dict(zip(topics, plt.cm.tab10(np.linspace(0, 1, len(topics)))))
+    color_map = dict(zip(topics, plt.cm.tab20(np.linspace(0, 1, len(topics)))))
 
     noise_data = embeddings_2d[embeddings_2d["topic_id"] == -1]
     if not noise_data.empty:
@@ -242,7 +242,7 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
             topic_data["x"],
             topic_data["y"],
             c=[color_map[topic_id]],
-            alpha=0.5,
+            alpha=0.7,
             s=15,
             label=f"{topic_id}: {topic_label}",
             edgecolors="black",

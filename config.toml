@@ -81,7 +81,7 @@ topic_modeling_use_bertopic = true
 topic_modeling_num_workers = 16
 topic_modeling_embedding_batch_size = 128
 topic_modeling_min_topic_share = 0.01
-topic_modeling_min_topic_count = 5
+topic_modeling_min_topic_count = 10
 topic_modeling_merge_under_threshold = false
 topic_modeling_max_final_topics = 15
 # Select which readability metrics to compute/write.
