@@ -25,6 +25,8 @@
   - Computes readability metrics (Flesch, FK grade, Fog, SMOG).
 - src/not_an_llm/analysis/trends.py
   - Aggregates yearly feature trends and saves visualizations.
+- src/not_an_llm/analysis/topic_modeling/
+  - Runs BERTopic topic assignment, records hierarchical merge candidates, filters topics by minimum abstract count/share, and saves topic-level reports.
 - src/not_an_llm/pipelines/analyze.py
   - Orchestrates analysis modules and writes trend artifacts.
 - src/not_an_llm/analysis/features.py

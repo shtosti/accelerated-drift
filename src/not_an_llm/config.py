@@ -95,6 +95,8 @@ class AnalysisConfig:
     topic_modeling_use_bertopic: bool
     topic_modeling_num_workers: int
     topic_modeling_embedding_batch_size: int
+    topic_modeling_min_topic_share: float
+    topic_modeling_min_topic_count: int
 
 
 @dataclass(slots=True)
@@ -236,6 +238,8 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             topic_modeling_use_bertopic=bool(analysis.get("topic_modeling_use_bertopic", False)),
             topic_modeling_num_workers=int(analysis.get("topic_modeling_num_workers", 0)),
             topic_modeling_embedding_batch_size=int(analysis.get("topic_modeling_embedding_batch_size", 64)),
+            topic_modeling_min_topic_share=float(analysis.get("topic_modeling_min_topic_share", 0.01)),
+            topic_modeling_min_topic_count=int(analysis.get("topic_modeling_min_topic_count", 30)),
         ),
 
         external=None,
