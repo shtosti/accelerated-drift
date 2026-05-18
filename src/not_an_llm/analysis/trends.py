@@ -1000,9 +1000,9 @@ class TrendAnalyzer:
 
         year_ts = pd.to_datetime(plot_yearly.index.astype(str) + "-01-01")
 
-        trend_fig, trend_ax = plt.subplots(figsize=(6, 1.5 * len(top_roles) + 0.3))
+        trend_fig, trend_ax = plt.subplots(figsize=(6, 0.5 * len(top_roles) + 0.3))
         for role in top_roles:
-            trend_ax.plot(year_ts, plot_yearly[role], marker="o", linewidth=1.6, label=role)
+            trend_ax.plot(year_ts, plot_yearly[role], marker="o", linewidth=1, label=role)
 
         if events:
             event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
