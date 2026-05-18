@@ -1,0 +1,54 @@
+topic_id,abstract_count,abstract_share,topic_label,passes_min_share,passes_min_count,selected
+52,454,0.22254901960784312,"language, llms, language models, llm, performance",True,True,True
+0,323,0.15833333333333333,"language, dialogue, llms, language models, reasoning",True,True,True
+1,311,0.15245098039215688,"learning, reinforcement learning, reinforcement, policy, rl",True,True,True
+2,61,0.029901960784313727,"clinical, medical, patients, health, delirium",True,True,True
+3,55,0.02696078431372549,"attacks, attack, anomaly, security, cyber",True,True,True
+4,52,0.025490196078431372,"knowledge, graph, knowledge graphs, embedding, graphs",True,True,True
+5,50,0.024509803921568627,"multimodal, visual, video, image, modal",True,True,True
+6,45,0.022058823529411766,"logic, belief, revision, asp, logics",True,True,True
+7,40,0.0196078431372549,"planning, robot, agent planning, agent, pomdp",True,True,True
+8,33,0.016176470588235296,"speech, speaker, tts, asr, audio",True,True,True
+9,30,0.014705882352941176,"ray, images, segmentation, image, dose",True,True,True
+10,29,0.014215686274509804,"bribery, votes, voting, frugal, game",True,True,True
+11,29,0.014215686274509804,"consciousness, intelligence, conscious, hiv, goal directed",True,True,True
+12,27,0.013235294117647059,"probabilistic, bayesian, probabilistic programming, inference, bayesian networks",True,True,True
+13,24,0.011764705882352941,"causal, causal structure, causal inference, structure learning, causality",True,True,True
+14,24,0.011764705882352941,"explanations, explainable, explainable recommendation, interpretable, interpretable machine",True,True,True
+15,24,0.011764705882352941,"game, games, chess, playing, ludii",True,True,True
+16,22,0.010784313725490196,"entity, word, word embeddings, languages, named entity",True,True,True
+17,22,0.010784313725490196,"dp, federated, privacy, federated learning, differentially private",True,True,True
+18,21,0.010294117647058823,"gans, generative, images, image, gan",True,True,True
+19,20,0.00980392156862745,"pruning, quantization, bit, hardware, weight pruning",False,True,False
+20,19,0.009313725490196078,"fuzzy, inconsistency, indices, decision, inconsistency indices",False,True,False
+21,18,0.008823529411764706,"sentiment, sentiment analysis, ratings, email, stories",False,True,False
+22,18,0.008823529411764706,"chatgpt, genlangs, cww, eia, lexical diversity",False,True,False
+23,17,0.008333333333333333,"mutation, optimization, search, swarm, local search",False,True,False
+24,16,0.00784313725490196,"ai, ethical, moral, irrationalities, regulation",False,True,False
+25,16,0.00784313725490196,"stations, routing, tsp, scheduling, vehicle routing",False,True,False
+26,15,0.007352941176470588,"ontology, owl, ontologies, business, collaborative",False,True,False
+27,15,0.007352941176470588,"user, recommendation, item, items, recommendations",False,True,False
+28,13,0.006372549019607843,"summarization, mds, document summarization, summaries, multi document",False,True,False
+29,13,0.006372549019607843,"price, pricing, bandits, reserve, bidding",False,True,False
+30,13,0.006372549019607843,"emotion, emotion recognition, emotions, multimodal, recognition",False,True,False
+31,12,0.0058823529411764705,"extraction, tables, relation extraction, el, scientific",False,True,False
+32,11,0.005392156862745098,"rnns, keyboard, arnet, dropout, lstms",False,True,False
+33,11,0.005392156862745098,"fairness, fair, llms, healthcare, demographic",False,True,False
+34,11,0.005392156862745098,"mathematics, mathematical, problems, mathematical reasoning, level mathematics",False,True,False
+35,10,0.004901960784313725,"settlements, informal settlements, informal, satellite, dvs",False,True,False
+36,9,0.004411764705882353,"privacy, mia, memorization, contextual privacy, notes",False,False,False
+37,9,0.004411764705882353,"music, musical, melody, melodies, midinet",False,False,False
+38,8,0.00392156862745098,"clustering, rank, number clusters, clustering solutions, nmf",False,False,False
+39,8,0.00392156862745098,"quantum, cognition, contextuality, quantum theory, quantum mass",False,False,False
+40,8,0.00392156862745098,"argumentation, arguments, semantics, argumentative, argumentation semantics",False,False,False
+41,8,0.00392156862745098,"authorial, topic, morphosyntactic, morphology, legal",False,False,False
+42,8,0.00392156862745098,"agent, helpa, apps, clai, command",False,False,False
+43,7,0.003431372549019608,"rlar, engagement, grading, graders, ya",False,False,False
+44,7,0.003431372549019608,"scrambled, revision, review, peer review, rem",False,False,False
+45,7,0.003431372549019608,"preference, preference optimization, omni, reward, tso",False,False,False
+46,7,0.003431372549019608,"patch, adversarial, adversarial patch, patches, stereo",False,False,False
+47,7,0.003431372549019608,"time series, forecasting, series, multivariate time, wind speed",False,False,False
+48,6,0.0029411764705882353,"robot, nlc, symbol, human robot, robotic",False,False,False
+49,6,0.0029411764705882353,"quantum, variational quantum, quantum circuits, circuits, variational",False,False,False
+50,6,0.0029411764705882353,"continual, continual learning, rehearsal, forgetting, parameter regularization",False,False,False
+51,5,0.0024509803921568627,"scoring, batcheval, controlled generation, text evaluation, human settlement",False,False,False
