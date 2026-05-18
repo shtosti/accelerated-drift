@@ -114,6 +114,7 @@ Collection sources:
 - [src/not_an_llm/analysis/feature_extractor.py](src/not_an_llm/analysis/feature_extractor.py): style feature extraction class
 - [src/not_an_llm/analysis/readability.py](src/not_an_llm/analysis/readability.py): readability metrics class
 - [src/not_an_llm/analysis/trends.py](src/not_an_llm/analysis/trends.py): yearly trend aggregation and plotting
+- [src/not_an_llm/analysis/topic_modeling/](src/not_an_llm/analysis/topic_modeling/): BERTopic fitting, topic selection thresholds, hierarchical merge candidates, and topic-level reports
 - [src/not_an_llm/analysis/features.py](src/not_an_llm/analysis/features.py): analysis hypotheses scaffold
 - [documents/ARCHITECTURE.md](documents/ARCHITECTURE.md): brief module map
 - [documents/RESEARCH_PLAN.md](documents/RESEARCH_PLAN.md): brief study logic
