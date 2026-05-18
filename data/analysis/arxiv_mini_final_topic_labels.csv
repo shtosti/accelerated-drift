@@ -1,0 +1,11 @@
+topic_id,topic_label
+0,"policy, llm, agent, reinforcement, language model"
+1,"game, agent, causal, logic, ai"
+2,"llm, language model, reasoning, prompt"
+3,"image, gan, deep, segmentation, generative"
+4,"speech, emotion, music, recognition, audio"
+5,"ontology, knowledge graph, kg, rule, node"
+6,"attack, adversarial, anomaly, threat, security"
+7,"entity, word, extraction, table"
+8,"privacy, dp, client, private, federate"
+9,"summarization, sentiment, story, mds, narrative"
