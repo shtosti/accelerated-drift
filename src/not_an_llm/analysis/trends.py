@@ -379,7 +379,7 @@ class TrendAnalyzer:
         if "month_ts" in monthly.columns:
             monthly["month_ts"] = pd.to_datetime(monthly["month_ts"], errors="coerce")
 
-        fig, axes = plt.subplots(len(features), 1, figsize=(5, 3 * len(features)))
+        fig, axes = plt.subplots(len(features), 1, figsize=(5, 2.5 * len(features)))
         if len(features) == 1:
             axes = [axes]
 

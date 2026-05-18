@@ -189,7 +189,7 @@ def _assign_topics(
     # Check for GPU availability
     device = "cuda" if torch.cuda.is_available() else "cpu"
     num_workers = config.analysis.topic_modeling_num_workers or multiprocessing.cpu_count()
-    num_workers = max(1, min(num_workers, multiprocessing.cpu_count()))
+    # num_workers = max(1, min(num_workers, multiprocessing.cpu_count()))
     
     # UMAP/numba has a hard limit of 16 threads
     umap_n_jobs = min(num_workers, 16)
@@ -274,7 +274,7 @@ def _assign_topics(
             source_topic_id = -1 if has_noise and topic_id_map.get(-1) == target_topic_id else target_topic_id
             terms = [
                 term for term, _ in topic_model.get_topic(source_topic_id)
-                if term.isalpha() and term.lower() not in stop_words
+                if term.lower() not in stop_words
             ]
             if not terms:
                 terms = [term for term, _ in topic_model.get_topic(source_topic_id)]
@@ -564,8 +564,23 @@ def _save_topic_cluster_plot(
     fig, ax = plt.subplots(figsize=(5, 5))
     
     # Get unique topics (excluding noise)
-    topics = sorted(embeddings_2d['topic_id'].unique())
-    topics = [t for t in topics if t != -1]  # Exclude noise
+    topic_sizes = (
+        embeddings_2d["topic_id"]
+        .value_counts()
+    )
+
+    topics = (
+        topic_sizes.index.tolist()
+    )
+
+    topics = [t for t in topics if t != -1]
+
+    # reverse: biggest first → smallest drawn last
+    topics = sorted(
+        topics,
+        key=lambda t: topic_sizes[t],
+        reverse=True,
+    )
     
     # Create color map
     colors = plt.cm.tab10(np.linspace(0, 1, len(topics)))
@@ -578,8 +593,8 @@ def _save_topic_cluster_plot(
             noise_data['x'], 
             noise_data['y'], 
             c='lightgray', 
-            alpha=0.5, 
-            s=20, 
+            alpha=0.35, 
+            s=13, 
             label='noise'
         )
     
@@ -860,7 +875,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     topic_counts = enriched["topic_id"].value_counts()
     total = len(enriched)
 
-    valid_topics = topic_counts[topic_counts / total >= 0.03].index
+    valid_topics = topic_counts[topic_counts / total >= 0.01].index
     enriched = enriched[enriched["topic_id"].isin(valid_topics)].copy()
     topic_labels = {k: v for k, v in topic_labels.items() if k in valid_topics}
     if embeddings_2d is not None:
