@@ -4,7 +4,7 @@ data_dir = "data"
 
 [collection]
 # Data source: semantic_scholar, arxiv, medarxiv, or biorxiv
-source = "medarxiv"
+source = "arxiv"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
 
@@ -81,9 +81,9 @@ topic_modeling_use_bertopic = true
 topic_modeling_num_workers = 0
 topic_modeling_embedding_batch_size = 256
 topic_modeling_min_topic_share = 0.01
-topic_modeling_min_topic_count = 30
+topic_modeling_min_topic_count = 10
 topic_modeling_merge_under_threshold = true
-topic_modeling_max_final_topics = 3
+topic_modeling_max_final_topics = 10
 # Select which readability metrics to compute/write.
 readability_metrics = [
   "avg_words_per_sentence",
@@ -94,7 +94,7 @@ readability_metrics = [
 ]
 
 # Full run config. Use config_mini.toml for the mini run.
-preprocessed_jsonl = "data/processed/medarxiv_mini.jsonl"
+preprocessed_jsonl = "data/processed/arxiv_mini.jsonl"
 feature_dataset_jsonl = ""
 trends_csv = ""
 monthly_trends_csv = ""
