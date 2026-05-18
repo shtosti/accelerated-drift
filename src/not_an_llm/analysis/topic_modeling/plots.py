@@ -70,6 +70,26 @@ def save_topic_prevalence(
     yearly.to_csv(yearly_csv, index=False)
     paths.append(yearly_csv)
 
+    yearly_count_pivot = yearly.pivot(index="year", columns="topic_label", values="count").fillna(0)
+    fig, ax = plt.subplots(figsize=(5, 4))
+    bottom = np.zeros(len(yearly_count_pivot.index))
+    for label in yearly_count_pivot.columns:
+        values = yearly_count_pivot[label].to_numpy()
+        ax.bar(yearly_count_pivot.index, values, bottom=bottom, label=label, alpha=0.85)
+        bottom += values
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Abstract count")
+    legend = ax.legend(loc="best", fontsize=8)
+    save_legend_only(ax, plot_dir / "topic_evolution_stacked_counts_legend.png")
+    legend.remove()
+    ax.grid(alpha=0.3, axis="y")
+    format_xticks(ax)
+    stacked_counts_path = plot_dir / "topic_evolution_stacked_counts_yearly.png"
+    fig.tight_layout()
+    fig.savefig(stacked_counts_path, dpi=150)
+    plt.close(fig)
+    paths.append(stacked_counts_path)
+
     yearly_pivot = yearly.pivot(index="year", columns="topic_label", values="pct").fillna(0.0)
 
     fig, ax = plt.subplots(figsize=(5, 4))

@@ -13,6 +13,7 @@ from not_an_llm.analysis.topic_modeling.plots import (
     save_topic_trend_plots,
 )
 from not_an_llm.analysis.topic_modeling.selection import filter_topics
+from not_an_llm.analysis.topic_modeling.stats import save_topic_modeling_stats
 from not_an_llm.analysis.trends import TrendAnalyzer
 from not_an_llm.config import AppConfig
 
@@ -63,6 +64,21 @@ def run_topic_modeling(
     selection_path = analysis_dir / f"{input_stem}_topic_selection.csv"
     selection.summary.to_csv(selection_path, index=False)
     paths.append(selection_path)
+
+    stats_path = analysis_dir / f"{input_stem}_topic_modeling_stats.csv"
+    save_topic_modeling_stats(
+        stats_path,
+        initial_enriched=result.enriched,
+        final_enriched=selection.enriched,
+        initial_summary=selection.initial_summary,
+        final_summary=selection.summary,
+        merge_plan=selection.merge_plan,
+        min_share=config.analysis.topic_modeling_min_topic_share,
+        min_count=config.analysis.topic_modeling_min_topic_count,
+        merge_under_threshold=config.analysis.topic_modeling_merge_under_threshold,
+        max_final_topics=config.analysis.topic_modeling_max_final_topics,
+    )
+    paths.append(stats_path)
 
     merge_candidates = _annotate_merge_candidates(result.merge_candidates, selection.summary)
     merge_path = save_merge_candidates(
