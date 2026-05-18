@@ -44,6 +44,7 @@ def run_topic_modeling(
         merge_candidates=result.merge_candidates,
         merge_under_threshold=config.analysis.topic_modeling_merge_under_threshold,
         max_final_topics=config.analysis.topic_modeling_max_final_topics,
+        final_label_top_terms=config.analysis.topic_modeling_top_n_terms,
     )
     initial_selection_path = analysis_dir / f"{input_stem}_initial_topic_selection.csv"
     selection.initial_summary.to_csv(initial_selection_path, index=False)
@@ -52,6 +53,12 @@ def run_topic_modeling(
     merge_plan_path = analysis_dir / f"{input_stem}_topic_merge_plan.csv"
     selection.merge_plan.to_csv(merge_plan_path, index=False)
     paths.append(merge_plan_path)
+
+    final_labels_path = save_topic_labels(
+        selection.topic_labels,
+        analysis_dir / f"{input_stem}_final_topic_labels.csv",
+    )
+    paths.append(final_labels_path)
 
     selection_path = analysis_dir / f"{input_stem}_topic_selection.csv"
     selection.summary.to_csv(selection_path, index=False)
