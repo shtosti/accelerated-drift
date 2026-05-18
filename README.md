@@ -125,6 +125,7 @@ Topic modeling intentionally starts granular and then collapses topics into stat
 2. The pipeline records initial topic sizes in `data/analysis/<stem>_initial_topic_selection.csv`.
 3. Topics below `topic_modeling_min_topic_count` or `topic_modeling_min_topic_share` are merged upward through BERTopic's hierarchy when `topic_modeling_merge_under_threshold = true`.
 4. If more than `topic_modeling_max_final_topics` groups remain, the closest hierarchical groups continue merging until the final count is at or below that maximum.
-5. The final topic groups are saved in `data/analysis/<stem>_topic_selection.csv`, with the merge audit trail in `data/analysis/<stem>_topic_merge_plan.csv`.
+5. Final topic labels are recomputed from all documents in each merged group, so labels stay concise instead of concatenating child-topic labels.
+6. The final topic groups are saved in `data/analysis/<stem>_topic_selection.csv`, with labels in `data/analysis/<stem>_final_topic_labels.csv` and the merge audit trail in `data/analysis/<stem>_topic_merge_plan.csv`.
 - [documents/ARCHITECTURE.md](documents/ARCHITECTURE.md): brief module map
 - [documents/RESEARCH_PLAN.md](documents/RESEARCH_PLAN.md): brief study logic

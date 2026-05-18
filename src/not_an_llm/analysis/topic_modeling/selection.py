@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from collections import Counter
 import logging
 import math
+import re
 from typing import Iterable
 
 import pandas as pd
@@ -31,6 +33,7 @@ def filter_topics(
     merge_candidates: pd.DataFrame | None = None,
     merge_under_threshold: bool = True,
     max_final_topics: int = 0,
+    final_label_top_terms: int = 8,
 ) -> TopicSelectionResult:
     if "topic_id" not in enriched.columns:
         empty = pd.DataFrame()
@@ -48,6 +51,12 @@ def filter_topics(
             merge_under_threshold=merge_under_threshold,
         )
         selected = _apply_merge_plan(enriched, final_topic_map, final_topic_labels)
+        final_topic_labels = _recompute_final_topic_labels(
+            selected,
+            final_topic_labels,
+            top_terms=final_label_top_terms,
+        )
+        selected["topic_label"] = selected["topic_id"].map(final_topic_labels)
     else:
         merge_plan = pd.DataFrame()
         selected_topics = set(initial_summary.loc[initial_summary["selected"], "topic_id"].astype(int))
@@ -58,6 +67,12 @@ def filter_topics(
             for topic_id, label in topic_labels.items()
             if int(topic_id) in selected_topics
         }
+        final_topic_labels = _recompute_final_topic_labels(
+            selected,
+            final_topic_labels,
+            top_terms=final_label_top_terms,
+        )
+        selected["topic_label"] = selected["topic_id"].map(final_topic_labels)
 
     final_summary = _topic_summary(selected, final_topic_labels, min_share, min_count)
 
@@ -382,6 +397,105 @@ def _apply_embedding_merge_plan(
     merged["topic_id"] = merged["original_topic_id"].map(lambda topic_id: final_topic_map[int(topic_id)])
     merged["topic_label"] = merged["topic_id"].map(final_topic_labels)
     return merged
+
+
+def _recompute_final_topic_labels(
+    enriched: pd.DataFrame,
+    fallback_labels: dict[int, str],
+    *,
+    top_terms: int = 8,
+) -> dict[int, str]:
+    text_column = _label_text_column(enriched)
+    if text_column is None or enriched.empty:
+        return fallback_labels
+
+    docs_by_topic = (
+        enriched.assign(_label_text=enriched[text_column].fillna("").astype(str))
+        .groupby("topic_id")["_label_text"]
+        .apply(lambda values: " ".join(value for value in values if value.strip()))
+    )
+    if docs_by_topic.empty:
+        return fallback_labels
+
+    try:
+        from sklearn.feature_extraction.text import TfidfVectorizer
+
+        vectorizer = TfidfVectorizer(
+            stop_words="english",
+            ngram_range=(1, 2),
+            max_df=0.95,
+            min_df=1,
+        )
+        matrix = vectorizer.fit_transform(docs_by_topic.tolist())
+    except ImportError:
+        return {
+            int(topic_id): _simple_top_terms(text, top_terms)
+            or fallback_labels.get(int(topic_id), f"topic_{topic_id}")
+            for topic_id, text in docs_by_topic.items()
+        }
+    except ValueError:
+        return fallback_labels
+
+    terms = vectorizer.get_feature_names_out()
+    labels: dict[int, str] = {}
+    for row_index, topic_id in enumerate(docs_by_topic.index):
+        row = matrix.getrow(row_index)
+        if row.nnz == 0:
+            labels[int(topic_id)] = fallback_labels.get(int(topic_id), f"topic_{topic_id}")
+            continue
+        top_indices = row.toarray().ravel().argsort()[::-1][:top_terms]
+        top_words = _dedupe_terms([terms[index] for index in top_indices if row[0, index] > 0], top_terms)
+        labels[int(topic_id)] = ", ".join(top_words) or fallback_labels.get(int(topic_id), f"topic_{topic_id}")
+
+    return labels
+
+
+def _label_text_column(enriched: pd.DataFrame) -> str | None:
+    for column in ("text_lemma", "text_clean", "text_raw", "abstract"):
+        if column in enriched.columns:
+            return column
+    return None
+
+
+def _simple_top_terms(text: str, top_terms: int) -> str:
+    stop_words = {
+        "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "has",
+        "in", "is", "it", "its", "of", "on", "or", "that", "the", "their",
+        "this", "to", "was", "were", "with", "we",
+    }
+    tokens = [
+        token
+        for token in re.findall(r"[a-z][a-z0-9_]+", text.lower())
+        if token not in stop_words and len(token) > 2
+    ]
+    if not tokens:
+        return ""
+
+    unigrams = Counter(tokens)
+    bigrams = Counter(
+        f"{left} {right}"
+        for left, right in zip(tokens, tokens[1:])
+        if left != right
+    )
+    combined = Counter()
+    combined.update(unigrams)
+    combined.update({term: count * 2 for term, count in bigrams.items()})
+
+    return ", ".join(_dedupe_terms([term for term, _ in combined.most_common()], top_terms))
+
+
+def _dedupe_terms(terms: list[str], top_terms: int) -> list[str]:
+    selected: list[str] = []
+    used_words: set[str] = set()
+    for term in terms:
+        words = set(term.split())
+        if len(selected) >= top_terms:
+            break
+        if words & used_words:
+            continue
+        selected.append(term)
+        used_words.update(words)
+    return selected
 
 
 def _cluster_count(members: set[int], counts: dict[int, int]) -> int:
