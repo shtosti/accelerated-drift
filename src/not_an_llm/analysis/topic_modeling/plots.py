@@ -1,12 +1,41 @@
 from __future__ import annotations
 
 from pathlib import Path
+import textwrap
+from typing import TYPE_CHECKING
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from not_an_llm.analysis.trends import TrendAnalyzer
+if TYPE_CHECKING:
+    from not_an_llm.analysis.trends import TrendAnalyzer
+
+
+TOPIC_COLORS = [
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#aec7e8",
+    "#ffbb78",
+    "#98df8a",
+    "#ff9896",
+    "#c5b0d5",
+    "#c49c94",
+    "#f7b6d2",
+    "#c7c7c7",
+    "#dbdb8d",
+    "#9edae5",
+]
+
+TOPIC_MARKERS = ["o", "s", "^", "D", "v", "P", "X", "*", "<", ">", "h", "p", "8", "H", "d"]
 
 
 def format_xticks(ax):
@@ -15,26 +44,49 @@ def format_xticks(ax):
         label.set_ha("right")
 
 
-def save_legend_only(ax, output_path: Path, ncol: int = 1):
+def topic_color_map(topic_ids) -> dict[int, str]:
+    ordered = sorted(int(topic_id) for topic_id in topic_ids)
+    return {
+        topic_id: TOPIC_COLORS[index % len(TOPIC_COLORS)]
+        for index, topic_id in enumerate(ordered)
+    }
+
+
+def save_legend_only(ax, output_path: Path, ncol: int = 1, wrap_width: int = 44):
     handles, labels = ax.get_legend_handles_labels()
     if not handles:
         return
 
-    fig_legend = plt.figure(figsize=(4, 5))
+    wrapped_labels = [
+        "\n".join(textwrap.wrap(label, width=wrap_width, break_long_words=False)) or label
+        for label in labels
+    ]
+    line_count = sum(max(1, label.count("\n") + 1) for label in wrapped_labels)
+    max_line_len = max(
+        (len(line) for label in wrapped_labels for line in label.splitlines()),
+        default=wrap_width,
+    )
+    fig_width = max(4.0, min(8.5, 1.6 + max_line_len * 0.085))
+    fig_height = max(2.0, min(12.0, 0.34 * line_count + 0.5))
+
+    fig_legend = plt.figure(figsize=(fig_width, fig_height))
     ax_legend = fig_legend.add_subplot(111)
     ax_legend.axis("off")
     legend = ax_legend.legend(
         handles,
-        labels,
+        wrapped_labels,
         loc="center",
         frameon=False,
         ncol=ncol,
         fontsize=8,
+        handlelength=1.6,
+        labelspacing=0.8,
+        borderaxespad=0.0,
     )
 
     fig_legend.canvas.draw()
     bbox = legend.get_window_extent().transformed(fig_legend.dpi_scale_trans.inverted())
-    fig_legend.savefig(output_path, dpi=150, bbox_inches=bbox)
+    fig_legend.savefig(output_path, dpi=150, bbox_inches=bbox, pad_inches=0.08)
     plt.close(fig_legend)
 
 
@@ -70,12 +122,30 @@ def save_topic_prevalence(
     yearly.to_csv(yearly_csv, index=False)
     paths.append(yearly_csv)
 
-    yearly_count_pivot = yearly.pivot(index="year", columns="topic_label", values="count").fillna(0)
+    topic_order = (
+        yearly.groupby("topic_id")["count"]
+        .sum()
+        .sort_values(ascending=False)
+        .index.tolist()
+    )
+    color_map = topic_color_map(topic_order)
+
+    yearly_count_pivot = yearly.pivot(index="year", columns="topic_id", values="count").fillna(0)
     fig, ax = plt.subplots(figsize=(4, 3))
     bottom = np.zeros(len(yearly_count_pivot.index))
-    for label in yearly_count_pivot.columns:
-        values = yearly_count_pivot[label].to_numpy()
-        ax.bar(yearly_count_pivot.index, values, bottom=bottom, label=label, alpha=0.85)
+    for topic_id in topic_order:
+        if topic_id not in yearly_count_pivot.columns:
+            continue
+        values = yearly_count_pivot[topic_id].to_numpy()
+        label = topic_labels.get(int(topic_id), f"topic_{topic_id}")
+        ax.bar(
+            yearly_count_pivot.index,
+            values,
+            bottom=bottom,
+            label=label,
+            color=color_map[int(topic_id)],
+            alpha=0.9,
+        )
         bottom += values
     ax.set_xlabel("Year")
     ax.set_ylabel("Abstract count")
@@ -90,11 +160,22 @@ def save_topic_prevalence(
     plt.close(fig)
     paths.append(stacked_counts_path)
 
-    yearly_pivot = yearly.pivot(index="year", columns="topic_label", values="pct").fillna(0.0)
+    yearly_pivot = yearly.pivot(index="year", columns="topic_id", values="pct").fillna(0.0)
 
     fig, ax = plt.subplots(figsize=(4, 3))
-    for label in yearly_pivot.columns:
-        ax.plot(yearly_pivot.index, yearly_pivot[label], marker="o", label=label, alpha=0.8, linewidth=1)
+    for marker_index, topic_id in enumerate(topic_order):
+        if topic_id not in yearly_pivot.columns:
+            continue
+        label = topic_labels.get(int(topic_id), f"topic_{topic_id}")
+        ax.plot(
+            yearly_pivot.index,
+            yearly_pivot[topic_id],
+            marker=TOPIC_MARKERS[marker_index % len(TOPIC_MARKERS)],
+            color=color_map[int(topic_id)],
+            label=label,
+            alpha=0.9,
+            linewidth=1,
+        )
     ax.set_xlabel("Year")
     ax.set_ylabel("Topic prevalence (%)")
     legend = ax.legend(loc="best", fontsize=8)
@@ -111,9 +192,10 @@ def save_topic_prevalence(
     fig, ax = plt.subplots(figsize=(4, 3))
     ax.stackplot(
         yearly_pivot.index,
-        *[yearly_pivot[col] for col in yearly_pivot.columns],
-        labels=yearly_pivot.columns,
-        alpha=0.8,
+        *[yearly_pivot[topic_id] for topic_id in topic_order if topic_id in yearly_pivot.columns],
+        labels=[topic_labels.get(int(topic_id), f"topic_{topic_id}") for topic_id in topic_order if topic_id in yearly_pivot.columns],
+        colors=[color_map[int(topic_id)] for topic_id in topic_order if topic_id in yearly_pivot.columns],
+        alpha=0.9,
     )
     ax.set_xlabel("Year")
     ax.set_ylabel("Topic prevalence (%)")
@@ -139,10 +221,20 @@ def save_topic_prevalence(
         monthly.to_csv(monthly_csv, index=False)
         paths.append(monthly_csv)
 
-        monthly_pivot = monthly.pivot(index="month_ts", columns="topic_label", values="pct").fillna(0.0)
+        monthly_pivot = monthly.pivot(index="month_ts", columns="topic_id", values="pct").fillna(0.0)
         fig, ax = plt.subplots(figsize=(4, 3))
-        for label in monthly_pivot.columns:
-            ax.plot(pd.to_datetime(monthly_pivot.index), monthly_pivot[label], marker=".", label=label)
+        for marker_index, topic_id in enumerate(topic_order):
+            if topic_id not in monthly_pivot.columns:
+                continue
+            label = topic_labels.get(int(topic_id), f"topic_{topic_id}")
+            ax.plot(
+                pd.to_datetime(monthly_pivot.index),
+                monthly_pivot[topic_id],
+                marker=TOPIC_MARKERS[marker_index % len(TOPIC_MARKERS)],
+                color=color_map[int(topic_id)],
+                label=label,
+                linewidth=1,
+            )
         ax.set_xlabel("Month")
         ax.set_ylabel("Topic prevalence (%)")
         legend = ax.legend(loc="best", fontsize=8)
@@ -182,18 +274,29 @@ def save_topic_trend_plots(
     grouped = enriched.groupby(["year", "topic_id"])[feature_columns].mean().reset_index()
     grouped["topic_label"] = grouped["topic_id"].map(topic_labels)
     event_dates = {name: pd.to_datetime(value) for name, value in events.items()}
+    topic_order = (
+        enriched["topic_id"]
+        .value_counts()
+        .sort_values(ascending=False)
+        .index.tolist()
+    )
+    color_map = topic_color_map(topic_order)
 
     for feature in feature_columns:
         fig, ax = plt.subplots(figsize=(4, 3))
-        for topic_id, topic_data in grouped.groupby("topic_id"):
+        for marker_index, topic_id in enumerate(topic_order):
+            topic_data = grouped[grouped["topic_id"] == topic_id]
+            if topic_data.empty:
+                continue
             topic_label = topic_labels.get(topic_id, f"topic_{topic_id}")
             ax.plot(
                 topic_data["year"],
                 topic_data[feature],
-                marker="o",
+                marker=TOPIC_MARKERS[marker_index % len(TOPIC_MARKERS)],
+                color=color_map[int(topic_id)],
                 linewidth=1,
                 label=topic_label,
-                alpha=0.8,
+                alpha=0.9,
             )
 
         for event_name, event_date in event_dates.items():
@@ -227,7 +330,7 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
     topic_sizes = embeddings_2d["topic_id"].value_counts()
     topics = [topic for topic in topic_sizes.index.tolist() if topic != -1]
     topics = sorted(topics, key=lambda topic: topic_sizes[topic], reverse=True)
-    color_map = dict(zip(topics, plt.cm.tab20(np.linspace(0, 1, len(topics)))))
+    color_map = topic_color_map(topics)
 
     noise_data = embeddings_2d[embeddings_2d["topic_id"] == -1]
     if not noise_data.empty:
@@ -267,7 +370,7 @@ def save_per_topic_trend_outputs(
     enriched: pd.DataFrame,
     plot_dir: Path,
     analysis_topic_base: Path,
-    trend_analyzer: TrendAnalyzer,
+    trend_analyzer: "TrendAnalyzer",
     group_specs: dict[str, dict[str, object]],
     summary_features: set[str],
     events: dict[str, str],
