@@ -1,0 +1,11 @@
+topic_id,abstract_count,abstract_share,topic_label,passes_min_share,passes_min_count,selected
+0,178070,0.4421869218754268,"forecasting, sensor, regret, fl, robotic, conversational, cancer",True,True,True
+1,77376,0.1921416031169373,"forecasting, sensor, robotic, backdoor, molecule, malware, differential equation",True,True,True
+2,36605,0.09089825504155669,"conversational, fake news, utterance, dialog, personality, hate speech, persona",True,True,True
+3,35788,0.08886946459301272,"regret, nonconvex, causal discovery, treatment effect, covariate, minimax, hessian",True,True,True
+4,28934,0.07184947715810411,"snn, mllm, point cloud, camera, caption, lidar, vqa",True,True,True
+5,14504,0.0360166177058527,"cancer, mri, ecg, tumor, mental, ray, lung",True,True,True
+6,9026,0.022413540500070772,"musical, automatic speech, utterance, lyric, recognition asr, music generation",True,True,True
+7,8808,0.02187219861783995,"fl, regret, differential privacy, watermark, differentially private",True,True,True
+8,7737,0.019212670379907773,"nmt, resource language, arabic, neural machine, grammatical, code switch",True,True,True
+9,5855,0.0145392510112912,"node classification, dynamic graph, entity alignment, gnn model, gcl",True,True,True
