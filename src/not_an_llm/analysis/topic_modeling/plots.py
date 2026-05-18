@@ -20,7 +20,7 @@ def save_legend_only(ax, output_path: Path, ncol: int = 1):
     if not handles:
         return
 
-    fig_legend = plt.figure(figsize=(4, 2))
+    fig_legend = plt.figure(figsize=(4, 3))
     ax_legend = fig_legend.add_subplot(111)
     ax_legend.axis("off")
     legend = ax_legend.legend(
@@ -34,7 +34,7 @@ def save_legend_only(ax, output_path: Path, ncol: int = 1):
 
     fig_legend.canvas.draw()
     bbox = legend.get_window_extent().transformed(fig_legend.dpi_scale_trans.inverted())
-    fig_legend.savefig(output_path, dpi=250, bbox_inches=bbox)
+    fig_legend.savefig(output_path, dpi=150, bbox_inches=bbox)
     plt.close(fig_legend)
 
 
@@ -74,7 +74,7 @@ def save_topic_prevalence(
 
     fig, ax = plt.subplots(figsize=(5, 4))
     for label in yearly_pivot.columns:
-        ax.plot(yearly_pivot.index, yearly_pivot[label], marker="o", label=label)
+        ax.plot(yearly_pivot.index, yearly_pivot[label], marker="o", label=label, alpha=0.8, linewidth=1)
     ax.set_xlabel("Year")
     ax.set_ylabel("Topic prevalence (%)")
     legend = ax.legend(loc="best", fontsize=8)
@@ -171,7 +171,7 @@ def save_topic_trend_plots(
                 topic_data["year"],
                 topic_data[feature],
                 marker="o",
-                linewidth=1.5,
+                linewidth=1,
                 label=topic_label,
                 alpha=0.8,
             )
@@ -211,7 +211,7 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
 
     noise_data = embeddings_2d[embeddings_2d["topic_id"] == -1]
     if not noise_data.empty:
-        ax.scatter(noise_data["x"], noise_data["y"], c="lightgray", alpha=0.35, s=13, label="noise")
+        ax.scatter(noise_data["x"], noise_data["y"], c="lightgray", alpha=0.35, s=10, label="noise")
 
     for topic_id in topics:
         topic_data = embeddings_2d[embeddings_2d["topic_id"] == topic_id]
@@ -222,8 +222,8 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
             topic_data["x"],
             topic_data["y"],
             c=[color_map[topic_id]],
-            alpha=0.7,
-            s=30,
+            alpha=0.5,
+            s=15,
             label=f"{topic_id}: {topic_label}",
             edgecolors="black",
             linewidth=0.5,
