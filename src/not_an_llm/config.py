@@ -90,15 +90,12 @@ class AnalysisConfig:
 
     generate_plots: bool
     topic_modeling_enabled: bool
-    topic_modeling_num_topics: int
     topic_modeling_top_n_terms: int
     topic_modeling_use_bertopic: bool
     topic_modeling_num_workers: int
     topic_modeling_embedding_batch_size: int
-    topic_modeling_min_topic_share: float
-    topic_modeling_min_topic_count: int
-    topic_modeling_merge_under_threshold: bool
-    topic_modeling_max_final_topics: int
+    topic_modeling_min_cluster_ratio: float
+    topic_modeling_max_final_topics: int = 12
 
 
 @dataclass(slots=True)
@@ -235,15 +232,11 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
 
             generate_plots=bool(analysis.get("generate_plots", True)),
             topic_modeling_enabled=bool(analysis.get("topic_modeling_enabled", False)),
-            topic_modeling_num_topics=int(analysis.get("topic_modeling_num_topics", 8)),
             topic_modeling_top_n_terms=int(analysis.get("topic_modeling_top_n_terms", 5)),
+            topic_modeling_min_cluster_ratio=float(analysis.get("topic_modeling_min_cluster_ratio", 0.01)),
             topic_modeling_use_bertopic=bool(analysis.get("topic_modeling_use_bertopic", False)),
             topic_modeling_num_workers=int(analysis.get("topic_modeling_num_workers", 0)),
             topic_modeling_embedding_batch_size=int(analysis.get("topic_modeling_embedding_batch_size", 64)),
-            topic_modeling_min_topic_share=float(analysis.get("topic_modeling_min_topic_share", 0.01)),
-            topic_modeling_min_topic_count=int(analysis.get("topic_modeling_min_topic_count", 30)),
-            topic_modeling_merge_under_threshold=bool(analysis.get("topic_modeling_merge_under_threshold", True)),
-            topic_modeling_max_final_topics=int(analysis.get("topic_modeling_max_final_topics", 0)),
         ),
 
         external=None,

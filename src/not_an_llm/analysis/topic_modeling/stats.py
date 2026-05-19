@@ -13,10 +13,6 @@ def save_topic_modeling_stats(
     initial_summary: pd.DataFrame,
     final_summary: pd.DataFrame,
     merge_plan: pd.DataFrame,
-    min_share: float,
-    min_count: int,
-    merge_under_threshold: bool,
-    max_final_topics: int,
 ) -> Path:
     total_abstracts = len(initial_enriched)
     kept_abstracts = len(final_enriched)
@@ -38,10 +34,6 @@ def save_topic_modeling_stats(
         _stats_row("dataset", "all", None, None, "kept_abstract_share", kept_abstracts / total_abstracts if total_abstracts else 0.0),
         _stats_row("dataset", "all", None, None, "dropped_abstract_share", dropped_abstracts / total_abstracts if total_abstracts else 0.0),
         _stats_row("dataset", "all", None, None, "under_threshold_initial_topics", under_threshold_initial_topics),
-        _stats_row("config", "all", None, None, "topic_modeling_min_topic_share", min_share),
-        _stats_row("config", "all", None, None, "topic_modeling_min_topic_count", min_count),
-        _stats_row("config", "all", None, None, "topic_modeling_merge_under_threshold", merge_under_threshold),
-        _stats_row("config", "all", None, None, "topic_modeling_max_final_topics", max_final_topics),
         _stats_row("merge", "all", None, None, "merge_steps", len(merge_plan)),
     ]
 

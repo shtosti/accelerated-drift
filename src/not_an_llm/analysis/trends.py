@@ -1037,8 +1037,8 @@ def save_grouped_difference_plot(
     label_map: dict[str, str],
     top_n: int = 15,
     stats_df: pd.DataFrame | None = None,
-    annotation_mode: str = "p+d",  # none | p | d | p+d
-    significant_only: bool = False,
+    annotation_mode: str = "p",  # none | p | d | p+d
+    significant_only: bool = True,
 ) -> Path:
 
     def _pretty_diff_label(feature: str) -> str:
@@ -1246,13 +1246,14 @@ def save_grouped_difference_plot(
             / 2
         )
 
-        if width >= 0:
-            x = width + offset
-            ha = "left"
+        inset = max(abs(width) * 0.2, offset)
 
-        else:
-            x = width - offset
+        if width >= 0:
+            x = width - inset
             ha = "right"
+        else:
+            x = width + inset
+            ha = "left"
 
         ax.text(
             x,

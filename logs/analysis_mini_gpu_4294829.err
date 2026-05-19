@@ -1,0 +1,96 @@
+Checked 1 package in 7ms
+2026-05-19 12:02:58,091 INFO not_an_llm.pipelines.analyze: Using 16 workers
+--- Logging error ---
+Traceback (most recent call last):
+  File "/software.9/software/Anaconda3/2024.02-1/lib/python3.11/logging/__init__.py", line 1110, in emit
+    msg = self.format(record)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/software.9/software/Anaconda3/2024.02-1/lib/python3.11/logging/__init__.py", line 953, in format
+    return fmt.format(record)
+           ^^^^^^^^^^^^^^^^^^
+  File "/software.9/software/Anaconda3/2024.02-1/lib/python3.11/logging/__init__.py", line 687, in format
+    record.message = record.getMessage()
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/software.9/software/Anaconda3/2024.02-1/lib/python3.11/logging/__init__.py", line 377, in getMessage
+    msg = msg % self.args
+          ~~~~^~~~~~~~~~~
+TypeError: not enough arguments for format string
+Call stack:
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/main.py", line 13, in <module>
+    main()
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/cli.py", line 156, in main
+    artifacts = run_analysis(config)
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/pipelines/analyze.py", line 264, in run_analysis
+    enriched, topic_labels, embeddings_2d, topic_modeling_paths = run_topic_modeling(
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/pipeline.py", line 34, in run_topic_modeling
+    result = assign_topics(enriched, config)
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/model.py", line 42, in assign_topics
+    return _assign_bertopic_topics(enriched, config, texts, top_terms)
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/model.py", line 70, in _assign_bertopic_topics
+    logger.info(
+Message: 'Using device: %s for topic modeling (%d documents, %d requested topics)'
+Arguments: ('cuda', 2040)
+2026-05-19 12:03:51,392 INFO not_an_llm.analysis.topic_modeling.model: Using 16 threads for UMAP, 16 workers for HDBSCAN
+2026-05-19 12:03:51,537 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:51,545 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-05-19 12:03:51,658 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:51,665 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-05-19 12:03:51,665 INFO sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-05-19 12:03:51,779 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:51,788 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-05-19 12:03:51,903 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:51,911 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/README.md "HTTP/1.1 200 OK"
+2026-05-19 12:03:52,022 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:52,032 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-05-19 12:03:52,143 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:52,150 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-05-19 12:03:52,264 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-05-19 12:03:52,382 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:52,389 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 23481.54it/s]
+2026-05-19 12:03:52,640 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-05-19 12:03:52,755 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-05-19 12:03:52,872 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-05-19 12:03:52,988 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-05-19 12:03:53,102 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:53,110 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-05-19 12:03:53,230 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:53,237 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-05-19 12:03:53,356 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:53,363 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-05-19 12:03:53,481 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:53,490 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-05-19 12:03:53,607 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-05-19 12:03:53,725 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-05-19 12:03:53,871 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 12:03:53,878 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-05-19 12:03:54,004 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+2026-05-19 12:03:54,176 INFO not_an_llm.analysis.topic_modeling.model: Encoding document embeddings...
+Batches:   0%|          | 0/8 [00:00<?, ?it/s]Batches:  12%|█▎        | 1/8 [00:00<00:01,  3.59it/s]Batches:  25%|██▌       | 2/8 [00:00<00:01,  4.46it/s]Batches:  38%|███▊      | 3/8 [00:00<00:00,  5.08it/s]Batches:  50%|█████     | 4/8 [00:00<00:00,  5.44it/s]Batches:  62%|██████▎   | 5/8 [00:00<00:00,  5.69it/s]Batches:  75%|███████▌  | 6/8 [00:01<00:00,  5.87it/s]Batches:  88%|████████▊ | 7/8 [00:01<00:00,  6.26it/s]Batches: 100%|██████████| 8/8 [00:01<00:00,  6.35it/s]Batches: 100%|██████████| 8/8 [00:01<00:00,  5.69it/s]
+2026-05-19 12:04:11,089 INFO not_an_llm.analysis.topic_modeling.model: Topic modeling completed in 19.70 seconds
+2026-05-19 12:04:11,091 INFO not_an_llm.analysis.topic_modeling.model: Created 12 topics
+  0%|          | 0/10 [00:00<?, ?it/s]100%|██████████| 10/10 [00:00<00:00, 117.31it/s]
+Traceback (most recent call last):
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/main.py", line 13, in <module>
+    main()
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/cli.py", line 156, in main
+    artifacts = run_analysis(config)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/pipelines/analyze.py", line 264, in run_analysis
+    enriched, topic_labels, embeddings_2d, topic_modeling_paths = run_topic_modeling(
+                                                                  ^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/pipeline.py", line 39, in run_topic_modeling
+    selection = filter_topics(
+                ^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/selection.py", line 42, in filter_topics
+    final_topic_map, final_topic_labels, merge_plan = _build_merge_plan(
+                                                      ^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/selection.py", line 124, in _build_merge_plan
+    _merge_by_hierarchy(
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/selection.py", line 256, in _merge_by_hierarchy
+    if only_if_under_threshold and not any(
+                                       ^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/selection.py", line 257, in <genexpr>
+    _cluster_is_under_threshold(active[cluster_id], counts, total, min_share, min_count)
+                                                                   ^^^^^^^^^
+NameError: name 'min_share' is not defined
