@@ -54,6 +54,8 @@ The analysis step can be separated from plot generation for efficiency. This is 
    - Feature dataset: `data/analyzed/arxiv.jsonl` (features for each document)
    - Yearly trends: `data/analysis/arxiv_year.csv`
    - Monthly trends: `data/analysis/arxiv_month.csv`
+   - Monthly interrupted time-series statistics: `data/analysis/<stem>_its_stats.csv`
+   - Placebo interrupted time-series checks: `data/analysis/<stem>_its_placebo_stats.csv`
 
 2. **Generate plots separately:**
 	uv run python main.py --config config.toml visualize
@@ -113,9 +115,29 @@ Collection sources:
 - [src/not_an_llm/preprocessing/text.py](src/not_an_llm/preprocessing/text.py): text preprocessing class
 - [src/not_an_llm/analysis/feature_extractor.py](src/not_an_llm/analysis/feature_extractor.py): style feature extraction class
 - [src/not_an_llm/analysis/readability.py](src/not_an_llm/analysis/readability.py): readability metrics class
-- [src/not_an_llm/analysis/trends.py](src/not_an_llm/analysis/trends.py): yearly trend aggregation and plotting
+- [src/not_an_llm/analysis/trends.py](src/not_an_llm/analysis/trends.py): yearly/monthly trend aggregation and exploratory plotting
+- [src/not_an_llm/analysis/interrupted_time_series.py](src/not_an_llm/analysis/interrupted_time_series.py): monthly segmented regression, HAC standard errors, FDR correction, and placebo checks
 - [src/not_an_llm/analysis/topic_modeling/](src/not_an_llm/analysis/topic_modeling/): BERTopic/HDBSCAN topic assignment, topic summaries, hierarchical merge candidates for review, and topic-level reports
 - [src/not_an_llm/analysis/features.py](src/not_an_llm/analysis/features.py): analysis hypotheses scaffold
+
+### Statistical Design
+
+The paper-facing temporal test is monthly interrupted time series, not the older yearly pre/post mean comparison.
+
+For each feature, the model estimates:
+
+`feature_rate_t = beta0 + beta1 * time + beta2 * post_chatgpt + beta3 * time_after_chatgpt + error_t`
+
+Interpretation:
+
+1. `beta1` is the pre-ChatGPT slope.
+2. `beta2` is the immediate level shift after the intervention date.
+3. `beta3` is the slope change after the intervention date.
+4. `beta1 + beta3` is the post-ChatGPT slope.
+
+The main hypothesis tests use `slope_change_per_year`, its 95% confidence interval, `slope_change_p`, and family-level Benjamini-Hochberg `slope_change_q` from `data/analysis/<stem>_its_stats.csv`. Models are weighted by monthly paper count and use HAC/Newey-West style standard errors to reduce overconfidence from autocorrelated monthly residuals. Placebo intervention years are written to `data/analysis/<stem>_its_placebo_stats.csv`.
+
+The pre/post diff plots and `feature_stats.csv` are retained as exploratory summaries for visual scanning; they are not the primary inferential result.
 
 ### Topic Modeling Control
 

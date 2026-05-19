@@ -126,7 +126,7 @@ class TrendAnalyzer:
         yearly = df.groupby("year", as_index=False).agg(**agg)
         return yearly.sort_values("year").reset_index(drop=True)
     
-    def _compute_its(self, df: pd.DataFrame, value_col: str, intervention_year: int = 2022):
+    def _legacy_yearly_segmented_regression(self, df: pd.DataFrame, value_col: str, intervention_year: int = 2022):
         """Compute Interrupted Time Series regression.
         
         Fits: y = β₀ + β₁*time + β₂*intervention + β₃*time_since_intervention
@@ -287,22 +287,6 @@ class TrendAnalyzer:
         # ---------------------------
         diff = _symmetric_percent_change(pre.mean(), post.mean())
 
-        # ---------------------------
-        # 5. Interrupted Time Series (ITS) regression
-        # ---------------------------
-        its_stats = self._compute_its(df, col, intervention_year=2022)
-        if its_stats is None:
-            its_stats = {
-                "its_pre_slope": np.nan,
-                "its_pre_slope_p": np.nan,
-                "its_level_shift": np.nan,
-                "its_level_shift_p": np.nan,
-                "its_slope_change": np.nan,
-                "its_slope_change_p": np.nan,
-                "its_post_slope": np.nan,
-                "its_r_squared": np.nan,
-            }
-
         result = {
             "feature": feature,
             "diff": diff,
@@ -312,11 +296,7 @@ class TrendAnalyzer:
             "slope_p": slope_p,
             "change_point": cp_year,
         }
-        
-        # Add ITS results if available
-        if its_stats:
-            result.update(its_stats)
-        
+
         return result
 
     def compute_all_stats(self, yearly: pd.DataFrame) -> pd.DataFrame:
@@ -724,6 +704,7 @@ class TrendAnalyzer:
             "Percent change (%)",
             self.label_map,
             stats_df=stats_df,
+            significant_only=False,
         )
 
     # =========================================================
@@ -787,7 +768,7 @@ class TrendAnalyzer:
                 self.label_map,
                 stats_df=stats_df,
                 annotation_mode="p+d",
-                significant_only=True,
+                significant_only=False,
             )
 
             outputs[group_name] = out_path
