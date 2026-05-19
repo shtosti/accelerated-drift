@@ -111,8 +111,10 @@ def save_its_slope_change_plot(
     labels = label_map if label_map is not None else LABEL_MAP
     plot_df["label"] = plot_df["feature"].map(lambda feature: _pretty_label(str(feature), labels))
 
-    fig_height = max(4, len(plot_df) * 0.25 + 1.6)
-    fig, ax = plt.subplots(figsize=(8, fig_height))
+    plot_df["annotation"] = plot_df.apply(_format_its_annotation, axis=1)
+
+    fig_height = max(4, len(plot_df) * 0.3 + 1.6)
+    fig, ax = plt.subplots(figsize=(7, fig_height))
     colors = ["#943F8B" if value < 0 else "#54A066" for value in plot_df["slope_change_per_year"]]
     xerr = None
     if {"slope_change_per_year_ci_low", "slope_change_per_year_ci_high"}.issubset(plot_df.columns):
@@ -122,11 +124,24 @@ def save_its_slope_change_plot(
                 plot_df["slope_change_per_year_ci_high"] - plot_df["slope_change_per_year"],
             ]
         )
-    ax.barh(plot_df["label"], plot_df["slope_change_per_year"], color=colors, xerr=xerr, capsize=2)
+    bars = ax.barh(plot_df["label"], plot_df["slope_change_per_year"], color=colors, xerr=xerr, capsize=2)
     ax.axvline(0, color="#333333", linewidth=0.8)
-    ax.set_xlabel("Change in slope after intervention, feature units per year")
+    ax.set_xlabel("Delta slope after intervention, feature units per year")
     ax.set_title("Interrupted time-series slope changes")
-    fig.tight_layout()
+
+    for bar, annotation in zip(bars, plot_df["annotation"]):
+        ax.text(
+            1.01,
+            bar.get_y() + bar.get_height() / 2,
+            annotation,
+            transform=ax.get_yaxis_transform(),
+            va="center",
+            ha="left",
+            fontsize=8,
+            color="#333333",
+        )
+
+    fig.tight_layout(rect=(0, 0, 0.78, 1))
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_path, dpi=150, bbox_inches="tight")
@@ -323,6 +338,41 @@ def _feature_family(feature: str) -> str:
     if "readability" in feature or feature.startswith("flesch") or feature in {"dale_chall", "avg_words_per_sentence"}:
         return "readability"
     return "other"
+
+
+def _format_its_annotation(row: pd.Series) -> str:
+    delta = _format_number(row.get("slope_change_per_year"))
+    ci_low = _format_number(row.get("slope_change_per_year_ci_low"))
+    ci_high = _format_number(row.get("slope_change_per_year_ci_high"))
+    q_value = _format_p_value(row.get("slope_change_q"))
+    return f"Delta/year {delta} [{ci_low}, {ci_high}]; q={q_value}"
+
+
+def _format_number(value: object) -> str:
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return "NA"
+    if not np.isfinite(numeric):
+        return "NA"
+    abs_value = abs(numeric)
+    if abs_value >= 10:
+        return f"{numeric:.1f}"
+    if abs_value >= 1:
+        return f"{numeric:.2f}"
+    return f"{numeric:.3f}"
+
+
+def _format_p_value(value: object) -> str:
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return "NA"
+    if not np.isfinite(numeric):
+        return "NA"
+    if numeric < 0.001:
+        return "<0.001"
+    return f"{numeric:.3f}"
 
 
 def _adjust_p_values_by_family(frame: pd.DataFrame, p_column: str) -> pd.Series:
