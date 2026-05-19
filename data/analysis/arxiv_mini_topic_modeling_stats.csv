@@ -1,0 +1,13 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,2040.0
+dataset,all,,,topics,3.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_count,457.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_share,0.22401960784313726
+topic,model,0.0,"language, training, llms, language models, neural, text, deep",abstract_count,1072.0
+topic,model,0.0,"language, training, llms, language models, neural, text, deep",abstract_share,0.5254901960784314
+topic,model,1.0,"policy, reinforcement, reinforcement learning, causal, game, ai, language",abstract_count,459.0
+topic,model,1.0,"policy, reinforcement, reinforcement learning, causal, game, ai, language",abstract_share,0.225
+topic,model,-1.0,-1 (outliers),abstract_count,457.0
+topic,model,-1.0,-1 (outliers),abstract_share,0.22401960784313726
+topic,model,2.0,"tsp, mutation, indices, inconsistency indices, local search, stations, metaheuristic",abstract_count,52.0
+topic,model,2.0,"tsp, mutation, indices, inconsistency indices, local search, stations, metaheuristic",abstract_share,0.025490196078431372
