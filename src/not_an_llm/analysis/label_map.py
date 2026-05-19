@@ -84,3 +84,37 @@ LABEL_MAP = {
     "summary_marker_in_summary_per_1k_words": "`in summary`",
     "summary_marker_taken_together_per_1k_words": "`taken together`",
 }
+
+
+def pretty_feature_label(feature: str, label_map: dict[str, str] | None = None) -> str:
+    label_map = label_map or LABEL_MAP
+    mapped = label_map.get(feature, feature)
+    return mapped
+
+
+def _uses_angle_brackets(feature: str, mapped: str) -> bool:
+    lexical_prefixes = ("word_", "verb_", "adjective_", "phrase_")
+    marker_prefixes = (
+        "sequential_marker_",
+        "causal_marker_",
+        "contrast_marker_",
+        "emphasis_marker_",
+        "summary_marker_",
+    )
+    marker_totals = (
+        "marker_words_total_per_1k_words",
+        "marker_verbs_total_per_1k_words",
+        "marker_adjectives_total_per_1k_words",
+        "marker_phrases_total_per_1k_words",
+        "sequential_markers_total_per_1k_words",
+        "causal_markers_total_per_1k_words",
+        "contrast_markers_total_per_1k_words",
+        "emphasis_markers_total_per_1k_words",
+        "summary_markers_total_per_1k_words",
+    )
+    return (
+        "`" in mapped
+        or feature.startswith(lexical_prefixes)
+        or feature.startswith(marker_prefixes)
+        or feature in marker_totals
+    )

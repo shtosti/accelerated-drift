@@ -10,7 +10,7 @@ from scipy import stats
 from sklearn.linear_model import LinearRegression
 import ruptures as rpt
 
-from .label_map import LABEL_MAP
+from .label_map import LABEL_MAP, pretty_feature_label
 from .feature_groups import FEATURE_GROUPS
 
 
@@ -42,8 +42,7 @@ class TrendAnalyzer:
     # LABELS
     # =========================================================
     def _pretty_label(self, feature: str) -> str:
-        mapped = self.label_map.get(feature, feature)
-        return mapped.replace("`", "")
+        return pretty_feature_label(feature, self.label_map)
 
     # =========================================================
     # UTILS
