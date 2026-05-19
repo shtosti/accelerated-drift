@@ -114,18 +114,17 @@ Collection sources:
 - [src/not_an_llm/analysis/feature_extractor.py](src/not_an_llm/analysis/feature_extractor.py): style feature extraction class
 - [src/not_an_llm/analysis/readability.py](src/not_an_llm/analysis/readability.py): readability metrics class
 - [src/not_an_llm/analysis/trends.py](src/not_an_llm/analysis/trends.py): yearly trend aggregation and plotting
-- [src/not_an_llm/analysis/topic_modeling/](src/not_an_llm/analysis/topic_modeling/): BERTopic fitting, topic selection thresholds, hierarchical merge candidates, and topic-level reports
+- [src/not_an_llm/analysis/topic_modeling/](src/not_an_llm/analysis/topic_modeling/): BERTopic/HDBSCAN topic assignment, topic summaries, hierarchical merge candidates for review, and topic-level reports
 - [src/not_an_llm/analysis/features.py](src/not_an_llm/analysis/features.py): analysis hypotheses scaffold
 
 ### Topic Modeling Control
 
-Topic modeling intentionally starts granular and then collapses topics into statistically usable groups:
+Topic modeling is a single BERTopic/HDBSCAN assignment pass:
 
-1. BERTopic discovers the initial topics.
-2. The pipeline records initial topic sizes in `data/analysis/<stem>_initial_topic_selection.csv`.
-3. Topics below `topic_modeling_min_topic_count` or `topic_modeling_min_topic_share` are merged upward through BERTopic's hierarchy when `topic_modeling_merge_under_threshold = true`.
-4. If more than `topic_modeling_max_final_topics` groups remain, the closest hierarchical groups continue merging until the final count is at or below that maximum.
-5. Final topic labels are recomputed from all documents in each merged group, so labels stay concise instead of concatenating child-topic labels.
-6. The final topic groups are saved in `data/analysis/<stem>_topic_selection.csv`, with labels in `data/analysis/<stem>_final_topic_labels.csv`, the merge audit trail in `data/analysis/<stem>_topic_merge_plan.csv`, and dataset/topic counts in `data/analysis/<stem>_topic_modeling_stats.csv`.
-- [documents/ARCHITECTURE.md](documents/ARCHITECTURE.md): brief module map
-- [documents/RESEARCH_PLAN.md](documents/RESEARCH_PLAN.md): brief study logic
+1. SentenceTransformer embeddings are encoded for each document.
+2. UMAP projects embeddings for clustering and the cluster plot.
+3. HDBSCAN forms topic clusters using `topic_modeling_min_cluster_ratio` to derive `min_cluster_size`.
+4. BERTopic labels topics with `topic_modeling_top_n_terms` and reduces the final topic count with `topic_modeling_max_final_topics`.
+5. Topic labels are saved in `data/analysis/<stem>_topic_labels.csv`, topic counts in `data/analysis/<stem>_topic_summary.csv`, optional hierarchy review data in `data/analysis/<stem>_topic_merge_candidates.csv`, and dataset/topic counts in `data/analysis/<stem>_topic_modeling_stats.csv`.
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): brief module map
+- [docs/RESEARCH_PLAN.md](docs/RESEARCH_PLAN.md): brief study logic

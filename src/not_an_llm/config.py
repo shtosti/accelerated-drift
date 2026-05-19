@@ -237,6 +237,7 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             topic_modeling_use_bertopic=bool(analysis.get("topic_modeling_use_bertopic", False)),
             topic_modeling_num_workers=int(analysis.get("topic_modeling_num_workers", 0)),
             topic_modeling_embedding_batch_size=int(analysis.get("topic_modeling_embedding_batch_size", 64)),
+            topic_modeling_max_final_topics=int(analysis.get("topic_modeling_max_final_topics", 12)),
         ),
 
         external=None,

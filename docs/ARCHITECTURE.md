@@ -26,7 +26,7 @@
 - src/not_an_llm/analysis/trends.py
   - Aggregates yearly feature trends and saves visualizations.
 - src/not_an_llm/analysis/topic_modeling/
-  - Runs BERTopic topic assignment, records hierarchical merge candidates, merges small or excess topics into larger final topic groups, and saves topic-level reports.
+  - Runs BERTopic/HDBSCAN topic assignment, records topic summaries and optional hierarchy review candidates, and saves topic-level reports.
 - src/not_an_llm/pipelines/analyze.py
   - Orchestrates analysis modules and writes trend artifacts.
 - src/not_an_llm/analysis/features.py

@@ -71,6 +71,7 @@ def _assign_bertopic_topics(
         "Using device: %s for topic modeling (%d documents, %d requested topics)",
         device,
         len(texts),
+        config.analysis.topic_modeling_max_final_topics,
     )
     logger.info("Using %d threads for UMAP, %d workers for HDBSCAN", umap_n_jobs, num_workers)
 
