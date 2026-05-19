@@ -169,7 +169,7 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
                 out_path,
                 "feature",
                 "diff",
-                "Percent change from pre-period baseline (%)",
+                "change (%)",
                 LABEL_MAP,
             )
             grouped_diff_plots[group_name] = out_path
