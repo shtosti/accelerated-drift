@@ -106,17 +106,18 @@ monthly_trends_csv = ""
 trends_plot_dir = ""
 # Feature columns included in trend plots, interrupted time-series stats, and diff plots.
 # Comment out individual lines here to remove a feature from the core analysis.
+
 features = [
   # marker group totals
-  "marker_words_total_per_1k_words",
-  "marker_verbs_total_per_1k_words",
-  "marker_adjectives_total_per_1k_words",
-  "marker_phrases_total_per_1k_words",
-  "sequential_markers_total_per_1k_words",
-  "causal_markers_total_per_1k_words",
-  "contrast_markers_total_per_1k_words",
-  "emphasis_markers_total_per_1k_words",
-  "summary_markers_total_per_1k_words",
+  # "marker_words_total_per_1k_words",
+  # "marker_verbs_total_per_1k_words",
+  # "marker_adjectives_total_per_1k_words",
+  # "marker_phrases_total_per_1k_words",
+  # "sequential_markers_total_per_1k_words",
+  # "causal_markers_total_per_1k_words",
+  # "contrast_markers_total_per_1k_words",
+  # "emphasis_markers_total_per_1k_words",
+  # "summary_markers_total_per_1k_words",
 
   # individual marker words
   "word_finding_per_1k_words",
@@ -131,7 +132,7 @@ features = [
   "word_across_per_1k_words",
   "word_additionally_per_1k_words",
 
-  # individual marker verbs/adjectives/phrases
+  # individual marker verbs
   "verb_delve_per_1k_words",
   "verb_underscore_per_1k_words",
   "verb_showcase_per_1k_words",
@@ -140,11 +141,15 @@ features = [
   "verb_garner_per_1k_words",
   "verb_align_per_1k_words",
   "verb_foster_per_1k_words",
+
+  # adjectives
   "adjective_crucial_per_1k_words",
   "adjective_pivotal_per_1k_words",
   "adjective_comprehensive_per_1k_words",
   "adjective_intricate_per_1k_words",
   "adjective_potential_per_1k_words",
+
+  # phrases
   "phrase_meticulously_delve_per_1k_words",
   "phrase_intricate_web_per_1k_words",
   "phrase_comprehensive_chapter_per_1k_words",
@@ -179,10 +184,12 @@ features = [
   "summary_marker_in_summary_per_1k_words",
   "summary_marker_taken_together_per_1k_words",
 
-  # syntax, punctuation, readability, and style ratios
+  # punctuatio
   "em_dash_per_1k_words",
   "semicolon_per_1k_words",
   "colon_per_1k_words",
+
+  # syntax
   "clause_depth",
   "clause_depth_std",
   "dependency_entropy",
@@ -191,8 +198,9 @@ features = [
   "coordination_count",
   "coordination_per_sentence_std",
   "sentence_depth_std",
-  "list_of_three",
   "list_of_three_per_1k_words",
+
+  # readability
   "avg_words_per_sentence",
   "avg_syllables_per_word",
   "flesch_reading_ease",
@@ -201,6 +209,8 @@ features = [
   "smog_index",
   "automated_readability_index",
   "gunning_fog",
+
+  # certainty and hedging
   "hedge_ratio",
   "certainty_ratio",
 ]
