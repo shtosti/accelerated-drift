@@ -1,0 +1,33 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,82011.0
+dataset,all,,,topics,15.0
+topic,model,14.0,"covid, covid 19, 19, patients, data, risk, health",abstract_count,28578.0
+topic,model,14.0,"covid, covid 19, 19, patients, data, risk, health",abstract_share,0.34846544975673993
+topic,model,0.0,"covid, covid 19, 19, sars, sars cov, cov, vaccine",abstract_count,20716.0
+topic,model,0.0,"covid, covid 19, 19, sars, sars cov, cov, vaccine",abstract_share,0.2526002609406055
+topic,model,1.0,"health, care, data, 19, covid, 95, mental",abstract_count,8239.0
+topic,model,1.0,"health, care, data, 19, covid, 95, mental",abstract_share,0.10046213312848276
+topic,model,2.0,"patients, cancer, variants, risk, genetic, disease, associated",abstract_count,7377.0
+topic,model,2.0,"patients, cancer, variants, risk, genetic, disease, associated",abstract_share,0.0899513479899038
+topic,model,3.0,"sleep, brain, cognitive, ad, disease, associated, patients",abstract_count,6576.0
+topic,model,3.0,"sleep, brain, cognitive, ad, disease, associated, patients",abstract_share,0.08018436551194352
+topic,model,4.0,"patients, clinical, data, model, models, learning, ai",abstract_count,6324.0
+topic,model,4.0,"patients, clinical, data, model, models, learning, ai",abstract_share,0.07711160697955152
+topic,model,5.0,"pain, activity, physical, patients, knee, physical activity, motor",abstract_count,1923.0
+topic,model,5.0,"pain, activity, physical, patients, knee, physical activity, motor",abstract_share,0.023448074038848448
+topic,model,6.0,"retinal, glaucoma, eye, visual, dental, patients, macular",abstract_count,1229.0
+topic,model,6.0,"retinal, glaucoma, eye, visual, dental, patients, macular",abstract_share,0.014985794588530808
+topic,model,7.0,"mri, imaging, radiation, dose, brain, patients, ct",abstract_count,316.0
+topic,model,7.0,"mri, imaging, radiation, dose, brain, patients, ct",abstract_share,0.003853141651729646
+topic,model,8.0,"pm2, exposure, health, pollution, mortality, air, firearm",abstract_count,291.0
+topic,model,8.0,"pm2, exposure, health, pollution, mortality, air, firearm",abstract_share,0.0035483044957383765
+topic,model,9.0,"gastric, patients, bsgm, pylori, alimetry, gastroduodenal, gastric alimetry",abstract_count,220.0
+topic,model,9.0,"gastric, patients, bsgm, pylori, alimetry, gastroduodenal, gastric alimetry",abstract_share,0.0026825669727231715
+topic,model,10.0,"hearing, tinnitus, cochlear, hearing loss, speech, auditory, loss",abstract_count,190.0
+topic,model,10.0,"hearing, tinnitus, cochlear, hearing loss, speech, auditory, loss",abstract_share,0.002316762385533648
+topic,model,11.0,"parents, tools, usability, knowledge translation, video, arts based, usability testing",abstract_count,12.0
+topic,model,11.0,"parents, tools, usability, knowledge translation, video, arts based, usability testing",abstract_share,0.00014632183487580934
+topic,model,12.0,"3d, muscle, durotomy, printing, printed, durotomy repair, muscle impairments",abstract_count,10.0
+topic,model,12.0,"3d, muscle, durotomy, printing, printed, durotomy repair, muscle impairments",abstract_share,0.00012193486239650779
+topic,model,13.0,"tattoo, tattooing, tattooed, tattoo ink, ink, tattoos, cancer",abstract_count,10.0
+topic,model,13.0,"tattoo, tattooing, tattooed, tattoo ink, ink, tattoos, cancer",abstract_share,0.00012193486239650779
