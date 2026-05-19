@@ -1,0 +1,103 @@
+Checked 1 package in 4ms
+2026-05-19 11:53:03,321 INFO not_an_llm.pipelines.analyze: Using 16 workers
+--- Logging error ---
+Traceback (most recent call last):
+  File "/software.9/software/Anaconda3/2024.02-1/lib/python3.11/logging/__init__.py", line 1110, in emit
+    msg = self.format(record)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/software.9/software/Anaconda3/2024.02-1/lib/python3.11/logging/__init__.py", line 953, in format
+    return fmt.format(record)
+           ^^^^^^^^^^^^^^^^^^
+  File "/software.9/software/Anaconda3/2024.02-1/lib/python3.11/logging/__init__.py", line 687, in format
+    record.message = record.getMessage()
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/software.9/software/Anaconda3/2024.02-1/lib/python3.11/logging/__init__.py", line 377, in getMessage
+    msg = msg % self.args
+          ~~~~^~~~~~~~~~~
+TypeError: not enough arguments for format string
+Call stack:
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/main.py", line 13, in <module>
+    main()
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/cli.py", line 156, in main
+    artifacts = run_analysis(config)
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/pipelines/analyze.py", line 264, in run_analysis
+    enriched, topic_labels, embeddings_2d, topic_modeling_paths = run_topic_modeling(
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/pipeline.py", line 34, in run_topic_modeling
+    result = assign_topics(enriched, config)
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/model.py", line 42, in assign_topics
+    return _assign_bertopic_topics(enriched, config, texts, top_terms)
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/model.py", line 70, in _assign_bertopic_topics
+    logger.info(
+Message: 'Using device: %s for topic modeling (%d documents, %d requested topics)'
+Arguments: ('cuda', 2040)
+2026-05-19 11:53:56,907 INFO not_an_llm.analysis.topic_modeling.model: Using 16 threads for UMAP, 16 workers for HDBSCAN
+2026-05-19 11:53:57,053 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:57,060 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-05-19 11:53:57,170 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:57,177 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-05-19 11:53:57,178 INFO sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-05-19 11:53:57,295 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:57,303 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-05-19 11:53:57,419 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:57,427 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/README.md "HTTP/1.1 200 OK"
+2026-05-19 11:53:57,537 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:57,547 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-05-19 11:53:57,665 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:57,672 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-05-19 11:53:57,810 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-05-19 11:53:57,923 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:57,930 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 9366.14it/s]
+2026-05-19 11:53:58,117 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-05-19 11:53:58,238 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-05-19 11:53:58,353 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-05-19 11:53:58,470 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-05-19 11:53:58,582 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:58,590 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-05-19 11:53:58,705 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:58,713 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-05-19 11:53:58,824 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:58,832 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-05-19 11:53:58,954 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:58,962 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-05-19 11:53:59,080 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-05-19 11:53:59,203 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-05-19 11:53:59,365 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-19 11:53:59,373 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-05-19 11:53:59,500 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+2026-05-19 11:53:59,667 INFO not_an_llm.analysis.topic_modeling.model: Encoding document embeddings...
+Batches:   0%|          | 0/8 [00:00<?, ?it/s]Batches:  12%|█▎        | 1/8 [00:00<00:01,  3.61it/s]Batches:  25%|██▌       | 2/8 [00:00<00:01,  4.48it/s]Batches:  38%|███▊      | 3/8 [00:00<00:00,  5.09it/s]Batches:  50%|█████     | 4/8 [00:00<00:00,  5.46it/s]Batches:  62%|██████▎   | 5/8 [00:00<00:00,  5.69it/s]Batches:  75%|███████▌  | 6/8 [00:01<00:00,  5.84it/s]Batches:  88%|████████▊ | 7/8 [00:01<00:00,  6.24it/s]Batches: 100%|██████████| 8/8 [00:01<00:00,  6.35it/s]Batches: 100%|██████████| 8/8 [00:01<00:00,  5.69it/s]
+2026-05-19 11:54:01,082 ERROR not_an_llm.analysis.topic_modeling.model: Topic modeling failed: 'AnalysisConfig' object has no attribute 'topic_modeling_max_final_topics'
+2026-05-19 11:54:01,083 ERROR not_an_llm.analysis.topic_modeling.model: Full traceback:
+Traceback (most recent call last):
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/model.py", line 42, in assign_topics
+    return _assign_bertopic_topics(enriched, config, texts, top_terms)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/model.py", line 115, in _assign_bertopic_topics
+    nr_topics=config.analysis.topic_modeling_max_final_topics or "auto",
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnalysisConfig' object has no attribute 'topic_modeling_max_final_topics'
+
+2026-05-19 11:54:01,083 WARNING not_an_llm.analysis.topic_modeling.model: Using fallback topic assignment
+2026-05-19 11:54:01,372 INFO not_an_llm.analysis.topic_modeling.selection: Topic selection finished with 1 final topics from 1 initial topics
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  yearly = df.groupby("year", as_index=False).agg(**agg)
+2026-05-19 11:54:01,614 INFO not_an_llm.pipelines.analyze: Computing statistical summaries...
+2026-05-19 11:54:01,932 INFO not_an_llm.pipelines.analyze: Saved statistical summary to data/visuals/arxiv_mini/feature_stats.csv
+2026-05-19 11:54:01,932 INFO not_an_llm.pipelines.analyze: Generating grouped pre/post diff plot...
+2026-05-19 11:54:02,464 INFO not_an_llm.pipelines.analyze: Saved grouped pre/post diff plot to data/visuals/arxiv_mini/pre_post_diff.png
+2026-05-19 11:54:02,464 INFO not_an_llm.pipelines.analyze: Generating per-group pre/post diff plots...
+Traceback (most recent call last):
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/main.py", line 13, in <module>
+    main()
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/cli.py", line 156, in main
+    artifacts = run_analysis(config)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/pipelines/analyze.py", line 309, in run_analysis
+    grouped_diff_plots = trend_analyzer.save_grouped_feature_diffs(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py", line 781, in save_grouped_feature_diffs
+    save_grouped_difference_plot(
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py", line 1132, in save_grouped_difference_plot
+    raise ValueError(
+ValueError: No rows available for data/visuals/arxiv_mini/marker_words_diff.png
