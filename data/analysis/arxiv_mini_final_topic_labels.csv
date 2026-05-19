@@ -1,0 +1,13 @@
+topic_id,topic_label
+0,"llm, dataset, language model, training, reinforcement, train, reasoning"
+1,"llm, language model, dataset, training, text, semantic, generate"
+2,"causal, logic, ai, robot, planning, belief, program, programming"
+3,"graph, entity, ontology, kg, embed, embedding, relation"
+4,"attack, privacy, adversarial, anomaly, defense, llm, detection, dp"
+5,"image, gan, training, segmentation, dataset, generative, deep learning, quantization"
+6,"speech, emotion, music, recognition, audio, speaker, training, tts"
+7,"user, explanation, recommendation, cluster, fairness, item, text, interpretable"
+8,"optimization, fuzzy, mutation, metaheuristic, price, station, bandit, tsp"
+9,"game, player, vote, election, voting, chess, ai, district"
+10,"llm, language model, reward, preference, text, chatgpt, continual"
+11,"quantum, cognition, variational, conceptual space"

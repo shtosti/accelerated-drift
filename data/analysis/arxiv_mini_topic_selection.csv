@@ -1,0 +1,13 @@
+topic_id,abstract_count,abstract_share,topic_label,passes_min_share,passes_min_count,selected
+0,776,0.3803921568627451,"llm, dataset, language model, training, reinforcement, train, reasoning",True,True,True
+1,454,0.22254901960784312,"llm, language model, dataset, training, text, semantic, generate",True,True,True
+2,195,0.09558823529411764,"causal, logic, ai, robot, planning, belief, program, programming",True,True,True
+3,101,0.049509803921568625,"graph, entity, ontology, kg, embed, embedding, relation",True,True,True
+4,93,0.045588235294117645,"attack, privacy, adversarial, anomaly, defense, llm, detection, dp",True,True,True
+5,81,0.039705882352941174,"image, gan, training, segmentation, dataset, generative, deep learning, quantization",True,True,True
+6,73,0.035784313725490194,"speech, emotion, music, recognition, audio, speaker, training, tts",True,True,True
+7,66,0.03235294117647059,"user, explanation, recommendation, cluster, fairness, item, text, interpretable",True,True,True
+8,65,0.031862745098039214,"optimization, fuzzy, mutation, metaheuristic, price, station, bandit, tsp",True,True,True
+9,61,0.029901960784313727,"game, player, vote, election, voting, chess, ai, district",True,True,True
+10,61,0.029901960784313727,"llm, language model, reward, preference, text, chatgpt, continual",True,True,True
+11,14,0.006862745098039216,"quantum, cognition, variational, conceptual space",True,True,True
