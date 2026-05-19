@@ -8,6 +8,11 @@ from concurrent.futures import ProcessPoolExecutor
 
 from not_an_llm.analysis.topic_modeling import run_topic_analysis, run_topic_modeling
 from not_an_llm.analysis.trends import TrendAnalyzer
+from not_an_llm.analysis.interrupted_time_series import (
+    compute_interrupted_time_series,
+    compute_placebo_interrupted_time_series,
+    save_its_slope_change_plot,
+)
 from not_an_llm.config import AppConfig
 
 from .feature_groups import FEATURE_GROUPS
@@ -280,18 +285,31 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     marker_group_specs, summary_features = _build_marker_group_specs(config)
 
     yearly = trend_analyzer.aggregate_yearly(enriched)
+    monthly = trend_analyzer.aggregate_monthly(enriched)
 
     # =========================
     # STATISTICAL ANALYSIS
     # =========================
-    logger.info("Computing statistical summaries...")
+    logger.info("Computing exploratory yearly pre/post summaries...")
 
     stats_df = trend_analyzer.compute_all_stats(yearly)
 
     stats_path = plot_dir / "feature_stats.csv"
     stats_df.to_csv(stats_path, index=False)
 
-    logger.info("Saved statistical summary to %s", stats_path)
+    logger.info("Saved exploratory yearly summary to %s", stats_path)
+
+    logger.info("Computing monthly interrupted time-series statistics...")
+    input_stem = config.analysis.preprocessed_jsonl.stem
+    its_stats = compute_interrupted_time_series(monthly, feature_columns)
+    its_stats_path = analysis_dir / f"{input_stem}_its_stats.csv"
+    its_stats.to_csv(its_stats_path, index=False)
+    logger.info("Saved monthly interrupted time-series statistics to %s", its_stats_path)
+
+    placebo_stats = compute_placebo_interrupted_time_series(monthly, feature_columns)
+    placebo_stats_path = analysis_dir / f"{input_stem}_its_placebo_stats.csv"
+    placebo_stats.to_csv(placebo_stats_path, index=False)
+    logger.info("Saved placebo interrupted time-series statistics to %s", placebo_stats_path)
 
     # =========================
     # PRE/POST DIFF PLOTS
@@ -356,8 +374,6 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
                 grouped_diff_plots[group_name] = out_path
             logger.info("Saved %d per-group diff plots (fallback)", len(grouped_diff_plots))
 
-    monthly = trend_analyzer.aggregate_monthly(enriched)
-
     # =========================
     # SAVE TABLES
     # =========================
@@ -376,13 +392,23 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
 
     trend_plots = list(topic_modeling_paths)
     if config.analysis.generate_plots:
-        trend_plots = trend_analyzer.save_plots(
-            yearly,
-            monthly,
-            plot_dir,
-            llm_events,
-            exclude_features=summary_features,
+        its_plot_path = save_its_slope_change_plot(
+            its_stats,
+            plot_dir / "its_slope_changes.png",
+            label_map=LABEL_MAP,
         )
+
+        trend_plots.extend(
+            trend_analyzer.save_plots(
+                yearly,
+                monthly,
+                plot_dir,
+                llm_events,
+                exclude_features=summary_features,
+            )
+        )
+        if its_plot_path is not None:
+            trend_plots.append(its_plot_path)
 
         trend_plots.extend(
             trend_analyzer.save_grouped_word_plots(

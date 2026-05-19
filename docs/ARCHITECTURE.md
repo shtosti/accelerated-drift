@@ -24,7 +24,9 @@
 - src/not_an_llm/analysis/readability.py
   - Computes readability metrics (Flesch, FK grade, Fog, SMOG).
 - src/not_an_llm/analysis/trends.py
-  - Aggregates yearly feature trends and saves visualizations.
+  - Aggregates yearly/monthly feature trends and saves exploratory visualizations.
+- src/not_an_llm/analysis/interrupted_time_series.py
+  - Fits monthly segmented regressions with HAC standard errors, FDR correction, and placebo checks.
 - src/not_an_llm/analysis/topic_modeling/
   - Runs BERTopic/HDBSCAN topic assignment, records topic summaries and optional hierarchy review candidates, and saves topic-level reports.
 - src/not_an_llm/pipelines/analyze.py
@@ -38,4 +40,6 @@
 
 1. Raw JSONL from source collection.
 2. Preprocessed JSONL with normalized text fields.
-3. Feature-enriched JSONL plus per-year trend CSV and trend plots.
+3. Feature-enriched JSONL plus yearly/monthly trend CSVs.
+4. Monthly interrupted time-series statistics and placebo checks.
+5. Exploratory trend plots.

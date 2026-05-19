@@ -7,11 +7,14 @@ Does the LLM era produce a measurable writing-feature shift, followed by a backl
 ## Design
 
 1. Collect papers over a broad year range via Semantic Scholar.
-2. Split timeline around experiment.llm_introduction_year from config.toml.
-3. Compare feature distributions in pre vs post windows.
-4. Test for an initial rise and later decline in LLM-like markers.
+2. Aggregate writing features by month.
+3. Fit interrupted time-series models around the ChatGPT release date.
+4. Test whether post-release slopes differ from pre-release slopes for confirmatory marker, syntax, and readability families.
+5. Use placebo intervention years as robustness checks.
+6. Use pre/post differences and topic-level plots as exploratory context, not as the main hypothesis test.
 
 ## Notes
 
-- This repository currently implements data ingestion and analysis scaffolding.
-- Feature extraction and statistical tests are the next implementation stage.
+- The primary inferential output is `data/analysis/<stem>_its_stats.csv`.
+- The primary estimand is `slope_change_per_year`, with family-level FDR correction in `slope_change_q`.
+- Yearly pre/post tests are retained only as exploratory summaries.

@@ -36,9 +36,19 @@ The `analyze` step can produce both analysis artifacts and plots, while the `vis
 - `data/analysis/<dataset>_trends_by_month.csv`
   - Monthly aggregated feature means for the same features.
 
+- `data/analysis/<dataset>_its_stats.csv`
+  - Primary hypothesis-test table.
+  - Fits monthly segmented regressions around the ChatGPT intervention date.
+  - Reports pre-intervention slope, level shift, slope change, 95% confidence intervals, post-intervention slope, HAC p-values, and family-level FDR q-values.
+
+- `data/analysis/<dataset>_its_placebo_stats.csv`
+  - Robustness table using placebo intervention years.
+  - Helps check whether the estimated ChatGPT-era slope change stands out from earlier arbitrary breaks.
+
 - `data/analysis/feature_stats.csv`
-  - Statistical summary computed from the yearly trends.
+  - Exploratory summary computed from yearly trends.
   - Includes pre/post comparisons, t-tests, Cohen's d, regression slopes, and change point estimates.
+  - Useful for plot annotation and triage, not the main paper-facing hypothesis test.
 
 ### External comparison outputs
 
@@ -117,40 +127,45 @@ All plots are saved to `data/visuals/<dataset_stem>/` or the configured `trends_
 3. `*_diff.png` / grouped feature diff plots
    - Per-feature-group diff plots for feature sets defined in `FEATURE_GROUPS`.
    - Examples: `marker_words_diff.png`, `verbs_diff.png`, `adjectives_diff.png`, `phrases_diff.png`, `syntax_diff.png`, `readability_diff.png`.
+   - These are exploratory effect-size plots. Empty or non-informative groups are skipped instead of treated as failed hypothesis tests.
 
-4. `*_trend.png` group plots
+4. `its_slope_changes.png`
+   - Ranks features by absolute post-intervention slope change from the monthly interrupted time-series model.
+   - This plot points to the most temporally relevant changes; the CSV is the authoritative statistical output.
+
+5. `*_trend.png` group plots
    - Trend plots for marker groups such as marker words, sequential markers, causal markers, contrast markers, emphasis markers, and summary markers.
    - Each group shows mean counts per 1,000 words over time.
 
-5. `stacked_trends.png`
+6. `stacked_trends.png`
    - Stacked layout of yearly feature trends for multiple features in one figure.
    - Useful for multi-feature visual comparison across years.
 
-6. `word_prefix_stack.png`
+7. `word_prefix_stack.png`
    - Vertical stack of all `word_` prefix feature trends.
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
-7. `verb_prefix_stack.png`
+8. `verb_prefix_stack.png`
    - Vertical stack of all `verb_` prefix feature trends.
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
-8. `adjective_prefix_stack.png`
+9. `adjective_prefix_stack.png`
    - Vertical stack of all `adjective_` prefix feature trends.
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
-9. `readability_stack.png`
+10. `readability_stack.png`
    - Vertical stack of all readability features (avg_words_per_sentence, avg_syllables_per_word, flesch_reading_ease, flesch_kincaid_grade, dale_chall).
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
-10. `punctuation_stack.png`
+11. `punctuation_stack.png`
    - TODO add
 
-11. `dependency_distribution_diff.png`
+12. `dependency_distribution_diff.png`
     - Change plot showing the top dependency roles by proportional change before vs after 2023.
     - Sorted by absolute percentage-point change and rendered in descending order.
 
 
-12. `dependency_distribution_trends.png`
+13. `dependency_distribution_trends.png`
     - Line chart showing yearly changes for the top dependency roles selected by their pre/post change.
     - Useful for spotting fluctuations over time.
 
@@ -160,7 +175,31 @@ When `generate_plots = true`, the `analyze` pipeline can also generate the same 
 
 ## Statistical analysis performed
 
-The trend analysis pipeline computes the following statistical summaries from yearly trend data:
+### Primary temporal model
+
+The primary paper-facing analysis is monthly interrupted time series. For each feature, the model is:
+
+`feature_rate_t = beta0 + beta1 * time + beta2 * post_chatgpt + beta3 * time_after_chatgpt + error_t`
+
+Interpretation:
+
+- `pre_slope_per_year`: pre-intervention annualized trend.
+- `level_shift`: immediate level change after the intervention.
+- `slope_change_per_year`: change in annualized trend after the intervention.
+- `post_slope_per_year`: post-intervention annualized trend.
+- `slope_change_per_year_ci_low` / `slope_change_per_year_ci_high`: 95% confidence interval for the annualized slope change.
+- `slope_change_p`: HAC/Newey-West style p-value for the slope change.
+- `slope_change_q`: Benjamini-Hochberg FDR-adjusted p-value within feature families.
+
+The model is weighted by monthly paper count because monthly means estimated from more papers are more stable. HAC standard errors are used because adjacent months are likely autocorrelated. The main hypothesis should be evaluated primarily through `slope_change_per_year`, its confidence implied by the HAC p-value, and the family-level `slope_change_q`.
+
+### Robustness checks
+
+The pipeline also computes placebo interrupted time-series models for earlier intervention years. These are written to `<dataset>_its_placebo_stats.csv` and should be used to check whether the ChatGPT-era change is unusually strong relative to arbitrary earlier breaks.
+
+### Exploratory yearly summaries
+
+The trend analysis pipeline also computes the following exploratory summaries from yearly trend data:
 
 - Mean difference between pre-LLM and post-LLM periods
 - T-tests for pre/post year groups
@@ -168,7 +207,9 @@ The trend analysis pipeline computes the following statistical summaries from ye
 - Linear regression slope across years
 - Slope p-value from Pearson correlation
 - Estimated change point using the `ruptures` library
-- Multiple testing corrected p-values (Benjamini/Hochberg-style adjustment)
+- Multiple testing corrected p-values
+
+These yearly summaries are retained for triage and visual annotation. They should not be presented as the core causal or temporal test.
 
 ## External human-vs-AI comparison analysis
 
@@ -205,6 +246,7 @@ Key settings include:
 - `src/not_an_llm/pipelines/visualize.py`
 - `src/not_an_llm/pipelines/external_analyze.py`
 - `src/not_an_llm/analysis/trends.py`
+- `src/not_an_llm/analysis/interrupted_time_series.py`
 - `src/not_an_llm/analysis/feature_extractor.py`
 - `src/not_an_llm/analysis/readability.py`
-- `docs` file: `documents/VISUALS_AND_ANALYSIS.md`
+- `docs` file: `docs/VISUALS_AND_ANALYSIS.md`
