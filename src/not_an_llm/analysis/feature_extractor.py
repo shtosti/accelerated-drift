@@ -221,7 +221,7 @@ class FeatureExtractor:
                     if h.i in seen:
                         continue
                     conj = [h] + list(h.conjuncts)
-                    if len(conj) >= 3:
+                    if len(conj) == 3:
                         lot_count += 1
                         seen.add(h.i)
 
@@ -384,7 +384,7 @@ class FeatureExtractor:
                 if token.dep_ == "cc" and token.text.lower() in {"and", "or"}:
                     head = token.head
                     conj = [head] + list(head.conjuncts)
-                    if len(conj) >= 3:
+                    if len(conj) == 3:
                         out.append({
                             "sentence": sent.text,
                             "conjuncts": [t.text for t in conj]
@@ -483,7 +483,7 @@ class FeatureExtractor:
                 if h.i in seen:
                     continue
                 conj = [h] + list(h.conjuncts)
-                if len(conj) >= 3:
+                if len(conj) == 3:
                     c += 1
                     seen.add(h.i)
         return c
