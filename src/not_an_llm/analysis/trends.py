@@ -14,20 +14,11 @@ from .label_map import LABEL_MAP
 from .feature_groups import FEATURE_GROUPS
 
 
-def _symmetric_percent_change(pre_value: float, post_value: float) -> float:
-    """Return a stable percentage change between two means.
-
-    Uses the symmetric percentage change formula so rare or near-zero
-    baselines do not explode to infinity:
-    100 * (post - pre) / (|post| + |pre|)
-    """
+def _simple_percent_change(pre_value: float, post_value: float) -> float:
 
     pre_value = float(pre_value)
     post_value = float(post_value)
-    scale = abs(pre_value) + abs(post_value)
-    if scale == 0.0:
-        return 0.0
-    return 100.0 * (post_value - pre_value) / scale
+    return 100.0 * (post_value - pre_value) / abs(pre_value) if pre_value != 0 else np.nan
 
 
 class TrendAnalyzer:
