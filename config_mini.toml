@@ -81,7 +81,6 @@ topic_modeling_max_final_topics = 12
 topic_modeling_use_bertopic = true
 topic_modeling_num_workers = 16
 topic_modeling_embedding_batch_size = 256
-topic_modeling_merge_under_threshold = false
 # Select which readability metrics to compute/write.
 readability_metrics = [
   "avg_words_per_sentence",

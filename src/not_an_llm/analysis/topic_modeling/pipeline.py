@@ -12,7 +12,6 @@ from not_an_llm.analysis.topic_modeling.plots import (
     save_topic_prevalence,
     save_topic_trend_plots,
 )
-from not_an_llm.analysis.topic_modeling.selection import filter_topics
 from not_an_llm.analysis.topic_modeling.stats import save_topic_modeling_stats
 from not_an_llm.analysis.trends import TrendAnalyzer
 from not_an_llm.config import AppConfig
@@ -36,43 +35,20 @@ def run_topic_modeling(
     labels_path = save_topic_labels(result.topic_labels, analysis_dir / f"{input_stem}_topic_labels.csv")
     paths.append(labels_path)
 
-    selection = filter_topics(
-        result.enriched,
-        result.topic_labels,
-        result.embeddings_2d,
-        merge_candidates=result.merge_candidates,
-        final_label_top_terms=config.analysis.topic_modeling_top_n_terms,
-    )
-    initial_selection_path = analysis_dir / f"{input_stem}_initial_topic_selection.csv"
-    selection.initial_summary.to_csv(initial_selection_path, index=False)
-    paths.append(initial_selection_path)
-
-    merge_plan_path = analysis_dir / f"{input_stem}_topic_merge_plan.csv"
-    selection.merge_plan.to_csv(merge_plan_path, index=False)
-    paths.append(merge_plan_path)
-
-    final_labels_path = save_topic_labels(
-        selection.topic_labels,
-        analysis_dir / f"{input_stem}_final_topic_labels.csv",
-    )
-    paths.append(final_labels_path)
-
-    selection_path = analysis_dir / f"{input_stem}_topic_selection.csv"
-    selection.summary.to_csv(selection_path, index=False)
-    paths.append(selection_path)
+    summary = _topic_summary(result.enriched, result.topic_labels)
+    summary_path = analysis_dir / f"{input_stem}_topic_summary.csv"
+    summary.to_csv(summary_path, index=False)
+    paths.append(summary_path)
 
     stats_path = analysis_dir / f"{input_stem}_topic_modeling_stats.csv"
     save_topic_modeling_stats(
         stats_path,
-        initial_enriched=result.enriched,
-        final_enriched=selection.enriched,
-        initial_summary=selection.initial_summary,
-        final_summary=selection.summary,
-        merge_plan=selection.merge_plan,
+        enriched=result.enriched,
+        summary=summary,
     )
     paths.append(stats_path)
 
-    merge_candidates = _annotate_merge_candidates(result.merge_candidates, selection.summary)
+    merge_candidates = _annotate_merge_candidates(result.merge_candidates, summary)
     merge_path = save_merge_candidates(
         merge_candidates,
         analysis_dir / f"{input_stem}_topic_merge_candidates.csv",
@@ -81,10 +57,10 @@ def run_topic_modeling(
         paths.append(merge_path)
 
     topic_labels = {
-        int(topic): selection.enriched.loc[selection.enriched["topic_id"] == int(topic), "topic_label"].iloc[0]
-        for topic in selection.enriched["topic_id"].unique()
+        int(topic): result.enriched.loc[result.enriched["topic_id"] == int(topic), "topic_label"].iloc[0]
+        for topic in result.enriched["topic_id"].unique()
     }
-    return selection.enriched, topic_labels, selection.embeddings_2d, paths
+    return result.enriched, topic_labels, result.embeddings_2d, paths
 
 
 def run_topic_analysis(
@@ -106,7 +82,7 @@ def run_topic_analysis(
         logger.error("topic_id column missing from enriched data, skipping topic analysis")
         return []
 
-    logger.info("Running topic analysis for %d selected topics", enriched["topic_id"].nunique())
+    logger.info("Running topic analysis for %d topics", enriched["topic_id"].nunique())
 
     topic_plot_dir = plot_dir / "topics"
     topic_plot_dir.mkdir(parents=True, exist_ok=True)
@@ -152,12 +128,12 @@ def run_topic_analysis(
 
 def _annotate_merge_candidates(
     merge_candidates: pd.DataFrame | None,
-    topic_selection: pd.DataFrame,
+    topic_summary: pd.DataFrame,
 ) -> pd.DataFrame | None:
-    if merge_candidates is None or merge_candidates.empty or topic_selection.empty:
+    if merge_candidates is None or merge_candidates.empty or topic_summary.empty:
         return merge_candidates
 
-    summary = topic_selection.set_index("topic_id")
+    summary = topic_summary.set_index("topic_id")
     annotated = merge_candidates.copy()
     for column, prefix in (
         ("Child_Left_ID", "child_left"),
@@ -168,17 +144,16 @@ def _annotate_merge_candidates(
             continue
         annotated[f"{prefix}_abstract_count"] = annotated[column].map(summary["abstract_count"])
         annotated[f"{prefix}_abstract_share"] = annotated[column].map(summary["abstract_share"])
-        annotated[f"{prefix}_selected"] = annotated[column].map(summary["selected"])
-
-    child_selected_columns = [
-        column
-        for column in ("child_left_selected", "child_right_selected")
-        if column in annotated.columns
-    ]
-    if child_selected_columns:
-        annotated["merge_priority"] = annotated[child_selected_columns].apply(
-            lambda row: "review_under_threshold_child" if not all(row.fillna(False)) else "review_semantic_merge",
-            axis=1,
-        )
 
     return annotated
+
+
+def _topic_summary(enriched: pd.DataFrame, topic_labels: dict[int, str]) -> pd.DataFrame:
+    if "topic_id" not in enriched.columns:
+        return pd.DataFrame()
+
+    topic_counts = enriched["topic_id"].value_counts().rename_axis("topic_id").reset_index(name="abstract_count")
+    total = len(enriched)
+    topic_counts["abstract_share"] = topic_counts["abstract_count"] / total if total else 0.0
+    topic_counts["topic_label"] = topic_counts["topic_id"].map(topic_labels)
+    return topic_counts.sort_values(["abstract_count", "topic_id"], ascending=[False, True]).reset_index(drop=True)
