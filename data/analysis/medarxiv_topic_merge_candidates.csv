@@ -1,9 +1,0 @@
-Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_abstract_count,child_left_abstract_share,child_right_abstract_count,child_right_abstract_share,parent_abstract_count,parent_abstract_share
-16,genetic_variants_hearing_breast_sars,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",14,genetic_variants_sars_sars cov_resistance,15,hearing_hearing loss_breast_cochlear_tinnitus,1.048653762210298,,,,,,,,,
-15,hearing_hearing loss_breast_cochlear_tinnitus,"[7, 8]",8,breast_orn_pcct_mr linac_linac,7,hearing_hearing loss_cochlear_tinnitus_cleft,0.9937486221352672,,,,,,,,,
-14,genetic_variants_sars_sars cov_resistance,"[0, 1, 2, 3, 4, 5, 6]",12,sars_sars cov_cov_resistance_infections,13,genetic_variants_deep learning_mental_depression,0.9871956299916855,,,,,,,,,
-13,genetic_variants_deep learning_mental_depression,"[1, 2, 3, 4, 5]",11,genetic_variants_depression_mental_disorder,5,deep learning_llms_gpt_language models_chatgpt,0.8722991426448453,,,,,,,,,
-12,sars_sars cov_cov_resistance_infections,"[0, 6]",6,resistance_antibiotic_gut_isolates_cholera,0,sars_sars cov_cov_vaccine_vaccination,0.816466617091782,,,,,,,,,
-11,genetic_variants_depression_mental_disorder,"[1, 2, 3, 4]",10,food_kidney_mental_maternal_pandemic,9,genetic_variants_disorder_disorders_motor,0.7979151210415073,,,,,,,,,
-10,food_kidney_mental_maternal_pandemic,"[3, 4]",3,food_mental_mental health_maternal_pandemic,4,kidney_asthma_retinal_ckd_vitamin,0.7039102532099031,,,,,,,,,
-9,genetic_variants_disorder_disorders_motor,"[1, 2]",1,genetic_variants_genome_tau_variant,2,motor_depression_eeg_disorder_stimulation,0.627782911505745,,,,,,,,,
