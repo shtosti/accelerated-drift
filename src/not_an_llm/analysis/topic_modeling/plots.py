@@ -66,7 +66,7 @@ def save_legend_only(ax, output_path: Path, ncol: int = 1, wrap_width: int = 44)
         (len(line) for label in wrapped_labels for line in label.splitlines()),
         default=wrap_width,
     )
-    fig_width = max(4.0, min(8.5, 1.6 + max_line_len * 0.085))
+    fig_width = max(5.0, min(8.5, 1.6 + max_line_len * 0.085))
     fig_height = max(2.0, min(12.0, 0.34 * line_count + 0.5))
 
     fig_legend = plt.figure(figsize=(fig_width, fig_height))
@@ -171,6 +171,7 @@ def save_topic_prevalence(
             yearly_pivot.index,
             yearly_pivot[topic_id],
             marker=TOPIC_MARKERS[marker_index % len(TOPIC_MARKERS)],
+            markersize=4,
             color=color_map[int(topic_id)],
             label=label,
             alpha=0.9,
@@ -325,7 +326,7 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
         return None
 
     plot_dir.mkdir(parents=True, exist_ok=True)
-    fig, ax = plt.subplots(figsize=(4, 4))
+    fig, ax = plt.subplots(figsize=(4.5, 4.5))
 
     topic_sizes = embeddings_2d["topic_id"].value_counts()
     topics = [topic for topic in topic_sizes.index.tolist() if topic != -1]
@@ -348,8 +349,8 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
             alpha=0.7,
             s=15,
             label=f"{topic_id}: {topic_label}",
-            edgecolors="black",
-            linewidth=0.5,
+            # edgecolors="black",
+            # linewidth=0.5,
         )
 
     ax.set_xlabel("UMAP Dimension 1")
