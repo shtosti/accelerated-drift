@@ -150,8 +150,11 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
                     continue
                 pre_mean = float(pre_vals.mean())
                 post_mean = float(post_vals.mean())
-                scale = abs(pre_mean) + abs(post_mean)
-                pct_change = 0.0 if scale == 0.0 else 200.0 * (post_mean - pre_mean) / scale
+                pct_change = (
+                    float("nan")
+                    if pre_mean == 0.0
+                    else 100.0 * (post_mean - pre_mean) / abs(pre_mean)
+                )
                 rows.append({"feature": m, "diff": pct_change})
 
             if not rows:
@@ -166,7 +169,7 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
                 out_path,
                 "feature",
                 "diff",
-                "Percent change (%)",
+                "Percent change from pre-period baseline (%)",
                 LABEL_MAP,
             )
             grouped_diff_plots[group_name] = out_path

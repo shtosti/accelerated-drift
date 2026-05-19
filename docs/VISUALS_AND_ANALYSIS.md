@@ -121,7 +121,7 @@ All plots are saved to `data/visuals/<dataset_stem>/` or the configured `trends_
 
 2. `pre_post_diff.png`
    - Global pre/post comparison for all features.
-   - Uses symmetric percent change between pre-LLM and post-LLM periods.
+   - Uses percent change from the pre-period baseline between pre-LLM and post-LLM periods.
    - Visualizes features sorted by effect size.
 
 3. `*_diff.png` / grouped feature diff plots
