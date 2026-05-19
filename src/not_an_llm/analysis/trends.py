@@ -350,7 +350,7 @@ class TrendAnalyzer:
         if "month_ts" in monthly.columns:
             monthly["month_ts"] = pd.to_datetime(monthly["month_ts"], errors="coerce")
 
-        fig, axes = plt.subplots(len(features), 1, figsize=(5, 2.5 * len(features)))
+        fig, axes = plt.subplots(len(features), 1, figsize=(4, 2.2 * len(features)))
         if len(features) == 1:
             axes = [axes]
 
@@ -433,7 +433,7 @@ class TrendAnalyzer:
         fig, axes = plt.subplots(
             len(features),
             1,
-            figsize=(4.5, 2.5 * len(features)),
+            figsize=(4, 2.2 * len(features)),
             sharex=True,
         )
         if len(features) == 1:
@@ -544,7 +544,7 @@ class TrendAnalyzer:
         fig, axes = plt.subplots(
             len(features),
             1,
-            figsize=(4.5, 2.5 * len(features)),
+            figsize=(4, 2.2 * len(features)),
             sharex=True
         )
         if len(features) == 1:
@@ -619,7 +619,7 @@ class TrendAnalyzer:
         fig, axes = plt.subplots(
             len(features),
             1,
-            figsize=(5, 3 * len(features)),
+            figsize=(4, 2.2 * len(features)),
             sharex=True,
         )
         if len(features) == 1:
@@ -802,7 +802,7 @@ class TrendAnalyzer:
             yearly_col = f"{rate_feature}_yearly_mean"
             monthly_col = f"{rate_feature}_monthly_mean"
 
-            fig, ax = plt.subplots(figsize=(5, 3))
+            fig, ax = plt.subplots(figsize=(4, 2.2))
 
             if monthly_col in monthly.columns and month_ts is not None:
                 y_m = monthly[monthly_col]
@@ -873,7 +873,7 @@ class TrendAnalyzer:
             feature = yearly_column.removesuffix("_yearly_mean")
             monthly_col = f"{feature}_monthly_mean"
 
-            fig, ax = plt.subplots(figsize=(5, 3))
+            fig, ax = plt.subplots(figsize=(4, 2.2))
 
             if monthly_col in monthly.columns and month_ts is not None:
                 ax.plot(month_ts, monthly[monthly_col], color=self.colors["monthly"], linewidth=1.0, alpha=1.0, label="Monthly mean")
@@ -952,7 +952,7 @@ class TrendAnalyzer:
         diff_df = diff_df.sort_values("diff_pct")
 
         # Save diff plot
-        diff_fig, diff_ax = plt.subplots(figsize=(6, 1.2 * len(diff_df) + 0.3))
+        diff_fig, diff_ax = plt.subplots(figsize=(5, 1 * len(diff_df) + 0.2))
         colors = ["#943F8B" if v < 0 else "#54A066" for v in diff_df["diff_pct"]]
         diff_ax.barh(diff_df["feature"], diff_df["diff_pct"], color=colors)
         diff_ax.axvline(0, color="black", linewidth=1)
@@ -972,7 +972,7 @@ class TrendAnalyzer:
 
         year_ts = pd.to_datetime(plot_yearly.index.astype(str) + "-01-01")
 
-        trend_fig, trend_ax = plt.subplots(figsize=(4, 4 + 0.3))
+        trend_fig, trend_ax = plt.subplots(figsize=(3.5, 3.5 + 0.2))
         for role in top_roles:
             trend_ax.plot(year_ts, plot_yearly[role], marker="o", linewidth=1, label=role)
 
@@ -1102,7 +1102,7 @@ def save_grouped_difference_plot(
     fig, ax = plt.subplots(
         figsize=(
             5,
-            max(3, fig_height),
+            max(2, fig_height),
         )
     )
 

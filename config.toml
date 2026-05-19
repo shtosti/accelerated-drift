@@ -81,13 +81,21 @@ topic_modeling_max_final_topics = 12
 topic_modeling_use_bertopic = true
 topic_modeling_num_workers = 16
 topic_modeling_embedding_batch_size = 128
+# Lower values reduce the size of the HDBSCAN outlier bucket; set <= 0 to use the derived default.
+topic_modeling_hdbscan_min_samples = 1
+# Cluster in a richer UMAP space, then generate a separate 2D UMAP projection for plots.
+topic_modeling_umap_n_components = 5
+topic_modeling_plot_umap_n_components = 2
 # Select which readability metrics to compute/write.
 readability_metrics = [
   "avg_words_per_sentence",
   "avg_syllables_per_word",
   "flesch_reading_ease",
   "flesch_kincaid_grade",
-  "dale_chall"
+  "dale_chall",
+  "smog_index",
+  "automated_readability_index",
+  "gunning_fog"
 ]
 
 # Full run config. Use config_mini.toml for the mini run.
@@ -96,8 +104,106 @@ feature_dataset_jsonl = ""
 trends_csv = ""
 monthly_trends_csv = ""
 trends_plot_dir = ""
-# Use "all" to automatically include every numeric feature in yearly trend analysis.
-features = ["all"]
+# Feature columns included in trend plots, interrupted time-series stats, and diff plots.
+# Comment out individual lines here to remove a feature from the core analysis.
+features = [
+  # marker group totals
+  "marker_words_total_per_1k_words",
+  "marker_verbs_total_per_1k_words",
+  "marker_adjectives_total_per_1k_words",
+  "marker_phrases_total_per_1k_words",
+  "sequential_markers_total_per_1k_words",
+  "causal_markers_total_per_1k_words",
+  "contrast_markers_total_per_1k_words",
+  "emphasis_markers_total_per_1k_words",
+  "summary_markers_total_per_1k_words",
+
+  # individual marker words
+  "word_finding_per_1k_words",
+  "word_interplay_per_1k_words",
+  "word_realm_per_1k_words",
+  "word_insight_per_1k_words",
+  "word_notably_per_1k_words",
+  "word_particularly_per_1k_words",
+  "word_meticulously_per_1k_words",
+  "word_while_per_1k_words",
+  "word_within_per_1k_words",
+  "word_across_per_1k_words",
+  "word_additionally_per_1k_words",
+
+  # individual marker verbs/adjectives/phrases
+  "verb_delve_per_1k_words",
+  "verb_underscore_per_1k_words",
+  "verb_showcase_per_1k_words",
+  "verb_enhance_per_1k_words",
+  "verb_exhibit_per_1k_words",
+  "verb_garner_per_1k_words",
+  "verb_align_per_1k_words",
+  "verb_foster_per_1k_words",
+  "adjective_crucial_per_1k_words",
+  "adjective_pivotal_per_1k_words",
+  "adjective_comprehensive_per_1k_words",
+  "adjective_intricate_per_1k_words",
+  "adjective_potential_per_1k_words",
+  "phrase_meticulously_delve_per_1k_words",
+  "phrase_intricate_web_per_1k_words",
+  "phrase_comprehensive_chapter_per_1k_words",
+  "phrase_deep_dive_per_1k_words",
+  "phrase_intricate_interplay_per_1k_words",
+  "phrase_essential_insight_per_1k_words",
+
+  # discourse marker groups
+  "sequential_marker_additionally_per_1k_words",
+  "sequential_marker_furthermore_per_1k_words",
+  "sequential_marker_moreover_per_1k_words",
+  "sequential_marker_subsequently_per_1k_words",
+  "sequential_marker_further_per_1k_words",
+  "causal_marker_hence_per_1k_words",
+  "causal_marker_thus_per_1k_words",
+  "causal_marker_consequently_per_1k_words",
+  "causal_marker_accordingly_per_1k_words",
+  "causal_marker_thereby_per_1k_words",
+  "contrast_marker_however_per_1k_words",
+  "contrast_marker_nonetheless_per_1k_words",
+  "contrast_marker_nevertheless_per_1k_words",
+  "contrast_marker_conversely_per_1k_words",
+  "contrast_marker_alternatively_per_1k_words",
+  "emphasis_marker_notably_per_1k_words",
+  "emphasis_marker_crucially_per_1k_words",
+  "emphasis_marker_remarkably_per_1k_words",
+  "emphasis_marker_particularly_per_1k_words",
+  "emphasis_marker_importantly_per_1k_words",
+  "summary_marker_overall_per_1k_words",
+  "summary_marker_collectively_per_1k_words",
+  "summary_marker_ultimately_per_1k_words",
+  "summary_marker_in_summary_per_1k_words",
+  "summary_marker_taken_together_per_1k_words",
+
+  # syntax, punctuation, readability, and style ratios
+  "em_dash_per_1k_words",
+  "semicolon_per_1k_words",
+  "colon_per_1k_words",
+  "clause_depth",
+  "clause_depth_std",
+  "dependency_entropy",
+  "dependency_length",
+  "dependency_length_std",
+  "coordination_count",
+  "coordination_per_sentence_std",
+  "sentence_depth_std",
+  "list_of_three",
+  "list_of_three_per_1k_words",
+  "avg_words_per_sentence",
+  "avg_syllables_per_word",
+  "flesch_reading_ease",
+  "flesch_kincaid_grade",
+  "dale_chall",
+  "smog_index",
+  "automated_readability_index",
+  "gunning_fog",
+  "hedge_ratio",
+  "certainty_ratio",
+]
 
 spacy_features = [
   "marker_list_of_three",

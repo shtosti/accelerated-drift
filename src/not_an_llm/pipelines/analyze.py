@@ -8,15 +8,15 @@ from concurrent.futures import ProcessPoolExecutor
 
 from not_an_llm.analysis.topic_modeling import run_topic_analysis, run_topic_modeling
 from not_an_llm.analysis.trends import TrendAnalyzer
+from not_an_llm.analysis.feature_groups import FEATURE_GROUPS
+from not_an_llm.analysis.feature_selection import build_marker_group_specs, resolve_feature_columns
 from not_an_llm.analysis.interrupted_time_series import (
     compute_interrupted_time_series,
     compute_placebo_interrupted_time_series,
     save_its_slope_change_plot,
 )
+from not_an_llm.analysis.label_map import LABEL_MAP
 from not_an_llm.config import AppConfig
-
-from .feature_groups import FEATURE_GROUPS
-from .label_map import LABEL_MAP
 
 
 logger = logging.getLogger(__name__)
@@ -68,92 +68,6 @@ def _resolve_analysis_paths(config: AppConfig):
     )
 
     return feature_dataset, trends_csv, monthly_csv, plot_dir
-
-
-# =========================================================
-# MARKER GROUPS
-# =========================================================
-def _build_marker_group_specs(config: AppConfig):
-    group_specs: dict[str, dict[str, object]] = {}
-    summary_features: set[str] = set()
-
-    group_definitions = {
-        "marker_words": (
-            "Marker words",
-            "word",
-            config.analysis.llm_marker_words,
-            "marker_words_total_per_1k_words",
-            "marker_words_total",
-        ),
-        "marker_verbs": (
-            "Marker verbs",
-            "verb",
-            config.analysis.llm_marker_verbs,
-            "marker_verbs_total_per_1k_words",
-            "marker_verbs_total",
-        ),
-        "marker_adjectives": (
-            "Marker adjectives",
-            "adjective",
-            config.analysis.llm_marker_adjectives,
-            "marker_adjectives_total_per_1k_words",
-            "marker_adjectives_total",
-        ),
-        "marker_phrases": (
-            "Marker phrases",
-            "phrase",
-            config.analysis.llm_marker_phrases,
-            "marker_phrases_total_per_1k_words",
-            "marker_phrases_total",
-        ),
-        "sequential_markers": (
-            "Sequential markers",
-            "sequential_marker",
-            config.analysis.sequential_markers,
-            "sequential_markers_total_per_1k_words",
-            "sequential_markers_total",
-        ),
-        "causal_markers": (
-            "Causal markers",
-            "causal_marker",
-            config.analysis.causal_markers,
-            "causal_markers_total_per_1k_words",
-            "causal_markers_total",
-        ),
-        "contrast_markers": (
-            "Contrast markers",
-            "contrast_marker",
-            config.analysis.contrast_markers,
-            "contrast_markers_total_per_1k_words",
-            "contrast_markers_total",
-        ),
-        "emphasis_markers": (
-            "Emphasis markers",
-            "emphasis_marker",
-            config.analysis.emphasis_markers,
-            "emphasis_markers_total_per_1k_words",
-            "emphasis_markers_total",
-        ),
-        "summary_markers": (
-            "Summary markers",
-            "summary_marker",
-            config.analysis.summary_markers,
-            "summary_markers_total_per_1k_words",
-            "summary_markers_total",
-        ),
-    }
-
-    for group_name, (label, prefix, terms, rate_feature, count_feature) in group_definitions.items():
-        group_specs[group_name] = {
-            "label": label,
-            "rate_feature": rate_feature,
-            "count_feature": count_feature,
-        }
-        summary_features.add(rate_feature)
-        summary_features.add(count_feature)
-
-    summary_features.add("marker_density")
-    return group_specs, summary_features
 
 
 # =========================================================
@@ -279,10 +193,10 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         mode="w",
     )
 
-    feature_columns = _resolve_feature_columns(config, enriched)
+    feature_columns = resolve_feature_columns(config, enriched)
 
     trend_analyzer = TrendAnalyzer(feature_columns)
-    marker_group_specs, summary_features = _build_marker_group_specs(config)
+    marker_group_specs, summary_features = build_marker_group_specs(config)
 
     yearly = trend_analyzer.aggregate_yearly(enriched)
     monthly = trend_analyzer.aggregate_monthly(enriched)
@@ -471,105 +385,4 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         monthly_trends_csv=monthly_trends_csv,
         trends_plot_paths=trend_plots,
     )
-
-
-# =========================================================
-# FEATURE SELECTION (UNCHANGED)
-# =========================================================
-def _resolve_feature_columns(config: AppConfig, frame: pd.DataFrame) -> list[str]:
-    metadata_exclusions = {
-        "year",
-        "paperId",
-        "citationCount",
-        "influentialCitationCount",
-        "isOpenAccess",
-    }
-
-    numeric_cols = [
-        column
-        for column in frame.columns
-        if pd.api.types.is_numeric_dtype(frame[column])
-        and column not in metadata_exclusions
-    ]
-
-    requested = [item.strip() for item in config.analysis.features if item.strip()]
-    if not requested or requested == ["all"]:
-        return [column for column in numeric_cols if _is_canonical_analysis_feature(column)]
-
-    return [
-        column
-        for column in requested
-        if column in frame.columns and _is_canonical_analysis_feature(column)
-    ]
-
-
-def _is_canonical_analysis_feature(column_name: str) -> bool:
-    excluded = {
-        "word_count",
-        "sentence_count",
-        "paper_count",
-        "marker_density",
-        # "coordination_density",
-        # "clause_depth_per_sentence",
-        # "dependency_entropy_normalized",
-        # "dependency_length_norm",
-        # "sentence_depth_cv",
-        # "coordination_count_per_1k_words",
-        # "list_of_three_per_1k_words",
-    }
-
-    if column_name in excluded:
-        return False
-
-    if column_name in {
-        "clause_depth",
-        "clause_depth_std",
-        "dependency_entropy",
-        "dependency_length",
-        "dependency_length_std",
-        "coordination_count",
-        "coordination_per_sentence_std",
-        "sentence_depth_std",
-        "list_of_three",
-        "avg_words_per_sentence",
-        "avg_syllables_per_word",
-        "flesch_reading_ease",
-        "flesch_kincaid_grade",
-        "dale_chall",
-        "hedge_ratio",
-        "certainty_ratio",
-    }:
-        return True
-
-    if column_name.endswith("_total_per_1k_words"):
-        return True
-
-    if column_name.endswith("_per_1k_words") and not column_name.endswith("_count_per_1k_words"):
-        return True
-    
-    if column_name.startswith("verb_") or column_name.startswith("adjective_") or column_name.startswith("word_") or column_name.startswith("phrase_"):
-        return True
-
-    return False
-
-
-def _is_metadata_like(column_name: str) -> bool:
-    lowered = column_name.lower()
-    blocked_tokens = {
-        "citation",
-        "openaccess",
-        "paperid",
-        "publication",
-        "externalid",
-        "fields_of_study",
-        "fieldsofstudy",
-        "authors",
-        "venue",
-        "journal",
-        "url",
-        "tldr",
-    }
-
-    normalized = lowered.replace("_", "")
-    return any(token in lowered or token in normalized for token in blocked_tokens)
 

@@ -4,7 +4,7 @@ Single-pass feature computation covering:
 - Structural (tokens, sentences, word counts)
 - Syntactic (patterns like em-dash, semicolon)
 - Lexical/semantic (hedges, certainty, LLM markers with POS awareness)
-- Readability (Flesch, Kincaid, Dale-Chall, syllables)
+- Readability (Flesch, Kincaid, Dale-Chall, SMOG, ARI, Fog, syllables)
 
 This replaces fragmented regex/spacy/textstat passes with one consistent pipeline.
 """
@@ -53,6 +53,9 @@ class UnifiedLinguisticFeatures:
         "flesch_reading_ease",
         "flesch_kincaid_grade",
         "dale_chall",
+        "smog_index",
+        "automated_readability_index",
+        "gunning_fog",
     ])
 
     _nlp: Language | None = field(default=None, init=False, repr=False)
@@ -167,6 +170,12 @@ class UnifiedLinguisticFeatures:
                 result[metric] = textstat.flesch_kincaid_grade(text)
             elif metric == "dale_chall":
                 result[metric] = textstat.dale_chall_readability_score(text)
+            elif metric == "smog_index":
+                result[metric] = textstat.smog_index(text)
+            elif metric == "automated_readability_index":
+                result[metric] = textstat.automated_readability_index(text)
+            elif metric == "gunning_fog":
+                result[metric] = textstat.gunning_fog(text)
 
         return result
 

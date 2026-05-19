@@ -21,14 +21,18 @@
   - Runs preprocessing and persists preprocessed JSONL.
 - src/not_an_llm/analysis/feature_extractor.py
   - Extracts stylistic and marker-based features from preprocessed text.
+- src/not_an_llm/analysis/feature_selection.py
+  - Owns shared feature inclusion rules and marker group summaries for pipelines.
+- src/not_an_llm/analysis/feature_groups.py
+  - Defines canonical grouped feature lists for diff and stack plots.
 - src/not_an_llm/analysis/readability.py
-  - Computes readability metrics (Flesch, FK grade, Fog, SMOG).
+  - Computes readability metrics (Flesch, FK grade, Dale-Chall, SMOG, ARI, Fog).
 - src/not_an_llm/analysis/trends.py
   - Aggregates yearly/monthly feature trends and saves exploratory visualizations.
 - src/not_an_llm/analysis/interrupted_time_series.py
   - Fits monthly segmented regressions with HAC standard errors, FDR correction, and placebo checks.
 - src/not_an_llm/analysis/topic_modeling/
-  - Runs BERTopic/HDBSCAN topic assignment, records topic summaries and optional hierarchy review candidates, and saves topic-level reports.
+  - Runs BERTopic/HDBSCAN topic assignment, preserves `-1` outliers, records topic summaries and optional hierarchy review candidates, and saves topic-level reports.
 - src/not_an_llm/pipelines/analyze.py
   - Orchestrates analysis modules and writes trend artifacts.
 - src/not_an_llm/analysis/features.py

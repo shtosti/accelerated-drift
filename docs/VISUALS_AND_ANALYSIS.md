@@ -100,6 +100,9 @@ When enabled, the pipeline computes readability statistics such as:
 - Flesch Reading Ease
 - Flesch-Kincaid Grade
 - Dale-Chall score
+- SMOG index
+- Automated Readability Index
+- Gunning Fog index
 
 ### 4. Document metadata and normalization
 
@@ -156,7 +159,7 @@ All plots are saved to `data/visuals/<dataset_stem>/` or the configured `trends_
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
 10. `readability_stack.png`
-   - Vertical stack of all readability features (avg_words_per_sentence, avg_syllables_per_word, flesch_reading_ease, flesch_kincaid_grade, dale_chall).
+   - Vertical stack of all readability features (avg_words_per_sentence, avg_syllables_per_word, flesch_reading_ease, flesch_kincaid_grade, dale_chall, smog_index, automated_readability_index, gunning_fog).
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
 11. `punctuation_stack.png`
@@ -227,8 +230,11 @@ Plot and analysis behavior is controlled in `config.toml`, `config_mini.toml`, a
 Key settings include:
 
 - `analysis.enabled`
-- `analysis.features`
+- `analysis.features`: explicit feature columns included in trend plots, interrupted time-series stats, and diff plots. Comment out individual entries in `config.toml` or `config_mini.toml` to remove them from the core analysis.
 - `analysis.readability_metrics`
+- `analysis.topic_modeling_hdbscan_min_samples`: HDBSCAN strictness for dense-core membership. Lower values usually reduce the `-1` outlier bucket; values `<= 0` restore the derived default.
+- `analysis.topic_modeling_umap_n_components`: UMAP dimensionality used for topic clustering.
+- `analysis.topic_modeling_plot_umap_n_components`: separate UMAP dimensionality used for `topic_clusters.png`; keep at `2` for ordinary scatter plots.
 - `analysis.syntactic_features`
 - `analysis.generate_plots`
 - `analysis.trends_plot_dir`
@@ -247,6 +253,8 @@ Key settings include:
 - `src/not_an_llm/pipelines/analyze.py`
 - `src/not_an_llm/pipelines/visualize.py`
 - `src/not_an_llm/pipelines/external_analyze.py`
+- `src/not_an_llm/analysis/feature_selection.py`
+- `src/not_an_llm/analysis/feature_groups.py`
 - `src/not_an_llm/analysis/trends.py`
 - `src/not_an_llm/analysis/interrupted_time_series.py`
 - `src/not_an_llm/analysis/feature_extractor.py`
