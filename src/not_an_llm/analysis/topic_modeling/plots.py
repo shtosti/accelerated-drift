@@ -355,8 +355,8 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
             alpha=0.7,
             s=15,
             label=f"{topic_id}: {topic_label}",
-            # edgecolors="black",
-            # linewidth=0.5,
+            edgecolors="black",
+            linewidth=0.2,
         )
 
     ax.set_xlabel("UMAP Dimension 1")
@@ -368,7 +368,7 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
 
     plot_path = plot_dir / "topic_clusters.png"
     fig.tight_layout()
-    fig.savefig(plot_path, dpi=150, bbox_inches="tight")
+    fig.savefig(plot_path, dpi=200, bbox_inches="tight")
     plt.close(fig)
     return plot_path
 
