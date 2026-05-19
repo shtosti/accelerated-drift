@@ -28,8 +28,6 @@ def filter_topics(
     topic_labels: dict[int, str],
     embeddings_2d: pd.DataFrame | None,
     *,
-    min_share: float,
-    min_count: int,
     merge_candidates: pd.DataFrame | None = None,
     merge_under_threshold: bool = True,
     max_final_topics: int = 0,
@@ -39,14 +37,12 @@ def filter_topics(
         empty = pd.DataFrame()
         return TopicSelectionResult(enriched, topic_labels, embeddings_2d, empty, empty, empty)
 
-    initial_summary = _topic_summary(enriched, topic_labels, min_share, min_count)
+    initial_summary = _topic_summary(enriched, topic_labels)
     if merge_under_threshold or max_final_topics > 0:
         final_topic_map, final_topic_labels, merge_plan = _build_merge_plan(
             initial_summary=initial_summary,
             topic_labels=topic_labels,
             merge_candidates=merge_candidates,
-            min_share=min_share,
-            min_count=min_count,
             max_final_topics=max_final_topics,
             merge_under_threshold=merge_under_threshold,
         )
@@ -74,7 +70,7 @@ def filter_topics(
         )
         selected["topic_label"] = selected["topic_id"].map(final_topic_labels)
 
-    final_summary = _topic_summary(selected, final_topic_labels, min_share, min_count)
+    final_summary = _topic_summary(selected, final_topic_labels)
 
     if embeddings_2d is not None:
         embeddings_2d = _apply_embedding_merge_plan(embeddings_2d, final_topic_map, final_topic_labels)
@@ -98,16 +94,12 @@ def filter_topics(
 def _topic_summary(
     enriched: pd.DataFrame,
     topic_labels: dict[int, str],
-    min_share: float,
-    min_count: int,
 ) -> pd.DataFrame:
     topic_counts = enriched["topic_id"].value_counts().rename_axis("topic_id").reset_index(name="abstract_count")
     total = len(enriched)
     topic_counts["abstract_share"] = topic_counts["abstract_count"] / total if total else 0.0
     topic_counts["topic_label"] = topic_counts["topic_id"].map(topic_labels)
-    topic_counts["passes_min_share"] = topic_counts["abstract_share"] >= min_share
-    topic_counts["passes_min_count"] = topic_counts["abstract_count"] >= min_count
-    topic_counts["selected"] = topic_counts["passes_min_share"] & topic_counts["passes_min_count"]
+    topic_counts["selected"] = True
     return topic_counts.sort_values(["abstract_count", "topic_id"], ascending=[False, True]).reset_index(drop=True)
 
 
@@ -115,8 +107,6 @@ def _build_merge_plan(
     initial_summary: pd.DataFrame,
     topic_labels: dict[int, str],
     merge_candidates: pd.DataFrame | None,
-    min_share: float,
-    min_count: int,
     max_final_topics: int,
     merge_under_threshold: bool,
 ) -> tuple[dict[int, int], dict[int, str], pd.DataFrame]:
@@ -137,8 +127,6 @@ def _build_merge_plan(
             total=total,
             hierarchy=hierarchy,
             events=events,
-            min_share=min_share,
-            min_count=min_count,
             reason="under_threshold_hierarchy",
             only_if_under_threshold=True,
         )
@@ -147,8 +135,6 @@ def _build_merge_plan(
             counts=counts,
             total=total,
             events=events,
-            min_share=min_share,
-            min_count=min_count,
             max_final_topics=0,
             reason="under_threshold_size_fallback",
             only_if_under_threshold=True,
@@ -161,8 +147,6 @@ def _build_merge_plan(
             total=total,
             hierarchy=hierarchy,
             events=events,
-            min_share=min_share,
-            min_count=min_count,
             reason="max_final_topics_hierarchy",
             only_if_under_threshold=False,
             max_final_topics=max_final_topics,
@@ -172,8 +156,6 @@ def _build_merge_plan(
             counts=counts,
             total=total,
             events=events,
-            min_share=min_share,
-            min_count=min_count,
             max_final_topics=max_final_topics,
             reason="max_final_topics_size_fallback",
             only_if_under_threshold=False,
@@ -250,8 +232,6 @@ def _merge_by_hierarchy(
     total: int,
     hierarchy: list[dict[str, object]],
     events: list[dict[str, object]],
-    min_share: float,
-    min_count: int,
     reason: str,
     only_if_under_threshold: bool,
     max_final_topics: int = 0,
@@ -304,8 +284,6 @@ def _merge_by_size_fallback(
     counts: dict[int, int],
     total: int,
     events: list[dict[str, object]],
-    min_share: float,
-    min_count: int,
     max_final_topics: int,
     reason: str,
     only_if_under_threshold: bool,

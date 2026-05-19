@@ -60,16 +60,17 @@ def _assign_bertopic_topics(
     import torch
     import umap
 
-    num_topics = config.analysis.topic_modeling_num_topics
     device = "cuda" if torch.cuda.is_available() else "cpu"
     num_workers = config.analysis.topic_modeling_num_workers or multiprocessing.cpu_count()
     umap_n_jobs = min(num_workers, 16)
+
+    min_cluster_size = max(10, int(len(texts) * config.analysis.topic_modeling_min_cluster_ratio))
+    min_samples = max(5, min_cluster_size // 2)
 
     logger.info(
         "Using device: %s for topic modeling (%d documents, %d requested topics)",
         device,
         len(texts),
-        num_topics,
     )
     logger.info("Using %d threads for UMAP, %d workers for HDBSCAN", umap_n_jobs, num_workers)
 
@@ -98,7 +99,8 @@ def _assign_bertopic_topics(
         n_jobs=umap_n_jobs,
     )
     hdbscan_model = hdbscan.HDBSCAN(
-        min_cluster_size=5,
+        min_cluster_size=min_cluster_size,
+        min_samples=min_samples,
         metric="euclidean",
         cluster_selection_method="eom",
         prediction_data=True,
@@ -110,9 +112,9 @@ def _assign_bertopic_topics(
         umap_model=umap_model,
         hdbscan_model=hdbscan_model,
         language="english",
-        nr_topics="auto",
+        nr_topics=config.analysis.topic_modeling_max_final_topics,
         top_n_words=top_terms,
-        min_topic_size=max(10, len(texts) // 100),
+        min_topic_size=min_cluster_size,
         calculate_probabilities=False,
         verbose=False,
     )
@@ -126,10 +128,8 @@ def _assign_bertopic_topics(
     topic_labels = _extract_topic_labels(topic_model, vectorizer_model, topic_id_map, top_terms)
 
     actual_topics = sorted(topic_labels)
-    logger.info("Created %d topics (requested %d)", len(actual_topics), num_topics)
-    if len(actual_topics) != num_topics:
-        logger.warning("BERTopic created %d topics instead of requested %d", len(actual_topics), num_topics)
-
+    logger.info("Created %d topics", len(actual_topics))
+ 
     enriched = enriched.copy()
     enriched["topic_id"] = labels
     enriched["topic_label"] = [topic_labels.get(int(topic), "noise") for topic in labels]
