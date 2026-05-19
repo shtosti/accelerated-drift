@@ -767,7 +767,7 @@ class TrendAnalyzer:
                 "Percent change (%)",
                 self.label_map,
                 stats_df=stats_df,
-                annotation_mode="p+d",
+                annotation_mode=None,
                 significant_only=False,
             )
 
