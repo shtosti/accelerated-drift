@@ -137,7 +137,7 @@ def save_topic_prevalence(
     color_map = topic_color_map(topic_order)
 
     yearly_count_pivot = yearly.pivot(index="year", columns="topic_id", values="count").fillna(0)
-    fig, ax = plt.subplots(figsize=(4, 3))
+    fig, ax = plt.subplots(figsize=(3.5, 3))
     bottom = np.zeros(len(yearly_count_pivot.index))
     for topic_id in topic_order:
         if topic_id not in yearly_count_pivot.columns:
@@ -168,7 +168,7 @@ def save_topic_prevalence(
 
     yearly_pivot = yearly.pivot(index="year", columns="topic_id", values="pct").fillna(0.0)
 
-    fig, ax = plt.subplots(figsize=(4, 3))
+    fig, ax = plt.subplots(figsize=(3.5, 3))
     for marker_index, topic_id in enumerate(topic_order):
         if topic_id not in yearly_pivot.columns:
             continue
@@ -196,7 +196,7 @@ def save_topic_prevalence(
     plt.close(fig)
     paths.append(trend_path)
 
-    fig, ax = plt.subplots(figsize=(4, 3))
+    fig, ax = plt.subplots(figsize=(3.5, 3))
     ax.stackplot(
         yearly_pivot.index,
         *[yearly_pivot[topic_id] for topic_id in topic_order if topic_id in yearly_pivot.columns],
@@ -229,7 +229,7 @@ def save_topic_prevalence(
         paths.append(monthly_csv)
 
         monthly_pivot = monthly.pivot(index="month_ts", columns="topic_id", values="pct").fillna(0.0)
-        fig, ax = plt.subplots(figsize=(4, 3))
+        fig, ax = plt.subplots(figsize=(3.5, 3))
         for marker_index, topic_id in enumerate(topic_order):
             if topic_id not in monthly_pivot.columns:
                 continue
@@ -290,7 +290,7 @@ def save_topic_trend_plots(
     color_map = topic_color_map(topic_order)
 
     for feature in feature_columns:
-        fig, ax = plt.subplots(figsize=(4, 3))
+        fig, ax = plt.subplots(figsize=(3.5, 3))
         for marker_index, topic_id in enumerate(topic_order):
             topic_data = grouped[grouped["topic_id"] == topic_id]
             if topic_data.empty:
@@ -341,7 +341,7 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
 
     noise_data = embeddings_2d[embeddings_2d["topic_id"] == -1]
     if not noise_data.empty:
-        ax.scatter(noise_data["x"], noise_data["y"], c="lightgray", alpha=0.35, s=10, label="noise")
+        ax.scatter(noise_data["x"], noise_data["y"], c="lightgray", alpha=0.35, s=10, label="-1 (outliers)")
 
     for topic_id in topics:
         topic_data = embeddings_2d[embeddings_2d["topic_id"] == topic_id]
@@ -353,7 +353,7 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
             topic_data["y"],
             c=[color_map[topic_id]],
             alpha=0.7,
-            s=15,
+            s=25,
             label=f"{topic_id}: {topic_label}",
             edgecolors="black",
             linewidth=0.2,

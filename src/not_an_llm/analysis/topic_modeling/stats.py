@@ -12,11 +12,22 @@ def save_topic_modeling_stats(
     summary: pd.DataFrame,
 ) -> Path:
     total_abstracts = len(enriched)
-    topics = summary["topic_id"].nunique() if "topic_id" in summary.columns else 0
+    if "topic_id" in summary.columns:
+        non_outlier_summary = summary[summary["topic_id"] != -1]
+        outlier_summary = summary[summary["topic_id"] == -1]
+        topics = non_outlier_summary["topic_id"].nunique()
+        outlier_count = int(outlier_summary["abstract_count"].sum()) if not outlier_summary.empty else 0
+        outlier_share = outlier_count / total_abstracts if total_abstracts else 0.0
+    else:
+        topics = 0
+        outlier_count = 0
+        outlier_share = 0.0
 
     rows: list[dict[str, object]] = [
         _stats_row("dataset", "all", None, None, "total_abstracts", total_abstracts),
         _stats_row("dataset", "all", None, None, "topics", topics),
+        _stats_row("dataset", "all", -1, "-1 (outliers)", "outlier_abstract_count", outlier_count),
+        _stats_row("dataset", "all", -1, "-1 (outliers)", "outlier_abstract_share", outlier_share),
     ]
 
     rows.extend(_topic_stats_rows(summary, "model"))

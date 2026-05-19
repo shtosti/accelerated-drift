@@ -334,7 +334,15 @@ def _feature_family(feature: str) -> str:
         return "adjectives"
     if feature.startswith("phrase_"):
         return "phrases"
-    if "readability" in feature or feature.startswith("flesch") or feature in {"dale_chall", "avg_words_per_sentence"}:
+    readability_features = {
+        "avg_words_per_sentence",
+        "avg_syllables_per_word",
+        "dale_chall",
+        "smog_index",
+        "automated_readability_index",
+        "gunning_fog",
+    }
+    if "readability" in feature or feature.startswith("flesch") or feature in readability_features:
         return "readability"
     return "other"
 

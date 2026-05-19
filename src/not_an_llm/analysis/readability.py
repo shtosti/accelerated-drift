@@ -15,6 +15,9 @@ class ReadabilityAnalyzer:
             "flesch_reading_ease",
             "flesch_kincaid_grade",
             "dale_chall",
+            "smog_index",
+            "automated_readability_index",
+            "gunning_fog",
         ]
         self.metrics = metrics or default_metrics
 
@@ -34,12 +37,20 @@ class ReadabilityAnalyzer:
             safe_word_count = max(1, word_count)
             total_syllables = textstat.syllable_count(text)
 
-            row_result = {
+            all_metrics = {
                 "avg_words_per_sentence": word_count / sentence_count if word_count > 0 else 0.0,
                 "avg_syllables_per_word": total_syllables / safe_word_count if word_count > 0 else 0.0,
                 "flesch_reading_ease": textstat.flesch_reading_ease(text),
                 "flesch_kincaid_grade": textstat.flesch_kincaid_grade(text),
                 "dale_chall": textstat.dale_chall_readability_score(text),
+                "smog_index": textstat.smog_index(text),
+                "automated_readability_index": textstat.automated_readability_index(text),
+                "gunning_fog": textstat.gunning_fog(text),
+            }
+            row_result = {
+                metric: all_metrics[metric]
+                for metric in self.metrics
+                if metric in all_metrics
             }
             results.append(row_result)
 

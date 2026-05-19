@@ -1,17 +1,30 @@
 FEATURE_GROUPS = {
     "marker_words": [
-        "marker_words_total_per_1k_words",
-        "sequential_markers_total_per_1k_words",
-        "emphasis_markers_total_per_1k_words",
-        "causal_markers_total_per_1k_words",
-        "contrast_markers_total_per_1k_words",
-        "summary_markers_total_per_1k_words",
+        # "marker_words_total_per_1k_words",
+        # "sequential_markers_total_per_1k_words",
+        # "emphasis_markers_total_per_1k_words",
+        # "causal_markers_total_per_1k_words",
+        # "contrast_markers_total_per_1k_words",
+        # "summary_markers_total_per_1k_words",
+        # "word_notably_per_1k_words",
+        # "word_particularly_per_1k_words",
+        # "word_meticulously_per_1k_words",
+        # individual marker words
+        "word_finding_per_1k_words",
+        "word_interplay_per_1k_words",
+        "word_realm_per_1k_words",
+        "word_insight_per_1k_words",
         "word_notably_per_1k_words",
         "word_particularly_per_1k_words",
         "word_meticulously_per_1k_words",
+        "word_while_per_1k_words",
+        "word_within_per_1k_words",
+        "word_across_per_1k_words",
+        "word_additionally_per_1k_words",
     ],
 
     "verbs": [
+        # flowery verbs
         "verb_exhibit_per_1k_words",
         "verb_delve_per_1k_words",
         "verb_underscore_per_1k_words",
@@ -23,6 +36,7 @@ FEATURE_GROUPS = {
     ],
 
     "adjectives": [
+        # flowery adjectives
         "adjective_potential_per_1k_words",
         "adjective_comprehensive_per_1k_words",
         "adjective_intricate_per_1k_words",
@@ -31,6 +45,7 @@ FEATURE_GROUPS = {
     ],
 
     "phrases": [
+        # flowery phrases
         "phrase_meticulously_delve_per_1k_words",
         "phrase_intricate_web_per_1k_words",
         "phrase_comprehensive_chapter_per_1k_words",
@@ -50,6 +65,7 @@ FEATURE_GROUPS = {
         "clause_depth_std",
         "coordination_count",
         "dependency_entropy",
+        "avg_words_per_sentence",
     ],
 
     "readability": [
@@ -58,5 +74,8 @@ FEATURE_GROUPS = {
         "flesch_reading_ease",
         "flesch_kincaid_grade",
         "dale_chall",
+        "smog_index",
+        "automated_readability_index",
+        "gunning_fog",
     ],
 }

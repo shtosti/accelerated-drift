@@ -20,7 +20,7 @@ Edit the matching file to control:
 
 1. query, year range, fields, output path
 2. LLM introduction year and pre/post windows
-3. analysis feature toggles
+3. analysis feature toggles and the explicit feature list used for plots/statistics
 
 ## Run
 
@@ -115,6 +115,8 @@ Collection sources:
 - [src/not_an_llm/preprocessing/text.py](src/not_an_llm/preprocessing/text.py): text preprocessing class
 - [src/not_an_llm/analysis/feature_extractor.py](src/not_an_llm/analysis/feature_extractor.py): style feature extraction class
 - [src/not_an_llm/analysis/readability.py](src/not_an_llm/analysis/readability.py): readability metrics class
+- [src/not_an_llm/analysis/feature_selection.py](src/not_an_llm/analysis/feature_selection.py): shared feature selection rules used by analyze, visualize, and external analysis
+- [src/not_an_llm/analysis/feature_groups.py](src/not_an_llm/analysis/feature_groups.py): canonical grouped feature lists for diff and stack plots
 - [src/not_an_llm/analysis/trends.py](src/not_an_llm/analysis/trends.py): yearly/monthly trend aggregation and exploratory plotting
 - [src/not_an_llm/analysis/interrupted_time_series.py](src/not_an_llm/analysis/interrupted_time_series.py): monthly segmented regression, HAC standard errors, FDR correction, and placebo checks
 - [src/not_an_llm/analysis/topic_modeling/](src/not_an_llm/analysis/topic_modeling/): BERTopic/HDBSCAN topic assignment, topic summaries, hierarchical merge candidates for review, and topic-level reports
@@ -144,9 +146,11 @@ The pre/post diff plots and `feature_stats.csv` are retained as exploratory summ
 Topic modeling is a single BERTopic/HDBSCAN assignment pass:
 
 1. SentenceTransformer embeddings are encoded for each document.
-2. UMAP projects embeddings for clustering and the cluster plot.
-3. HDBSCAN forms topic clusters using `topic_modeling_min_cluster_ratio` to derive `min_cluster_size`.
+2. UMAP projects embeddings to `topic_modeling_umap_n_components` dimensions for clustering.
+3. HDBSCAN forms topic clusters using `topic_modeling_min_cluster_ratio` to derive `min_cluster_size` and `topic_modeling_hdbscan_min_samples` to control outlier strictness.
 4. BERTopic labels topics with `topic_modeling_top_n_terms` and reduces the final topic count with `topic_modeling_max_final_topics`.
-5. Topic labels are saved in `data/analysis/<stem>_topic_labels.csv`, topic counts in `data/analysis/<stem>_topic_summary.csv`, optional hierarchy review data in `data/analysis/<stem>_topic_merge_candidates.csv`, and dataset/topic counts in `data/analysis/<stem>_topic_modeling_stats.csv`.
+5. A separate `topic_modeling_plot_umap_n_components` projection is used for `topic_clusters.png`.
+6. HDBSCAN outliers are preserved as `topic_id = -1` with label `-1 (outliers)` instead of being remapped to an ordinary topic.
+7. Topic labels are saved in `data/analysis/<stem>_topic_labels.csv`, topic counts in `data/analysis/<stem>_topic_summary.csv`, optional hierarchy review data in `data/analysis/<stem>_topic_merge_candidates.csv`, and dataset/topic counts in `data/analysis/<stem>_topic_modeling_stats.csv`.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): brief module map
 - [docs/RESEARCH_PLAN.md](docs/RESEARCH_PLAN.md): brief study logic

@@ -10,6 +10,7 @@ import pandas as pd
 import spacy
 
 from not_an_llm.analysis.feature_extractor import FeatureExtractor
+from not_an_llm.analysis.feature_selection import is_canonical_analysis_feature
 from not_an_llm.analysis.readability import ReadabilityAnalyzer
 from not_an_llm.analysis.trends import save_grouped_difference_plot
 from not_an_llm.config import AppConfig
@@ -124,43 +125,6 @@ def _build_comparison_table(enriched: pd.DataFrame, feature_columns: list[str]) 
     return result.sort_values("diff_ai_minus_human", ascending=False, key=lambda s: s.abs())
 
 
-def _is_canonical_analysis_feature(column_name: str) -> bool:
-    excluded = {
-        "word_count",
-        "sentence_count",
-        "paper_count",
-        "marker_density",
-        "coordination_density",
-        "clause_depth_per_sentence",
-        "dependency_entropy_normalized",
-        "dependency_length_norm",
-        "sentence_depth_cv",
-        "coordination_count_per_1k_words",
-        "list_of_three_per_1k_words",
-    }
-
-    if column_name in excluded:
-        return False
-
-    if column_name in {
-        "clause_depth",
-        "dependency_entropy",
-        "dependency_length",
-        "coordination_count",
-        "sentence_depth_std",
-        "list_of_three",
-    }:
-        return True
-
-    if column_name.endswith("_total_per_1k_words"):
-        return True
-
-    if column_name.endswith("_per_1k_words") and not column_name.endswith("_count_per_1k_words"):
-        return True
-
-    return False
-
-
 def _save_top_diff_plot(comparison: pd.DataFrame, output_path: Path, top_n: int = 20) -> Path:
     logger.info("Generating grouped external diff plot...")
     saved_path = save_grouped_difference_plot(
@@ -226,7 +190,7 @@ def run_external_analysis(
         c for c in enriched.columns
         if pd.api.types.is_numeric_dtype(enriched[c])
         and c not in {"pair_id", "word_count", "sentence_count"}
-        and _is_canonical_analysis_feature(c)
+        and is_canonical_analysis_feature(c)
     ]
 
     comparison = _build_comparison_table(enriched, numeric_features)
