@@ -127,10 +127,12 @@ All plots are saved to `data/visuals/<dataset_stem>/` or the configured `trends_
 3. `*_diff.png` / grouped feature diff plots
    - Per-feature-group diff plots for feature sets defined in `FEATURE_GROUPS`.
    - Examples: `marker_words_diff.png`, `verbs_diff.png`, `adjectives_diff.png`, `phrases_diff.png`, `syntax_diff.png`, `readability_diff.png`.
-   - These are exploratory effect-size plots. Empty or non-informative groups are skipped instead of treated as failed hypothesis tests.
+   - These are exploratory effect-size plots. They do not carry pre/post p-value or Cohen's d annotations because the primary hypothesis is about slope change, not pre/post mean separation.
+   - Empty or non-informative groups are skipped instead of treated as failed hypothesis tests.
 
 4. `its_slope_changes.png`
    - Ranks features by absolute post-intervention slope change from the monthly interrupted time-series model.
+   - Annotates each row with delta slope/year, 95% CI, and family-level q-value.
    - This plot points to the most temporally relevant changes; the CSV is the authoritative statistical output.
 
 5. `*_trend.png` group plots
