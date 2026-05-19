@@ -14,20 +14,14 @@ from .label_map import LABEL_MAP
 from .feature_groups import FEATURE_GROUPS
 
 
-def _symmetric_percent_change(pre_value: float, post_value: float) -> float:
-    """Return a stable percentage change between two means.
-
-    Uses the symmetric percentage change formula so rare or near-zero
-    baselines do not explode to infinity:
-    100 * (post - pre) / (|post| + |pre|)
-    """
-
+def _simple_percent_change(pre_value: float, post_value: float) -> float:
     pre_value = float(pre_value)
     post_value = float(post_value)
-    scale = abs(pre_value) + abs(post_value)
-    if scale == 0.0:
-        return 0.0
-    return 100.0 * (post_value - pre_value) / scale
+
+    if pre_value == 0.0:
+        return np.nan
+
+    return 100.0 * (post_value - pre_value) / abs(pre_value)
 
 
 class TrendAnalyzer:
@@ -285,7 +279,7 @@ class TrendAnalyzer:
         # ---------------------------
         # symmetric %
         # ---------------------------
-        diff = _symmetric_percent_change(pre.mean(), post.mean())
+        diff = _simple_percent_change(pre.mean(), post.mean())
 
         result = {
             "feature": feature,
@@ -689,7 +683,7 @@ class TrendAnalyzer:
 
             rows.append({
                 "feature": feature,
-                "diff": _symmetric_percent_change(pre_vals.mean(), post_vals.mean())
+                "diff": _simple_percent_change(pre_vals.mean(), post_vals.mean())
             })
 
         df = pd.DataFrame(rows).sort_values("diff")
@@ -747,7 +741,7 @@ class TrendAnalyzer:
 
                 rows.append({
                     "feature": f,
-                    "diff": _symmetric_percent_change(pre_vals.mean(), post_vals.mean())
+                    "diff": _simple_percent_change(pre_vals.mean(), post_vals.mean())
                 })
 
             df = pd.DataFrame(rows)
