@@ -462,7 +462,7 @@ class TrendAnalyzer:
         fig, axes = plt.subplots(
             len(features),
             1,
-            figsize=(5, 3 * len(features)),
+            figsize=(4.5, 2.5 * len(features)),
             sharex=True,
         )
         if len(features) == 1:
@@ -573,7 +573,7 @@ class TrendAnalyzer:
         fig, axes = plt.subplots(
             len(features),
             1,
-            figsize=(5, 3 * len(features)),
+            figsize=(4.5, 2.5 * len(features)),
             sharex=True
         )
         if len(features) == 1:
@@ -727,7 +727,7 @@ class TrendAnalyzer:
         )
 
     # =========================================================
-    # GROUPED DIFFS (THIS IS YOUR MAIN REQUEST)
+    # GROUPED DIFFS
     # =========================================================
     def save_grouped_feature_diffs(
         self,
@@ -785,7 +785,9 @@ class TrendAnalyzer:
                 "diff",
                 "Percent change (%)",
                 self.label_map,
-                stats_df = stats_df
+                stats_df=stats_df,
+                annotation_mode="p+d",
+                significant_only=True,
             )
 
             outputs[group_name] = out_path
@@ -810,8 +812,6 @@ class TrendAnalyzer:
 
         events = events or {
             "ChatGPT": "2022-11-30",
-            "GPT-4": "2023-03-14",
-            "AI detection": "2023-06-01",
             "Delve paper": "2024-01-15",
         }
 
@@ -980,7 +980,7 @@ class TrendAnalyzer:
         diff_df = diff_df.sort_values("diff_pct")
 
         # Save diff plot
-        diff_fig, diff_ax = plt.subplots(figsize=(6, 1.5 * len(diff_df) + 0.3))
+        diff_fig, diff_ax = plt.subplots(figsize=(6, 1.2 * len(diff_df) + 0.3))
         colors = ["#943F8B" if v < 0 else "#54A066" for v in diff_df["diff_pct"]]
         diff_ax.barh(diff_df["feature"], diff_df["diff_pct"], color=colors)
         diff_ax.axvline(0, color="black", linewidth=1)
@@ -1000,7 +1000,7 @@ class TrendAnalyzer:
 
         year_ts = pd.to_datetime(plot_yearly.index.astype(str) + "-01-01")
 
-        trend_fig, trend_ax = plt.subplots(figsize=(6, 0.5 * len(top_roles) + 0.3))
+        trend_fig, trend_ax = plt.subplots(figsize=(4, 4 + 0.3))
         for role in top_roles:
             trend_ax.plot(year_ts, plot_yearly[role], marker="o", linewidth=1, label=role)
 
@@ -1035,14 +1035,16 @@ def save_grouped_difference_plot(
     diff_column: str,
     xlabel: str,
     label_map: dict[str, str],
-    top_n: int = 50,
+    top_n: int = 15,
     stats_df: pd.DataFrame | None = None,
+    annotation_mode: str = "p+d",  # none | p | d | p+d
+    significant_only: bool = False,
 ) -> Path:
 
     def _pretty_diff_label(feature: str) -> str:
         mapped = label_map.get(feature)
+
         if mapped:
-            # Remove markdown-style quoting for cleaner axis labels.
             return mapped.replace("`", "")
 
         if feature.endswith("_TOTAL"):
@@ -1061,60 +1063,229 @@ def save_grouped_difference_plot(
         return cleaned.replace("_", " ")
 
     df = df.dropna().copy()
-    if stats_df is not None and not stats_df.empty and "feature" in stats_df.columns:
-        stats_df = stats_df.drop(columns=["diff"], errors="ignore")
-        df = df.merge(stats_df, on="feature", how="left")
-        df = df.sort_values(diff_column, key=lambda s: s.abs(), ascending=False).head(top_n)
-        df = df.sort_values(diff_column)
 
-    df["label"] = df[feature_column].astype(str).map(_pretty_diff_label)
+    # =====================================================
+    # MERGE STATS
+    # =====================================================
+    if (
+        stats_df is not None
+        and not stats_df.empty
+        and "feature" in stats_df.columns
+    ):
 
-    # Fixed bar height per data point for consistent appearance across plots
-    bar_height_inches = 0.25  # inches per bar
-    num_bars = len(df)
-    fig_height = num_bars * bar_height_inches + 1.5  # 1.5 inches for margins, labels, etc.
-    fig, ax = plt.subplots(figsize=(6, max(3, fig_height)))
+        stats_keep = [
+            c
+            for c in [
+                "feature",
+                "p_value",
+                "p_adj",
+                "cohens_d",
+            ]
+            if c in stats_df.columns
+        ]
 
-    colors = ["#943F8B" if v < 0 else "#54A066" for v in df[diff_column]]
+        df = df.merge(
+            stats_df[stats_keep],
+            on="feature",
+            how="left",
+        )
 
-    ax.barh(df["label"], df[diff_column], color=colors)
-    ax.axvline(0, color="black", linewidth=1)
+        # optional significance filtering
+        if significant_only and "p_adj" in df.columns:
+            df = df[df["p_adj"] < 0.05]
 
-    # # ---------------------------
-    # # ADD STATS ANNOTATIONS
-    # # ---------------------------
-    # if stats_df is not None and not df.empty:
+        # hybrid ranking:
+        # large change + significant = top
+        if "p_adj" in df.columns:
 
-    #     for i, row in df.iterrows():
-    #         txt = []
+            p = df["p_adj"].fillna(1.0)
+            score = (
+                df[diff_column].abs()
+                * (-np.log10(np.clip(p, 1e-10, 1)))
+            )
 
-    #         if "p_adj" in row and pd.notna(row["p_adj"]):
-    #             txt.append(f"p={row['p_adj']:.3f}")
+            df["_rank_score"] = score
 
-    #         if "change_point" in row and pd.notna(row["change_point"]):
-    #             txt.append(f"cp={int(row['change_point'])}")
+            df = (
+                df
+                .sort_values(
+                    "_rank_score",
+                    ascending=False,
+                )
+                .head(top_n)
+            )
 
-    #         if "cohens_d" in row and pd.notna(row["cohens_d"]):
-    #             txt.append(f"d={row['cohens_d']:.2f}")
+        else:
+            df = (
+                df
+                .sort_values(
+                    diff_column,
+                    key=lambda s: s.abs(),
+                    ascending=False,
+                )
+                .head(top_n)
+            )
 
-    #         if txt:
-    #             label = " | ".join(txt)
+    df = df.sort_values(diff_column)
 
-    #             ax.text(
-    #                 row[diff_column],
-    #                 i,
-    #                 " " + label,
-    #                 va="center",
-    #                 fontsize=8,
-    #                 alpha=0.8
-    #             )
+    if df.empty:
+        raise ValueError(
+            f"No rows available for {output_path}"
+        )
 
-    # ax.set_xlabel(xlabel)
-    ax.grid(axis="x", alpha=0.3)
+    df["label"] = (
+        df[feature_column]
+        .astype(str)
+        .map(_pretty_diff_label)
+    )
+
+    # =====================================================
+    # FIGURE SIZE
+    # =====================================================
+    bar_height_inches = 0.2
+
+    fig_height = (
+        len(df) * bar_height_inches
+        + 1.6
+    )
+
+    fig, ax = plt.subplots(
+        figsize=(
+            7,
+            max(3, fig_height),
+        )
+    )
+
+    colors = [
+        "#943F8B" if v < 0
+        else "#54A066"
+        for v in df[diff_column]
+    ]
+
+    bars = ax.barh(
+        df["label"],
+        df[diff_column],
+        color=colors,
+    )
+
+    ax.axvline(
+        0,
+        color="black",
+        linewidth=1,
+    )
+
+    # =====================================================
+    # ANNOTATIONS
+    # =====================================================
+    x_range = abs(
+        df[diff_column]
+    ).max()
+
+    offset = max(
+        x_range * 0.03,
+        1.0,
+    )
+
+    for bar, (_, row) in zip(
+        bars,
+        df.iterrows(),
+    ):
+
+        pieces = []
+
+        p = row.get(
+            "p_adj",
+            np.nan,
+        )
+
+        d = row.get(
+            "cohens_d",
+            np.nan,
+        )
+
+        if annotation_mode in ("p", "p+d"):
+
+            if pd.notna(p):
+
+                if p < 0.001:
+                    sig = "***"
+                elif p < 0.01:
+                    sig = "**"
+                elif p < 0.05:
+                    sig = "*"
+                else:
+                    sig = "ns"
+
+                pieces.append(
+                    f"{sig} p={p:.3f}"
+                )
+
+        if (
+            annotation_mode
+            in ("d", "p+d")
+            and pd.notna(d)
+        ):
+            pieces.append(
+                f"d={d:.2f}"
+            )
+
+        if not pieces:
+            continue
+
+        label = " | ".join(
+            pieces
+        )
+
+        width = (
+            bar.get_width()
+        )
+
+        y = (
+            bar.get_y()
+            + bar.get_height()
+            / 2
+        )
+
+        if width >= 0:
+            x = width + offset
+            ha = "left"
+
+        else:
+            x = width - offset
+            ha = "right"
+
+        ax.text(
+            x,
+            y,
+            label,
+            va="center",
+            ha=ha,
+            fontsize=7,
+            alpha=0.85,
+        )
+
+    ax.grid(
+        axis="x",
+        alpha=0.3,
+    )
+
+    ax.set_xlabel(
+        xlabel
+    )
 
     fig.tight_layout()
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+
+    output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    fig.savefig(
+        output_path,
+        dpi=200,
+        bbox_inches="tight",
+    )
+
     plt.close(fig)
 
     return output_path
