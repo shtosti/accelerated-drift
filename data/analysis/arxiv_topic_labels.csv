@@ -1,0 +1,13 @@
+topic_id,topic_label
+0,"segmentation, forecasting, molecular, eeg, vision language, protein, cnn"
+1,"sentiment, dialogue, node, sentence, emotion, multilingual, fine tuning"
+2,"reinforcement learning, rl, robot, action, reward, policies, planning"
+3,"attacks, federated, federated learning, attack, fl, private, clients"
+4,"regret, bandit, bandits, wireless, channel, reinforcement learning, armed"
+5,"asr, speaker, acoustic, automatic speech, voice, musical, recognition asr"
+6,"causal, treatment, imputation, causal discovery, observational, causal inference, observational data"
+7,"quantum, quantum machine, quantum circuits, qubit, qml, quantum computing, circuit"
+8,"clustering algorithms, means clustering, based clustering, fuzzy, number clusters, center, hierarchical clustering"
+9,"tensors, tensor completion, rank tensor, tensor decomposition, tucker, factorization, tensor train"
+10,"ocr, character, handwriting, character recognition, layout, handwritten text, characters"
+11,"fine tuning, reinforcement learning, prompt, token, planning, gpt, tokens"
