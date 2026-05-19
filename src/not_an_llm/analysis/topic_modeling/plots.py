@@ -5,8 +5,11 @@ import textwrap
 from typing import TYPE_CHECKING
 
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 import numpy as np
 import pandas as pd
+
+from not_an_llm.analysis.label_map import pretty_feature_label
 
 if TYPE_CHECKING:
     from not_an_llm.analysis.trends import TrendAnalyzer
@@ -42,6 +45,19 @@ def format_xticks(ax):
     for label in ax.get_xticklabels():
         label.set_rotation(45)
         label.set_ha("right")
+
+
+def format_year_xticks(ax):
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    format_xticks(ax)
+
+
+def normalize_year_column(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df["year"] = pd.to_numeric(df["year"], errors="coerce").astype("Int64")
+    df = df.dropna(subset=["year"]).copy()
+    df["year"] = df["year"].astype(int)
+    return df
 
 
 def topic_color_map(topic_ids) -> dict[int, str]:
@@ -110,7 +126,7 @@ def save_topic_prevalence(
     if "year" not in enriched.columns:
         raise ValueError("Topic prevalence requires a 'year' column.")
 
-    df = enriched.copy()
+    df = normalize_year_column(enriched)
     if "month_ts" not in df.columns and "year" in df.columns and "month" in df.columns:
         df["month_ts"] = pd.to_datetime(
             df["year"].astype(str) + "-" + df["month"].astype(str).str.zfill(2) + "-01",
@@ -159,7 +175,7 @@ def save_topic_prevalence(
     save_legend_only(ax, plot_dir / "topic_evolution_stacked_counts_legend.png")
     legend.remove()
     ax.grid(alpha=0.3, axis="y")
-    format_xticks(ax)
+    format_year_xticks(ax)
     stacked_counts_path = plot_dir / "topic_evolution_stacked_counts_yearly.png"
     fig.tight_layout()
     fig.savefig(stacked_counts_path, dpi=150)
@@ -189,7 +205,7 @@ def save_topic_prevalence(
     save_legend_only(ax, plot_dir / "topic_prevalence_legend.png")
     legend.remove()
     ax.grid(alpha=0.3)
-    format_xticks(ax)
+    format_year_xticks(ax)
     trend_path = plot_dir / "topic_prevalence_yearly.png"
     fig.tight_layout()
     fig.savefig(trend_path, dpi=150)
@@ -210,7 +226,7 @@ def save_topic_prevalence(
     save_legend_only(ax, plot_dir / "topic_evolution_stacked_legend.png")
     legend.remove()
     ax.grid(alpha=0.3, axis="y")
-    format_xticks(ax)
+    format_year_xticks(ax)
     stacked_path = plot_dir / "topic_evolution_stacked_yearly.png"
     fig.tight_layout()
     fig.savefig(stacked_path, dpi=150)
@@ -278,6 +294,7 @@ def save_topic_trend_plots(
     if not feature_columns:
         return paths
 
+    enriched = normalize_year_column(enriched)
     grouped = enriched.groupby(["year", "topic_id"])[feature_columns].mean().reset_index()
     grouped["topic_label"] = grouped["topic_id"].map(topic_labels)
     event_dates = {name: pd.to_datetime(value) for name, value in events.items()}
@@ -311,12 +328,12 @@ def save_topic_trend_plots(
                 ax.axvline(x=event_date.year, color="red", linestyle="--", alpha=0.7, label=event_name)
 
         ax.set_xlabel("Year")
-        ax.set_ylabel(feature.replace("_per_1k_words", "").replace("_", " ").replace("Word", "").title())
+        ax.set_ylabel(pretty_feature_label(feature))
         legend = ax.legend(loc="best", fontsize=8)
         save_legend_only(ax, plot_dir / f"{feature}_by_topic_legend.png")
         legend.remove()
         ax.grid(alpha=0.3)
-        format_xticks(ax)
+        format_year_xticks(ax)
 
         plot_path = plot_dir / f"{feature}_by_topic.png"
         fig.tight_layout()
