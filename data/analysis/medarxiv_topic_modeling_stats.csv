@@ -1,0 +1,23 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,82011.0
+dataset,all,,,topics,10.0
+topic,model,9.0,"sars, sars cov, cov, pandemic, vaccination, vaccine, genetic",abstract_count,27446.0
+topic,model,9.0,"sars, sars cov, cov, pandemic, vaccination, vaccine, genetic",abstract_share,0.33466242333345525
+topic,model,0.0,"sars, sars cov, cov, vaccine, vaccination, pandemic, hiv",abstract_count,21726.0
+topic,model,0.0,"sars, sars cov, cov, vaccine, vaccination, pandemic, hiv",abstract_share,0.2649156820426528
+topic,model,1.0,"genetic, variants, genome, tau, variant, gwas, prs",abstract_count,8783.0
+topic,model,1.0,"genetic, variants, genome, tau, variant, gwas, prs",abstract_share,0.10709538964285278
+topic,model,2.0,"motor, depression, eeg, disorder, stimulation, epilepsy, asd",abstract_count,7365.0
+topic,model,2.0,"motor, depression, eeg, disorder, stimulation, epilepsy, asd",abstract_share,0.08980502615502799
+topic,model,3.0,"food, mental, mental health, maternal, pandemic, birth, countries",abstract_count,6188.0
+topic,model,3.0,"food, mental, mental health, maternal, pandemic, birth, countries",abstract_share,0.07545329285095902
+topic,model,4.0,"kidney, asthma, retinal, ckd, vitamin, type diabetes, glaucoma",abstract_count,5487.0
+topic,model,4.0,"kidney, asthma, retinal, ckd, vitamin, type diabetes, glaucoma",abstract_share,0.06690565899696382
+topic,model,5.0,"deep learning, llms, gpt, language models, chatgpt, large language, segmentation",abstract_count,3071.0
+topic,model,5.0,"deep learning, llms, gpt, language models, chatgpt, large language, segmentation",abstract_share,0.037446196241967544
+topic,model,6.0,"resistance, antibiotic, gut, isolates, cholera, microbiome, antimicrobial",abstract_count,1407.0
+topic,model,6.0,"resistance, antibiotic, gut, isolates, cholera, microbiome, antimicrobial",abstract_share,0.017156235139188646
+topic,model,7.0,"hearing, hearing loss, cochlear, tinnitus, cleft, speech, auditory",abstract_count,338.0
+topic,model,7.0,"hearing, hearing loss, cochlear, tinnitus, cleft, speech, auditory",abstract_share,0.004121398349001963
+topic,model,8.0,"breast, orn, pcct, mr linac, linac, hnc, ornj",abstract_count,200.0
+topic,model,8.0,"breast, orn, pcct, mr linac, linac, hnc, ornj",abstract_share,0.0024386972479301557

@@ -127,7 +127,6 @@ def save_its_slope_change_plot(
     bars = ax.barh(plot_df["label"], plot_df["slope_change_per_year"], color=colors, xerr=xerr, capsize=2)
     ax.axvline(0, color="#333333", linewidth=0.8)
     ax.set_xlabel("Delta slope after intervention, feature units per year")
-    ax.set_title("Interrupted time-series slope changes")
 
     for bar, annotation in zip(bars, plot_df["annotation"]):
         ax.text(
