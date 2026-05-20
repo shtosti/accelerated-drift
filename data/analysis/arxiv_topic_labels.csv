@@ -1,0 +1,14 @@
+topic_id,topic_label
+-1,-1 (outliers)
+0,"deep, deep learning, diffusion, gradient, time series, clinical, transformer"
+1,"translation, dialogue, word, sentiment, emotion, machine translation, news"
+2,"reinforcement, reinforcement learning, rl, regret, offline, bandit, games"
+3,"attacks, privacy, federated, attack, federated learning, fl, security"
+4,"speech, audio, asr, speaker, music, speech recognition, acoustic"
+5,"market, time series, imputation, causal discovery, deep, forecasting, trading"
+6,"gnns, graph neural, gnn, node classification, spectral, networks gnns, link prediction"
+7,"quantum, quantum machine, quantum circuits, quantum computing, qubit, circuits, circuit"
+8,"ai systems, ethical, governance, ethics, creative, creativity, consciousness"
+9,"ontology, ontologies, owl, knowledge graphs, knowledge graph, rdf, ontological"
+10,"sports, players, soccer, player, football, tennis, league"
+11,"rough, belief, neutrosophic, rough set, dempster, shafer, hesitant fuzzy"

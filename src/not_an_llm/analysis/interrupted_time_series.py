@@ -113,7 +113,7 @@ def save_its_slope_change_plot(
 
     plot_df["annotation"] = plot_df.apply(_format_its_annotation, axis=1)
 
-    fig_height = max(6, len(plot_df) * 0.3 + 1.6)
+    fig_height = max(8, len(plot_df) * 0.3 + 1.6)
     fig, ax = plt.subplots(figsize=(7, fig_height))
     colors = ["#943F8B" if value < 0 else "#54A066" for value in plot_df["slope_change_per_year"]]
     xerr = None
@@ -126,7 +126,7 @@ def save_its_slope_change_plot(
         )
     bars = ax.barh(plot_df["label"], plot_df["slope_change_per_year"], color=colors, xerr=xerr, capsize=2)
     ax.axvline(0, color="#333333", linewidth=0.8)
-    ax.set_xlabel("Delta slope after intervention, feature units per year")
+    ax.set_xlabel(r"$\Delta$ slope after intervention, feature units per year")
 
     for bar, annotation in zip(bars, plot_df["annotation"]):
         ax.text(
@@ -352,7 +352,7 @@ def _format_its_annotation(row: pd.Series) -> str:
     ci_low = _format_number(row.get("slope_change_per_year_ci_low"))
     ci_high = _format_number(row.get("slope_change_per_year_ci_high"))
     q_value = _format_p_value(row.get("slope_change_q"))
-    return f"Delta/year {delta} [{ci_low}, {ci_high}]; q={q_value}"
+    return rf"$\Delta$/year {delta} [{ci_low}, {ci_high}]; q={q_value}"
 
 
 def _format_number(value: object) -> str:

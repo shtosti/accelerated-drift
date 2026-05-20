@@ -4,7 +4,7 @@ data_dir = "data"
 
 [collection]
 # Data source: semantic_scholar, arxiv, medarxiv, or biorxiv
-source = "medarxiv"
+source = "arxiv"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
 
@@ -75,14 +75,14 @@ enabled = true
 generate_plots = true
 include_readability = true
 topic_modeling_enabled = true
-topic_modeling_min_cluster_ratio = 0.001
+topic_modeling_min_cluster_ratio = 0.0001
 topic_modeling_top_n_terms = 7
 topic_modeling_max_final_topics = 13
 topic_modeling_use_bertopic = true
 topic_modeling_num_workers = 16
 topic_modeling_embedding_batch_size = 128
 # Lower values reduce the size of the HDBSCAN outlier bucket; set <= 0 to use the derived default.
-topic_modeling_hdbscan_min_samples = 1
+topic_modeling_hdbscan_min_samples = 10
 # Cluster in a richer UMAP space, then generate a separate 2D UMAP projection for plots.
 topic_modeling_umap_n_components = 5
 topic_modeling_plot_umap_n_components = 2
@@ -99,7 +99,7 @@ readability_metrics = [
 ]
 
 # Full run config. Use config_mini.toml for the mini run.
-preprocessed_jsonl = "data/processed/medarxiv.jsonl"
+preprocessed_jsonl = "data/processed/arxiv.jsonl"
 feature_dataset_jsonl = ""
 trends_csv = ""
 monthly_trends_csv = ""
