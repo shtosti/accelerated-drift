@@ -1,0 +1,12 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_abstract_count,child_left_abstract_share,child_right_abstract_count,child_right_abstract_share,parent_abstract_count,parent_abstract_share
+22,deep_quantum_speech_ontology_reinforcement,"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]",17,deep_speech_reinforcement_reinforcement learning_attacks,21,quantum_ontology_ontologies_sports_players,1.1545827410834755,,,,,,,,,
+21,quantum_ontology_ontologies_sports_players,"[7, 8, 9, 10, 11]",19,ontology_sports_ontologies_players_soccer,20,quantum_rough_belief_neutrosophic_rough set,0.9924840932670933,,,,,,,,,
+20,quantum_rough_belief_neutrosophic_rough set,"[7, 11]",7,quantum_quantum machine_quantum circuits_quantum computing_qubit,11,rough_belief_neutrosophic_rough set_dempster,0.98194305245415,,,,,,,,,
+19,ontology_sports_ontologies_players_soccer,"[8, 9, 10]",18,ontology_ontologies_ai systems_ethical_governance,10,sports_players_soccer_player_football,0.9788817147146238,,,,,,,,,
+18,ontology_ontologies_ai systems_ethical_governance,"[8, 9]",9,ontology_ontologies_owl_knowledge graphs_knowledge graph,8,ai systems_ethical_governance_ethics_creative,0.9475869042097947,,,,,,,,,
+17,deep_speech_reinforcement_reinforcement learning_attacks,"[0, 1, 2, 3, 4, 5, 6]",4,speech_audio_asr_speaker_music,16,deep_reinforcement_reinforcement learning_attacks_deep learning,0.9282056807908593,,,,,,,,,
+16,deep_reinforcement_reinforcement learning_attacks_deep learning,"[0, 1, 2, 3, 5, 6]",14,deep_reinforcement_reinforcement learning_rl_deep learning,15,attacks_gnns_privacy_attack_graph neural,0.8399900800269675,,,,,,,,,
+15,attacks_gnns_privacy_attack_graph neural,"[3, 6]",3,attacks_privacy_federated_attack_federated learning,6,gnns_graph neural_gnn_node classification_spectral,0.7794982178455173,,,,,,,,,
+14,deep_reinforcement_reinforcement learning_rl_deep learning,"[0, 1, 2, 5]",2,reinforcement_reinforcement learning_rl_regret_offline,13,deep_time series_deep learning_forecasting_market,0.7400322089666639,,,,,,,,,
+13,deep_time series_deep learning_forecasting_market,"[0, 1, 5]",12,deep_time series_deep learning_forecasting_market,1,translation_dialogue_word_sentiment_emotion,0.7068414703912841,,,,,,,,,
+12,deep_time series_deep learning_forecasting_market,"[0, 5]",5,market_time series_imputation_causal discovery_deep,0,deep_deep learning_diffusion_gradient_time series,0.5868304838024663,,,,,,,,,

@@ -1,0 +1,31 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,402703.0
+dataset,all,,,topics,12.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_count,131343.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_share,0.32615351760478567
+topic,model,-1.0,-1 (outliers),abstract_count,131343.0
+topic,model,-1.0,-1 (outliers),abstract_share,0.32615351760478567
+topic,model,0.0,"deep, deep learning, diffusion, gradient, time series, clinical, transformer",abstract_count,125780.0
+topic,model,0.0,"deep, deep learning, diffusion, gradient, time series, clinical, transformer",abstract_share,0.31233936672932655
+topic,model,1.0,"translation, dialogue, word, sentiment, emotion, machine translation, news",abstract_count,48023.0
+topic,model,1.0,"translation, dialogue, word, sentiment, emotion, machine translation, news",abstract_share,0.11925165692830697
+topic,model,2.0,"reinforcement, reinforcement learning, rl, regret, offline, bandit, games",abstract_count,37929.0
+topic,model,2.0,"reinforcement, reinforcement learning, rl, regret, offline, bandit, games",abstract_share,0.09418603784923381
+topic,model,3.0,"attacks, privacy, federated, attack, federated learning, fl, security",abstract_count,24774.0
+topic,model,3.0,"attacks, privacy, federated, attack, federated learning, fl, security",abstract_share,0.06151928344213974
+topic,model,4.0,"speech, audio, asr, speaker, music, speech recognition, acoustic",abstract_count,10143.0
+topic,model,4.0,"speech, audio, asr, speaker, music, speech recognition, acoustic",abstract_share,0.025187296841592936
+topic,model,5.0,"market, time series, imputation, causal discovery, deep, forecasting, trading",abstract_count,8626.0
+topic,model,5.0,"market, time series, imputation, causal discovery, deep, forecasting, trading",abstract_share,0.021420252642766504
+topic,model,6.0,"gnns, graph neural, gnn, node classification, spectral, networks gnns, link prediction",abstract_count,8033.0
+topic,model,6.0,"gnns, graph neural, gnn, node classification, spectral, networks gnns, link prediction",abstract_share,0.01994770339431293
+topic,model,7.0,"quantum, quantum machine, quantum circuits, quantum computing, qubit, circuits, circuit",abstract_count,3638.0
+topic,model,7.0,"quantum, quantum machine, quantum circuits, quantum computing, qubit, circuits, circuit",abstract_share,0.009033953062182304
+topic,model,8.0,"ai systems, ethical, governance, ethics, creative, creativity, consciousness",abstract_count,2688.0
+topic,model,8.0,"ai systems, ethical, governance, ethics, creative, creativity, consciousness",abstract_share,0.0066748944010846705
+topic,model,9.0,"ontology, ontologies, owl, knowledge graphs, knowledge graph, rdf, ontological",abstract_count,676.0
+topic,model,9.0,"ontology, ontologies, owl, knowledge graphs, knowledge graph, rdf, ontological",abstract_share,0.0016786564788442103
+topic,model,10.0,"sports, players, soccer, player, football, tennis, league",abstract_count,558.0
+topic,model,10.0,"sports, players, soccer, player, football, tennis, league",abstract_share,0.0013856365609394516
+topic,model,11.0,"rough, belief, neutrosophic, rough set, dempster, shafer, hesitant fuzzy",abstract_count,492.0
+topic,model,11.0,"rough, belief, neutrosophic, rough set, dempster, shafer, hesitant fuzzy",abstract_share,0.0012217440644842477

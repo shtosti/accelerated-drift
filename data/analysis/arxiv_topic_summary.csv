@@ -1,0 +1,14 @@
+topic_id,abstract_count,abstract_share,topic_label
+-1,131343,0.32615351760478567,-1 (outliers)
+0,125780,0.31233936672932655,"deep, deep learning, diffusion, gradient, time series, clinical, transformer"
+1,48023,0.11925165692830697,"translation, dialogue, word, sentiment, emotion, machine translation, news"
+2,37929,0.09418603784923381,"reinforcement, reinforcement learning, rl, regret, offline, bandit, games"
+3,24774,0.06151928344213974,"attacks, privacy, federated, attack, federated learning, fl, security"
+4,10143,0.025187296841592936,"speech, audio, asr, speaker, music, speech recognition, acoustic"
+5,8626,0.021420252642766504,"market, time series, imputation, causal discovery, deep, forecasting, trading"
+6,8033,0.01994770339431293,"gnns, graph neural, gnn, node classification, spectral, networks gnns, link prediction"
+7,3638,0.009033953062182304,"quantum, quantum machine, quantum circuits, quantum computing, qubit, circuits, circuit"
+8,2688,0.0066748944010846705,"ai systems, ethical, governance, ethics, creative, creativity, consciousness"
+9,676,0.0016786564788442103,"ontology, ontologies, owl, knowledge graphs, knowledge graph, rdf, ontological"
+10,558,0.0013856365609394516,"sports, players, soccer, player, football, tennis, league"
+11,492,0.0012217440644842477,"rough, belief, neutrosophic, rough set, dempster, shafer, hesitant fuzzy"
