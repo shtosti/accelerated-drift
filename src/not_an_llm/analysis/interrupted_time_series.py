@@ -127,6 +127,16 @@ def save_its_slope_change_plot(
     bars = ax.barh(plot_df["label"], plot_df["slope_change_per_year"], color=colors, xerr=xerr, capsize=2)
     ax.axvline(0, color="#333333", linewidth=0.8)
     ax.set_xlabel(r"$\Delta$ slope after intervention, feature units per year")
+    ax.text(
+        0.0,
+        1.01,
+        "Significance stars use FDR-adjusted slope-change q-values: * q<0.05, ** q<0.01, *** q<0.001",
+        transform=ax.transAxes,
+        ha="left",
+        va="bottom",
+        fontsize=8,
+        color="#333333",
+    )
 
     for bar, annotation in zip(bars, plot_df["annotation"]):
         ax.text(
@@ -352,7 +362,9 @@ def _format_its_annotation(row: pd.Series) -> str:
     ci_low = _format_number(row.get("slope_change_per_year_ci_low"))
     ci_high = _format_number(row.get("slope_change_per_year_ci_high"))
     q_value = _format_p_value(row.get("slope_change_q"))
-    return rf"$\Delta$/year {delta} [{ci_low}, {ci_high}]; q={q_value}"
+    stars = _format_significance_stars(row.get("slope_change_q"))
+    star_suffix = f" {stars}" if stars else ""
+    return rf"$\Delta$/year {delta} [{ci_low}, {ci_high}]; q={q_value}{star_suffix}"
 
 
 def _format_number(value: object) -> str:
@@ -380,6 +392,22 @@ def _format_p_value(value: object) -> str:
     if numeric < 0.001:
         return "<0.001"
     return f"{numeric:.3f}"
+
+
+def _format_significance_stars(value: object) -> str:
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        return ""
+    if not np.isfinite(numeric):
+        return ""
+    if numeric < 0.001:
+        return "***"
+    if numeric < 0.01:
+        return "**"
+    if numeric < 0.05:
+        return "*"
+    return ""
 
 
 def _adjust_p_values_by_family(frame: pd.DataFrame, p_column: str) -> pd.Series:

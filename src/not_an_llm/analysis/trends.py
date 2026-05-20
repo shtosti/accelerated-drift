@@ -1013,7 +1013,7 @@ def save_grouped_difference_plot(
     diff_column: str,
     xlabel: str,
     label_map: dict[str, str] | None = None,
-    top_n: int = 25,
+    top_n: int = 30,
     stats_df: pd.DataFrame | None = None,
     annotation_mode: str = None,  # none | p | d | p+d
     significant_only: bool = False,
@@ -1025,7 +1025,7 @@ def save_grouped_difference_plot(
         mapped = label_map.get(feature)
 
         if mapped:
-            return mapped.replace("`", "")
+            return mapped
 
         if feature.endswith("_TOTAL"):
             group = feature.removesuffix("_TOTAL").replace("_", " ")
@@ -1035,10 +1035,19 @@ def save_grouped_difference_plot(
         cleaned = cleaned.removesuffix("_per_1k_words")
         cleaned = cleaned.removesuffix("_total")
 
-        for prefix in ("word_", "verb_", "adjective_", "phrase_"):
+        lexical_prefixes = ("word_", "verb_", "adjective_", "phrase_")
+        marker_prefixes = (
+            "sequential_marker_",
+            "causal_marker_",
+            "contrast_marker_",
+            "emphasis_marker_",
+            "summary_marker_",
+        )
+
+        for prefix in lexical_prefixes + marker_prefixes:
             if cleaned.startswith(prefix):
                 cleaned = cleaned[len(prefix):]
-                break
+                return f"`{cleaned.replace('_', ' ')}`"
 
         return cleaned.replace("_", " ")
 
@@ -1104,11 +1113,11 @@ def save_grouped_difference_plot(
     # =====================================================
     # FIGURE SIZE
     # =====================================================
-    bar_height_inches = 0.2
+    bar_height_inches = 0.15
 
     fig_height = (
         len(df) * bar_height_inches
-        + 1.6
+        + 1.0
     )
 
     fig, ax = plt.subplots(
