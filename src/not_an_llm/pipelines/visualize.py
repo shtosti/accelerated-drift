@@ -262,7 +262,8 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
         events=llm_events,
         smoothing_window=3,
     )
-    trend_plots.append(readability_stack_plot_path)
+    if readability_stack_plot_path is not None:
+        trend_plots.append(readability_stack_plot_path)
 
     punctuation_stack_plot_path = trend_analyzer.save_punctuation_stack_plot(
         yearly=yearly,
