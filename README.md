@@ -56,11 +56,12 @@ The analysis step can be separated from plot generation for efficiency. This is 
    - Monthly trends: `data/analysis/arxiv_month.csv`
    - Monthly interrupted time-series statistics: `data/analysis/<stem>_its_stats.csv`
    - Placebo interrupted time-series checks: `data/analysis/<stem>_its_placebo_stats.csv`
+   - Topic summaries and prevalence tables, when topic modeling is enabled: `data/analysis/<stem>_topic_*.csv`
 
 2. **Generate plots separately:**
 	uv run python main.py --config config.toml visualize
 	
-   This reads the precomputed trend CSVs and generates all plots in `data/visuals/<dataset_stem>/`.
+   This reads the precomputed analysis CSVs and generates all plots in `data/visuals/<dataset_stem>/`. CSV artifacts stay in `data/analysis/`; `data/visuals/` is for rendered figures.
    
    Benefits:
    - No need to rerun expensive feature extraction
@@ -139,7 +140,7 @@ Interpretation:
 
 The main hypothesis tests use `slope_change_per_year`, its 95% confidence interval, `slope_change_p`, and family-level Benjamini-Hochberg `slope_change_q` from `data/analysis/<stem>_its_stats.csv`. Models are weighted by monthly paper count and use HAC/Newey-West style standard errors to reduce overconfidence from autocorrelated monthly residuals. Placebo intervention years are written to `data/analysis/<stem>_its_placebo_stats.csv`.
 
-The pre/post diff plots and `feature_stats.csv` are retained as exploratory summaries for visual scanning; they are not the primary inferential result and do not carry the paper's hypothesis-test annotations. The inferential plot is `its_slope_changes.png`, annotated with delta slope/year, 95% CI, and q-value.
+The pre/post diff plots are retained as exploratory visual summaries only; the old `feature_stats.csv` tables are no longer written because they duplicated non-primary yearly pre/post statistics. The inferential plot is `its_slope_changes.png`, annotated with delta slope/year, 95% CI, and q-value.
 
 ### Topic Modeling Control
 
