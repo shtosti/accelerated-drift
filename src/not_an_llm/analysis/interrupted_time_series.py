@@ -148,7 +148,7 @@ def save_its_slope_change_plot(
         value_column="slope_change_per_year",
         ci_low_column="slope_change_per_year_ci_low",
         ci_high_column="slope_change_per_year_ci_high",
-        xlabel=r"$\Delta$ annual trend after intervention (feature-specific native units/year)",
+        xlabel=r"$\Delta$ annual trend after intervention (feature-specific units/year)",
         label_map=label_map,
         top_n=top_n,
     )
@@ -167,7 +167,7 @@ def save_its_standardized_slope_change_plot(
         value_column="standardized_slope_change_per_year",
         ci_low_column="standardized_slope_change_per_year_ci_low",
         ci_high_column="standardized_slope_change_per_year_ci_high",
-        xlabel=r"$\Delta$ annual trend after intervention (pre-ChatGPT SD/year)",
+        xlabel=r"$\Delta$ annual trend after intervention (Pre SD/year)",
         label_map=label_map,
         top_n=top_n,
     )
@@ -228,7 +228,7 @@ def save_its_standardized_grouped_slope_change_plots(
             value_column="standardized_slope_change_per_year",
             ci_low_column="standardized_slope_change_per_year_ci_low",
             ci_high_column="standardized_slope_change_per_year_ci_high",
-            xlabel=r"$\Delta$ annual trend after intervention (pre-ChatGPT SD/year)",
+            xlabel=r"$\Delta$ annual trend after intervention (Pre SD/year)",
             label_map=label_map,
             top_n=top_n_per_group,
         )
@@ -454,7 +454,7 @@ def _format_its_annotation(row: pd.Series) -> str:
     q_value = _format_p_value(row.get("slope_change_q"))
     stars = _format_significance_stars(row.get("slope_change_q"))
     star_suffix = f" {stars}" if stars else ""
-    return rf"$\Delta$/year {delta} [{ci_low}, {ci_high}]; q={q_value}{star_suffix}"
+    return rf"$\Delta$ {delta}; [{ci_low}, {ci_high}]; q={q_value}{star_suffix}"
 
 
 def _save_its_slope_change_plot(
