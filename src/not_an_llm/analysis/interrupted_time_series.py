@@ -95,7 +95,7 @@ def save_its_slope_change_plot(
     output_path: Path,
     *,
     label_map: dict[str, str] | None = None,
-    top_n: int = 20,
+    top_n: int = 30,
 ) -> Path | None:
     if stats.empty or "slope_change_per_year" not in stats.columns:
         return None
