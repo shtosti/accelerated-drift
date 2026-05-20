@@ -1228,7 +1228,14 @@ def save_grouped_difference_plot(
 
         inset = max(abs(width) * 0.2, offset)
 
-        if width >= 0:
+        if is_percent_plot and pd.notna(raw_value) and abs(raw_value) > 100.0:
+            if width >= 0:
+                x = inset
+                ha = "left"
+            else:
+                x = -inset
+                ha = "right"
+        elif width >= 0:
             x = width - inset
             ha = "right"
         else:

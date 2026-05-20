@@ -12,8 +12,8 @@ from not_an_llm.analysis.feature_selection import build_marker_group_specs, reso
 from not_an_llm.analysis.interrupted_time_series import (
     add_standardized_slope_change_columns,
     compute_interrupted_time_series,
-    save_its_raw_unit_slope_change_plots,
     save_its_slope_change_plot,
+    save_its_standardized_grouped_slope_change_plots,
     save_its_standardized_slope_change_plot,
 )
 from not_an_llm.analysis.label_map import LABEL_MAP
@@ -210,9 +210,9 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
         trend_plots.append(standardized_its_plot_path)
 
     trend_plots.extend(
-        save_its_raw_unit_slope_change_plots(
+        save_its_standardized_grouped_slope_change_plots(
             its_stats,
-            plot_dir / "its_slope_changes_raw_units",
+            plot_dir / "its_slope_changes_standardized_groups",
             label_map=LABEL_MAP,
         )
     )

@@ -207,6 +207,37 @@ def save_its_raw_unit_slope_change_plots(
     return paths
 
 
+def save_its_standardized_grouped_slope_change_plots(
+    stats: pd.DataFrame,
+    output_dir: Path,
+    *,
+    label_map: dict[str, str] | None = None,
+    top_n_per_group: int = 20,
+) -> list[Path]:
+    if stats.empty or "feature" not in stats.columns or "family" not in stats.columns:
+        return []
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths: list[Path] = []
+    for family, group_df in stats.groupby("family", sort=True):
+        family_slug = str(family).replace(" ", "_").replace("/", "_")
+        path = output_dir / f"its_slope_changes_{family_slug}.png"
+        saved_path = _save_its_slope_change_plot(
+            group_df,
+            path,
+            value_column="standardized_slope_change_per_year",
+            ci_low_column="standardized_slope_change_per_year_ci_low",
+            ci_high_column="standardized_slope_change_per_year_ci_high",
+            xlabel=r"$\Delta$ annual trend after intervention (pre-ChatGPT SD/year)",
+            label_map=label_map,
+            top_n=top_n_per_group,
+        )
+        if saved_path is not None:
+            paths.append(saved_path)
+
+    return paths
+
+
 def _fit_feature(
     monthly: pd.DataFrame,
     feature: str,

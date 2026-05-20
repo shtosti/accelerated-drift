@@ -141,10 +141,10 @@ All plots are saved to `data/visuals/<dataset_stem>/` or the configured `trends_
    - The x-axis is annual trend change in pre-ChatGPT standard-deviation units, making readability, syntax, punctuation, and marker-rate features more comparable in one figure.
    - This is the preferred cross-family summary figure.
 
-6. `its_slope_changes_raw_units/*.png`
-   - Splits the raw ITS slope-change results into compatible unit groups.
-   - Examples include occurrences per 1,000 words per year, readability score points per year, ratio units per year, and syntax/other metric points per year.
-   - Use these plots when the native scale is important.
+6. `its_slope_changes_standardized_groups/*.png`
+   - Splits the standardized ITS slope-change results by feature family.
+   - The x-axis stays in pre-ChatGPT standard-deviation units, so features within each family remain comparable even when their native scales differ.
+   - Use these plots for family-level interpretation.
 
 7. `*_trend.png` group plots
    - Trend plots for marker groups such as marker words, sequential markers, causal markers, contrast markers, emphasis markers, and summary markers.
