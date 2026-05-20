@@ -1,5 +1,4 @@
 Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_abstract_count,child_left_abstract_share,child_right_abstract_count,child_right_abstract_share,parent_abstract_count,parent_abstract_share
-8,reinforcement_reinforcement learning_images_logic_tuning,"[0, 1, 2, 3, 4]",3,logic_embedding_variables_logics_neutrosophic,7,reinforcement_reinforcement learning_images_tuning_planning,0.9650662400180415,,,,,,,,,
-7,reinforcement_reinforcement learning_images_tuning_planning,"[0, 1, 2, 4]",6,reinforcement_reinforcement learning_images_planning_rl,4,attack_attacks_privacy_safety_fairness,0.9301855264024893,,,,,,,,,
-6,reinforcement_reinforcement learning_images_planning_rl,"[0, 1, 2]",1,reinforcement_reinforcement learning_planning_rl_policies,5,images_shot_speech_tuning_retrieval,0.9087899121573214,,,,,,,,,
-5,images_shot_speech_tuning_retrieval,"[0, 2]",0,speech_corpus_dialogue_english_retrieval,2,images_3d_video_multimodal_segmentation,0.8207398974003812,,,,,,,,,
+6,language_training_causal_reinforcement_reinforcement learning,"[0, 1, 2, 3]",3,scheduling_neutrosophic_mutation_tsp_routing,5,language_training_causal_reinforcement_reinforcement learning,1.0506701503239197,,,,,,,,,
+5,language_training_causal_reinforcement_reinforcement learning,"[0, 1, 2]",4,language_training_reinforcement_reinforcement learning_deep,2,causal_belief_bayesian_ontology_graphs,0.8810151319933242,,,,,,,,,
+4,language_training_reinforcement_reinforcement learning_deep,"[0, 1]",1,reinforcement_reinforcement learning_rl_ai_deep,0,language_training_llms_language models_large language,0.6850430206932048,,,,,,,,,
