@@ -1,0 +1,25 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,402703.0
+dataset,all,,,topics,9.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_count,1.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_share,2.483219643260666e-06
+topic,model,0.0,"learning, data, model, models, neural, training, based",abstract_count,144427.0
+topic,model,0.0,"learning, data, model, models, neural, training, based",abstract_share,0.3586439634172082
+topic,model,1.0,"models, language, model, data, based, llms, large",abstract_count,125158.0
+topic,model,1.0,"models, language, model, data, based, llms, large",abstract_share,0.31079480411121846
+topic,model,2.0,"learning, policy, reinforcement, reinforcement learning, algorithm, based, problem",abstract_count,52876.0
+topic,model,2.0,"learning, policy, reinforcement, reinforcement learning, algorithm, based, problem",abstract_share,0.13130272185705097
+topic,model,3.0,"data, adversarial, learning, privacy, model, models, attacks",abstract_count,29512.0
+topic,model,3.0,"data, adversarial, learning, privacy, model, models, attacks",abstract_share,0.07328477811190878
+topic,model,4.0,"data, time, learning, model, based, series, time series",abstract_count,26586.0
+topic,model,4.0,"data, time, learning, model, based, series, time series",abstract_share,0.06601887743572807
+topic,model,7.0,"models, model, performance, design, based, large, memory",abstract_count,9316.0
+topic,model,7.0,"models, model, performance, design, based, large, memory",abstract_share,0.023133674196616365
+topic,model,6.0,"ai, human, systems, intelligence, artificial, agents, artificial intelligence",abstract_count,7709.0
+topic,model,6.0,"ai, human, systems, intelligence, artificial, agents, artificial intelligence",abstract_share,0.019143140229896473
+topic,model,5.0,"quantum, classical, learning, quantum machine, machine, machine learning, neural",abstract_count,4096.0
+topic,model,5.0,"quantum, classical, learning, quantum machine, machine, machine learning, neural",abstract_share,0.010171267658795688
+topic,model,8.0,"fuzzy, based, decision, problem, set, paper, data",abstract_count,3022.0
+topic,model,8.0,"fuzzy, based, decision, problem, set, paper, data",abstract_share,0.007504289761933733
+topic,model,-1.0,-1 (outliers),abstract_count,1.0
+topic,model,-1.0,-1 (outliers),abstract_share,2.483219643260666e-06

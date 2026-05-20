@@ -1,0 +1,25 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,82011.0
+dataset,all,,,topics,10.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_count,0.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_share,0.0
+topic,model,0.0,"sars, sars cov, vaccine, vaccination, hiv, omicron, epidemic",abstract_count,30039.0
+topic,model,0.0,"sars, sars cov, vaccine, vaccination, hiv, omicron, epidemic",abstract_share,0.3662801331528697
+topic,model,1.0,"diabetes, gwas, kidney, genome wide, mortality, type diabetes, prs",abstract_count,13487.0
+topic,model,1.0,"diabetes, gwas, kidney, genome wide, mortality, type diabetes, prs",abstract_share,0.16445354891417005
+topic,model,4.0,"mental health, maternal, mortality, pregnancy, depression, 19 pandemic, mothers",abstract_count,9987.0
+topic,model,4.0,"mental health, maternal, mortality, pregnancy, depression, 19 pandemic, mothers",abstract_share,0.12177634707539232
+topic,model,2.0,"mortality, coronary, ischemic, knee, cvd, atrial, ventricular",abstract_count,8603.0
+topic,model,2.0,"mortality, coronary, ischemic, knee, cvd, atrial, ventricular",abstract_share,0.10490056211971564
+topic,model,3.0,"alzheimers, tau, alzheimers disease, eeg, asd, seizure, epilepsy",abstract_count,8287.0
+topic,model,3.0,"alzheimers, tau, alzheimers disease, eeg, asd, seizure, epilepsy",abstract_share,0.101047420467986
+topic,model,5.0,"gpt, llm, ehr, mortality, nlp, electronic health, notes",abstract_count,6567.0
+topic,model,5.0,"gpt, llm, ehr, mortality, nlp, electronic health, notes",abstract_share,0.08007462413578666
+topic,model,6.0,"asthma, copd, cigarette, pm2, mortality, smokers, ipf",abstract_count,2096.0
+topic,model,6.0,"asthma, copd, cigarette, pm2, mortality, smokers, ipf",abstract_share,0.025557547158308033
+topic,model,7.0,"retinal, glaucoma, macular, caries, diabetic, myopia, diabetic retinopathy",abstract_count,1640.0
+topic,model,7.0,"retinal, glaucoma, macular, caries, diabetic, myopia, diabetic retinopathy",abstract_share,0.019997317433027278
+topic,model,9.0,"breast, pet, yidixie, radiomics, breast cancer, gy, hnc",abstract_count,931.0
+topic,model,9.0,"breast, pet, yidixie, radiomics, breast cancer, gy, hnc",abstract_share,0.011352135689114876
+topic,model,8.0,"hearing loss, tinnitus, speech, cochlear, auditory, hearing aids, hearing aid",abstract_count,374.0
+topic,model,8.0,"hearing loss, tinnitus, speech, cochlear, auditory, hearing aids, hearing aid",abstract_share,0.004560363853629392
