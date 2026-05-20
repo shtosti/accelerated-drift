@@ -1,6 +1,6 @@
 LABEL_MAP = {
-    "avg_words_per_sentence": "mean words per sentence",
-    "avg_syllables_per_word": "mean syllables per word",
+    "avg_words_per_sentence": "words per sentence",
+    "avg_syllables_per_word": "syllables per word",
     "flesch_reading_ease": "FRE",
     "flesch_kincaid_grade": "FKGL",
     "flesh_reading_ease": "FRE",
