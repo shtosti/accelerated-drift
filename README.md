@@ -143,14 +143,15 @@ The pre/post diff plots and `feature_stats.csv` are retained as exploratory summ
 
 ### Topic Modeling Control
 
-Topic modeling is a single BERTopic/HDBSCAN assignment pass:
+Topic modeling is a single BERTopic assignment pass with a configurable clusterer:
 
 1. SentenceTransformer embeddings are encoded for each document.
 2. UMAP projects embeddings to `topic_modeling_umap_n_components` dimensions for clustering.
-3. HDBSCAN forms topic clusters using `topic_modeling_min_cluster_ratio` to derive `min_cluster_size` and `topic_modeling_hdbscan_min_samples` to control outlier strictness.
-4. BERTopic labels topics with `topic_modeling_top_n_terms` and reduces the final topic count with `topic_modeling_max_final_topics`.
-5. A separate `topic_modeling_plot_umap_n_components` projection is used for `topic_clusters.png`.
-6. HDBSCAN outliers are preserved as `topic_id = -1` with label `-1 (outliers)` instead of being remapped to an ordinary topic.
-7. Topic labels are saved in `data/analysis/<stem>_topic_labels.csv`, topic counts in `data/analysis/<stem>_topic_summary.csv`, optional hierarchy review data in `data/analysis/<stem>_topic_merge_candidates.csv`, and dataset/topic counts in `data/analysis/<stem>_topic_modeling_stats.csv`.
+3. If `topic_modeling_clusterer = "hdbscan"`, HDBSCAN forms density-based topics using `topic_modeling_min_cluster_ratio` and `topic_modeling_hdbscan_min_samples`; optional `topic_modeling_reduce_outliers` reassigns `-1` documents to the nearest semantic topic.
+4. If `topic_modeling_clusterer = "kmeans"`, KMeans assigns every document to one of `topic_modeling_kmeans_num_clusters` clusters, or `topic_modeling_max_final_topics` when the KMeans override is `0`.
+5. BERTopic labels topics with `topic_modeling_top_n_terms`.
+6. A separate `topic_modeling_plot_umap_n_components` projection is used for `topic_clusters.png`.
+7. Remaining HDBSCAN outliers, if any, are preserved as `topic_id = -1` with label `-1 (outliers)` instead of being remapped to an ordinary topic.
+8. Topic labels are saved in `data/analysis/<stem>_topic_labels.csv`, topic counts in `data/analysis/<stem>_topic_summary.csv`, optional hierarchy review data in `data/analysis/<stem>_topic_merge_candidates.csv`, and dataset/topic counts in `data/analysis/<stem>_topic_modeling_stats.csv`.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): brief module map
 - [docs/RESEARCH_PLAN.md](docs/RESEARCH_PLAN.md): brief study logic

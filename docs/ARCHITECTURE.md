@@ -32,7 +32,7 @@
 - src/not_an_llm/analysis/interrupted_time_series.py
   - Fits monthly segmented regressions with HAC standard errors, FDR correction, and placebo checks.
 - src/not_an_llm/analysis/topic_modeling/
-  - Runs BERTopic/HDBSCAN topic assignment, preserves `-1` outliers, records topic summaries and optional hierarchy review candidates, and saves topic-level reports.
+  - Runs BERTopic topic assignment with configurable HDBSCAN or KMeans clustering, records topic summaries and optional hierarchy review candidates, and saves topic-level reports.
 - src/not_an_llm/pipelines/analyze.py
   - Orchestrates analysis modules and writes trend artifacts.
 - src/not_an_llm/analysis/features.py

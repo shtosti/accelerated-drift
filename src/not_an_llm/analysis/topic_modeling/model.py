@@ -55,8 +55,8 @@ def _assign_bertopic_topics(
 ) -> TopicModelingResult:
     from bertopic import BERTopic
     from sentence_transformers import SentenceTransformer
+    from sklearn.cluster import KMeans
     from sklearn.feature_extraction.text import TfidfVectorizer
-    import hdbscan
     import torch
     import umap
 
@@ -67,6 +67,14 @@ def _assign_bertopic_topics(
     min_cluster_size = max(10, int(len(texts) * config.analysis.topic_modeling_min_cluster_ratio))
     configured_min_samples = config.analysis.topic_modeling_hdbscan_min_samples
     min_samples = configured_min_samples if configured_min_samples > 0 else max(5, min_cluster_size // 2)
+    clusterer = config.analysis.topic_modeling_clusterer
+    if clusterer not in {"hdbscan", "kmeans"}:
+        raise ValueError("topic_modeling_clusterer must be either 'hdbscan' or 'kmeans'.")
+    kmeans_clusters = (
+        config.analysis.topic_modeling_kmeans_num_clusters
+        if config.analysis.topic_modeling_kmeans_num_clusters > 0
+        else config.analysis.topic_modeling_max_final_topics
+    )
 
     logger.info(
         "Using device: %s for topic modeling (%d documents, %d requested topics)",
@@ -78,13 +86,15 @@ def _assign_bertopic_topics(
     plot_umap_n_components = max(2, config.analysis.topic_modeling_plot_umap_n_components)
 
     logger.info(
-        "Using %d threads for UMAP, %d workers for HDBSCAN (%dD clustering UMAP, %dD plot UMAP, min_cluster_size=%d, min_samples=%d)",
+        "Using %d threads for UMAP, %d workers for topic clustering (%s, %dD clustering UMAP, %dD plot UMAP, min_cluster_size=%d, min_samples=%d, kmeans_clusters=%d)",
         umap_n_jobs,
         num_workers,
+        clusterer,
         umap_n_components,
         plot_umap_n_components,
         min_cluster_size,
         min_samples,
+        kmeans_clusters,
     )
 
     start_time = time.time()
@@ -111,21 +121,35 @@ def _assign_bertopic_topics(
         random_state=42,
         n_jobs=umap_n_jobs,
     )
-    hdbscan_model = hdbscan.HDBSCAN(
-        min_cluster_size=min_cluster_size,
-        min_samples=min_samples,
-        metric="euclidean",
-        cluster_selection_method="eom",
-        prediction_data=True,
-        core_dist_n_jobs=16,
-    )
+    cluster_model: Any
+    nr_topics: int | None
+    if clusterer == "kmeans":
+        cluster_model = KMeans(
+            n_clusters=max(1, min(kmeans_clusters, len(texts))),
+            random_state=42,
+            n_init=10,
+        )
+        nr_topics = None
+    else:
+        import hdbscan
+
+        cluster_model = hdbscan.HDBSCAN(
+            min_cluster_size=min_cluster_size,
+            min_samples=min_samples,
+            metric="euclidean",
+            cluster_selection_method="eom",
+            prediction_data=True,
+            core_dist_n_jobs=16,
+        )
+        nr_topics = config.analysis.topic_modeling_max_final_topics
+
     topic_model = BERTopic(
         embedding_model=embedding_model,
         vectorizer_model=vectorizer_model,
         umap_model=umap_model,
-        hdbscan_model=hdbscan_model,
+        hdbscan_model=cluster_model,
         language="english",
-        nr_topics=config.analysis.topic_modeling_max_final_topics,
+        nr_topics=nr_topics,
         top_n_words=top_terms,
         min_topic_size=min_cluster_size,
         calculate_probabilities=False,
@@ -134,6 +158,19 @@ def _assign_bertopic_topics(
 
     topic_model.fit_transform(texts, embeddings=embeddings)
     raw_topics = topic_model.topics_
+    if clusterer == "hdbscan" and config.analysis.topic_modeling_reduce_outliers and -1 in set(raw_topics):
+        logger.info(
+            "Reducing BERTopic outliers with strategy=%s",
+            config.analysis.topic_modeling_outlier_reduction_strategy,
+        )
+        raw_topics = topic_model.reduce_outliers(
+            texts,
+            raw_topics,
+            strategy=config.analysis.topic_modeling_outlier_reduction_strategy,
+            embeddings=embeddings,
+        )
+        topic_model.update_topics(texts, topics=raw_topics, vectorizer_model=vectorizer_model)
+
     logger.info("Topic modeling completed in %.2f seconds", time.time() - start_time)
 
     topic_id_map = _build_topic_id_map(raw_topics)

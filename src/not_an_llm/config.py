@@ -92,10 +92,14 @@ class AnalysisConfig:
     topic_modeling_enabled: bool
     topic_modeling_top_n_terms: int
     topic_modeling_use_bertopic: bool
+    topic_modeling_clusterer: str
     topic_modeling_num_workers: int
     topic_modeling_embedding_batch_size: int
     topic_modeling_min_cluster_ratio: float
     topic_modeling_hdbscan_min_samples: int
+    topic_modeling_reduce_outliers: bool
+    topic_modeling_outlier_reduction_strategy: str
+    topic_modeling_kmeans_num_clusters: int
     topic_modeling_umap_n_components: int
     topic_modeling_plot_umap_n_components: int
     topic_modeling_max_final_topics: int = 12
@@ -238,7 +242,13 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             topic_modeling_top_n_terms=int(analysis.get("topic_modeling_top_n_terms", 5)),
             topic_modeling_min_cluster_ratio=float(analysis.get("topic_modeling_min_cluster_ratio", 0.01)),
             topic_modeling_hdbscan_min_samples=int(analysis.get("topic_modeling_hdbscan_min_samples", 1)),
+            topic_modeling_reduce_outliers=bool(analysis.get("topic_modeling_reduce_outliers", True)),
+            topic_modeling_outlier_reduction_strategy=str(
+                analysis.get("topic_modeling_outlier_reduction_strategy", "embeddings")
+            ).strip().lower(),
+            topic_modeling_kmeans_num_clusters=int(analysis.get("topic_modeling_kmeans_num_clusters", 0)),
             topic_modeling_use_bertopic=bool(analysis.get("topic_modeling_use_bertopic", False)),
+            topic_modeling_clusterer=str(analysis.get("topic_modeling_clusterer", "hdbscan")).strip().lower(),
             topic_modeling_num_workers=int(analysis.get("topic_modeling_num_workers", 0)),
             topic_modeling_embedding_batch_size=int(analysis.get("topic_modeling_embedding_batch_size", 64)),
             topic_modeling_umap_n_components=int(analysis.get("topic_modeling_umap_n_components", 5)),
