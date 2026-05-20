@@ -1,4 +1,0 @@
-Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_abstract_count,child_left_abstract_share,child_right_abstract_count,child_right_abstract_share,parent_abstract_count,parent_abstract_share
-6,covid_covid 19_cancer_sars_cov,"[0, 1, 2, 3]",2,motor_mri_tdcs_white matter_cortical,5,covid_covid 19_cancer_sars_cov,0.9812779198432684,,,,,,,,,
-5,covid_covid 19_cancer_sars_cov,"[0, 1, 3]",4,covid_covid 19_cancer_sars_cov,3,opioid_hiv_menstrual_middle dot_dot,0.8916671109183101,,,,,,,,,
-4,covid_covid 19_cancer_sars_cov,"[0, 1]",0,cancer_lung_ai_breast_tumor,1,covid_covid 19_sars_cov_sars cov,0.8726661508465916,,,,,,,,,
