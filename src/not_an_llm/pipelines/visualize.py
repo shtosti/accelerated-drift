@@ -11,7 +11,6 @@ from not_an_llm.analysis.feature_groups import FEATURE_GROUPS
 from not_an_llm.analysis.feature_selection import build_marker_group_specs, resolve_feature_columns
 from not_an_llm.analysis.interrupted_time_series import (
     compute_interrupted_time_series,
-    compute_placebo_interrupted_time_series,
     save_its_slope_change_plot,
 )
 from not_an_llm.analysis.label_map import LABEL_MAP
@@ -85,30 +84,20 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
     marker_group_specs, summary_features = build_marker_group_specs(config)
 
     # =========================
-    # STATISTICAL ANALYSIS
+    # LOAD PRIMARY STATISTICS
     # =========================
-    logger.info("Computing exploratory yearly pre/post summaries...")
-
-    stats_df = trend_analyzer.compute_all_stats(yearly)
-
-    stats_path = plot_dir / "feature_stats.csv"
-    stats_df.to_csv(stats_path, index=False)
-
-    logger.info("Saved exploratory yearly summary to %s", stats_path)
-
-    logger.info("Computing monthly interrupted time-series statistics...")
     input_stem = config.analysis.preprocessed_jsonl.stem
     analysis_dir = Path(config.data_dir) / "analysis"
-    analysis_dir.mkdir(parents=True, exist_ok=True)
-    its_stats = compute_interrupted_time_series(monthly)
     its_stats_path = analysis_dir / f"{input_stem}_its_stats.csv"
-    its_stats.to_csv(its_stats_path, index=False)
-    logger.info("Saved monthly interrupted time-series statistics to %s", its_stats_path)
-
-    placebo_stats = compute_placebo_interrupted_time_series(monthly)
-    placebo_stats_path = analysis_dir / f"{input_stem}_its_placebo_stats.csv"
-    placebo_stats.to_csv(placebo_stats_path, index=False)
-    logger.info("Saved placebo interrupted time-series statistics to %s", placebo_stats_path)
+    if its_stats_path.exists():
+        its_stats = pd.read_csv(its_stats_path)
+        logger.info("Loaded monthly interrupted time-series statistics from %s", its_stats_path)
+    else:
+        logger.warning(
+            "Interrupted time-series statistics not found at %s; computing them in memory for plotting only.",
+            its_stats_path,
+        )
+        its_stats = compute_interrupted_time_series(monthly, feature_columns)
 
     # =========================
     # PRE/POST DIFF PLOTS

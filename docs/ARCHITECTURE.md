@@ -46,4 +46,5 @@
 2. Preprocessed JSONL with normalized text fields.
 3. Feature-enriched JSONL plus yearly/monthly trend CSVs.
 4. Monthly interrupted time-series statistics and placebo checks.
-5. Exploratory trend plots.
+5. Topic summary/prevalence CSVs under data/analysis.
+6. Exploratory trend plots under data/visuals.

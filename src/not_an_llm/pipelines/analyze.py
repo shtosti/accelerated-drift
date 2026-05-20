@@ -204,15 +204,6 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     # =========================
     # STATISTICAL ANALYSIS
     # =========================
-    logger.info("Computing exploratory yearly pre/post summaries...")
-
-    stats_df = trend_analyzer.compute_all_stats(yearly)
-
-    stats_path = plot_dir / "feature_stats.csv"
-    stats_df.to_csv(stats_path, index=False)
-
-    logger.info("Saved exploratory yearly summary to %s", stats_path)
-
     logger.info("Computing monthly interrupted time-series statistics...")
     input_stem = config.analysis.preprocessed_jsonl.stem
     its_stats = compute_interrupted_time_series(monthly, feature_columns)
