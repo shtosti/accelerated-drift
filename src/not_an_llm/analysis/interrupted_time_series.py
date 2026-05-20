@@ -114,7 +114,7 @@ def save_its_slope_change_plot(
     plot_df["annotation"] = plot_df.apply(_format_its_annotation, axis=1)
 
     fig_height = max(2, len(plot_df) * 0.25 + 1.0)
-    fig, ax = plt.subplots(figsize=(10, fig_height))
+    fig, ax = plt.subplots(figsize=(12, fig_height))
     colors = ["#943F8B" if value < 0 else "#54A066" for value in plot_df["slope_change_per_year"]]
     xerr = None
     if {"slope_change_per_year_ci_low", "slope_change_per_year_ci_high"}.issubset(plot_df.columns):
