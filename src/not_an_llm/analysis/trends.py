@@ -659,7 +659,7 @@ class TrendAnalyzer:
     # =========================================================
     # PRE/POST GLOBAL DIFF
     # =========================================================
-    def save_pre_post_diff_plot(self, yearly: pd.DataFrame, output_dir: Path) -> Path:
+    def save_pre_post_diff_plot(self, yearly: pd.DataFrame, output_dir: Path) -> Path | None:
 
         cols = [c for c in yearly.columns if c.endswith("_yearly_mean")]
 
@@ -682,7 +682,10 @@ class TrendAnalyzer:
                 "diff": _simple_percent_change(pre_vals.mean(), post_vals.mean())
             })
 
-        df = pd.DataFrame(rows).sort_values("diff")
+        if not rows:
+            return None
+
+        df = pd.DataFrame(rows).dropna(subset=["diff"]).sort_values("diff")
 
         stats_df = self.compute_all_stats(yearly)
 
@@ -740,7 +743,10 @@ class TrendAnalyzer:
                     "diff": _simple_percent_change(pre_vals.mean(), post_vals.mean())
                 })
 
-            df = pd.DataFrame(rows)
+            if not rows:
+                continue
+
+            df = pd.DataFrame(rows).dropna(subset=["diff"])
 
             if df.empty:
                 continue
@@ -749,7 +755,7 @@ class TrendAnalyzer:
 
             out_path = output_dir / f"{group_name}_diff.png"
 
-            save_grouped_difference_plot(
+            saved_path = save_grouped_difference_plot(
                 df,
                 out_path,
                 "feature",
@@ -761,7 +767,8 @@ class TrendAnalyzer:
                 significant_only=False,
             )
 
-            outputs[group_name] = out_path
+            if saved_path is not None:
+                outputs[group_name] = saved_path
 
         return outputs
 
@@ -1005,12 +1012,14 @@ def save_grouped_difference_plot(
     feature_column: str,
     diff_column: str,
     xlabel: str,
-    label_map: dict[str, str],
+    label_map: dict[str, str] | None = None,
     top_n: int = 15,
     stats_df: pd.DataFrame | None = None,
     annotation_mode: str = None,  # none | p | d | p+d
     significant_only: bool = False,
-) -> Path:
+    title: str | None = None,
+) -> Path | None:
+    label_map = label_map or {}
 
     def _pretty_diff_label(feature: str) -> str:
         mapped = label_map.get(feature)
@@ -1033,7 +1042,7 @@ def save_grouped_difference_plot(
 
         return cleaned.replace("_", " ")
 
-    df = df.dropna().copy()
+    df = df.dropna(subset=[feature_column, diff_column]).copy()
 
     # =====================================================
     # MERGE STATS
@@ -1078,15 +1087,19 @@ def save_grouped_difference_plot(
     df = df.sort_values(diff_column)
 
     if df.empty:
-        raise ValueError(
-            f"No rows available for {output_path}"
-        )
+        return None
 
     df["label"] = (
         df[feature_column]
         .astype(str)
         .map(_pretty_diff_label)
     )
+
+    is_percent_plot = "%" in xlabel or "percent" in xlabel.lower()
+    plot_column = "_plot_diff"
+    df[plot_column] = pd.to_numeric(df[diff_column], errors="coerce")
+    if is_percent_plot:
+        df[plot_column] = df[plot_column].clip(lower=-100.0, upper=100.0)
 
     # =====================================================
     # FIGURE SIZE
@@ -1113,7 +1126,7 @@ def save_grouped_difference_plot(
 
     bars = ax.barh(
         df["label"],
-        df[diff_column],
+        df[plot_column],
         color=colors,
     )
 
@@ -1127,7 +1140,7 @@ def save_grouped_difference_plot(
     # ANNOTATIONS
     # =====================================================
     x_range = abs(
-        df[diff_column]
+        df[plot_column]
     ).max()
 
     offset = max(
@@ -1141,6 +1154,10 @@ def save_grouped_difference_plot(
     ):
 
         pieces = []
+        raw_value = float(row.get(diff_column, np.nan))
+
+        if is_percent_plot and pd.notna(raw_value) and abs(raw_value) > 100.0:
+            pieces.append(f"{raw_value:+.1f}%")
 
         p = row.get(
             "p_adj",
@@ -1185,9 +1202,7 @@ def save_grouped_difference_plot(
             pieces
         )
 
-        width = (
-            bar.get_width()
-        )
+        width = bar.get_width()
 
         y = (
             bar.get_y()
@@ -1212,7 +1227,15 @@ def save_grouped_difference_plot(
             ha=ha,
             fontsize=7,
             alpha=0.85,
+            color="white" if is_percent_plot and abs(raw_value) > 100.0 else "black",
         )
+
+    if title:
+        ax.set_title(title)
+
+    if is_percent_plot:
+        ax.set_xlim(-100, 100)
+        ax.set_xticks([-100, -50, 0, 50, 100])
 
     ax.grid(
         axis="x",

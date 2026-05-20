@@ -143,7 +143,7 @@ def save_its_slope_change_plot(
     fig.tight_layout(rect=(0, 0, 0.78, 1))
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    fig.savefig(output_path, dpi=200, bbox_inches="tight")
     plt.close(fig)
     return output_path
 
