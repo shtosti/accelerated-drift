@@ -81,7 +81,7 @@ topic_modeling_max_final_topics = 10
 topic_modeling_use_bertopic = true
 # Topic clusterer: "hdbscan" preserves density-based topics and can reduce outliers;
 # "kmeans" forces every document into one of topic_modeling_kmeans_num_clusters topics.
-topic_modeling_clusterer = "kmeans"
+topic_modeling_clusterer = "hdbscan"
 topic_modeling_num_workers = 16
 topic_modeling_embedding_batch_size = 128
 # Lower values reduce the size of the HDBSCAN outlier bucket; set <= 0 to use the derived default.
@@ -192,7 +192,7 @@ features = [
   "summary_marker_in_summary_per_1k_words",
   "summary_marker_taken_together_per_1k_words",
 
-  # punctuatio
+  # punctuation
   "em_dash_per_1k_words",
   "semicolon_per_1k_words",
   "colon_per_1k_words",

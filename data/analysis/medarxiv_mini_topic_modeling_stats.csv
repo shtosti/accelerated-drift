@@ -1,0 +1,13 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,1245.0
+dataset,all,,,topics,4.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_count,0.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_share,0.0
+topic,model,1.0,"covid, covid 19, sars, cov, sars cov, vaccination, vaccine",abstract_count,428.0
+topic,model,1.0,"covid, covid 19, sars, cov, sars cov, vaccination, vaccine",abstract_share,0.3437751004016064
+topic,model,0.0,"cancer, lung, ai, breast, tumor, prs, sequencing",abstract_count,412.0
+topic,model,0.0,"cancer, lung, ai, breast, tumor, prs, sequencing",abstract_share,0.3309236947791165
+topic,model,3.0,"opioid, hiv, menstrual, middle dot, dot, xylazine, pandemic",abstract_count,221.0
+topic,model,3.0,"opioid, hiv, menstrual, middle dot, dot, xylazine, pandemic",abstract_share,0.17751004016064256
+topic,model,2.0,"motor, mri, tdcs, white matter, cortical, parkinsons disease, speech",abstract_count,184.0
+topic,model,2.0,"motor, mri, tdcs, white matter, cortical, parkinsons disease, speech",abstract_share,0.14779116465863454

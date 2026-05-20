@@ -1,6 +1,5 @@
 topic_id,topic_label
-0,"speech, corpus, dialogue, english, retrieval, gpt, tuning"
-1,"reinforcement, reinforcement learning, planning, rl, policies, quantum, environments"
-2,"images, 3d, video, multimodal, segmentation, shot, quantization"
-3,"logic, embedding, variables, logics, neutrosophic, ontology, revision"
-4,"attack, attacks, privacy, safety, fairness, recommendation, dp"
+0,"language, training, llms, language models, large language, deep, llm"
+1,"reinforcement, reinforcement learning, rl, ai, deep, game, action"
+2,"causal, belief, bayesian, ontology, graphs, program, logics"
+3,"scheduling, neutrosophic, mutation, tsp, routing, indices, inconsistency indices"

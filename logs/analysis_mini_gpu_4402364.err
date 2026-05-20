@@ -1,0 +1,80 @@
+Checked 1 package in 7ms
+2026-05-20 16:00:53,714 INFO not_an_llm.pipelines.analyze: Using 16 workers
+2026-05-20 16:01:52,610 INFO not_an_llm.analysis.topic_modeling.model: Using device: cuda for topic modeling (2040 documents, 5 requested topics)
+2026-05-20 16:01:52,611 INFO not_an_llm.analysis.topic_modeling.model: Using 16 threads for UMAP, 16 workers for topic clustering (hdbscan, 5D clustering UMAP, 2D plot UMAP, min_cluster_size=10, min_samples=1, kmeans_clusters=5)
+2026-05-20 16:01:52,762 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:52,768 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-05-20 16:01:52,881 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:52,888 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-05-20 16:01:52,889 INFO sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-05-20 16:01:53,001 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:53,010 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-05-20 16:01:53,123 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:53,131 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/README.md "HTTP/1.1 200 OK"
+2026-05-20 16:01:53,243 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:53,251 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+2026-05-20 16:01:53,369 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:53,377 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-05-20 16:01:53,499 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-05-20 16:01:53,610 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:53,618 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 9202.35it/s]
+2026-05-20 16:01:53,848 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-05-20 16:01:53,969 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-05-20 16:01:54,087 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-05-20 16:01:54,210 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-05-20 16:01:54,323 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:54,330 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-05-20 16:01:54,451 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:54,458 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-05-20 16:01:54,621 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:54,716 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+2026-05-20 16:01:54,901 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:54,914 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-05-20 16:01:55,042 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-05-20 16:01:55,164 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-05-20 16:01:55,343 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-20 16:01:55,352 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-05-20 16:01:55,469 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+2026-05-20 16:01:55,872 INFO not_an_llm.analysis.topic_modeling.model: Encoding document embeddings...
+Batches:   0%|          | 0/8 [00:00<?, ?it/s]Batches:  12%|█▎        | 1/8 [00:00<00:02,  3.14it/s]Batches:  25%|██▌       | 2/8 [00:00<00:01,  4.13it/s]Batches:  38%|███▊      | 3/8 [00:00<00:01,  4.83it/s]Batches:  50%|█████     | 4/8 [00:00<00:00,  5.27it/s]Batches:  62%|██████▎   | 5/8 [00:00<00:00,  5.56it/s]Batches:  75%|███████▌  | 6/8 [00:01<00:00,  5.74it/s]Batches:  88%|████████▊ | 7/8 [00:01<00:00,  6.16it/s]Batches: 100%|██████████| 8/8 [00:01<00:00,  6.29it/s]Batches: 100%|██████████| 8/8 [00:01<00:00,  5.51it/s]
+2026-05-20 16:02:13,257 INFO not_an_llm.analysis.topic_modeling.model: Reducing BERTopic outliers with strategy=embeddings
+2026-05-20 16:02:13,262 - BERTopic - WARNING: Using a custom list of topic assignments may lead to errors if topic reduction techniques are used afterwards. Make sure that manually assigning topics is the last step in the pipeline.Note that topic embeddings will also be created through weightedc-TF-IDF embeddings instead of centroid embeddings.
+2026-05-20 16:02:14,052 INFO not_an_llm.analysis.topic_modeling.model: Topic modeling completed in 21.44 seconds
+2026-05-20 16:02:14,053 INFO not_an_llm.analysis.topic_modeling.model: Created 4 topics plus no outlier bucket
+  0%|          | 0/3 [00:00<?, ?it/s]100%|██████████| 3/3 [00:00<00:00, 76.14it/s]
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:116: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  yearly = df.groupby("year", as_index=False).agg(**agg)
+2026-05-20 16:02:21,193 INFO not_an_llm.pipelines.analyze: Computing monthly interrupted time-series statistics...
+2026-05-20 16:02:22,109 INFO not_an_llm.pipelines.analyze: Saved monthly interrupted time-series statistics to data/analysis/arxiv_mini_its_stats.csv
+2026-05-20 16:02:25,696 INFO not_an_llm.pipelines.analyze: Saved placebo interrupted time-series statistics to data/analysis/arxiv_mini_its_placebo_stats.csv
+2026-05-20 16:02:25,696 INFO not_an_llm.pipelines.analyze: Generating grouped pre/post diff plot...
+2026-05-20 16:02:26,378 INFO not_an_llm.pipelines.analyze: Saved grouped pre/post diff plot to data/visuals/arxiv_mini/pre_post_diff.png
+2026-05-20 16:02:26,378 INFO not_an_llm.pipelines.analyze: Generating per-group pre/post diff plots...
+2026-05-20 16:02:28,346 INFO not_an_llm.pipelines.analyze: Saved 13 per-group diff plots
+2026-05-20 16:02:48,837 INFO not_an_llm.analysis.topic_modeling.pipeline: Starting topic analysis...
+2026-05-20 16:02:48,838 INFO not_an_llm.analysis.topic_modeling.pipeline: Running topic analysis for 4 topics
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:116: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  yearly = df.groupby("year", as_index=False).agg(**agg)
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:116: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  yearly = df.groupby("year", as_index=False).agg(**agg)
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:116: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  yearly = df.groupby("year", as_index=False).agg(**agg)
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:116: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  yearly = df.groupby("year", as_index=False).agg(**agg)
+Traceback (most recent call last):
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/main.py", line 13, in <module>
+    main()
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/cli.py", line 156, in main
+    artifacts = run_analysis(config)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/pipelines/analyze.py", line 367, in run_analysis
+    topic_paths = run_topic_analysis(
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/pipeline.py", line 115, in run_topic_analysis
+    save_per_topic_trend_outputs(
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/topic_modeling/plots.py", line 461, in save_per_topic_trend_outputs
+    trend_analyzer.save_dependency_distribution_plot(
+  File "/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py", line 942, in save_dependency_distribution_plot
+    raise ValueError("Insufficient pre- or post-period dependency counts for diff plot")
+ValueError: Insufficient pre- or post-period dependency counts for diff plot
