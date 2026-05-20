@@ -592,12 +592,20 @@ class TrendAnalyzer:
         output_dir: Path,
         events: dict[str, str] | None = None,
         smoothing_window: int | None = None,
-    ) -> Path:
+    ) -> Path | None:
         from .feature_groups import FEATURE_GROUPS
         
-        features = FEATURE_GROUPS.get("readability", [])
+        features = []
+        for feature in FEATURE_GROUPS.get("readability", []):
+            ycol = f"{feature}_yearly_mean"
+            if ycol not in yearly.columns:
+                continue
+            if pd.to_numeric(yearly[ycol], errors="coerce").dropna().empty:
+                continue
+            features.append(feature)
+
         if not features:
-            raise ValueError("No readability features found in FEATURE_GROUPS")
+            return None
 
         # Ensure monthly has proper datetime month_ts before plotting.
         monthly = monthly.copy()
@@ -946,7 +954,7 @@ class TrendAnalyzer:
         post = dep_yearly.loc[dep_yearly.index >= post_cut].sum(numeric_only=True)
 
         if pre.sum() == 0 or post.sum() == 0:
-            raise ValueError("Insufficient pre- or post-period dependency counts for diff plot")
+            return []
 
         pre_prop = pre / pre.sum()
         post_prop = post / post.sum()
@@ -963,6 +971,8 @@ class TrendAnalyzer:
         diff_df["abs_diff"] = diff_df["diff_pct"].abs()
         diff_df = diff_df.sort_values("abs_diff", ascending=False).head(top_n)
         diff_df = diff_df.sort_values("diff_pct")
+        if diff_df.empty:
+            return []
 
         # Save diff plot
         diff_fig, diff_ax = plt.subplots(figsize=(5, 1 * len(diff_df) + 0.2))
