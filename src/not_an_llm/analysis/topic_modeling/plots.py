@@ -427,10 +427,6 @@ def save_per_topic_trend_outputs(
         topic_yearly.to_csv(analysis_topic_dir / "trends_by_year.csv", index=False)
         topic_monthly.to_csv(analysis_topic_dir / "trends_by_month.csv", index=False)
 
-        stats_path = analysis_topic_dir / "feature_stats.csv"
-        trend_analyzer.compute_all_stats(topic_yearly).to_csv(stats_path, index=False)
-        paths.append(stats_path)
-
         paths.extend(
             trend_analyzer.save_plots(
                 topic_yearly,

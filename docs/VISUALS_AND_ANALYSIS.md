@@ -45,10 +45,7 @@ The `analyze` step can produce both analysis artifacts and plots, while the `vis
   - Robustness table using placebo intervention years.
   - Helps check whether the estimated ChatGPT-era slope change stands out from earlier arbitrary breaks.
 
-- `data/analysis/feature_stats.csv`
-  - Exploratory summary computed from yearly trends.
-  - Includes pre/post comparisons, t-tests, Cohen's d, regression slopes, and change point estimates.
-  - Useful for plot annotation and triage, not the main paper-facing hypothesis test.
+CSV statistics are kept only under `data/analysis/`. Plot directories under `data/visuals/` contain figures only. See `data/analysis/README.md` for the current table-level data dictionary.
 
 ### External comparison outputs
 
@@ -214,7 +211,7 @@ The trend analysis pipeline also computes the following exploratory summaries fr
 - Estimated change point using the `ruptures` library
 - Multiple testing corrected p-values
 
-These yearly summaries are retained for triage and visual annotation. They should not be presented as the core causal or temporal test.
+These yearly summaries are computed in memory for exploratory diff plots only. They are no longer persisted as `feature_stats.csv` because the retained paper-facing statistics are the interrupted time-series and topic summary tables in `data/analysis/`.
 
 ## External human-vs-AI comparison analysis
 
