@@ -113,7 +113,7 @@ def save_its_slope_change_plot(
 
     plot_df["annotation"] = plot_df.apply(_format_its_annotation, axis=1)
 
-    fig_height = max(4, len(plot_df) * 0.3 + 1.6)
+    fig_height = max(6, len(plot_df) * 0.3 + 1.6)
     fig, ax = plt.subplots(figsize=(7, fig_height))
     colors = ["#943F8B" if value < 0 else "#54A066" for value in plot_df["slope_change_per_year"]]
     xerr = None
@@ -408,7 +408,7 @@ def _benjamini_hochberg(p_values: np.ndarray) -> np.ndarray:
 
 def _pretty_label(feature: str, label_map: dict[str, str]) -> str:
     mapped = label_map.get(feature, feature)
-    return mapped.replace("`", "").replace("_", " ")
+    return mapped.replace("_", " ")
 
 
 def _empty_its_frame() -> pd.DataFrame:

@@ -1,0 +1,13 @@
+topic_id,topic_label
+-1,-1 (outliers)
+0,"vaccination, pandemic, tb, wastewater, malaria, omicron, viral"
+1,"diabetes, tumor, kidney, gut, gwas, breast, polygenic"
+2,"sleep, brain, cognitive, ad, dementia, asd, tau"
+3,"hiv, hpv, healthcare, medical, smoking, prep, students"
+4,"ai, medical, deep, deep learning, llms, gpt, images"
+5,"maternal, pregnancy, food, mothers, pm2, aor, anc"
+6,"stroke, heart, cardiac, valve, atrial, ventricular, ischemic"
+7,"physical, knee, motor, gait, stroke, frailty, exercise"
+8,"retinal, glaucoma, eye, visual, eyes, macular, oct"
+9,"hearing, olfactory, smell, tinnitus, cochlear, hearing loss, speech"
+10,"hiv, viral, cd4, hiv infection, reservoir, bnabs, antiretroviral"

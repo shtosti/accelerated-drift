@@ -432,7 +432,7 @@ class TrendAnalyzer:
         fig, axes = plt.subplots(
             len(features),
             1,
-            figsize=(4, 2.8 * len(features)),
+            figsize=(3.5, 2.0 * len(features)),
             sharex=True,
         )
         if len(features) == 1:
@@ -971,7 +971,7 @@ class TrendAnalyzer:
 
         year_ts = pd.to_datetime(plot_yearly.index.astype(str) + "-01-01")
 
-        trend_fig, trend_ax = plt.subplots(figsize=(3.5, 3.5 + 0.2))
+        trend_fig, trend_ax = plt.subplots(figsize=(4.5, 3.5 + 0.2))
         for role in top_roles:
             trend_ax.plot(year_ts, plot_yearly[role], marker="o", linewidth=1, label=role)
 
