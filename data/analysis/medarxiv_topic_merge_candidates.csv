@@ -1,0 +1,9 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_abstract_count,child_left_abstract_share,child_right_abstract_count,child_right_abstract_share,parent_abstract_count,parent_abstract_share
+16,diabetes_sars_sars cov_breast_mental health,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",7,hearing loss_tinnitus_cochlear_auditory_hearing aids,15,diabetes_sars_sars cov_breast_mental health,1.0471428807367256,,,,,,,,,
+15,diabetes_sars_sars cov_breast_mental health,"[0, 1, 2, 3, 4, 5, 6, 8]",13,sars_sars cov_diabetes_mental health_maternal,14,retinal_glaucoma_breast_yidixie_pet,0.9491693235938506,,,,,,,,,
+14,retinal_glaucoma_breast_yidixie_pet,"[6, 8]",6,retinal_glaucoma_macular_caries_diabetic,8,breast_yidixie_pet_breast cancer_radiomics,0.9358045511528785,,,,,,,,,
+13,sars_sars cov_diabetes_mental health_maternal,"[0, 1, 2, 3, 4, 5]",0,sars_sars cov_vaccine_vaccination_hiv,12,diabetes_mental health_maternal_pregnancy_obesity,0.9192815595859885,,,,,,,,,
+12,diabetes_mental health_maternal_pregnancy_obesity,"[1, 2, 3, 4, 5]",11,diabetes_mental health_maternal_pregnancy_obesity,3,alzheimers_tau_alzheimers disease_asd_eeg,0.8422607944270695,,,,,,,,,
+11,diabetes_mental health_maternal_pregnancy_obesity,"[1, 2, 4, 5]",5,gpt_llm_ehr_electronic health_nlp,10,diabetes_mental health_maternal_pregnancy_obesity,0.7691195266918248,,,,,,,,,
+10,diabetes_mental health_maternal_pregnancy_obesity,"[1, 2, 4]",9,diabetes_kidney_coronary_genome wide_type diabetes,4,mental health_maternal_pregnancy_19 pandemic_mothers,0.7436278459460539,,,,,,,,,
+9,diabetes_kidney_coronary_genome wide_type diabetes,"[1, 2]",1,diabetes_gwas_genome wide_kidney_prs,2,coronary_cvd_asthma_ischemic_atrial,0.6570340700191529,,,,,,,,,
