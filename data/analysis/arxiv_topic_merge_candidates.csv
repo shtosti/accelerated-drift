@@ -1,9 +1,0 @@
-Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_abstract_count,child_left_abstract_share,child_right_abstract_count,child_right_abstract_share,parent_abstract_count,parent_abstract_share
-16,shot_pre trained_encoder_cnn_contrastive,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",14,shot_pre trained_encoder_cnn_contrastive,15,ontologies_sat_argumentation_answer set_neutrosophic,1.0662282835726016,,,,,,,,,
-15,ontologies_sat_argumentation_answer set_neutrosophic,"[6, 8]",6,ontologies_sat_argumentation_answer set_logics,8,neutrosophic_fuzzy sets_rough set_fuzzy systems_type fuzzy,0.9437769639987831,,,,,,,,,
-14,shot_pre trained_encoder_cnn_contrastive,"[0, 1, 2, 3, 4, 5, 7]",7,mimo_channel estimation_beamforming_rf_mmwave,13,shot_pre trained_encoder_contrastive_zero shot,0.9232805286246848,,,,,,,,,
-13,shot_pre trained_encoder_contrastive_zero shot,"[0, 1, 2, 3, 4, 5]",12,shot_pre trained_sentiment_contrastive_encoder,10,deep reinforcement_learning rl_continual_imitation_demonstrations,0.8880072912429586,,,,,,,,,
-12,shot_pre trained_sentiment_contrastive_encoder,"[0, 1, 3, 4]",11,shot_pre trained_unlearning_encoder_contrastive,4,user item_collaborative filtering_sentiment_commerce_markets,0.8165443788742672,,,,,,,,,
-11,shot_pre trained_unlearning_encoder_contrastive,"[0, 1, 3]",3,unlearning_adversarial attacks_malware_backdoor_dp,9,shot_pre trained_encoder_sentence_dialogue,0.7612762175200074,,,,,,,,,
-10,deep reinforcement_learning rl_continual_imitation_demonstrations,"[2, 5]",2,deep reinforcement_learning rl_continual_bandit_continual learning,5,sign language_embodied_gesture_grasping_locomotion,0.7384166416742171,,,,,,,,,
-9,shot_pre trained_encoder_sentence_dialogue,"[0, 1]",0,shot_cnn_convolutional neural_contrastive_encoder,1,dialogue_sentence_shot_question answering_pre trained,0.573174870951564,,,,,,,,,
