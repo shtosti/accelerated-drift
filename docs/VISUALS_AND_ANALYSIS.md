@@ -232,7 +232,11 @@ Key settings include:
 - `analysis.enabled`
 - `analysis.features`: explicit feature columns included in trend plots, interrupted time-series stats, and diff plots. Comment out individual entries in `config.toml` or `config_mini.toml` to remove them from the core analysis.
 - `analysis.readability_metrics`
+- `analysis.topic_modeling_clusterer`: topic clusterer used inside BERTopic. Use `"hdbscan"` for density-based topics with optional outlier reduction, or `"kmeans"` to force every document into a topic.
 - `analysis.topic_modeling_hdbscan_min_samples`: HDBSCAN strictness for dense-core membership. Lower values usually reduce the `-1` outlier bucket; values `<= 0` restore the derived default.
+- `analysis.topic_modeling_reduce_outliers`: when using HDBSCAN, reassigns `-1` documents to semantic topics after initial topic discovery.
+- `analysis.topic_modeling_outlier_reduction_strategy`: BERTopic outlier-reduction strategy, usually `"embeddings"`.
+- `analysis.topic_modeling_kmeans_num_clusters`: KMeans cluster count override. If `0`, KMeans uses `analysis.topic_modeling_max_final_topics`.
 - `analysis.topic_modeling_umap_n_components`: UMAP dimensionality used for topic clustering.
 - `analysis.topic_modeling_plot_umap_n_components`: separate UMAP dimensionality used for `topic_clusters.png`; keep at `2` for ordinary scatter plots.
 - `analysis.syntactic_features`
