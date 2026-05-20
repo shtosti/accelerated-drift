@@ -1,0 +1,29 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,82011.0
+dataset,all,,,topics,11.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_count,28372.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_share,0.3459535915913719
+topic,model,-1.0,-1 (outliers),abstract_count,28372.0
+topic,model,-1.0,-1 (outliers),abstract_share,0.3459535915913719
+topic,model,0.0,"vaccination, pandemic, tb, wastewater, malaria, omicron, viral",abstract_count,19871.0
+topic,model,0.0,"vaccination, pandemic, tb, wastewater, malaria, omicron, viral",abstract_share,0.24229676506810063
+topic,model,1.0,"diabetes, tumor, kidney, gut, gwas, breast, polygenic",abstract_count,9786.0
+topic,model,1.0,"diabetes, tumor, kidney, gut, gwas, breast, polygenic",abstract_share,0.11932545634122252
+topic,model,2.0,"sleep, brain, cognitive, ad, dementia, asd, tau",abstract_count,6275.0
+topic,model,2.0,"sleep, brain, cognitive, ad, dementia, asd, tau",abstract_share,0.07651412615380863
+topic,model,3.0,"hiv, hpv, healthcare, medical, smoking, prep, students",abstract_count,5008.0
+topic,model,3.0,"hiv, hpv, healthcare, medical, smoking, prep, students",abstract_share,0.0610649790881711
+topic,model,4.0,"ai, medical, deep, deep learning, llms, gpt, images",abstract_count,3958.0
+topic,model,4.0,"ai, medical, deep, deep learning, llms, gpt, images",abstract_share,0.048261818536537784
+topic,model,5.0,"maternal, pregnancy, food, mothers, pm2, aor, anc",abstract_count,2803.0
+topic,model,5.0,"maternal, pregnancy, food, mothers, pm2, aor, anc",abstract_share,0.03417834192974113
+topic,model,6.0,"stroke, heart, cardiac, valve, atrial, ventricular, ischemic",abstract_count,2453.0
+topic,model,6.0,"stroke, heart, cardiac, valve, atrial, ventricular, ischemic",abstract_share,0.02991062174586336
+topic,model,7.0,"physical, knee, motor, gait, stroke, frailty, exercise",abstract_count,2116.0
+topic,model,7.0,"physical, knee, motor, gait, stroke, frailty, exercise",abstract_share,0.025801416883101048
+topic,model,8.0,"retinal, glaucoma, eye, visual, eyes, macular, oct",abstract_count,943.0
+topic,model,8.0,"retinal, glaucoma, eye, visual, eyes, macular, oct",abstract_share,0.011498457523990684
+topic,model,9.0,"hearing, olfactory, smell, tinnitus, cochlear, hearing loss, speech",abstract_count,325.0
+topic,model,9.0,"hearing, olfactory, smell, tinnitus, cochlear, hearing loss, speech",abstract_share,0.003962883027886503
+topic,model,10.0,"hiv, viral, cd4, hiv infection, reservoir, bnabs, antiretroviral",abstract_count,101.0
+topic,model,10.0,"hiv, viral, cd4, hiv infection, reservoir, bnabs, antiretroviral",abstract_share,0.0012315421102047286
