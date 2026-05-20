@@ -1,14 +1,6 @@
 FEATURE_GROUPS = {
     "marker_words": [
-        # "marker_words_total_per_1k_words",
-        # "sequential_markers_total_per_1k_words",
-        # "emphasis_markers_total_per_1k_words",
-        # "causal_markers_total_per_1k_words",
-        # "contrast_markers_total_per_1k_words",
-        # "summary_markers_total_per_1k_words",
-        # "word_notably_per_1k_words",
-        # "word_particularly_per_1k_words",
-        # "word_meticulously_per_1k_words",
+        "marker_words_total_per_1k_words",
         # individual marker words
         "word_finding_per_1k_words",
         "word_interplay_per_1k_words",
@@ -24,6 +16,7 @@ FEATURE_GROUPS = {
     ],
 
     "verbs": [
+        "marker_verbs_total_per_1k_words",
         # flowery verbs
         "verb_exhibit_per_1k_words",
         "verb_delve_per_1k_words",
@@ -36,6 +29,7 @@ FEATURE_GROUPS = {
     ],
 
     "adjectives": [
+        "marker_adjectives_total_per_1k_words",
         # flowery adjectives
         "adjective_potential_per_1k_words",
         "adjective_comprehensive_per_1k_words",
@@ -45,6 +39,7 @@ FEATURE_GROUPS = {
     ],
 
     "phrases": [
+        "marker_phrases_total_per_1k_words",
         # flowery phrases
         "phrase_meticulously_delve_per_1k_words",
         "phrase_intricate_web_per_1k_words",
@@ -60,11 +55,69 @@ FEATURE_GROUPS = {
         "colon_per_1k_words",
     ],
 
+    "discourse_marker_totals": [
+        "sequential_markers_total_per_1k_words",
+        "causal_markers_total_per_1k_words",
+        "contrast_markers_total_per_1k_words",
+        "emphasis_markers_total_per_1k_words",
+        "summary_markers_total_per_1k_words",
+    ],
+
+    "sequential_markers": [
+        "sequential_markers_total_per_1k_words",
+        "sequential_marker_additionally_per_1k_words",
+        "sequential_marker_furthermore_per_1k_words",
+        "sequential_marker_moreover_per_1k_words",
+        "sequential_marker_subsequently_per_1k_words",
+        "sequential_marker_further_per_1k_words",
+    ],
+
+    "causal_markers": [
+        "causal_markers_total_per_1k_words",
+        "causal_marker_hence_per_1k_words",
+        "causal_marker_thus_per_1k_words",
+        "causal_marker_consequently_per_1k_words",
+        "causal_marker_accordingly_per_1k_words",
+        "causal_marker_thereby_per_1k_words",
+    ],
+
+    "contrast_markers": [
+        "contrast_markers_total_per_1k_words",
+        "contrast_marker_however_per_1k_words",
+        "contrast_marker_nonetheless_per_1k_words",
+        "contrast_marker_nevertheless_per_1k_words",
+        "contrast_marker_conversely_per_1k_words",
+        "contrast_marker_alternatively_per_1k_words",
+    ],
+
+    "emphasis_markers": [
+        "emphasis_markers_total_per_1k_words",
+        "emphasis_marker_notably_per_1k_words",
+        "emphasis_marker_crucially_per_1k_words",
+        "emphasis_marker_remarkably_per_1k_words",
+        "emphasis_marker_particularly_per_1k_words",
+        "emphasis_marker_importantly_per_1k_words",
+    ],
+
+    "summary_markers": [
+        "summary_markers_total_per_1k_words",
+        "summary_marker_overall_per_1k_words",
+        "summary_marker_collectively_per_1k_words",
+        "summary_marker_ultimately_per_1k_words",
+        "summary_marker_in_summary_per_1k_words",
+        "summary_marker_taken_together_per_1k_words",
+    ],
+
     "syntax": [
         "clause_depth",
         "clause_depth_std",
-        "coordination_count",
         "dependency_entropy",
+        "dependency_length",
+        "dependency_length_std",
+        "coordination_count",
+        "coordination_per_sentence_std",
+        "sentence_depth_std",
+        "list_of_three_per_1k_words",
         "avg_words_per_sentence",
     ],
 

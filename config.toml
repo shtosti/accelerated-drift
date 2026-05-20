@@ -117,15 +117,15 @@ trends_plot_dir = ""
 
 features = [
   # marker group totals
-  # "marker_words_total_per_1k_words",
-  # "marker_verbs_total_per_1k_words",
-  # "marker_adjectives_total_per_1k_words",
-  # "marker_phrases_total_per_1k_words",
-  # "sequential_markers_total_per_1k_words",
-  # "causal_markers_total_per_1k_words",
-  # "contrast_markers_total_per_1k_words",
-  # "emphasis_markers_total_per_1k_words",
-  # "summary_markers_total_per_1k_words",
+  "marker_words_total_per_1k_words",
+  "marker_verbs_total_per_1k_words",
+  "marker_adjectives_total_per_1k_words",
+  "marker_phrases_total_per_1k_words",
+  "sequential_markers_total_per_1k_words",
+  "causal_markers_total_per_1k_words",
+  "contrast_markers_total_per_1k_words",
+  "emphasis_markers_total_per_1k_words",
+  "summary_markers_total_per_1k_words",
 
   # individual marker words
   "word_finding_per_1k_words",

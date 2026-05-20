@@ -1013,7 +1013,7 @@ def save_grouped_difference_plot(
     diff_column: str,
     xlabel: str,
     label_map: dict[str, str] | None = None,
-    top_n: int = 15,
+    top_n: int = 25,
     stats_df: pd.DataFrame | None = None,
     annotation_mode: str = None,  # none | p | d | p+d
     significant_only: bool = False,
