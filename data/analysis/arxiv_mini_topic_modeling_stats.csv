@@ -1,0 +1,15 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,2040.0
+dataset,all,,,topics,5.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_count,0.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_share,0.0
+topic,model,0.0,"speech, corpus, dialogue, english, retrieval, gpt, tuning",abstract_count,830.0
+topic,model,0.0,"speech, corpus, dialogue, english, retrieval, gpt, tuning",abstract_share,0.4068627450980392
+topic,model,1.0,"reinforcement, reinforcement learning, planning, rl, policies, quantum, environments",abstract_count,429.0
+topic,model,1.0,"reinforcement, reinforcement learning, planning, rl, policies, quantum, environments",abstract_share,0.21029411764705883
+topic,model,2.0,"images, 3d, video, multimodal, segmentation, shot, quantization",abstract_count,327.0
+topic,model,2.0,"images, 3d, video, multimodal, segmentation, shot, quantization",abstract_share,0.16029411764705884
+topic,model,3.0,"logic, embedding, variables, logics, neutrosophic, ontology, revision",abstract_count,257.0
+topic,model,3.0,"logic, embedding, variables, logics, neutrosophic, ontology, revision",abstract_share,0.12598039215686274
+topic,model,4.0,"attack, attacks, privacy, safety, fairness, recommendation, dp",abstract_count,197.0
+topic,model,4.0,"attack, attacks, privacy, safety, fairness, recommendation, dp",abstract_share,0.0965686274509804
