@@ -133,41 +133,52 @@ All plots are saved to `data/visuals/<dataset_stem>/` or the configured `trends_
 4. `its_slope_changes.png`
    - Ranks features by absolute post-intervention slope change from the monthly interrupted time-series model.
    - Annotates each row with delta slope/year, 95% CI, and family-level q-value.
-   - This plot points to the most temporally relevant changes; the CSV is the authoritative statistical output.
+   - This raw-unit plot points to temporally relevant changes, but features with different native scales should not be compared as if their x-axis units were identical.
+   - The CSV is the authoritative statistical output.
 
-5. `*_trend.png` group plots
+5. `its_slope_changes_standardized.png`
+   - Ranks features by standardized post-intervention slope change.
+   - The x-axis is annual trend change in pre-ChatGPT standard-deviation units, making readability, syntax, punctuation, and marker-rate features more comparable in one figure.
+   - This is the preferred cross-family summary figure.
+
+6. `its_slope_changes_raw_units/*.png`
+   - Splits the raw ITS slope-change results into compatible unit groups.
+   - Examples include occurrences per 1,000 words per year, readability score points per year, ratio units per year, and syntax/other metric points per year.
+   - Use these plots when the native scale is important.
+
+7. `*_trend.png` group plots
    - Trend plots for marker groups such as marker words, sequential markers, causal markers, contrast markers, emphasis markers, and summary markers.
    - Each group shows mean counts per 1,000 words over time.
 
-6. `stacked_trends.png`
+8. `stacked_trends.png`
    - Stacked layout of yearly feature trends for multiple features in one figure.
    - Useful for multi-feature visual comparison across years.
 
-7. `word_prefix_stack.png`
+9. `word_prefix_stack.png`
    - Vertical stack of all `word_` prefix feature trends.
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
-8. `verb_prefix_stack.png`
+10. `verb_prefix_stack.png`
    - Vertical stack of all `verb_` prefix feature trends.
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
-9. `adjective_prefix_stack.png`
+11. `adjective_prefix_stack.png`
    - Vertical stack of all `adjective_` prefix feature trends.
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
-10. `readability_stack.png`
+12. `readability_stack.png`
    - Vertical stack of all readability features (avg_words_per_sentence, avg_syllables_per_word, flesch_reading_ease, flesch_kincaid_grade, dale_chall, smog_index, automated_readability_index, gunning_fog).
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
-11. `punctuation_stack.png`
+13. `punctuation_stack.png`
    - TODO add
 
-12. `dependency_distribution_diff.png`
+14. `dependency_distribution_diff.png`
     - Change plot showing the top dependency roles by proportional change before vs after 2023.
     - Sorted by absolute percentage-point change and rendered in descending order.
 
 
-13. `dependency_distribution_trends.png`
+15. `dependency_distribution_trends.png`
     - Line chart showing yearly changes for the top dependency roles selected by their pre/post change.
     - Useful for spotting fluctuations over time.
 

@@ -51,8 +51,7 @@ def compute_interrupted_time_series(
 
     result["slope_change_q"] = _adjust_p_values_by_family(result, "slope_change_p")
     result["level_shift_q"] = _adjust_p_values_by_family(result, "level_shift_p")
-    result = result.sort_values(["family", "slope_change_q", "feature"], na_position="last")
-    return result.reset_index(drop=True)
+    return _sort_by_slope_change_significance(result).reset_index(drop=True)
 
 
 def compute_placebo_interrupted_time_series(
@@ -87,7 +86,53 @@ def compute_placebo_interrupted_time_series(
         return _empty_placebo_frame()
 
     result["slope_change_q"] = _adjust_p_values_by_family(result, "slope_change_p")
-    return result.sort_values(["placebo_year", "family", "slope_change_q", "feature"]).reset_index(drop=True)
+    return _sort_by_slope_change_significance(result, extra_tie_breakers=["placebo_year"]).reset_index(drop=True)
+
+
+def add_standardized_slope_change_columns(
+    stats: pd.DataFrame,
+    monthly: pd.DataFrame,
+    *,
+    config: ITSConfig | None = None,
+) -> pd.DataFrame:
+    """Add standardized ITS effect columns to existing stats.
+
+    This keeps older CSVs usable when plotting from precomputed monthly trend
+    tables. Standardization divides annualized slope-change estimates by the
+    pre-intervention monthly standard deviation for each feature.
+    """
+
+    if stats.empty or "feature" not in stats.columns:
+        return stats
+
+    config = config or ITSConfig()
+    result = stats.copy()
+    intervention = pd.Timestamp(config.intervention_date)
+    pre_sd_by_feature: dict[str, float] = {}
+
+    for feature in result["feature"].dropna().astype(str).unique():
+        value_col = f"{feature}_monthly_mean"
+        frame = _monthly_model_frame(monthly, value_col, intervention)
+        if frame is None:
+            pre_sd_by_feature[feature] = np.nan
+            continue
+        pre_values = frame.loc[frame["post"] == 0, "value"]
+        pre_sd_by_feature[feature] = float(pre_values.std(ddof=1)) if len(pre_values) > 1 else np.nan
+
+    result["pre_sd"] = result["feature"].astype(str).map(pre_sd_by_feature)
+    for source, target in (
+        ("slope_change_per_year", "standardized_slope_change_per_year"),
+        ("slope_change_per_year_se", "standardized_slope_change_per_year_se"),
+        ("slope_change_per_year_ci_low", "standardized_slope_change_per_year_ci_low"),
+        ("slope_change_per_year_ci_high", "standardized_slope_change_per_year_ci_high"),
+    ):
+        if source not in result.columns:
+            continue
+        denominator = pd.to_numeric(result["pre_sd"], errors="coerce")
+        numerator = pd.to_numeric(result[source], errors="coerce")
+        result[target] = numerator / denominator.where(denominator > 0)
+
+    return result
 
 
 def save_its_slope_change_plot(
@@ -95,67 +140,71 @@ def save_its_slope_change_plot(
     output_path: Path,
     *,
     label_map: dict[str, str] | None = None,
-    top_n: int = 30,
+    top_n: int = 40,
 ) -> Path | None:
-    if stats.empty or "slope_change_per_year" not in stats.columns:
-        return None
-
-    plot_df = stats.dropna(subset=["slope_change_per_year"]).copy()
-    if plot_df.empty:
-        return None
-
-    plot_df["_rank"] = plot_df["slope_change_per_year"].abs()
-    plot_df = plot_df.sort_values("_rank", ascending=False).head(top_n)
-    plot_df = plot_df.sort_values("slope_change_per_year")
-
-    labels = label_map if label_map is not None else LABEL_MAP
-    plot_df["label"] = plot_df["feature"].map(lambda feature: _pretty_label(str(feature), labels))
-
-    plot_df["annotation"] = plot_df.apply(_format_its_annotation, axis=1)
-
-    fig_height = max(2, len(plot_df) * 0.25 + 1.0)
-    fig, ax = plt.subplots(figsize=(12, fig_height))
-    colors = ["#943F8B" if value < 0 else "#54A066" for value in plot_df["slope_change_per_year"]]
-    xerr = None
-    if {"slope_change_per_year_ci_low", "slope_change_per_year_ci_high"}.issubset(plot_df.columns):
-        xerr = np.vstack(
-            [
-                plot_df["slope_change_per_year"] - plot_df["slope_change_per_year_ci_low"],
-                plot_df["slope_change_per_year_ci_high"] - plot_df["slope_change_per_year"],
-            ]
-        )
-    bars = ax.barh(plot_df["label"], plot_df["slope_change_per_year"], color=colors, xerr=xerr, capsize=2)
-    ax.axvline(0, color="#333333", linewidth=0.8)
-    ax.set_xlabel(r"$\Delta$ slope after intervention, feature units per year")
-    ax.text(
-        0.0,
-        1.01,
-        "Significance stars use FDR-adjusted slope-change q-values: * q<0.05, ** q<0.01, *** q<0.001",
-        transform=ax.transAxes,
-        ha="left",
-        va="bottom",
-        fontsize=8,
-        color="#333333",
+    return _save_its_slope_change_plot(
+        stats,
+        output_path,
+        value_column="slope_change_per_year",
+        ci_low_column="slope_change_per_year_ci_low",
+        ci_high_column="slope_change_per_year_ci_high",
+        xlabel=r"$\Delta$ annual trend after intervention (feature-specific native units/year)",
+        label_map=label_map,
+        top_n=top_n,
     )
 
-    for bar, annotation in zip(bars, plot_df["annotation"]):
-        ax.text(
-            1.01,
-            bar.get_y() + bar.get_height() / 2,
-            annotation,
-            transform=ax.get_yaxis_transform(),
-            va="center",
-            ha="left",
-            fontsize=8,
-            color="#333333",
+
+def save_its_standardized_slope_change_plot(
+    stats: pd.DataFrame,
+    output_path: Path,
+    *,
+    label_map: dict[str, str] | None = None,
+    top_n: int = 40,
+) -> Path | None:
+    return _save_its_slope_change_plot(
+        stats,
+        output_path,
+        value_column="standardized_slope_change_per_year",
+        ci_low_column="standardized_slope_change_per_year_ci_low",
+        ci_high_column="standardized_slope_change_per_year_ci_high",
+        xlabel=r"$\Delta$ annual trend after intervention (pre-ChatGPT SD/year)",
+        label_map=label_map,
+        top_n=top_n,
+    )
+
+
+def save_its_raw_unit_slope_change_plots(
+    stats: pd.DataFrame,
+    output_dir: Path,
+    *,
+    label_map: dict[str, str] | None = None,
+    top_n_per_group: int = 20,
+) -> list[Path]:
+    if stats.empty or "feature" not in stats.columns:
+        return []
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    stats = stats.copy()
+    stats["unit_group"] = stats["feature"].map(lambda feature: _feature_unit_group(str(feature)))
+
+    paths: list[Path] = []
+    for unit_group, group_df in stats.groupby("unit_group", sort=False):
+        unit_slug = unit_group.replace(" ", "_").replace("/", "_")
+        path = output_dir / f"its_slope_changes_{unit_slug}.png"
+        saved_path = _save_its_slope_change_plot(
+            group_df,
+            path,
+            value_column="slope_change_per_year",
+            ci_low_column="slope_change_per_year_ci_low",
+            ci_high_column="slope_change_per_year_ci_high",
+            xlabel=_unit_group_axis_label(unit_group),
+            label_map=label_map,
+            top_n=top_n_per_group,
         )
+        if saved_path is not None:
+            paths.append(saved_path)
 
-    fig.tight_layout(rect=(0, 0, 0.78, 1))
-
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_path, dpi=200, bbox_inches="tight")
-    plt.close(fig)
-    return output_path
+    return paths
 
 
 def _fit_feature(
@@ -192,6 +241,11 @@ def _fit_feature(
     slope_change_se = float(fit["se"][3])
     post_slope = pre_slope + slope_change
     family = _feature_family(feature)
+    pre_values = frame.loc[frame["post"] == 0, "value"]
+    pre_sd = float(pre_values.std(ddof=1)) if len(pre_values) > 1 else np.nan
+
+    def _standardize(value: float) -> float:
+        return value / pre_sd if np.isfinite(pre_sd) and pre_sd > 0 else np.nan
 
     return {
         "feature": feature,
@@ -202,6 +256,7 @@ def _fit_feature(
         "n_post_months": post_count,
         "pre_mean": float(frame.loc[frame["post"] == 0, "value"].mean()),
         "post_mean": float(frame.loc[frame["post"] == 1, "value"].mean()),
+        "pre_sd": pre_sd,
         "pre_slope_per_month": pre_slope,
         "pre_slope_per_year": pre_slope * 12.0,
         "level_shift": level_shift,
@@ -215,6 +270,10 @@ def _fit_feature(
         "slope_change_per_year_se": slope_change_se * 12.0,
         "slope_change_per_year_ci_low": (slope_change - 1.96 * slope_change_se) * 12.0,
         "slope_change_per_year_ci_high": (slope_change + 1.96 * slope_change_se) * 12.0,
+        "standardized_slope_change_per_year": _standardize(slope_change * 12.0),
+        "standardized_slope_change_per_year_se": _standardize(slope_change_se * 12.0),
+        "standardized_slope_change_per_year_ci_low": _standardize((slope_change - 1.96 * slope_change_se) * 12.0),
+        "standardized_slope_change_per_year_ci_high": _standardize((slope_change + 1.96 * slope_change_se) * 12.0),
         "slope_change_p": float(fit["p_values"][3]),
         "post_slope_per_month": post_slope,
         "post_slope_per_year": post_slope * 12.0,
@@ -358,13 +417,111 @@ def _feature_family(feature: str) -> str:
 
 
 def _format_its_annotation(row: pd.Series) -> str:
-    delta = _format_number(row.get("slope_change_per_year"))
-    ci_low = _format_number(row.get("slope_change_per_year_ci_low"))
-    ci_high = _format_number(row.get("slope_change_per_year_ci_high"))
+    delta = _format_number(row.get("_plot_value", row.get("slope_change_per_year")))
+    ci_low = _format_number(row.get("_plot_ci_low", row.get("slope_change_per_year_ci_low")))
+    ci_high = _format_number(row.get("_plot_ci_high", row.get("slope_change_per_year_ci_high")))
     q_value = _format_p_value(row.get("slope_change_q"))
     stars = _format_significance_stars(row.get("slope_change_q"))
     star_suffix = f" {stars}" if stars else ""
     return rf"$\Delta$/year {delta} [{ci_low}, {ci_high}]; q={q_value}{star_suffix}"
+
+
+def _save_its_slope_change_plot(
+    stats: pd.DataFrame,
+    output_path: Path,
+    *,
+    value_column: str,
+    ci_low_column: str,
+    ci_high_column: str,
+    xlabel: str,
+    label_map: dict[str, str] | None = None,
+    top_n: int = 40,
+) -> Path | None:
+    if stats.empty or value_column not in stats.columns:
+        return None
+
+    plot_df = stats.dropna(subset=[value_column]).copy()
+    if plot_df.empty:
+        return None
+
+    plot_df["_rank"] = plot_df[value_column].abs()
+    plot_df = plot_df.sort_values("_rank", ascending=False).head(top_n)
+    plot_df = plot_df.sort_values(value_column)
+    plot_df["_plot_value"] = plot_df[value_column]
+    plot_df["_plot_ci_low"] = plot_df[ci_low_column] if ci_low_column in plot_df.columns else np.nan
+    plot_df["_plot_ci_high"] = plot_df[ci_high_column] if ci_high_column in plot_df.columns else np.nan
+
+    labels = label_map if label_map is not None else LABEL_MAP
+    plot_df["label"] = plot_df["feature"].map(lambda feature: _pretty_label(str(feature), labels))
+    plot_df["annotation"] = plot_df.apply(_format_its_annotation, axis=1)
+
+    fig_height = max(2, len(plot_df) * 0.25 + 1.0)
+    fig, ax = plt.subplots(figsize=(12, fig_height))
+    colors = ["#943F8B" if value < 0 else "#54A066" for value in plot_df[value_column]]
+    xerr = None
+    if {ci_low_column, ci_high_column}.issubset(plot_df.columns):
+        xerr = np.vstack(
+            [
+                plot_df[value_column] - plot_df[ci_low_column],
+                plot_df[ci_high_column] - plot_df[value_column],
+            ]
+        )
+    bars = ax.barh(plot_df["label"], plot_df[value_column], color=colors, xerr=xerr, capsize=2)
+    ax.axvline(0, color="#333333", linewidth=0.8)
+    ax.set_xlabel(xlabel)
+    ax.text(
+        0.0,
+        1.01,
+        "Significance stars use FDR-adjusted slope-change q-values: * q<0.05, ** q<0.01, *** q<0.001",
+        transform=ax.transAxes,
+        ha="left",
+        va="bottom",
+        fontsize=8,
+        color="#333333",
+    )
+
+    for bar, annotation in zip(bars, plot_df["annotation"]):
+        ax.text(
+            1.01,
+            bar.get_y() + bar.get_height() / 2,
+            annotation,
+            transform=ax.get_yaxis_transform(),
+            va="center",
+            ha="left",
+            fontsize=8,
+            color="#333333",
+        )
+
+    fig.tight_layout(rect=(0, 0, 0.78, 1))
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def _feature_unit_group(feature: str) -> str:
+    if feature.endswith("_per_1k_words"):
+        return "per_1k_words"
+    if feature in {"hedge_ratio", "certainty_ratio"}:
+        return "ratios"
+    if (
+        "readability" in feature
+        or feature.startswith("flesch")
+        or feature in {"dale_chall", "smog_index", "automated_readability_index", "gunning_fog"}
+    ):
+        return "readability_scores"
+    return "syntax_and_other_metrics"
+
+
+def _unit_group_axis_label(unit_group: str) -> str:
+    labels = {
+        "per_1k_words": r"$\Delta$ annual trend after intervention (occurrences per 1,000 words/year)",
+        "ratios": r"$\Delta$ annual trend after intervention (ratio units/year)",
+        "readability_scores": r"$\Delta$ annual trend after intervention (readability score points/year)",
+        "syntax_and_other_metrics": r"$\Delta$ annual trend after intervention (metric points/year)",
+    }
+    return labels.get(unit_group, r"$\Delta$ annual trend after intervention")
 
 
 def _format_number(value: object) -> str:
@@ -421,6 +578,44 @@ def _adjust_p_values_by_family(frame: pd.DataFrame, p_column: str) -> pd.Series:
     return adjusted
 
 
+def _sort_by_slope_change_significance(
+    frame: pd.DataFrame,
+    *,
+    extra_tie_breakers: list[str] | None = None,
+) -> pd.DataFrame:
+    result = frame.copy()
+    result["_abs_slope_change_per_year"] = pd.to_numeric(
+        result.get("slope_change_per_year"),
+        errors="coerce",
+    ).abs()
+
+    sort_columns = [
+        "slope_change_q",
+        "slope_change_p",
+        "_abs_slope_change_per_year",
+    ]
+    ascending = [True, True, False]
+
+    for column in extra_tie_breakers or []:
+        if column in result.columns:
+            sort_columns.append(column)
+            ascending.append(True)
+
+    for column in ("family", "feature"):
+        if column in result.columns:
+            sort_columns.append(column)
+            ascending.append(True)
+
+    return (
+        result.sort_values(
+            sort_columns,
+            ascending=ascending,
+            na_position="last",
+        )
+        .drop(columns=["_abs_slope_change_per_year"])
+    )
+
+
 def _benjamini_hochberg(p_values: np.ndarray) -> np.ndarray:
     p_values = np.asarray(p_values, dtype=float)
     order = np.argsort(p_values)
@@ -450,11 +645,13 @@ def _empty_its_frame() -> pd.DataFrame:
             "n_post_months",
             "pre_mean",
             "post_mean",
+            "pre_sd",
             "pre_slope_per_year",
             "level_shift",
             "level_shift_p",
             "level_shift_q",
             "slope_change_per_year",
+            "standardized_slope_change_per_year",
             "slope_change_p",
             "slope_change_q",
             "post_slope_per_year",
