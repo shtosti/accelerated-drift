@@ -1126,6 +1126,10 @@ def save_grouped_difference_plot(
     df[plot_column] = pd.to_numeric(df[diff_column], errors="coerce")
     if is_percent_plot:
         df[plot_column] = df[plot_column].clip(lower=-100.0, upper=100.0)
+    clipped_percent_column = "_is_clipped_percent_diff"
+    df[clipped_percent_column] = False
+    if is_percent_plot:
+        df[clipped_percent_column] = pd.to_numeric(df[diff_column], errors="coerce").abs() >= 100.0
 
     # =====================================================
     # FIGURE SIZE
@@ -1182,7 +1186,9 @@ def save_grouped_difference_plot(
         pieces = []
         raw_value = float(row.get(diff_column, np.nan))
 
-        if is_percent_plot and pd.notna(raw_value) and abs(raw_value) > 100.0:
+        is_clipped_percent = bool(row.get(clipped_percent_column, False))
+
+        if is_clipped_percent:
             pieces.append(f"{raw_value:+.1f}%")
 
         p = row.get(
@@ -1238,7 +1244,7 @@ def save_grouped_difference_plot(
 
         inset = max(abs(width) * 0.2, offset)
 
-        if is_percent_plot and pd.notna(raw_value) and abs(raw_value) > 100.0:
+        if is_clipped_percent:
             if width >= 0:
                 x = inset
                 ha = "left"
@@ -1260,7 +1266,7 @@ def save_grouped_difference_plot(
             ha=ha,
             fontsize=7,
             alpha=0.85,
-            color="white" if is_percent_plot and abs(raw_value) > 100.0 else "black",
+            color="white" if is_clipped_percent else "black",
         )
 
     if title:
