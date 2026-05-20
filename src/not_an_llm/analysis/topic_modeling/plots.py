@@ -61,11 +61,14 @@ def normalize_year_column(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def topic_color_map(topic_ids) -> dict[int, str]:
-    ordered = sorted(int(topic_id) for topic_id in topic_ids)
-    return {
+    ordered = sorted(int(topic_id) for topic_id in topic_ids if int(topic_id) != -1)
+    color_map = {
         topic_id: TOPIC_COLORS[index % len(TOPIC_COLORS)]
         for index, topic_id in enumerate(ordered)
     }
+    if any(int(topic_id) == -1 for topic_id in topic_ids):
+        color_map[-1] = "lightgray"
+    return color_map
 
 
 def save_legend_only(ax, output_path: Path, ncol: int = 1, wrap_width: int = 44):
@@ -358,7 +361,14 @@ def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) 
 
     noise_data = embeddings_2d[embeddings_2d["topic_id"] == -1]
     if not noise_data.empty:
-        ax.scatter(noise_data["x"], noise_data["y"], c="lightgray", alpha=0.35, s=10, label="-1 (outliers)")
+        ax.scatter(
+            noise_data["x"],
+            noise_data["y"],
+            c=topic_color_map([-1])[-1],
+            alpha=0.35,
+            s=10,
+            label="-1 (outliers)",
+        )
 
     for topic_id in topics:
         topic_data = embeddings_2d[embeddings_2d["topic_id"] == topic_id]

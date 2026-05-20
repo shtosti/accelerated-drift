@@ -125,14 +125,14 @@ def _build_comparison_table(enriched: pd.DataFrame, feature_columns: list[str]) 
     return result.sort_values("diff_ai_minus_human", ascending=False, key=lambda s: s.abs())
 
 
-def _save_top_diff_plot(comparison: pd.DataFrame, output_path: Path, top_n: int = 20) -> Path:
+def _save_top_diff_plot(comparison: pd.DataFrame, output_path: Path, top_n: int = 20) -> Path | None:
     logger.info("Generating grouped external diff plot...")
     saved_path = save_grouped_difference_plot(
         comparison,
         output_path=output_path,
         feature_column="feature",
         diff_column="diff_ai_minus_human",
-        title="Top feature shifts: AI - Human",
+        label_map={},
         xlabel="Mean difference",
         top_n=top_n,
     )

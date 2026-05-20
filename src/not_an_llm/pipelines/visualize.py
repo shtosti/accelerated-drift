@@ -118,7 +118,10 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
         yearly,
         output_dir=plot_dir,
     )
-    logger.info("Saved grouped pre/post diff plot to %s", diff_plot_path)
+    if diff_plot_path is not None:
+        logger.info("Saved grouped pre/post diff plot to %s", diff_plot_path)
+    else:
+        logger.info("Skipped grouped pre/post diff plot because no finite rows were available")
 
     logger.info("Generating per-group pre/post diff plots...")
     if hasattr(trend_analyzer, "save_grouped_feature_diffs"):
@@ -160,11 +163,13 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
             if not rows:
                 continue
 
-            df = pd.DataFrame(rows)
+            df = pd.DataFrame(rows).dropna(subset=["diff"])
+            if df.empty:
+                continue
 
             df = df.sort_values("diff")
             out_path = plot_dir / f"{group_name}_diff.png"
-            save_grouped_difference_plot(
+            saved_path = save_grouped_difference_plot(
                 df,
                 out_path,
                 "feature",
@@ -172,7 +177,8 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
                 "change (%)",
                 LABEL_MAP,
             )
-            grouped_diff_plots[group_name] = out_path
+            if saved_path is not None:
+                grouped_diff_plots[group_name] = saved_path
         logger.info("Saved %d per-group diff plots (fallback)", len(grouped_diff_plots))
 
     # =========================
