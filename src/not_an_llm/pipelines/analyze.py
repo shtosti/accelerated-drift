@@ -7,13 +7,15 @@ import pandas as pd
 from concurrent.futures import ProcessPoolExecutor
 
 from not_an_llm.analysis.topic_modeling import run_topic_analysis, run_topic_modeling
-from not_an_llm.analysis.trends import TrendAnalyzer
+from not_an_llm.analysis.trends import TrendAnalyzer, is_group_total_feature
 from not_an_llm.analysis.feature_groups import FEATURE_GROUPS
 from not_an_llm.analysis.feature_selection import build_marker_group_specs, resolve_feature_columns
 from not_an_llm.analysis.interrupted_time_series import (
     compute_interrupted_time_series,
     compute_placebo_interrupted_time_series,
+    save_its_raw_unit_slope_change_plots,
     save_its_slope_change_plot,
+    save_its_standardized_slope_change_plot,
 )
 from not_an_llm.analysis.label_map import LABEL_MAP
 from not_an_llm.config import AppConfig
@@ -250,6 +252,9 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
                 rows = []
                 valid_cols = []
                 for m in members:
+                    if is_group_total_feature(m):
+                        continue
+
                     col = f"{m}_yearly_mean"
                     if col not in yearly.columns:
                         continue
@@ -311,6 +316,16 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
             plot_dir / "its_slope_changes.png",
             label_map=LABEL_MAP,
         )
+        standardized_its_plot_path = save_its_standardized_slope_change_plot(
+            its_stats,
+            plot_dir / "its_slope_changes_standardized.png",
+            label_map=LABEL_MAP,
+        )
+        raw_unit_its_plot_paths = save_its_raw_unit_slope_change_plots(
+            its_stats,
+            plot_dir / "its_slope_changes_raw_units",
+            label_map=LABEL_MAP,
+        )
 
         trend_plots.extend(
             trend_analyzer.save_plots(
@@ -323,6 +338,9 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         )
         if its_plot_path is not None:
             trend_plots.append(its_plot_path)
+        if standardized_its_plot_path is not None:
+            trend_plots.append(standardized_its_plot_path)
+        trend_plots.extend(raw_unit_its_plot_paths)
 
         trend_plots.extend(
             trend_analyzer.save_grouped_word_plots(

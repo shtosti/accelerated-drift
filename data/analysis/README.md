@@ -40,17 +40,24 @@ Primary hypothesis-test table. Each row is one configured feature in one feature
 - `intervention_date`: intervention date used by the model, currently the ChatGPT release date.
 - `n_months`, `n_pre_months`, `n_post_months`: total, pre-intervention, and post-intervention monthly observations used.
 - `pre_mean`, `post_mean`: average monthly feature value before and after the intervention.
+- `pre_sd`: standard deviation of monthly feature values before the intervention. This is used to standardize slope-change estimates.
 - `pre_slope_per_month`, `pre_slope_per_year`: estimated pre-intervention trend.
 - `level_shift`: immediate post-intervention jump or drop in the feature level.
 - `level_shift_se`, `level_shift_ci_low`, `level_shift_ci_high`, `level_shift_p`, `level_shift_q`: uncertainty, confidence interval, p-value, and FDR-adjusted q-value for the immediate level shift.
 - `slope_change_per_month`, `slope_change_per_year`: change in trend after the intervention. This is the main estimate for temporal acceleration or deceleration.
 - `slope_change_se`, `slope_change_per_year_se`, `slope_change_per_year_ci_low`, `slope_change_per_year_ci_high`, `slope_change_p`, `slope_change_q`: uncertainty, confidence interval, p-value, and FDR-adjusted q-value for the slope change.
+- `standardized_slope_change_per_year`: `slope_change_per_year / pre_sd`. This expresses the slope-change effect in pre-intervention standard-deviation units per year, making different feature families more comparable.
+- `standardized_slope_change_per_year_se`, `standardized_slope_change_per_year_ci_low`, `standardized_slope_change_per_year_ci_high`: standardized uncertainty and confidence interval for the slope-change effect.
 - `post_slope_per_month`, `post_slope_per_year`: estimated post-intervention trend, equal to the pre-slope plus the slope change.
 - `r_squared`: descriptive model fit.
 - `model`: model specification label.
 - `hac_lags`: number of HAC/Newey-West lags used for autocorrelation-robust standard errors.
 
 Read `slope_change_per_year` with its confidence interval and `slope_change_q` as the main result. Positive values mean the feature increased faster after the intervention; negative values mean it slowed or declined relative to the pre-intervention trend.
+
+Use `standardized_slope_change_per_year` for cross-feature ranking or figures that mix feature families. Use raw `slope_change_per_year` when the row's native unit matters, such as occurrences per 1,000 words per year, readability-score points per year, or ratio units per year.
+
+Rows are sorted by decreasing corrected significance: smallest `slope_change_q` first, then smallest `slope_change_p`, then largest absolute `slope_change_per_year`.
 
 ### `<stem>_its_placebo_stats.csv`
 

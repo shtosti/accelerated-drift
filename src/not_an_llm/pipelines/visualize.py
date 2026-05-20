@@ -6,12 +6,15 @@ import json
 import logging
 import pandas as pd
 
-from not_an_llm.analysis.trends import TrendAnalyzer
+from not_an_llm.analysis.trends import TrendAnalyzer, is_group_total_feature
 from not_an_llm.analysis.feature_groups import FEATURE_GROUPS
 from not_an_llm.analysis.feature_selection import build_marker_group_specs, resolve_feature_columns
 from not_an_llm.analysis.interrupted_time_series import (
+    add_standardized_slope_change_columns,
     compute_interrupted_time_series,
+    save_its_raw_unit_slope_change_plots,
     save_its_slope_change_plot,
+    save_its_standardized_slope_change_plot,
 )
 from not_an_llm.analysis.label_map import LABEL_MAP
 from not_an_llm.config import AppConfig
@@ -98,6 +101,8 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
             its_stats_path,
         )
         its_stats = compute_interrupted_time_series(monthly, feature_columns)
+    if "standardized_slope_change_per_year" not in its_stats.columns:
+        its_stats = add_standardized_slope_change_columns(its_stats, monthly)
 
     # =========================
     # PRE/POST DIFF PLOTS
@@ -132,6 +137,9 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
             rows = []
             valid_cols = []
             for m in members:
+                if is_group_total_feature(m):
+                    continue
+
                 col = f"{m}_yearly_mean"
                 if col not in yearly.columns:
                     continue
@@ -192,6 +200,22 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
     )
     if its_plot_path is not None:
         trend_plots.append(its_plot_path)
+
+    standardized_its_plot_path = save_its_standardized_slope_change_plot(
+        its_stats,
+        plot_dir / "its_slope_changes_standardized.png",
+        label_map=LABEL_MAP,
+    )
+    if standardized_its_plot_path is not None:
+        trend_plots.append(standardized_its_plot_path)
+
+    trend_plots.extend(
+        save_its_raw_unit_slope_change_plots(
+            its_stats,
+            plot_dir / "its_slope_changes_raw_units",
+            label_map=LABEL_MAP,
+        )
+    )
 
     trend_plots.extend(
         trend_analyzer.save_grouped_word_plots(

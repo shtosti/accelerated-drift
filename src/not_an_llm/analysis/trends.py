@@ -21,6 +21,10 @@ def _simple_percent_change(pre_value: float, post_value: float) -> float:
     return 100.0 * (post_value - pre_value) / abs(pre_value) if pre_value != 0 else np.nan
 
 
+def is_group_total_feature(feature: str) -> bool:
+    return feature.endswith("_total_per_1k_words")
+
+
 class TrendAnalyzer:
     """Aggregate and visualize per-year feature trends with mean + confidence intervals."""
 
@@ -726,6 +730,9 @@ class TrendAnalyzer:
             valid_cols = []
 
             for f in features:
+                if is_group_total_feature(f):
+                    continue
+
                 col = f"{f}_yearly_mean"
                 if col not in yearly.columns:
                     continue
