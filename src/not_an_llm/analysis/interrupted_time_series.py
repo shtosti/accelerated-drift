@@ -487,7 +487,7 @@ def _save_its_slope_change_plot(
     plot_df["annotation"] = plot_df.apply(_format_its_annotation, axis=1)
 
     fig_height = max(2, len(plot_df) * 0.25 + 1.0)
-    fig, ax = plt.subplots(figsize=(12, fig_height))
+    fig, ax = plt.subplots(figsize=(10, fig_height))
     colors = ["#943F8B" if value < 0 else "#54A066" for value in plot_df[value_column]]
     xerr = None
     if {ci_low_column, ci_high_column}.issubset(plot_df.columns):
@@ -507,7 +507,7 @@ def _save_its_slope_change_plot(
         transform=ax.transAxes,
         ha="left",
         va="bottom",
-        fontsize=8,
+        fontsize=9,
         color="#333333",
     )
 
@@ -519,7 +519,7 @@ def _save_its_slope_change_plot(
             transform=ax.get_yaxis_transform(),
             va="center",
             ha="left",
-            fontsize=8,
+            fontsize=9,
             color="#333333",
         )
 
