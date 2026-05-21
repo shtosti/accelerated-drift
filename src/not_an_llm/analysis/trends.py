@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Optional
+from matplotlib.lines import Line2D
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,6 +24,111 @@ def _simple_percent_change(pre_value: float, post_value: float) -> float:
 
 def is_group_total_feature(feature: str) -> bool:
     return feature.endswith("_total_per_1k_words")
+
+
+DEPENDENCY_ROLE_ORDER = [
+    "det",
+    "pobj",
+    "prep",
+    "aux",
+    "auxpass",
+    "advcl",
+    "conj",
+    "compound",
+    "dobj",
+    "amod",
+    "nummod",
+    "appos",
+]
+
+DEPENDENCY_ROLE_COLORS = [
+    "#4E79A7",
+    "#F28E2B",
+    "#E15759",
+    "#76B7B2",
+    "#59A14F",
+    "#EDC948",
+    "#B07AA1",
+    "#FF9DA7",
+    "#1F77B4",
+    "#8C564B",
+    "#E377C2",
+    "#7F7F7F",
+    "#BCBD22",
+    "#17BECF",
+    "#AEC7E8",
+    "#FFBB78",
+    "#98DF8A",
+    "#FF9896",
+    "#C5B0D5",
+    "#C49C94",
+    "#F7B6D2",
+    "#C7C7C7",
+    "#DBDB8D",
+    "#9EDAE5",
+    "#393B79",
+    "#637939",
+    "#8C6D31",
+    "#843C39",
+    "#7B4173",
+    "#3182BD",
+    "#31A354",
+    "#756BB1",
+    "#636363",
+    "#E6550D",
+    "#969696",
+    "#6BAED6",
+    "#74C476",
+    "#9E9AC8",
+    "#BDBDBD",
+]
+
+
+def dependency_role_color_map(roles) -> dict[str, str]:
+    """Return a stable dependency-label color map shared across datasets."""
+    canonical = {
+        role: DEPENDENCY_ROLE_COLORS[index % len(DEPENDENCY_ROLE_COLORS)]
+        for index, role in enumerate(DEPENDENCY_ROLE_ORDER)
+    }
+    unknown_roles = sorted(str(role) for role in roles if str(role) not in canonical)
+    for offset, role in enumerate(unknown_roles, start=len(canonical)):
+        canonical[role] = DEPENDENCY_ROLE_COLORS[offset % len(DEPENDENCY_ROLE_COLORS)]
+    return canonical
+
+
+def save_dependency_role_legend(
+    roles,
+    output_path: Path,
+    ncol: int = 5,
+) -> Path:
+    """Save a standalone legend for the shared dependency-label colors."""
+    observed_roles = set(map(str, roles))
+    roles = [role for role in DEPENDENCY_ROLE_ORDER if role in observed_roles]
+    roles.extend(sorted(observed_roles.difference(DEPENDENCY_ROLE_ORDER)))
+    color_map = dependency_role_color_map(roles)
+    handles = [
+        Line2D([0], [0], color=color_map[role], marker="o", linewidth=1.8, markersize=4, label=role)
+        for role in roles
+    ]
+
+    rows = max(1, int(np.ceil(len(handles) / ncol)))
+    fig_width = max(5.0, 1.25 * ncol)
+    fig_height = max(0.8, 0.32 * rows + 0.3)
+    fig = plt.figure(figsize=(fig_width, fig_height))
+    fig.legend(
+        handles=handles,
+        loc="center",
+        frameon=False,
+        ncol=ncol,
+        fontsize=8,
+        handlelength=1.5,
+        columnspacing=1.2,
+        labelspacing=0.7,
+    )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_path, dpi=200, bbox_inches="tight", pad_inches=0.12)
+    plt.close(fig)
+    return output_path
 
 
 class TrendAnalyzer:
@@ -974,9 +1080,16 @@ class TrendAnalyzer:
         if diff_df.empty:
             return []
 
+        all_roles = dep_yearly_prop.columns.astype(str).tolist()
+        color_map = dependency_role_color_map(all_roles)
+        legend_path = save_dependency_role_legend(
+            all_roles,
+            output_dir / "dependency_distribution_legend.png",
+        )
+
         # Save diff plot
         diff_fig, diff_ax = plt.subplots(figsize=(4.0, 1.0 * len(diff_df) + 0.2))
-        colors = ["#943F8B" if v < 0 else "#54A066" for v in diff_df["diff_pct"]]
+        colors = [color_map[str(role)] for role in diff_df["feature"]]
         diff_ax.barh(diff_df["feature"], diff_df["diff_pct"], color=colors)
         diff_ax.axvline(0, color="black", linewidth=1)
         diff_ax.set_xlabel("Change in role proportion (percentage points)")
@@ -997,7 +1110,14 @@ class TrendAnalyzer:
 
         trend_fig, trend_ax = plt.subplots(figsize=(4.0, 3.5 + 0.2))
         for role in top_roles:
-            trend_ax.plot(year_ts, plot_yearly[role], marker="o", linewidth=1, label=role)
+            trend_ax.plot(
+                year_ts,
+                plot_yearly[role],
+                marker="o",
+                linewidth=1,
+                color=color_map[str(role)],
+                label=role,
+            )
 
         if events:
             event_dates = {k: pd.to_datetime(v) for k, v in events.items()}
@@ -1010,14 +1130,13 @@ class TrendAnalyzer:
         trend_ax.set_ylabel("Dependency role proportion")
         # trend_ax.set_title("Dependency role trends over years")
         trend_ax.grid(alpha=0.3)
-        trend_ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5), fontsize=8)
         self._format_xticks(trend_ax)
         trend_out_path = output_dir / "dependency_distribution_trends.png"
         trend_fig.tight_layout()
         trend_fig.savefig(trend_out_path, dpi=200, bbox_inches="tight")
         plt.close(trend_fig)
 
-        return [diff_out_path, trend_out_path]
+        return [diff_out_path, trend_out_path, legend_path]
 
 
 # =========================================================
