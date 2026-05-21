@@ -1080,10 +1080,11 @@ class TrendAnalyzer:
         if diff_df.empty:
             return []
 
+        top_roles = diff_df["feature"].astype(str).tolist()
         all_roles = dep_yearly_prop.columns.astype(str).tolist()
         color_map = dependency_role_color_map(all_roles)
         legend_path = save_dependency_role_legend(
-            all_roles,
+            top_roles,
             output_dir / "dependency_distribution_legend.png",
         )
 
@@ -1102,7 +1103,6 @@ class TrendAnalyzer:
         plt.close(diff_fig)
 
         # Save yearly role trend plot for the top changed roles
-        top_roles = diff_df["feature"].tolist()
         plot_yearly = dep_yearly_prop[top_roles].copy()
         plot_yearly = plot_yearly.sort_index()
 
