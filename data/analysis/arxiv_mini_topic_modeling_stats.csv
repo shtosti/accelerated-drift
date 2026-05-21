@@ -1,0 +1,13 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,2040.0
+dataset,all,,,topics,4.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_count,0.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_share,0.0
+topic,model,0.0,"language, training, llms, language models, large language, deep, llm",abstract_count,1356.0
+topic,model,0.0,"language, training, llms, language models, large language, deep, llm",abstract_share,0.6647058823529411
+topic,model,1.0,"reinforcement, reinforcement learning, rl, ai, deep, game, action",abstract_count,423.0
+topic,model,1.0,"reinforcement, reinforcement learning, rl, ai, deep, game, action",abstract_share,0.2073529411764706
+topic,model,2.0,"causal, belief, bayesian, ontology, graphs, program, logics",abstract_count,190.0
+topic,model,2.0,"causal, belief, bayesian, ontology, graphs, program, logics",abstract_share,0.09313725490196079
+topic,model,3.0,"scheduling, neutrosophic, mutation, tsp, routing, indices, inconsistency indices",abstract_count,71.0
+topic,model,3.0,"scheduling, neutrosophic, mutation, tsp, routing, indices, inconsistency indices",abstract_share,0.03480392156862745

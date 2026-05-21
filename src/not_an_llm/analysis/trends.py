@@ -547,7 +547,7 @@ class TrendAnalyzer:
         fig, axes = plt.subplots(
             len(features),
             1,
-            figsize=(3.5, 2.0 * len(features)),
+            figsize=(3.5, 2.3 * len(features)),
             sharex=True
         )
         if len(features) == 1:
@@ -630,7 +630,7 @@ class TrendAnalyzer:
         fig, axes = plt.subplots(
             len(features),
             1,
-            figsize=(3.5, 2.0 * len(features)),
+            figsize=(3.5, 2.3 * len(features)),
             sharex=True,
         )
         if len(features) == 1:
@@ -894,7 +894,7 @@ class TrendAnalyzer:
             feature = yearly_column.removesuffix("_yearly_mean")
             monthly_col = f"{feature}_monthly_mean"
 
-            fig, ax = plt.subplots(figsize=(3.5, 2.3))
+            fig, ax = plt.subplots(figsize=(3.5, 2.6))
 
             if monthly_col in monthly.columns and month_ts is not None:
                 ax.plot(month_ts, monthly[monthly_col], color=self.colors["monthly"], linewidth=1.0, alpha=1.0, label="Monthly mean")
@@ -975,7 +975,7 @@ class TrendAnalyzer:
             return []
 
         # Save diff plot
-        diff_fig, diff_ax = plt.subplots(figsize=(5, 1 * len(diff_df) + 0.2))
+        diff_fig, diff_ax = plt.subplots(figsize=(4.0, 1.0 * len(diff_df) + 0.2))
         colors = ["#943F8B" if v < 0 else "#54A066" for v in diff_df["diff_pct"]]
         diff_ax.barh(diff_df["feature"], diff_df["diff_pct"], color=colors)
         diff_ax.axvline(0, color="black", linewidth=1)
@@ -985,7 +985,7 @@ class TrendAnalyzer:
         self._format_xticks(diff_ax)
         diff_out_path = output_dir / "dependency_distribution_diff.png"
         diff_fig.tight_layout()
-        diff_fig.savefig(diff_out_path, dpi=150, bbox_inches="tight")
+        diff_fig.savefig(diff_out_path, dpi=200, bbox_inches="tight")
         plt.close(diff_fig)
 
         # Save yearly role trend plot for the top changed roles
@@ -995,7 +995,7 @@ class TrendAnalyzer:
 
         year_ts = pd.to_datetime(plot_yearly.index.astype(str) + "-01-01")
 
-        trend_fig, trend_ax = plt.subplots(figsize=(4.5, 3.5 + 0.2))
+        trend_fig, trend_ax = plt.subplots(figsize=(4.0, 3.5 + 0.2))
         for role in top_roles:
             trend_ax.plot(year_ts, plot_yearly[role], marker="o", linewidth=1, label=role)
 
@@ -1004,7 +1004,7 @@ class TrendAnalyzer:
             self._add_event_lines(trend_ax, event_dates)
             top_y = trend_ax.get_ylim()[1]
             for label, d in event_dates.items():
-                trend_ax.text(d, top_y, label, rotation=0, va="bottom", fontsize=10, alpha=0.8)
+                trend_ax.text(d, top_y, label, rotation=0, va="bottom", fontsize=8, alpha=0.8)
 
         trend_ax.set_xlabel("Year")
         trend_ax.set_ylabel("Dependency role proportion")
@@ -1014,7 +1014,7 @@ class TrendAnalyzer:
         self._format_xticks(trend_ax)
         trend_out_path = output_dir / "dependency_distribution_trends.png"
         trend_fig.tight_layout()
-        trend_fig.savefig(trend_out_path, dpi=150, bbox_inches="tight")
+        trend_fig.savefig(trend_out_path, dpi=200, bbox_inches="tight")
         plt.close(trend_fig)
 
         return [diff_out_path, trend_out_path]
@@ -1134,7 +1134,7 @@ def save_grouped_difference_plot(
     # =====================================================
     # FIGURE SIZE
     # =====================================================
-    bar_height_inches = 0.15
+    bar_height_inches = 0.13
 
     fig_height = (
         len(df) * bar_height_inches

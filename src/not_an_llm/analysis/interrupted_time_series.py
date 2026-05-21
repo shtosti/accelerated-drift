@@ -140,7 +140,7 @@ def save_its_slope_change_plot(
     output_path: Path,
     *,
     label_map: dict[str, str] | None = None,
-    top_n: int = 30,
+    top_n: int = 20,
 ) -> Path | None:
     return _save_its_slope_change_plot(
         stats,
@@ -159,7 +159,7 @@ def save_its_standardized_slope_change_plot(
     output_path: Path,
     *,
     label_map: dict[str, str] | None = None,
-    top_n: int = 30,
+    top_n: int = 20,
 ) -> Path | None:
     return _save_its_slope_change_plot(
         stats,
@@ -167,7 +167,7 @@ def save_its_standardized_slope_change_plot(
         value_column="standardized_slope_change_per_year",
         ci_low_column="standardized_slope_change_per_year_ci_low",
         ci_high_column="standardized_slope_change_per_year_ci_high",
-        xlabel=r"$\Delta$ annual trend after intervention (Pre SD/year)",
+        xlabel=rf"$\Delta$ annual trend after intervention (Pre $\sigma$/year)",
         label_map=label_map,
         top_n=top_n,
     )
@@ -178,7 +178,7 @@ def save_its_raw_unit_slope_change_plots(
     output_dir: Path,
     *,
     label_map: dict[str, str] | None = None,
-    top_n_per_group: int = 30,
+    top_n_per_group: int = 20,
 ) -> list[Path]:
     if stats.empty or "feature" not in stats.columns:
         return []
@@ -212,7 +212,7 @@ def save_its_standardized_grouped_slope_change_plots(
     output_dir: Path,
     *,
     label_map: dict[str, str] | None = None,
-    top_n_per_group: int = 30,
+    top_n_per_group: int = 20,
 ) -> list[Path]:
     if stats.empty or "feature" not in stats.columns or "family" not in stats.columns:
         return []
@@ -228,7 +228,7 @@ def save_its_standardized_grouped_slope_change_plots(
             value_column="standardized_slope_change_per_year",
             ci_low_column="standardized_slope_change_per_year_ci_low",
             ci_high_column="standardized_slope_change_per_year_ci_high",
-            xlabel=r"$\Delta$ annual trend after intervention (Pre SD/year)",
+            xlabel=rf"$\Delta$ annual trend after intervention (Pre $\sigma$/year)",
             label_map=label_map,
             top_n=top_n_per_group,
         )
@@ -466,7 +466,7 @@ def _save_its_slope_change_plot(
     ci_high_column: str,
     xlabel: str,
     label_map: dict[str, str] | None = None,
-    top_n: int = 40,
+    top_n: int = 20,
 ) -> Path | None:
     if stats.empty or value_column not in stats.columns:
         return None
@@ -500,16 +500,16 @@ def _save_its_slope_change_plot(
     bars = ax.barh(plot_df["label"], plot_df[value_column], color=colors, xerr=xerr, capsize=2)
     ax.axvline(0, color="#333333", linewidth=0.8)
     ax.set_xlabel(xlabel)
-    ax.text(
-        0.0,
-        1.01,
-        "Significance stars use FDR-adjusted slope-change q-values: * q<0.05, ** q<0.01, *** q<0.001",
-        transform=ax.transAxes,
-        ha="left",
-        va="bottom",
-        fontsize=9,
-        color="#333333",
-    )
+    # ax.text(
+    #     0.0,
+    #     1.01,
+    #     "Significance stars use FDR-adjusted slope-change q-values: * q<0.05, ** q<0.01, *** q<0.001",
+    #     transform=ax.transAxes,
+    #     ha="left",
+    #     va="bottom",
+    #     fontsize=9,
+    #     color="#333333",
+    # )
 
     for bar, annotation in zip(bars, plot_df["annotation"]):
         ax.text(
