@@ -1,6 +1,6 @@
 LABEL_MAP = {
-    "avg_words_per_sentence": "words per sentence",
-    "avg_syllables_per_word": "syllables per word",
+    "avg_words_per_sentence": "words/sent.",
+    "avg_syllables_per_word": "syllables/word",
     "flesch_reading_ease": "FRE",
     "flesch_kincaid_grade": "FKGL",
     "flesh_reading_ease": "FRE",
@@ -14,9 +14,9 @@ LABEL_MAP = {
     "semicolon_per_1k_words": "semicolon",
     "em_dash_per_1k_words": "em dash",
     "word_count": "word count",
-    "sentence_count": "sentence count",
+    "sentence_count": "sent. count",
     "clause_depth": "clause depth",
-    "clause_depth_std": "clause depth (std)",
+    "clause_depth_std": r"clause depth $\sigma$",
     "contrast_marker_however_per_1k_words": "`however`",
     "verb_exhibit_per_1k_words": "`exhibit`",
     "verb_delve_per_1k_words": "`delve`",
@@ -39,15 +39,15 @@ LABEL_MAP = {
     "contrast_markers_total_per_1k_words": "contrast markers",
     "summary_markers_total_per_1k_words": "summary markers",
     "coordination_count": "coordination count",
-    "coordination_per_sentence_std": "coordination per sentence (std)",
+    "coordination_per_sentence_std": r"coordination/sent. $\sigma$",
     "marker_words_total_per_1k_words": "marker words",
     "marker_verbs_total_per_1k_words": "marker verbs",
     "marker_adjectives_total_per_1k_words": "marker adjectives",
     "marker_phrases_total_per_1k_words": "marker phrases",
-    "dependency_entropy": "dependency entropy",
-    "dependency_length": "dependency length",
-    "dependency_length_std": "dependency length (std)",
-    "sentence_depth_std": "sentence depth (std)",
+    "dependency_entropy": "dep. entropy",
+    "dependency_length": "dep. length",
+    "dependency_length_std": r"dep. length $\sigma$",
+    "sentence_depth_std": r"sent. depth $\sigma$",
     "phrase_meticulously_delve_per_1k_words": "`meticulously delve`",
     "phrase_intricate_web_per_1k_words": "`intricate web`",
     "phrase_comprehensive_chapter_per_1k_words": "`comprehensive chapter`",
@@ -97,31 +97,3 @@ def pretty_feature_label(feature: str, label_map: dict[str, str] | None = None) 
     label_map = label_map or LABEL_MAP
     mapped = label_map.get(feature, feature)
     return mapped
-
-
-def _uses_angle_brackets(feature: str, mapped: str) -> bool:
-    lexical_prefixes = ("word_", "verb_", "adjective_", "phrase_")
-    marker_prefixes = (
-        "sequential_marker_",
-        "causal_marker_",
-        "contrast_marker_",
-        "emphasis_marker_",
-        "summary_marker_",
-    )
-    marker_totals = (
-        "marker_words_total_per_1k_words",
-        "marker_verbs_total_per_1k_words",
-        "marker_adjectives_total_per_1k_words",
-        "marker_phrases_total_per_1k_words",
-        "sequential_markers_total_per_1k_words",
-        "causal_markers_total_per_1k_words",
-        "contrast_markers_total_per_1k_words",
-        "emphasis_markers_total_per_1k_words",
-        "summary_markers_total_per_1k_words",
-    )
-    return (
-        "`" in mapped
-        or feature.startswith(lexical_prefixes)
-        or feature.startswith(marker_prefixes)
-        or feature in marker_totals
-    )
