@@ -86,7 +86,7 @@ def save_legend_only(ax, output_path: Path, ncol: int = 1, wrap_width: int = 44)
         default=wrap_width,
     )
     fig_width = max(5.0, min(8.5, 1.6 + max_line_len * 0.085))
-    fig_height = max(2.0, 0.34 * line_count + 0.2)
+    fig_height = max(1.0, 0.3 * line_count + 0.2)
 
     fig_legend = plt.figure(figsize=(fig_width, fig_height))
     legend = fig_legend.legend(
@@ -156,7 +156,7 @@ def save_topic_prevalence(
     color_map = topic_color_map(topic_order)
 
     yearly_count_pivot = yearly.pivot(index="year", columns="topic_id", values="count").fillna(0)
-    fig, ax = plt.subplots(figsize=(3.5, 3))
+    fig, ax = plt.subplots(figsize=(3.5, 2.8))
     bottom = np.zeros(len(yearly_count_pivot.index))
     for topic_id in topic_order:
         if topic_id not in yearly_count_pivot.columns:
@@ -187,7 +187,7 @@ def save_topic_prevalence(
 
     yearly_pivot = yearly.pivot(index="year", columns="topic_id", values="pct").fillna(0.0)
 
-    fig, ax = plt.subplots(figsize=(3.5, 3))
+    fig, ax = plt.subplots(figsize=(3.5, 2.8))
     for marker_index, topic_id in enumerate(topic_order):
         if topic_id not in yearly_pivot.columns:
             continue
@@ -215,7 +215,7 @@ def save_topic_prevalence(
     plt.close(fig)
     paths.append(trend_path)
 
-    fig, ax = plt.subplots(figsize=(3.5, 3))
+    fig, ax = plt.subplots(figsize=(3.5, 2.8))
     ax.stackplot(
         yearly_pivot.index,
         *[yearly_pivot[topic_id] for topic_id in topic_order if topic_id in yearly_pivot.columns],
@@ -248,7 +248,7 @@ def save_topic_prevalence(
         paths.append(monthly_csv)
 
         monthly_pivot = monthly.pivot(index="month_ts", columns="topic_id", values="pct").fillna(0.0)
-        fig, ax = plt.subplots(figsize=(3.5, 3))
+        fig, ax = plt.subplots(figsize=(3.5, 2.8))
         for marker_index, topic_id in enumerate(topic_order):
             if topic_id not in monthly_pivot.columns:
                 continue
@@ -310,7 +310,7 @@ def save_topic_trend_plots(
     color_map = topic_color_map(topic_order)
 
     for feature in feature_columns:
-        fig, ax = plt.subplots(figsize=(3.5, 3))
+        fig, ax = plt.subplots(figsize=(3.5, 2.8))
         for marker_index, topic_id in enumerate(topic_order):
             topic_data = grouped[grouped["topic_id"] == topic_id]
             if topic_data.empty:
