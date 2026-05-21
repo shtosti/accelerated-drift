@@ -54,7 +54,7 @@ class ReadabilityAnalyzer:
             }
             results.append(row_result)
 
-        metrics_df = pd.DataFrame(results)
+        metrics_df = pd.DataFrame(results, index=df.index)
 
         # attach back
         for col in metrics_df.columns:
