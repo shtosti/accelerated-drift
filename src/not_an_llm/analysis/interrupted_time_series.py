@@ -159,7 +159,7 @@ def save_its_standardized_slope_change_plot(
     output_path: Path,
     *,
     label_map: dict[str, str] | None = None,
-    top_n: int = 20,
+    top_n: int = 40,
 ) -> Path | None:
     return _save_its_slope_change_plot(
         stats,
@@ -178,7 +178,7 @@ def save_its_raw_unit_slope_change_plots(
     output_dir: Path,
     *,
     label_map: dict[str, str] | None = None,
-    top_n_per_group: int = 20,
+    top_n_per_group: int = 40,
 ) -> list[Path]:
     if stats.empty or "feature" not in stats.columns:
         return []
@@ -212,7 +212,7 @@ def save_its_standardized_grouped_slope_change_plots(
     output_dir: Path,
     *,
     label_map: dict[str, str] | None = None,
-    top_n_per_group: int = 20,
+    top_n_per_group: int = 40,
 ) -> list[Path]:
     if stats.empty or "feature" not in stats.columns or "family" not in stats.columns:
         return []
@@ -487,7 +487,7 @@ def _save_its_slope_change_plot(
     plot_df["annotation"] = plot_df.apply(_format_its_annotation, axis=1)
 
     fig_height = max(1.0, len(plot_df) * 0.2 + 0.8)
-    fig, ax = plt.subplots(figsize=(10, fig_height))
+    fig, ax = plt.subplots(figsize=(7, fig_height))
     colors = ["#943F8B" if value < 0 else "#54A066" for value in plot_df[value_column]]
     xerr = None
     if {ci_low_column, ci_high_column}.issubset(plot_df.columns):
