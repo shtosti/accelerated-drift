@@ -71,7 +71,7 @@ def topic_color_map(topic_ids) -> dict[int, str]:
     return color_map
 
 
-def save_legend_only(ax, output_path: Path, ncol: int = 1, wrap_width: int = 44):
+def save_legend_only(ax, output_path: Path, ncol: int = 1, wrap_width: int = 24):
     handles, labels = ax.get_legend_handles_labels()
     if not handles:
         return
@@ -85,8 +85,8 @@ def save_legend_only(ax, output_path: Path, ncol: int = 1, wrap_width: int = 44)
         (len(line) for label in wrapped_labels for line in label.splitlines()),
         default=wrap_width,
     )
-    fig_width = max(5.0, min(8.5, 1.6 + max_line_len * 0.085))
-    fig_height = max(1.0, 0.3 * line_count + 0.2)
+    fig_width = max(2.2, min(4.2, 0.9 + max_line_len * 0.075))
+    fig_height = max(1.0, 0.22 * line_count + 0.25)
 
     fig_legend = plt.figure(figsize=(fig_width, fig_height))
     legend = fig_legend.legend(
@@ -96,13 +96,15 @@ def save_legend_only(ax, output_path: Path, ncol: int = 1, wrap_width: int = 44)
         frameon=False,
         ncol=ncol,
         fontsize=8,
-        handlelength=1.6,
-        labelspacing=0.8,
+        handlelength=1.0,
+        handletextpad=0.7,
+        labelspacing=0.65,
+        borderaxespad=0.0,
     )
 
     fig_legend.canvas.draw()
     bbox = legend.get_window_extent().transformed(fig_legend.dpi_scale_trans.inverted())
-    pad_inches = 0.18
+    pad_inches = 0.12
     required_width = bbox.width + pad_inches * 2
     required_height = bbox.height + pad_inches * 2
     if required_width > fig_width or required_height > fig_height:
