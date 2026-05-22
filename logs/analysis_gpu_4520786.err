@@ -70,3 +70,12 @@ Checked 1 package in 152ms
   yearly = df.groupby("year", as_index=False).agg(**agg)
 /storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:226: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
   yearly = df.groupby("year", as_index=False).agg(**agg)
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:226: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  yearly = df.groupby("year", as_index=False).agg(**agg)
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:226: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  yearly = df.groupby("year", as_index=False).agg(**agg)
+2026-05-22 11:28:53,703 INFO not_an_llm.pipelines.visualize: Loaded monthly interrupted time-series statistics from data/analysis/arxiv_its_stats.csv
+2026-05-22 11:28:53,703 INFO not_an_llm.pipelines.visualize: Generating grouped pre/post diff plot...
+2026-05-22 11:28:54,362 INFO not_an_llm.pipelines.visualize: Saved grouped pre/post diff plot to data/visuals/arxiv/pre_post_diff.png
+2026-05-22 11:28:54,363 INFO not_an_llm.pipelines.visualize: Generating per-group pre/post diff plots...
+2026-05-22 11:28:55,968 INFO not_an_llm.pipelines.visualize: Saved 12 per-group diff plots
