@@ -1,0 +1,18 @@
+--- Python runtime info ---
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/bin/python
+/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/bin/python
+[38;5;2m✔ Download and installation successful[0m
+You can now load the package via spacy.load('en_core_web_sm')
+Saving feature dataset to: data/analyzed/medarxiv.jsonl
+Saving yearly trends to: data/analysis/medarxiv_year.csv
+Saving monthly trends to: data/analysis/medarxiv_month.csv
+Saving plots to: data/visuals/medarxiv
+Saved feature dataset to data/analyzed/medarxiv.jsonl
+Saved yearly trends to data/analysis/medarxiv_year.csv
+Saved monthly trends to data/analysis/medarxiv_month.csv
+Saved trend plots to data/visuals/medarxiv (1015 files)
+Loading feature dataset from: data/analyzed/medarxiv.jsonl
+Loading yearly trends from: data/analysis/medarxiv_year.csv
+Loading monthly trends from: data/analysis/medarxiv_month.csv
+Saving plots to: data/visuals/medarxiv
+Saved trend plots to data/visuals/medarxiv (102 files)
