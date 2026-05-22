@@ -354,7 +354,7 @@ def _save_feature_strength_heatmap(df: pd.DataFrame, features: tuple[str, ...], 
 
     plot_df = df.copy()
     plot_df["topic"] = plot_df.apply(
-        lambda row: f"{row['domain']}: {row['topic_id']} ({row['abstract_share']:.1%})",
+        lambda row: f"{_domain_label(row['domain'])}: {row['topic_id']} ({row['abstract_share']:.1%})",
         axis=1,
     )
     values = plot_df[heatmap_cols].replace([np.inf, -np.inf], np.nan)
@@ -403,7 +403,7 @@ def _save_standardized_its_heatmap(df: pd.DataFrame, features: tuple[str, ...], 
         return
     value_table = value_table[available_features].reset_index()
     value_table["topic"] = value_table.apply(
-        lambda row: f"{row['domain']}: {int(row['topic_id'])} ({row['abstract_share']:.1%})",
+        lambda row: f"{_domain_label(row['domain'])}: {int(row['topic_id'])} ({row['abstract_share']:.1%})",
         axis=1,
     )
 
@@ -460,3 +460,8 @@ def _value_at_year(wide: pd.DataFrame, topic_id: int, year: int) -> float:
 def _require_file(path: Path) -> None:
     if not path.exists():
         raise FileNotFoundError(f"Required topic analysis file not found: {path}")
+
+
+def _domain_label(domain: object) -> str:
+    value = str(domain)
+    return DOMAIN_LABELS.get(value, value)
