@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 import pandas as pd
 
@@ -27,6 +28,13 @@ DOMAIN_LABELS = {
     "arxiv": "arXiv",
     "medarxiv": "medRxiv",
 }
+
+DECREASE_COLOR = "#943F8B"
+INCREASE_COLOR = "#54A066"
+TOPIC_HEATMAP_CMAP = LinearSegmentedColormap.from_list(
+    "orchid_white_green",
+    [DECREASE_COLOR, "#FFFFFF", INCREASE_COLOR],
+)
 
 
 @dataclass(slots=True)
@@ -368,7 +376,7 @@ def _save_feature_strength_heatmap(df: pd.DataFrame, features: tuple[str, ...], 
     if not np.isfinite(vmax) or vmax == 0.0:
         vmax = 1.0
 
-    image = ax.imshow(values, aspect="auto", cmap="RdBu_r", vmin=-vmax, vmax=vmax)
+    image = ax.imshow(values, aspect="auto", cmap=TOPIC_HEATMAP_CMAP, vmin=-vmax, vmax=vmax)
     ax.set_xticks(range(len(labels)), labels=labels, rotation=45, ha="right")
     ax.set_yticks(range(len(plot_df)), labels=plot_df["topic"])
     # ax.set_title("Post/pre feature change by topic (%)")
@@ -418,7 +426,7 @@ def _save_standardized_its_heatmap(df: pd.DataFrame, features: tuple[str, ...], 
     if not np.isfinite(vmax) or vmax == 0.0:
         vmax = 1.0
 
-    image = ax.imshow(values, aspect="auto", cmap="RdBu_r", vmin=-vmax, vmax=vmax)
+    image = ax.imshow(values, aspect="auto", cmap=TOPIC_HEATMAP_CMAP, vmin=-vmax, vmax=vmax)
     ax.set_xticks(range(len(labels)), labels=labels, rotation=45, ha="right")
     ax.set_yticks(range(len(value_table)), labels=value_table["topic"])
     # ax.set_title("Topic ITS slope change (pre SD/year)")
