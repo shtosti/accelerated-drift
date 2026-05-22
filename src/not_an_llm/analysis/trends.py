@@ -1089,7 +1089,7 @@ class TrendAnalyzer:
         )
 
         # Save diff plot
-        diff_fig, diff_ax = plt.subplots(figsize=(4.0, 1.0 * len(diff_df) + 0.2))
+        diff_fig, diff_ax = plt.subplots(figsize=(4.0, 0.2 * len(diff_df) + 0.2))
         colors = [color_map[str(role)] for role in diff_df["feature"]]
         diff_ax.barh(diff_df["feature"], diff_df["diff_pct"], color=colors)
         diff_ax.axvline(0, color="black", linewidth=1)
@@ -1108,7 +1108,7 @@ class TrendAnalyzer:
 
         year_ts = pd.to_datetime(plot_yearly.index.astype(str) + "-01-01")
 
-        trend_fig, trend_ax = plt.subplots(figsize=(4.0, 3.5 + 0.2))
+        trend_fig, trend_ax = plt.subplots(figsize=(3.2, 3.5 + 0.2))
         for role in top_roles:
             trend_ax.plot(
                 year_ts,
