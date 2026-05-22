@@ -7,6 +7,11 @@ import pandas as pd
 from concurrent.futures import ProcessPoolExecutor
 
 from not_an_llm.analysis.topic_modeling import run_topic_analysis, run_topic_modeling
+from not_an_llm.analysis.topic_modeling.comparison import (
+    compare_topic_distributions_and_features,
+    save_selected_its_features,
+    select_top_its_features,
+)
 from not_an_llm.analysis.trends import TrendAnalyzer, is_group_total_feature
 from not_an_llm.analysis.feature_groups import FEATURE_GROUPS
 from not_an_llm.analysis.feature_selection import build_marker_group_specs, resolve_feature_columns
@@ -393,6 +398,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
             embeddings_2d=embeddings_2d,
         )
         trend_plots.extend(topic_paths)
+        trend_plots.extend(_maybe_run_cross_domain_topic_comparison(analysis_dir))
 
     return AnalysisArtifacts(
         feature_dataset_jsonl=enriched_output_path,
@@ -400,4 +406,60 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         monthly_trends_csv=monthly_trends_csv,
         trends_plot_paths=trend_plots,
     )
+
+
+def _maybe_run_cross_domain_topic_comparison(analysis_dir: Path) -> list[Path]:
+    domains = ("arxiv", "medarxiv")
+    required_paths = []
+    for domain in domains:
+        required_paths.extend(
+            [
+                analysis_dir / f"{domain}_its_stats.csv",
+                analysis_dir / f"{domain}_topic_summary.csv",
+                analysis_dir / f"{domain}_topic_prevalence_yearly.csv",
+                analysis_dir / f"{domain}_topics",
+            ]
+        )
+
+    missing = [path for path in required_paths if not path.exists()]
+    if missing:
+        logger.info(
+            "Skipping cross-domain topic comparison because not all arXiv/medRxiv topic artifacts exist yet."
+        )
+        return []
+
+    output_dir = analysis_dir / "topic_comparison"
+    features, selected = select_top_its_features(
+        analysis_dir=analysis_dir,
+        domains=domains,
+        top_n=20,
+        q_threshold=0.05,
+    )
+    selected_path = save_selected_its_features(
+        selected,
+        output_dir / "selected_top_its_features.csv",
+    )
+    artifacts = compare_topic_distributions_and_features(
+        analysis_dir=analysis_dir,
+        output_dir=output_dir,
+        domains=domains,
+        features=features,
+        min_topic_share=0.005,
+        make_heatmap=True,
+    )
+
+    paths = [
+        selected_path,
+        artifacts.distribution_csv,
+        artifacts.feature_strength_csv,
+        artifacts.its_stats_csv,
+        artifacts.combined_csv,
+    ]
+    if artifacts.percent_change_heatmap_path:
+        paths.append(artifacts.percent_change_heatmap_path)
+    if artifacts.standardized_its_heatmap_path:
+        paths.append(artifacts.standardized_its_heatmap_path)
+
+    logger.info("Saved cross-domain topic comparison outputs to %s", output_dir)
+    return paths
 

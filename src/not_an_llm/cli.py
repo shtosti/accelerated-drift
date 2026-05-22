@@ -7,6 +7,11 @@ import logging
 from pathlib import Path
 
 from not_an_llm.analysis.features import default_hypotheses
+from not_an_llm.analysis.topic_modeling.comparison import (
+    compare_topic_distributions_and_features,
+    save_selected_its_features,
+    select_top_its_features,
+)
 from not_an_llm.config import load_config
 from not_an_llm.pipelines.analyze import run_analysis
 from not_an_llm.pipelines.collect import run_collection
@@ -37,6 +42,73 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("preprocess", help="Preprocess raw title/abstract text and save JSONL.")
     subparsers.add_parser("analyze", help="Run feature and readability analysis with yearly trends.")
     subparsers.add_parser("visualize", help="Generate plots from previously computed analysis data.")
+    topic_compare = subparsers.add_parser(
+        "topic-compare",
+        help="Compare topic prevalence and post/pre feature strength for arXiv and medRxiv.",
+    )
+    topic_compare.add_argument(
+        "--analysis-dir",
+        default="data/analysis",
+        help="Directory containing topic summary, prevalence, and per-topic trend CSVs.",
+    )
+    topic_compare.add_argument(
+        "--output-dir",
+        default="data/analysis/topic_comparison",
+        help="Directory where topic comparison CSVs and plots are written.",
+    )
+    topic_compare.add_argument(
+        "--domains",
+        nargs="+",
+        default=["arxiv", "medarxiv"],
+        help="Dataset prefixes to compare.",
+    )
+    topic_compare.add_argument(
+        "--features",
+        nargs="+",
+        default=None,
+        help="Feature base names to compare across topics. If omitted, use the top ITS features.",
+    )
+    topic_compare.add_argument(
+        "--top-n",
+        type=int,
+        default=15,
+        help="Number of strongest ITS rows to use when --features is omitted.",
+    )
+    topic_compare.add_argument(
+        "--q-threshold",
+        type=float,
+        default=0.05,
+        help="FDR q-value threshold for top ITS feature selection.",
+    )
+    topic_compare.add_argument(
+        "--intervention-year",
+        type=int,
+        default=2022,
+        help="Last pre-intervention year.",
+    )
+    topic_compare.add_argument(
+        "--post-start-year",
+        type=int,
+        default=2023,
+        help="First post-intervention year.",
+    )
+    topic_compare.add_argument(
+        "--latest-year",
+        type=int,
+        default=None,
+        help="Year used for the prevalence endpoint; defaults to latest available year.",
+    )
+    topic_compare.add_argument(
+        "--min-topic-share",
+        type=float,
+        default=0.0,
+        help="Drop topics below this overall share before comparing.",
+    )
+    topic_compare.add_argument(
+        "--no-heatmap",
+        action="store_true",
+        help="Skip the topic feature-strength heatmap.",
+    )
     subparsers.add_parser("show-hypotheses", help="Print default feature-shift hypotheses.")
 
     subparsers.add_parser(
@@ -163,6 +235,48 @@ def main() -> None:
     if args.command == "visualize":
         artifacts = run_visualization(config)
         print(f"Saved trend plots to {config.analysis.trends_plot_dir} ({len(artifacts.trends_plot_paths)} files)")
+        return
+
+    if args.command == "topic-compare":
+        analysis_dir = Path(args.analysis_dir)
+        output_dir = Path(args.output_dir)
+        selected_features_csv = None
+        if args.features:
+            features = tuple(args.features)
+        else:
+            features, selected = select_top_its_features(
+                analysis_dir=analysis_dir,
+                domains=tuple(args.domains),
+                top_n=args.top_n,
+                q_threshold=args.q_threshold,
+            )
+            selected_features_csv = save_selected_its_features(
+                selected,
+                output_dir / "selected_top_its_features.csv",
+            )
+
+        artifacts = compare_topic_distributions_and_features(
+            analysis_dir=analysis_dir,
+            output_dir=output_dir,
+            domains=tuple(args.domains),
+            features=features,
+            intervention_year=args.intervention_year,
+            post_start_year=args.post_start_year,
+            latest_year=args.latest_year,
+            min_topic_share=args.min_topic_share,
+            make_heatmap=not args.no_heatmap,
+        )
+        artifacts.selected_features_csv = selected_features_csv
+        if artifacts.selected_features_csv:
+            print(f"Saved selected top ITS features to {artifacts.selected_features_csv}")
+        print(f"Saved topic distribution comparison to {artifacts.distribution_csv}")
+        print(f"Saved topic feature-strength comparison to {artifacts.feature_strength_csv}")
+        print(f"Saved topic ITS standardized slope comparison to {artifacts.its_stats_csv}")
+        print(f"Saved combined topic comparison to {artifacts.combined_csv}")
+        if artifacts.percent_change_heatmap_path:
+            print(f"Saved topic feature-strength percent-change heatmap to {artifacts.percent_change_heatmap_path}")
+        if artifacts.standardized_its_heatmap_path:
+            print(f"Saved topic standardized ITS heatmap to {artifacts.standardized_its_heatmap_path}")
         return
 
     if args.command == "show-hypotheses":
