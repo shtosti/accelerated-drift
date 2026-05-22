@@ -11,3 +11,8 @@ Saved feature dataset to data/analyzed/medarxiv.jsonl
 Saved yearly trends to data/analysis/medarxiv_year.csv
 Saved monthly trends to data/analysis/medarxiv_month.csv
 Saved trend plots to data/visuals/medarxiv (1015 files)
+Loading feature dataset from: data/analyzed/medarxiv.jsonl
+Loading yearly trends from: data/analysis/medarxiv_year.csv
+Loading monthly trends from: data/analysis/medarxiv_month.csv
+Saving plots to: data/visuals/medarxiv
+Saved trend plots to data/visuals/medarxiv (102 files)
