@@ -7,3 +7,12 @@ Saving feature dataset to: data/analyzed/arxiv.jsonl
 Saving yearly trends to: data/analysis/arxiv_year.csv
 Saving monthly trends to: data/analysis/arxiv_month.csv
 Saving plots to: data/visuals/arxiv
+Saved feature dataset to data/analyzed/arxiv.jsonl
+Saved yearly trends to data/analysis/arxiv_year.csv
+Saved monthly trends to data/analysis/arxiv_month.csv
+Saved trend plots to data/visuals/arxiv (1099 files)
+Loading feature dataset from: data/analyzed/arxiv.jsonl
+Loading yearly trends from: data/analysis/arxiv_year.csv
+Loading monthly trends from: data/analysis/arxiv_month.csv
+Saving plots to: data/visuals/arxiv
+Saved trend plots to data/visuals/arxiv (102 files)
