@@ -76,7 +76,7 @@ def topic_legend_label(topic_id: int, topic_labels: dict[int, str]) -> str:
     return f"{int(topic_id)}: {label}"
 
 
-def save_legend_only(ax, output_path: Path, ncol: int = 1, wrap_width: int = 24):
+def save_legend_only(ax, output_path: Path, ncol: int = 1, wrap_width: int = 33):
     handles, labels = ax.get_legend_handles_labels()
     if not handles:
         return
