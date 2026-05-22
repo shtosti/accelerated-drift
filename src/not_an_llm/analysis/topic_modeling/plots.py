@@ -71,6 +71,11 @@ def topic_color_map(topic_ids) -> dict[int, str]:
     return color_map
 
 
+def topic_legend_label(topic_id: int, topic_labels: dict[int, str]) -> str:
+    label = topic_labels.get(int(topic_id), f"topic_{topic_id}")
+    return f"{int(topic_id)}: {label}"
+
+
 def save_legend_only(ax, output_path: Path, ncol: int = 1, wrap_width: int = 24):
     handles, labels = ax.get_legend_handles_labels()
     if not handles:
@@ -164,7 +169,7 @@ def save_topic_prevalence(
         if topic_id not in yearly_count_pivot.columns:
             continue
         values = yearly_count_pivot[topic_id].to_numpy()
-        label = topic_labels.get(int(topic_id), f"topic_{topic_id}")
+        label = topic_legend_label(int(topic_id), topic_labels)
         ax.bar(
             yearly_count_pivot.index,
             values,
@@ -193,7 +198,7 @@ def save_topic_prevalence(
     for marker_index, topic_id in enumerate(topic_order):
         if topic_id not in yearly_pivot.columns:
             continue
-        label = topic_labels.get(int(topic_id), f"topic_{topic_id}")
+        label = topic_legend_label(int(topic_id), topic_labels)
         ax.plot(
             yearly_pivot.index,
             yearly_pivot[topic_id],
@@ -221,7 +226,7 @@ def save_topic_prevalence(
     ax.stackplot(
         yearly_pivot.index,
         *[yearly_pivot[topic_id] for topic_id in topic_order if topic_id in yearly_pivot.columns],
-        labels=[topic_labels.get(int(topic_id), f"topic_{topic_id}") for topic_id in topic_order if topic_id in yearly_pivot.columns],
+        labels=[topic_legend_label(int(topic_id), topic_labels) for topic_id in topic_order if topic_id in yearly_pivot.columns],
         colors=[color_map[int(topic_id)] for topic_id in topic_order if topic_id in yearly_pivot.columns],
         alpha=0.9,
     )
@@ -254,7 +259,7 @@ def save_topic_prevalence(
         for marker_index, topic_id in enumerate(topic_order):
             if topic_id not in monthly_pivot.columns:
                 continue
-            label = topic_labels.get(int(topic_id), f"topic_{topic_id}")
+            label = topic_legend_label(int(topic_id), topic_labels)
             ax.plot(
                 pd.to_datetime(monthly_pivot.index),
                 monthly_pivot[topic_id],
@@ -317,7 +322,7 @@ def save_topic_trend_plots(
             topic_data = grouped[grouped["topic_id"] == topic_id]
             if topic_data.empty:
                 continue
-            topic_label = topic_labels.get(topic_id, f"topic_{topic_id}")
+            topic_label = topic_legend_label(int(topic_id), topic_labels)
             ax.plot(
                 topic_data["year"],
                 topic_data[feature],
