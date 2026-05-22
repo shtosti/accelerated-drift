@@ -148,7 +148,7 @@ def save_its_slope_change_plot(
         value_column="slope_change_per_year",
         ci_low_column="slope_change_per_year_ci_low",
         ci_high_column="slope_change_per_year_ci_high",
-        xlabel=r"$\Delta$ annual trend after intervention (feature-specific units/year)",
+        xlabel=r"$\Delta$ post-intervention trend (units/year)",
         label_map=label_map,
         top_n=top_n,
     )
@@ -167,7 +167,7 @@ def save_its_standardized_slope_change_plot(
         value_column="standardized_slope_change_per_year",
         ci_low_column="standardized_slope_change_per_year_ci_low",
         ci_high_column="standardized_slope_change_per_year_ci_high",
-        xlabel=rf"$\Delta$ annual trend after intervention (Pre $\sigma$/year)",
+        xlabel=rf"$\Delta$ post-intervention trend (pre $\sigma$/year)",
         label_map=label_map,
         top_n=top_n,
     )
@@ -228,7 +228,7 @@ def save_its_standardized_grouped_slope_change_plots(
             value_column="standardized_slope_change_per_year",
             ci_low_column="standardized_slope_change_per_year_ci_low",
             ci_high_column="standardized_slope_change_per_year_ci_high",
-            xlabel=rf"$\Delta$ annual trend after intervention (Pre $\sigma$/year)",
+            xlabel=rf"$\Delta$ post-intervention trend (pre $\sigma$/year)",
             label_map=label_map,
             top_n=top_n_per_group,
         )
@@ -547,12 +547,12 @@ def _feature_unit_group(feature: str) -> str:
 
 def _unit_group_axis_label(unit_group: str) -> str:
     labels = {
-        "per_1k_words": r"$\Delta$ annual trend after intervention (occurrences per 1,000 words/year)",
-        "ratios": r"$\Delta$ annual trend after intervention (ratio units/year)",
-        "readability_scores": r"$\Delta$ annual trend after intervention (readability score points/year)",
-        "syntax_and_other_metrics": r"$\Delta$ annual trend after intervention (metric points/year)",
+        "per_1k_words": r"$\Delta$ post-intervention trend (per 1,000 words/year)",
+        "ratios": r"$\Delta$ post-intervention trend (ratio units/year)",
+        "readability_scores": r"$\Delta$ post-intervention trend (metric points/year)",
+        "syntax_and_other_metrics": r"$\Delta$ post-intervention trend (metric points/year)",
     }
-    return labels.get(unit_group, r"$\Delta$ annual trend after intervention")
+    return labels.get(unit_group, r"$\Delta$ post-intervention annual trend")
 
 
 def _format_number(value: object) -> str:

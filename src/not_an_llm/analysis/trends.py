@@ -1093,7 +1093,7 @@ class TrendAnalyzer:
         colors = [color_map[str(role)] for role in diff_df["feature"]]
         diff_ax.barh(diff_df["feature"], diff_df["diff_pct"], color=colors)
         diff_ax.axvline(0, color="black", linewidth=1)
-        diff_ax.set_xlabel("Change in role proportion (percentage points)")
+        diff_ax.set_xlabel(rf"$\Delta$ role proportion (%)")
         # diff_ax.set_title("Top dependency role proportion changes after 2023")
         diff_ax.grid(axis="x", alpha=0.3)
         self._format_xticks(diff_ax)
