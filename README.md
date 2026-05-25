@@ -1,5 +1,3 @@
-# not-an-llm
-
 Modular research pipeline for studying writing-feature changes before and after broad LLM adoption.
 
 ## Goal
