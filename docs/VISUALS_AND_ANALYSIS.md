@@ -215,7 +215,7 @@ These yearly summaries are computed in memory for exploratory diff plots only. T
 
 ## Configurable behavior
 
-Plot and analysis behavior is controlled in `config.toml`, `config_mini.toml`, and `config_external.toml`.
+Plot and analysis behavior is controlled in `config.toml` and `config_mini.toml`.
 
 Key settings include:
 
@@ -246,7 +246,6 @@ Key settings include:
 
 - `src/not_an_llm/pipelines/analyze.py`
 - `src/not_an_llm/pipelines/visualize.py`
-- `src/not_an_llm/pipelines/external_analyze.py`
 - `src/not_an_llm/analysis/feature_selection.py`
 - `src/not_an_llm/analysis/feature_groups.py`
 - `src/not_an_llm/analysis/trends.py`

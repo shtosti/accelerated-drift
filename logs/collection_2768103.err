@@ -1,928 +1,0 @@
-2026-04-24 13:23:15,830 INFO not_an_llm.pipelines.collect: Starting arxiv collection: queries=3 years=2015-2026 (month-split)
-2026-04-24 13:23:15,831 INFO not_an_llm.pipelines.collect: Resuming from existing output: path=data/raw/arxiv_papers.jsonl existing_unique_papers=402703
-Collecting arxiv papers: 402703paper [00:00, ?paper/s]Collecting arxiv papers: 402703paper [00:00, ?paper/s, 2015-01]2026-04-24 13:23:16,132 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-01
-2026-04-24 13:23:16,132 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-01 query=cat:cs.CL
-2026-04-24 13:23:16,601 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=31 added=0 duplicates=31
-2026-04-24 13:23:16,601 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-01 query=cat:cs.AI
-2026-04-24 13:23:20,592 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=63 added=0 duplicates=63
-2026-04-24 13:23:20,593 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-01 query=cat:cs.LG
-2026-04-24 13:23:28,308 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=118 added=0 duplicates=118
-Collecting arxiv papers: 402703paper [00:12, ?paper/s, 2015-02]2026-04-24 13:23:28,308 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-02
-2026-04-24 13:23:28,308 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-02 query=cat:cs.CL
-2026-04-24 13:23:32,263 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=43 added=0 duplicates=43
-2026-04-24 13:23:32,263 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-02 query=cat:cs.AI
-2026-04-24 13:23:36,204 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=83 added=0 duplicates=83
-2026-04-24 13:23:36,204 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-02 query=cat:cs.LG
-2026-04-24 13:23:44,219 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=196 added=0 duplicates=196
-Collecting arxiv papers: 402703paper [00:28, ?paper/s, 2015-03]2026-04-24 13:23:44,219 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-03
-2026-04-24 13:23:44,219 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-03 query=cat:cs.CL
-2026-04-24 13:23:48,175 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=50 added=0 duplicates=50
-2026-04-24 13:23:48,175 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-03 query=cat:cs.AI
-2026-04-24 13:23:52,184 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=89 added=0 duplicates=89
-2026-04-24 13:23:52,184 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-03 query=cat:cs.LG
-2026-04-24 13:24:00,279 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=190 added=0 duplicates=190
-Collecting arxiv papers: 402703paper [00:44, ?paper/s, 2015-04]2026-04-24 13:24:00,279 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-04
-2026-04-24 13:24:00,279 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-04 query=cat:cs.CL
-2026-04-24 13:24:04,371 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=62 added=0 duplicates=62
-2026-04-24 13:24:04,371 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-04 query=cat:cs.AI
-2026-04-24 13:24:08,214 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=79 added=0 duplicates=79
-2026-04-24 13:24:08,214 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-04 query=cat:cs.LG
-2026-04-24 13:24:16,343 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=174 added=0 duplicates=174
-Collecting arxiv papers: 402703paper [01:00, ?paper/s, 2015-05]2026-04-24 13:24:16,343 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-05
-2026-04-24 13:24:16,345 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-05 query=cat:cs.CL
-2026-04-24 13:24:20,206 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=62 added=0 duplicates=62
-2026-04-24 13:24:20,206 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-05 query=cat:cs.AI
-2026-04-24 13:24:28,031 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=104 added=0 duplicates=104
-2026-04-24 13:24:28,032 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-05 query=cat:cs.LG
-2026-04-24 13:24:36,212 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=170 added=0 duplicates=170
-Collecting arxiv papers: 402703paper [01:20, ?paper/s, 2015-06]2026-04-24 13:24:36,212 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-06
-2026-04-24 13:24:36,212 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-06 query=cat:cs.CL
-2026-04-24 13:24:43,868 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=100 added=0 duplicates=100
-2026-04-24 13:24:43,868 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-06 query=cat:cs.AI
-2026-04-24 13:24:47,893 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=95 added=0 duplicates=95
-2026-04-24 13:24:47,893 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-06 query=cat:cs.LG
-2026-04-24 13:24:59,934 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=283 added=0 duplicates=283
-Collecting arxiv papers: 402703paper [01:44, ?paper/s, 2015-07]2026-04-24 13:24:59,936 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-07
-2026-04-24 13:24:59,936 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-07 query=cat:cs.CL
-2026-04-24 13:25:03,823 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=63 added=0 duplicates=63
-2026-04-24 13:25:03,823 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-07 query=cat:cs.AI
-2026-04-24 13:25:11,730 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=102 added=0 duplicates=102
-2026-04-24 13:25:11,730 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-07 query=cat:cs.LG
-2026-04-24 13:25:19,863 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=190 added=0 duplicates=190
-Collecting arxiv papers: 402703paper [02:04, ?paper/s, 2015-08]2026-04-24 13:25:19,863 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-08
-2026-04-24 13:25:19,863 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-08 query=cat:cs.CL
-2026-04-24 13:25:23,744 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=82 added=0 duplicates=82
-2026-04-24 13:25:23,745 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-08 query=cat:cs.AI
-2026-04-24 13:25:28,219 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=80 added=0 duplicates=80
-2026-04-24 13:25:28,219 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-08 query=cat:cs.LG
-2026-04-24 13:25:36,094 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=162 added=0 duplicates=162
-Collecting arxiv papers: 402703paper [02:20, ?paper/s, 2015-09]2026-04-24 13:25:36,094 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-09
-2026-04-24 13:25:36,094 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-09 query=cat:cs.CL
-2026-04-24 13:25:40,066 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=74 added=0 duplicates=74
-2026-04-24 13:25:40,066 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-09 query=cat:cs.AI
-2026-04-24 13:25:44,242 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=96 added=0 duplicates=96
-2026-04-24 13:25:44,243 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-09 query=cat:cs.LG
-2026-04-24 13:25:52,291 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=178 added=0 duplicates=178
-Collecting arxiv papers: 402703paper [02:36, ?paper/s, 2015-10]2026-04-24 13:25:52,291 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-10
-2026-04-24 13:25:52,291 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-10 query=cat:cs.CL
-2026-04-24 13:25:56,395 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=69 added=0 duplicates=69
-2026-04-24 13:25:56,395 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-10 query=cat:cs.AI
-2026-04-24 13:26:00,407 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=75 added=0 duplicates=75
-2026-04-24 13:26:00,407 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-10 query=cat:cs.LG
-2026-04-24 13:26:08,734 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=182 added=0 duplicates=182
-Collecting arxiv papers: 402703paper [02:52, ?paper/s, 2015-11]2026-04-24 13:26:08,735 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-11
-2026-04-24 13:26:08,735 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-11 query=cat:cs.CL
-2026-04-24 13:26:16,725 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=127 added=0 duplicates=127
-2026-04-24 13:26:16,725 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-11 query=cat:cs.AI
-2026-04-24 13:26:24,502 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=129 added=0 duplicates=129
-2026-04-24 13:26:24,502 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-11 query=cat:cs.LG
-2026-04-24 13:26:44,762 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=439 added=0 duplicates=439
-Collecting arxiv papers: 402703paper [03:28, ?paper/s, 2015-12]2026-04-24 13:26:44,763 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2015-12
-2026-04-24 13:26:44,764 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2015-2015 month=2015-12 query=cat:cs.CL
-2026-04-24 13:26:48,768 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=69 added=0 duplicates=69
-2026-04-24 13:26:48,769 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2015-2015 month=2015-12 query=cat:cs.AI
-2026-04-24 13:26:56,779 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=122 added=0 duplicates=122
-2026-04-24 13:26:56,780 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2015-2015 month=2015-12 query=cat:cs.LG
-2026-04-24 13:27:09,139 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=208 added=0 duplicates=208
-Collecting arxiv papers: 402703paper [03:53, ?paper/s, 2016-01]2026-04-24 13:27:09,140 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-01
-2026-04-24 13:27:09,140 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-01 query=cat:cs.CL
-2026-04-24 13:27:13,142 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=71 added=0 duplicates=71
-2026-04-24 13:27:13,142 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-01 query=cat:cs.AI
-2026-04-24 13:27:17,279 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=87 added=0 duplicates=87
-2026-04-24 13:27:17,279 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-01 query=cat:cs.LG
-2026-04-24 13:27:25,496 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=152 added=0 duplicates=152
-Collecting arxiv papers: 402703paper [04:09, ?paper/s, 2016-02]2026-04-24 13:27:25,496 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-02
-2026-04-24 13:27:25,496 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-02 query=cat:cs.CL
-2026-04-24 13:27:29,513 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=86 added=0 duplicates=86
-2026-04-24 13:27:29,513 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-02 query=cat:cs.AI
-2026-04-24 13:27:37,462 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=133 added=0 duplicates=133
-2026-04-24 13:27:37,462 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-02 query=cat:cs.LG
-2026-04-24 13:27:57,051 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=320 added=0 duplicates=320
-Collecting arxiv papers: 402703paper [04:41, ?paper/s, 2016-03]2026-04-24 13:27:57,052 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-03
-2026-04-24 13:27:57,052 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-03 query=cat:cs.CL
-2026-04-24 13:28:05,209 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=134 added=0 duplicates=134
-2026-04-24 13:28:05,209 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-03 query=cat:cs.AI
-2026-04-24 13:28:15,302 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=124 added=0 duplicates=124
-2026-04-24 13:28:15,302 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-03 query=cat:cs.LG
-2026-04-24 13:28:28,170 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=276 added=0 duplicates=276
-Collecting arxiv papers: 402703paper [05:12, ?paper/s, 2016-04]2026-04-24 13:28:28,170 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-04
-2026-04-24 13:28:28,170 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-04 query=cat:cs.CL
-2026-04-24 13:28:36,126 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=104 added=0 duplicates=104
-2026-04-24 13:28:36,126 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-04 query=cat:cs.AI
-2026-04-24 13:28:44,574 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=185 added=0 duplicates=185
-2026-04-24 13:28:44,574 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-04 query=cat:cs.LG
-2026-04-24 13:28:56,524 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=229 added=0 duplicates=229
-Collecting arxiv papers: 402703paper [05:40, ?paper/s, 2016-05]2026-04-24 13:28:56,525 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-05
-2026-04-24 13:28:56,525 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-05 query=cat:cs.CL
-2026-04-24 13:29:04,468 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=120 added=0 duplicates=120
-2026-04-24 13:29:04,468 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-05 query=cat:cs.AI
-2026-04-24 13:29:12,923 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=162 added=0 duplicates=162
-2026-04-24 13:29:12,924 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-05 query=cat:cs.LG
-2026-04-24 13:29:29,260 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=345 added=0 duplicates=345
-Collecting arxiv papers: 402703paper [06:13, ?paper/s, 2016-06]2026-04-24 13:29:29,261 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-06
-2026-04-24 13:29:29,261 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-06 query=cat:cs.CL
-2026-04-24 13:29:41,528 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=246 added=0 duplicates=246
-2026-04-24 13:29:41,528 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-06 query=cat:cs.AI
-2026-04-24 13:29:53,527 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=220 added=0 duplicates=220
-2026-04-24 13:29:53,527 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-06 query=cat:cs.LG
-2026-04-24 13:30:10,301 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=359 added=0 duplicates=359
-Collecting arxiv papers: 402703paper [06:54, ?paper/s, 2016-07]2026-04-24 13:30:10,302 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-07
-2026-04-24 13:30:10,302 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-07 query=cat:cs.CL
-2026-04-24 13:30:18,822 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=119 added=0 duplicates=119
-2026-04-24 13:30:18,822 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-07 query=cat:cs.AI
-2026-04-24 13:30:27,575 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=154 added=0 duplicates=154
-2026-04-24 13:30:27,575 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-07 query=cat:cs.LG
-2026-04-24 13:30:39,835 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=225 added=0 duplicates=225
-Collecting arxiv papers: 402703paper [07:24, ?paper/s, 2016-08]2026-04-24 13:30:39,836 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-08
-2026-04-24 13:30:39,836 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-08 query=cat:cs.CL
-2026-04-24 13:30:47,863 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=137 added=0 duplicates=137
-2026-04-24 13:30:47,864 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-08 query=cat:cs.AI
-2026-04-24 13:30:56,053 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=154 added=0 duplicates=154
-2026-04-24 13:30:56,053 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-08 query=cat:cs.LG
-2026-04-24 13:31:07,964 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=235 added=0 duplicates=235
-Collecting arxiv papers: 402703paper [07:52, ?paper/s, 2016-09]2026-04-24 13:31:07,965 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-09
-2026-04-24 13:31:07,965 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-09 query=cat:cs.CL
-2026-04-24 13:31:15,990 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=159 added=0 duplicates=159
-2026-04-24 13:31:15,990 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-09 query=cat:cs.AI
-2026-04-24 13:31:24,603 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=148 added=0 duplicates=148
-2026-04-24 13:31:24,603 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-09 query=cat:cs.LG
-2026-04-24 13:31:36,628 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=295 added=0 duplicates=295
-Collecting arxiv papers: 402703paper [08:20, ?paper/s, 2016-10]2026-04-24 13:31:36,628 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-10
-2026-04-24 13:31:36,628 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-10 query=cat:cs.CL
-2026-04-24 13:31:44,824 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=176 added=0 duplicates=176
-2026-04-24 13:31:44,824 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-10 query=cat:cs.AI
-2026-04-24 13:31:54,031 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=167 added=0 duplicates=167
-2026-04-24 13:31:54,031 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-10 query=cat:cs.LG
-2026-04-24 13:32:10,448 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=339 added=0 duplicates=339
-Collecting arxiv papers: 402703paper [08:54, ?paper/s, 2016-11]2026-04-24 13:32:10,448 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-11
-2026-04-24 13:32:10,449 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-11 query=cat:cs.CL
-2026-04-24 13:32:18,439 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=196 added=0 duplicates=196
-2026-04-24 13:32:18,439 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-11 query=cat:cs.AI
-2026-04-24 13:32:30,409 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=216 added=0 duplicates=216
-2026-04-24 13:32:30,409 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-11 query=cat:cs.LG
-2026-04-24 13:32:50,407 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=444 added=0 duplicates=444
-Collecting arxiv papers: 402703paper [09:34, ?paper/s, 2016-12]2026-04-24 13:32:50,408 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2016-12
-2026-04-24 13:32:50,408 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2016-2016 month=2016-12 query=cat:cs.CL
-2026-04-24 13:32:58,539 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=144 added=0 duplicates=144
-2026-04-24 13:32:58,539 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2016-2016 month=2016-12 query=cat:cs.AI
-2026-04-24 13:33:06,438 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=195 added=0 duplicates=195
-2026-04-24 13:33:06,439 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2016-2016 month=2016-12 query=cat:cs.LG
-2026-04-24 13:33:22,738 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=357 added=0 duplicates=357
-Collecting arxiv papers: 402703paper [10:06, ?paper/s, 2017-01]2026-04-24 13:33:22,739 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-01
-2026-04-24 13:33:22,739 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-01 query=cat:cs.CL
-2026-04-24 13:33:31,342 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=113 added=0 duplicates=113
-2026-04-24 13:33:31,342 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-01 query=cat:cs.AI
-2026-04-24 13:33:39,326 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=138 added=0 duplicates=138
-2026-04-24 13:33:39,326 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-01 query=cat:cs.LG
-2026-04-24 13:33:51,276 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=228 added=0 duplicates=228
-Collecting arxiv papers: 402703paper [10:35, ?paper/s, 2017-02]2026-04-24 13:33:51,276 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-02
-2026-04-24 13:33:51,276 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-02 query=cat:cs.CL
-2026-04-24 13:33:59,671 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=157 added=0 duplicates=157
-2026-04-24 13:33:59,671 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-02 query=cat:cs.AI
-2026-04-24 13:34:08,400 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=142 added=0 duplicates=142
-2026-04-24 13:34:08,400 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-02 query=cat:cs.LG
-2026-04-24 13:34:25,560 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=359 added=0 duplicates=359
-Collecting arxiv papers: 402703paper [11:09, ?paper/s, 2017-03]2026-04-24 13:34:25,560 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-03
-2026-04-24 13:34:25,560 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-03 query=cat:cs.CL
-2026-04-24 13:34:33,507 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=168 added=0 duplicates=168
-2026-04-24 13:34:33,507 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-03 query=cat:cs.AI
-2026-04-24 13:34:45,633 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=241 added=0 duplicates=241
-2026-04-24 13:34:45,634 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-03 query=cat:cs.LG
-2026-04-24 13:35:06,718 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=469 added=0 duplicates=469
-Collecting arxiv papers: 402703paper [11:50, ?paper/s, 2017-04]2026-04-24 13:35:06,719 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-04
-2026-04-24 13:35:06,719 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-04 query=cat:cs.CL
-2026-04-24 13:35:21,474 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=235 added=0 duplicates=235
-2026-04-24 13:35:21,475 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-04 query=cat:cs.AI
-2026-04-24 13:35:33,425 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=215 added=0 duplicates=215
-2026-04-24 13:35:33,425 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-04 query=cat:cs.LG
-2026-04-24 13:35:49,606 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=361 added=0 duplicates=361
-Collecting arxiv papers: 402703paper [12:33, ?paper/s, 2017-05]2026-04-24 13:35:49,608 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-05
-2026-04-24 13:35:49,608 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-05 query=cat:cs.CL
-2026-04-24 13:35:57,646 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=193 added=0 duplicates=193
-2026-04-24 13:35:57,646 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-05 query=cat:cs.AI
-2026-04-24 13:36:09,715 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=289 added=0 duplicates=289
-2026-04-24 13:36:09,715 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-05 query=cat:cs.LG
-2026-04-24 13:36:34,383 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=515 added=0 duplicates=515
-Collecting arxiv papers: 402703paper [13:18, ?paper/s, 2017-06]2026-04-24 13:36:34,384 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-06
-2026-04-24 13:36:34,384 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-06 query=cat:cs.CL
-2026-04-24 13:36:42,435 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=187 added=0 duplicates=187
-2026-04-24 13:36:42,436 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-06 query=cat:cs.AI
-2026-04-24 13:36:54,741 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=221 added=0 duplicates=221
-2026-04-24 13:36:54,741 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-06 query=cat:cs.LG
-2026-04-24 13:37:15,492 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=459 added=0 duplicates=459
-Collecting arxiv papers: 402703paper [13:59, ?paper/s, 2017-07]2026-04-24 13:37:15,493 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-07
-2026-04-24 13:37:15,493 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-07 query=cat:cs.CL
-2026-04-24 13:37:28,335 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=286 added=0 duplicates=286
-2026-04-24 13:37:28,336 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-07 query=cat:cs.AI
-2026-04-24 13:37:40,300 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=260 added=0 duplicates=260
-2026-04-24 13:37:40,300 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-07 query=cat:cs.LG
-2026-04-24 13:38:00,336 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=407 added=0 duplicates=407
-Collecting arxiv papers: 402703paper [14:44, ?paper/s, 2017-08]2026-04-24 13:38:00,338 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-08
-2026-04-24 13:38:00,338 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-08 query=cat:cs.CL
-2026-04-24 13:38:12,390 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=232 added=0 duplicates=232
-2026-04-24 13:38:12,390 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-08 query=cat:cs.AI
-2026-04-24 13:38:25,565 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=228 added=0 duplicates=228
-2026-04-24 13:38:25,565 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-08 query=cat:cs.LG
-2026-04-24 13:38:42,420 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=351 added=0 duplicates=351
-Collecting arxiv papers: 402703paper [15:26, ?paper/s, 2017-09]2026-04-24 13:38:42,450 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-09
-2026-04-24 13:38:42,450 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-09 query=cat:cs.CL
-2026-04-24 13:38:54,416 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=224 added=0 duplicates=224
-2026-04-24 13:38:54,417 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-09 query=cat:cs.AI
-2026-04-24 13:39:11,012 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=307 added=0 duplicates=307
-2026-04-24 13:39:11,012 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-09 query=cat:cs.LG
-2026-04-24 13:39:32,424 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=457 added=0 duplicates=457
-Collecting arxiv papers: 402703paper [16:16, ?paper/s, 2017-10]2026-04-24 13:39:32,429 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-10
-2026-04-24 13:39:32,429 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-10 query=cat:cs.CL
-2026-04-24 13:39:40,541 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=194 added=0 duplicates=194
-2026-04-24 13:39:40,541 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-10 query=cat:cs.AI
-2026-04-24 13:39:52,652 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=239 added=0 duplicates=239
-2026-04-24 13:39:52,652 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-10 query=cat:cs.LG
-2026-04-24 13:40:17,685 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=514 added=0 duplicates=514
-Collecting arxiv papers: 402703paper [17:01, ?paper/s, 2017-11]2026-04-24 13:40:17,686 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-11
-2026-04-24 13:40:17,686 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-11 query=cat:cs.CL
-2026-04-24 13:40:30,729 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=245 added=0 duplicates=245
-2026-04-24 13:40:30,729 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-11 query=cat:cs.AI
-2026-04-24 13:40:46,962 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=335 added=0 duplicates=335
-2026-04-24 13:40:46,962 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-11 query=cat:cs.LG
-2026-04-24 13:41:15,788 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=674 added=0 duplicates=674
-Collecting arxiv papers: 402703paper [17:59, ?paper/s, 2017-12]2026-04-24 13:41:15,789 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2017-12
-2026-04-24 13:41:15,789 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2017-2017 month=2017-12 query=cat:cs.CL
-2026-04-24 13:41:24,001 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=165 added=0 duplicates=165
-2026-04-24 13:41:24,001 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2017-2017 month=2017-12 query=cat:cs.AI
-2026-04-24 13:41:35,909 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=201 added=0 duplicates=201
-2026-04-24 13:41:35,909 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2017-2017 month=2017-12 query=cat:cs.LG
-2026-04-24 13:41:56,290 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=457 added=0 duplicates=457
-Collecting arxiv papers: 402703paper [18:40, ?paper/s, 2018-01]2026-04-24 13:41:56,290 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-01
-2026-04-24 13:41:56,290 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-01 query=cat:cs.CL
-2026-04-24 13:42:04,513 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=147 added=0 duplicates=147
-2026-04-24 13:42:04,514 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-01 query=cat:cs.AI
-2026-04-24 13:42:16,547 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=238 added=0 duplicates=238
-2026-04-24 13:42:16,547 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-01 query=cat:cs.LG
-2026-04-24 13:42:32,635 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=364 added=0 duplicates=364
-Collecting arxiv papers: 402703paper [19:16, ?paper/s, 2018-02]2026-04-24 13:42:32,636 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-02
-2026-04-24 13:42:32,636 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-02 query=cat:cs.CL
-2026-04-24 13:42:40,909 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=197 added=0 duplicates=197
-2026-04-24 13:42:40,909 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-02 query=cat:cs.AI
-2026-04-24 13:42:57,410 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=339 added=0 duplicates=339
-2026-04-24 13:42:57,410 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-02 query=cat:cs.LG
-2026-04-24 13:43:34,548 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=803 added=0 duplicates=803
-Collecting arxiv papers: 402703paper [20:18, ?paper/s, 2018-03]2026-04-24 13:43:34,549 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-03
-2026-04-24 13:43:34,549 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-03 query=cat:cs.CL
-2026-04-24 13:43:46,595 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=221 added=0 duplicates=221
-2026-04-24 13:43:46,595 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-03 query=cat:cs.AI
-2026-04-24 13:43:58,482 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=296 added=0 duplicates=296
-2026-04-24 13:43:58,482 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-03 query=cat:cs.LG
-2026-04-24 13:44:27,149 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=680 added=0 duplicates=680
-Collecting arxiv papers: 402703paper [21:11, ?paper/s, 2018-04]2026-04-24 13:44:27,151 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-04
-2026-04-24 13:44:27,151 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-04 query=cat:cs.CL
-2026-04-24 13:44:43,292 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=358 added=0 duplicates=358
-2026-04-24 13:44:43,293 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-04 query=cat:cs.AI
-2026-04-24 13:45:00,191 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=333 added=0 duplicates=333
-2026-04-24 13:45:00,191 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-04 query=cat:cs.LG
-2026-04-24 13:45:25,845 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=590 added=0 duplicates=590
-Collecting arxiv papers: 402703paper [22:10, ?paper/s, 2018-05]2026-04-24 13:45:25,846 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-05
-2026-04-24 13:45:25,846 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-05 query=cat:cs.CL
-2026-04-24 13:45:46,059 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=435 added=0 duplicates=435
-2026-04-24 13:45:46,059 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-05 query=cat:cs.AI
-2026-04-24 13:46:37,182 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
-2026-04-24 13:46:45,808 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=439 added=0 duplicates=439
-2026-04-24 13:46:45,808 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-05 query=cat:cs.LG
-2026-04-24 13:47:28,588 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=966 added=0 duplicates=966
-Collecting arxiv papers: 402703paper [24:12, ?paper/s, 2018-06]2026-04-24 13:47:28,590 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-06
-2026-04-24 13:47:28,590 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-06 query=cat:cs.CL
-2026-04-24 13:47:44,480 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=306 added=0 duplicates=306
-2026-04-24 13:47:44,480 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-06 query=cat:cs.AI
-2026-04-24 13:48:04,832 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=400 added=0 duplicates=400
-2026-04-24 13:48:04,833 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-06 query=cat:cs.LG
-2026-04-24 13:48:45,320 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=930 added=0 duplicates=930
-Collecting arxiv papers: 402703paper [25:29, ?paper/s, 2018-07]2026-04-24 13:48:45,321 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-07
-2026-04-24 13:48:45,321 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-07 query=cat:cs.CL
-2026-04-24 13:48:57,798 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=249 added=0 duplicates=249
-2026-04-24 13:48:57,798 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-07 query=cat:cs.AI
-2026-04-24 13:49:13,982 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=342 added=0 duplicates=342
-2026-04-24 13:49:13,982 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-07 query=cat:cs.LG
-2026-04-24 13:49:51,031 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=875 added=0 duplicates=875
-Collecting arxiv papers: 402703paper [26:35, ?paper/s, 2018-08]2026-04-24 13:49:51,032 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-08
-2026-04-24 13:49:51,032 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-08 query=cat:cs.CL
-2026-04-24 13:50:10,982 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=430 added=0 duplicates=430
-2026-04-24 13:50:10,983 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-08 query=cat:cs.AI
-2026-04-24 13:50:23,153 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=266 added=0 duplicates=266
-2026-04-24 13:50:23,153 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-08 query=cat:cs.LG
-2026-04-24 13:50:53,348 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=670 added=0 duplicates=670
-Collecting arxiv papers: 402703paper [27:37, ?paper/s, 2018-09]2026-04-24 13:50:53,349 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-09
-2026-04-24 13:50:53,349 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-09 query=cat:cs.CL
-2026-04-24 13:51:14,369 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=405 added=0 duplicates=405
-2026-04-24 13:51:14,369 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-09 query=cat:cs.AI
-2026-04-24 13:51:35,040 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=422 added=0 duplicates=422
-2026-04-24 13:51:35,040 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-09 query=cat:cs.LG
-2026-04-24 13:52:15,968 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=961 added=0 duplicates=961
-Collecting arxiv papers: 402703paper [29:00, ?paper/s, 2018-10]2026-04-24 13:52:15,970 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-10
-2026-04-24 13:52:15,970 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-10 query=cat:cs.CL
-2026-04-24 13:52:32,004 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=336 added=0 duplicates=336
-2026-04-24 13:52:32,004 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-10 query=cat:cs.AI
-2026-04-24 13:52:52,821 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=420 added=0 duplicates=420
-2026-04-24 13:52:52,822 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-10 query=cat:cs.LG
-2026-04-24 13:53:45,362 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1241 added=0 duplicates=1241
-Collecting arxiv papers: 402703paper [30:29, ?paper/s, 2018-11]2026-04-24 13:53:45,364 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-11
-2026-04-24 13:53:45,364 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-11 query=cat:cs.CL
-2026-04-24 13:54:06,786 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=414 added=0 duplicates=414
-2026-04-24 13:54:06,786 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-11 query=cat:cs.AI
-2026-04-24 13:54:27,137 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=468 added=0 duplicates=468
-2026-04-24 13:54:27,137 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-11 query=cat:cs.LG
-2026-04-24 13:55:25,416 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1322 added=0 duplicates=1322
-Collecting arxiv papers: 402703paper [32:09, ?paper/s, 2018-12]2026-04-24 13:55:25,420 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2018-12
-2026-04-24 13:55:25,420 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2018-2018 month=2018-12 query=cat:cs.CL
-2026-04-24 13:55:37,481 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=231 added=0 duplicates=231
-2026-04-24 13:55:37,481 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2018-2018 month=2018-12 query=cat:cs.AI
-2026-04-24 13:55:53,883 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=316 added=0 duplicates=316
-2026-04-24 13:55:53,883 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2018-2018 month=2018-12 query=cat:cs.LG
-2026-04-24 13:56:38,661 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1096 added=0 duplicates=1096
-Collecting arxiv papers: 402703paper [33:22, ?paper/s, 2019-01]2026-04-24 13:56:38,663 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-01
-2026-04-24 13:56:38,663 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-01 query=cat:cs.CL
-2026-04-24 13:56:50,590 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=203 added=0 duplicates=203
-2026-04-24 13:56:50,590 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-01 query=cat:cs.AI
-2026-04-24 13:57:03,242 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=298 added=0 duplicates=298
-2026-04-24 13:57:03,242 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-01 query=cat:cs.LG
-2026-04-24 13:57:53,820 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1111 added=0 duplicates=1111
-Collecting arxiv papers: 402703paper [34:37, ?paper/s, 2019-02]2026-04-24 13:57:53,822 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-02
-2026-04-24 13:57:53,822 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-02 query=cat:cs.CL
-2026-04-24 13:58:06,236 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=237 added=0 duplicates=237
-2026-04-24 13:58:06,237 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-02 query=cat:cs.AI
-2026-04-24 13:58:18,309 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=296 added=0 duplicates=296
-2026-04-24 13:58:18,309 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-02 query=cat:cs.LG
-2026-04-24 13:59:11,342 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1228 added=0 duplicates=1228
-Collecting arxiv papers: 402703paper [35:55, ?paper/s, 2019-03]2026-04-24 13:59:11,344 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-03
-2026-04-24 13:59:11,345 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-03 query=cat:cs.CL
-2026-04-24 13:59:23,313 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=263 added=0 duplicates=263
-2026-04-24 13:59:23,313 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-03 query=cat:cs.AI
-2026-04-24 13:59:39,278 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=350 added=0 duplicates=350
-2026-04-24 13:59:39,278 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-03 query=cat:cs.LG
-2026-04-24 14:00:45,461 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1103 added=0 duplicates=1103
-Collecting arxiv papers: 402703paper [37:29, ?paper/s, 2019-04]2026-04-24 14:00:45,463 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-04
-2026-04-24 14:00:45,463 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-04 query=cat:cs.CL
-2026-04-24 14:01:26,677 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=477 added=0 duplicates=477
-2026-04-24 14:01:26,678 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-04 query=cat:cs.AI
-2026-04-24 14:01:54,050 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=400 added=0 duplicates=400
-2026-04-24 14:01:54,050 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-04 query=cat:cs.LG
-2026-04-24 14:02:55,451 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1346 added=0 duplicates=1346
-Collecting arxiv papers: 402703paper [39:39, ?paper/s, 2019-05]2026-04-24 14:02:55,454 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-05
-2026-04-24 14:02:55,454 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-05 query=cat:cs.CL
-2026-04-24 14:03:15,603 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=409 added=0 duplicates=409
-2026-04-24 14:03:15,604 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-05 query=cat:cs.AI
-2026-04-24 14:03:40,018 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=563 added=0 duplicates=563
-2026-04-24 14:03:40,018 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-05 query=cat:cs.LG
-2026-04-24 14:05:06,333 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2027 added=0 duplicates=2027
-Collecting arxiv papers: 402703paper [41:50, ?paper/s, 2019-06]2026-04-24 14:05:06,338 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-06
-2026-04-24 14:05:06,338 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-06 query=cat:cs.CL
-2026-04-24 14:05:34,940 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=621 added=0 duplicates=621
-2026-04-24 14:05:34,940 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-06 query=cat:cs.AI
-2026-04-24 14:05:55,748 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=466 added=0 duplicates=466
-2026-04-24 14:05:55,749 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-06 query=cat:cs.LG
-2026-04-24 14:07:13,940 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1895 added=0 duplicates=1895
-Collecting arxiv papers: 402703paper [43:58, ?paper/s, 2019-07]2026-04-24 14:07:13,944 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-07
-2026-04-24 14:07:13,944 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-07 query=cat:cs.CL
-2026-04-24 14:07:29,736 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=389 added=0 duplicates=389
-2026-04-24 14:07:29,736 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-07 query=cat:cs.AI
-2026-04-24 14:07:46,108 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=363 added=0 duplicates=363
-2026-04-24 14:07:46,108 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-07 query=cat:cs.LG
-2026-04-24 14:08:50,979 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1543 added=0 duplicates=1543
-Collecting arxiv papers: 402703paper [45:35, ?paper/s, 2019-08]2026-04-24 14:08:50,982 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-08
-2026-04-24 14:08:50,982 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-08 query=cat:cs.CL
-2026-04-24 14:09:16,689 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=524 added=0 duplicates=524
-2026-04-24 14:09:16,689 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-08 query=cat:cs.AI
-2026-04-24 14:09:33,362 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=303 added=0 duplicates=303
-2026-04-24 14:09:33,362 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-08 query=cat:cs.LG
-2026-04-24 14:10:37,388 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1315 added=0 duplicates=1315
-Collecting arxiv papers: 402703paper [47:21, ?paper/s, 2019-09]2026-04-24 14:10:37,390 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-09
-2026-04-24 14:10:37,390 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-09 query=cat:cs.CL
-2026-04-24 14:11:16,533 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=699 added=0 duplicates=699
-2026-04-24 14:11:16,533 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-09 query=cat:cs.AI
-2026-04-24 14:11:42,284 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=567 added=0 duplicates=567
-2026-04-24 14:11:42,284 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-09 query=cat:cs.LG
-2026-04-24 14:13:03,389 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1771 added=0 duplicates=1771
-Collecting arxiv papers: 402703paper [49:47, ?paper/s, 2019-10]2026-04-24 14:13:03,392 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-10
-2026-04-24 14:13:03,392 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-10 query=cat:cs.CL
-2026-04-24 14:13:33,120 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=579 added=0 duplicates=579
-2026-04-24 14:13:33,120 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-10 query=cat:cs.AI
-2026-04-24 14:14:07,484 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=390 added=0 duplicates=390
-2026-04-24 14:14:07,484 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-10 query=cat:cs.LG
-2026-04-24 14:15:09,452 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
-2026-04-24 14:15:55,747 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
-2026-04-24 14:16:11,987 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/11). sleeping 10.00s
-2026-04-24 14:16:22,440 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/11). sleeping 14.00s
-2026-04-24 14:18:29,072 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2231 added=0 duplicates=2231
-Collecting arxiv papers: 402703paper [55:13, ?paper/s, 2019-11]2026-04-24 14:18:29,076 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-11
-2026-04-24 14:18:29,077 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-11 query=cat:cs.CL
-2026-04-24 14:18:57,470 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=631 added=0 duplicates=631
-2026-04-24 14:18:57,470 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-11 query=cat:cs.AI
-2026-04-24 14:19:17,314 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=435 added=0 duplicates=435
-2026-04-24 14:19:17,315 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-11 query=cat:cs.LG
-2026-04-24 14:20:43,978 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2049 added=0 duplicates=2049
-Collecting arxiv papers: 402703paper [57:28, ?paper/s, 2019-12]2026-04-24 14:20:43,982 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2019-12
-2026-04-24 14:20:43,982 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2019-2019 month=2019-12 query=cat:cs.CL
-2026-04-24 14:21:00,833 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=361 added=0 duplicates=361
-2026-04-24 14:21:00,833 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2019-2019 month=2019-12 query=cat:cs.AI
-2026-04-24 14:21:17,755 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=327 added=0 duplicates=327
-2026-04-24 14:21:17,755 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2019-2019 month=2019-12 query=cat:cs.LG
-2026-04-24 14:22:34,146 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1673 added=0 duplicates=1673
-Collecting arxiv papers: 402703paper [59:18, ?paper/s, 2020-01]2026-04-24 14:22:34,149 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-01
-2026-04-24 14:22:34,150 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-01 query=cat:cs.CL
-2026-04-24 14:22:58,133 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=293 added=0 duplicates=293
-2026-04-24 14:22:58,133 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-01 query=cat:cs.AI
-2026-04-24 14:23:40,369 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=352 added=0 duplicates=352
-2026-04-24 14:23:40,369 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-01 query=cat:cs.LG
-2026-04-24 14:24:24,291 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 1/11). sleeping 10.00s
-2026-04-24 14:24:44,970 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/11). sleeping 10.00s
-2026-04-24 14:25:25,235 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 3/11). sleeping 14.00s
-2026-04-24 14:26:48,786 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1408 added=0 duplicates=1408
-Collecting arxiv papers: 402703paper [1:03:32, ?paper/s, 2020-02]2026-04-24 14:26:48,788 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-02
-2026-04-24 14:26:48,788 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-02 query=cat:cs.CL
-2026-04-24 14:27:05,158 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=362 added=0 duplicates=362
-2026-04-24 14:27:05,158 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-02 query=cat:cs.AI
-2026-04-24 14:27:25,090 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=446 added=0 duplicates=446
-2026-04-24 14:27:25,091 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-02 query=cat:cs.LG
-2026-04-24 14:28:58,108 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2246 added=0 duplicates=2246
-Collecting arxiv papers: 402703paper [1:05:42, ?paper/s, 2020-03]2026-04-24 14:28:58,112 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-03
-2026-04-24 14:28:58,112 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-03 query=cat:cs.CL
-2026-04-24 14:29:14,113 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=358 added=0 duplicates=358
-2026-04-24 14:29:14,113 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-03 query=cat:cs.AI
-2026-04-24 14:29:34,601 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=403 added=0 duplicates=403
-2026-04-24 14:29:34,601 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-03 query=cat:cs.LG
-2026-04-24 14:30:53,937 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1828 added=0 duplicates=1828
-Collecting arxiv papers: 402703paper [1:07:38, ?paper/s, 2020-04]2026-04-24 14:30:53,942 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-04
-2026-04-24 14:30:53,942 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-04 query=cat:cs.CL
-2026-04-24 14:31:30,871 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=889 added=0 duplicates=889
-2026-04-24 14:31:30,872 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-04 query=cat:cs.AI
-2026-04-24 14:31:51,169 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=439 added=0 duplicates=439
-2026-04-24 14:31:51,169 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-04 query=cat:cs.LG
-2026-04-24 14:33:12,859 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1976 added=0 duplicates=1976
-Collecting arxiv papers: 402703paper [1:09:57, ?paper/s, 2020-05]2026-04-24 14:33:12,861 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-05
-2026-04-24 14:33:12,861 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-05 query=cat:cs.CL
-2026-04-24 14:33:49,417 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=853 added=0 duplicates=853
-2026-04-24 14:33:49,417 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-05 query=cat:cs.AI
-2026-04-24 14:34:09,512 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=495 added=0 duplicates=495
-2026-04-24 14:34:09,512 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-05 query=cat:cs.LG
-2026-04-24 14:35:34,180 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1915 added=0 duplicates=1915
-Collecting arxiv papers: 402703paper [1:12:18, ?paper/s, 2020-06]2026-04-24 14:35:34,183 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-06
-2026-04-24 14:35:34,183 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-06 query=cat:cs.CL
-2026-04-24 14:35:54,676 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=491 added=0 duplicates=491
-2026-04-24 14:35:54,676 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-06 query=cat:cs.AI
-2026-04-24 14:36:19,007 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=566 added=0 duplicates=566
-2026-04-24 14:36:19,007 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-06 query=cat:cs.LG
-2026-04-24 14:38:35,208 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3272 added=0 duplicates=3272
-Collecting arxiv papers: 402703paper [1:15:19, ?paper/s, 2020-07]2026-04-24 14:38:35,212 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-07
-2026-04-24 14:38:35,212 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-07 query=cat:cs.CL
-2026-04-24 14:38:55,254 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=405 added=0 duplicates=405
-2026-04-24 14:38:55,254 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-07 query=cat:cs.AI
-2026-04-24 14:39:20,068 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=523 added=0 duplicates=523
-2026-04-24 14:39:20,069 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-07 query=cat:cs.LG
-2026-04-24 14:40:59,111 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2395 added=0 duplicates=2395
-Collecting arxiv papers: 402703paper [1:17:43, ?paper/s, 2020-08]2026-04-24 14:40:59,114 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-08
-2026-04-24 14:40:59,114 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-08 query=cat:cs.CL
-2026-04-24 14:41:15,426 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=384 added=0 duplicates=384
-2026-04-24 14:41:15,426 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-08 query=cat:cs.AI
-2026-04-24 14:41:36,486 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=495 added=0 duplicates=495
-2026-04-24 14:41:36,486 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-08 query=cat:cs.LG
-2026-04-24 14:42:50,365 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1770 added=0 duplicates=1770
-Collecting arxiv papers: 402703paper [1:19:34, ?paper/s, 2020-09]2026-04-24 14:42:50,368 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-09
-2026-04-24 14:42:50,368 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-09 query=cat:cs.CL
-2026-04-24 14:43:14,966 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=575 added=0 duplicates=575
-2026-04-24 14:43:14,966 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-09 query=cat:cs.AI
-2026-04-24 14:43:48,292 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=775 added=0 duplicates=775
-2026-04-24 14:43:48,293 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-09 query=cat:cs.LG
-2026-04-24 14:45:11,174 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1835 added=0 duplicates=1835
-Collecting arxiv papers: 402703paper [1:21:55, ?paper/s, 2020-10]2026-04-24 14:45:11,176 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-10
-2026-04-24 14:45:11,176 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-10 query=cat:cs.CL
-2026-04-24 14:46:11,383 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1309 added=0 duplicates=1309
-2026-04-24 14:46:11,383 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-10 query=cat:cs.AI
-2026-04-24 14:47:01,409 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1103 added=0 duplicates=1103
-2026-04-24 14:47:01,409 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-10 query=cat:cs.LG
-2026-04-24 14:49:00,672 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2897 added=0 duplicates=2897
-Collecting arxiv papers: 402703paper [1:25:44, ?paper/s, 2020-11]2026-04-24 14:49:00,676 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-11
-2026-04-24 14:49:00,676 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-11 query=cat:cs.CL
-2026-04-24 14:49:26,242 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=596 added=0 duplicates=596
-2026-04-24 14:49:26,243 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-11 query=cat:cs.AI
-2026-04-24 14:50:02,575 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=861 added=0 duplicates=861
-2026-04-24 14:50:02,576 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-11 query=cat:cs.LG
-2026-04-24 14:51:33,235 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2187 added=0 duplicates=2187
-Collecting arxiv papers: 402703paper [1:28:17, ?paper/s, 2020-12]2026-04-24 14:51:33,238 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2020-12
-2026-04-24 14:51:33,238 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2020-2020 month=2020-12 query=cat:cs.CL
-2026-04-24 14:52:01,989 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=610 added=0 duplicates=610
-2026-04-24 14:52:01,989 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2020-2020 month=2020-12 query=cat:cs.AI
-2026-04-24 14:52:45,417 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=959 added=0 duplicates=959
-2026-04-24 14:52:45,417 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2020-2020 month=2020-12 query=cat:cs.LG
-2026-04-24 14:54:16,892 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2160 added=0 duplicates=2160
-Collecting arxiv papers: 402703paper [1:31:01, ?paper/s, 2021-01]2026-04-24 14:54:16,894 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-01
-2026-04-24 14:54:16,895 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-01 query=cat:cs.CL
-2026-04-24 14:54:37,231 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=483 added=0 duplicates=483
-2026-04-24 14:54:37,231 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-01 query=cat:cs.AI
-2026-04-24 14:55:10,245 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=734 added=0 duplicates=734
-2026-04-24 14:55:10,245 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-01 query=cat:cs.LG
-2026-04-24 14:56:23,892 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1665 added=0 duplicates=1665
-Collecting arxiv papers: 402703paper [1:33:08, ?paper/s, 2021-02]2026-04-24 14:56:23,896 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-02
-2026-04-24 14:56:23,896 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-02 query=cat:cs.CL
-2026-04-24 14:56:43,771 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=435 added=0 duplicates=435
-2026-04-24 14:56:43,771 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-02 query=cat:cs.AI
-2026-04-24 14:57:26,511 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=987 added=0 duplicates=987
-2026-04-24 14:57:26,511 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-02 query=cat:cs.LG
-2026-04-24 14:59:01,101 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2298 added=0 duplicates=2298
-Collecting arxiv papers: 402703paper [1:35:45, ?paper/s, 2021-03]2026-04-24 14:59:01,104 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-03
-2026-04-24 14:59:01,104 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-03 query=cat:cs.CL
-2026-04-24 14:59:25,844 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=539 added=0 duplicates=539
-2026-04-24 14:59:25,844 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-03 query=cat:cs.AI
-2026-04-24 15:00:13,894 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1012 added=0 duplicates=1012
-2026-04-24 15:00:13,894 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-03 query=cat:cs.LG
-2026-04-24 15:03:04,032 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2179 added=0 duplicates=2179
-Collecting arxiv papers: 402703paper [1:39:48, ?paper/s, 2021-04]2026-04-24 15:03:04,035 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-04
-2026-04-24 15:03:04,035 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-04 query=cat:cs.CL
-2026-04-24 15:03:47,825 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=945 added=0 duplicates=945
-2026-04-24 15:03:47,825 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-04 query=cat:cs.AI
-2026-04-24 15:04:33,334 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1027 added=0 duplicates=1027
-2026-04-24 15:04:33,334 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-04 query=cat:cs.LG
-2026-04-24 15:05:59,390 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2033 added=0 duplicates=2033
-Collecting arxiv papers: 402703paper [1:42:43, ?paper/s, 2021-05]2026-04-24 15:05:59,392 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-05
-2026-04-24 15:05:59,392 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-05 query=cat:cs.CL
-2026-04-24 15:06:29,348 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=683 added=0 duplicates=683
-2026-04-24 15:06:29,348 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-05 query=cat:cs.AI
-2026-04-24 15:07:12,395 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=975 added=0 duplicates=975
-2026-04-24 15:07:12,395 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-05 query=cat:cs.LG
-2026-04-24 15:08:39,046 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2053 added=0 duplicates=2053
-Collecting arxiv papers: 402703paper [1:45:23, ?paper/s, 2021-06]2026-04-24 15:08:39,050 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-06
-2026-04-24 15:08:39,050 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-06 query=cat:cs.CL
-2026-04-24 15:09:20,718 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=903 added=0 duplicates=903
-2026-04-24 15:09:20,718 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-06 query=cat:cs.AI
-2026-04-24 15:10:18,510 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1301 added=0 duplicates=1301
-2026-04-24 15:10:18,511 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-06 query=cat:cs.LG
-Collecting arxiv papers: 402704paper [1:49:15, 6555.61s/paper, 2021-06]2026-04-24 15:12:31,456 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3033 added=1 duplicates=3032
-Collecting arxiv papers: 402704paper [1:49:15, 6555.61s/paper, 2021-07]2026-04-24 15:12:31,462 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-07
-2026-04-24 15:12:31,462 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-07 query=cat:cs.CL
-2026-04-24 15:13:00,351 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=462 added=0 duplicates=462
-2026-04-24 15:13:00,352 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-07 query=cat:cs.AI
-2026-04-24 15:13:46,002 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1020 added=0 duplicates=1020
-2026-04-24 15:13:46,002 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-07 query=cat:cs.LG
-2026-04-24 15:15:16,662 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2068 added=0 duplicates=2068
-Collecting arxiv papers: 402704paper [1:52:00, 6555.61s/paper, 2021-08]2026-04-24 15:15:16,665 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-08
-2026-04-24 15:15:16,665 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-08 query=cat:cs.CL
-2026-04-24 15:15:41,492 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=519 added=0 duplicates=519
-2026-04-24 15:15:41,493 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-08 query=cat:cs.AI
-2026-04-24 15:16:19,347 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=894 added=0 duplicates=894
-2026-04-24 15:16:19,347 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-08 query=cat:cs.LG
-2026-04-24 15:17:33,439 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1647 added=0 duplicates=1647
-Collecting arxiv papers: 402704paper [1:54:17, 6555.61s/paper, 2021-09]2026-04-24 15:17:33,443 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-09
-2026-04-24 15:17:33,443 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-09 query=cat:cs.CL
-2026-04-24 15:18:22,114 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1130 added=0 duplicates=1130
-2026-04-24 15:18:22,114 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-09 query=cat:cs.AI
-2026-04-24 15:19:11,486 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1129 added=0 duplicates=1129
-2026-04-24 15:19:11,486 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-09 query=cat:cs.LG
-2026-04-24 15:20:41,719 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2146 added=0 duplicates=2146
-Collecting arxiv papers: 402704paper [1:57:25, 6555.61s/paper, 2021-10]2026-04-24 15:20:41,722 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-10
-2026-04-24 15:20:41,722 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-10 query=cat:cs.CL
-2026-04-24 15:21:18,778 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=872 added=0 duplicates=872
-2026-04-24 15:21:18,779 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-10 query=cat:cs.AI
-2026-04-24 15:22:16,026 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1320 added=0 duplicates=1320
-2026-04-24 15:22:16,027 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-10 query=cat:cs.LG
-2026-04-24 15:24:20,581 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2961 added=0 duplicates=2961
-Collecting arxiv papers: 402704paper [2:01:04, 6555.61s/paper, 2021-11]2026-04-24 15:24:20,588 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-11
-2026-04-24 15:24:20,588 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-11 query=cat:cs.CL
-2026-04-24 15:24:40,968 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=489 added=0 duplicates=489
-2026-04-24 15:24:40,968 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-11 query=cat:cs.AI
-2026-04-24 15:25:27,720 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1039 added=0 duplicates=1039
-2026-04-24 15:25:27,721 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-11 query=cat:cs.LG
-2026-04-24 15:27:07,431 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2265 added=0 duplicates=2265
-Collecting arxiv papers: 402704paper [2:03:51, 6555.61s/paper, 2021-12]2026-04-24 15:27:07,434 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2021-12
-2026-04-24 15:27:07,434 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2021-2021 month=2021-12 query=cat:cs.CL
-2026-04-24 15:27:37,091 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=623 added=0 duplicates=623
-2026-04-24 15:27:37,091 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2021-2021 month=2021-12 query=cat:cs.AI
-2026-04-24 15:28:22,932 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1083 added=0 duplicates=1083
-2026-04-24 15:28:22,932 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2021-2021 month=2021-12 query=cat:cs.LG
-2026-04-24 15:29:52,713 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2182 added=0 duplicates=2182
-Collecting arxiv papers: 402704paper [2:06:36, 6555.61s/paper, 2022-01]2026-04-24 15:29:52,715 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-01
-2026-04-24 15:29:52,715 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-01 query=cat:cs.CL
-2026-04-24 15:30:13,325 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=471 added=0 duplicates=471
-2026-04-24 15:30:13,325 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-01 query=cat:cs.AI
-2026-04-24 15:30:56,776 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=907 added=0 duplicates=907
-2026-04-24 15:30:56,777 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-01 query=cat:cs.LG
-2026-04-24 15:32:16,830 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1886 added=0 duplicates=1886
-Collecting arxiv papers: 402704paper [2:09:00, 6555.61s/paper, 2022-02]2026-04-24 15:32:16,833 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-02
-2026-04-24 15:32:16,833 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-02 query=cat:cs.CL
-2026-04-24 15:32:38,077 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=472 added=0 duplicates=472
-2026-04-24 15:32:38,077 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-02 query=cat:cs.AI
-2026-04-24 15:33:28,649 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1105 added=0 duplicates=1105
-2026-04-24 15:33:28,650 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-02 query=cat:cs.LG
-2026-04-24 15:35:18,769 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2502 added=0 duplicates=2502
-Collecting arxiv papers: 402704paper [2:12:02, 6555.61s/paper, 2022-03]2026-04-24 15:35:18,776 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-03
-2026-04-24 15:35:18,776 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-03 query=cat:cs.CL
-2026-04-24 15:35:57,531 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=882 added=0 duplicates=882
-2026-04-24 15:35:57,531 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-03 query=cat:cs.AI
-2026-04-24 15:36:52,060 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1268 added=0 duplicates=1268
-2026-04-24 15:36:52,060 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-03 query=cat:cs.LG
-2026-04-24 15:38:42,460 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2482 added=0 duplicates=2482
-Collecting arxiv papers: 402704paper [2:15:26, 6555.61s/paper, 2022-04]2026-04-24 15:38:42,463 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-04
-2026-04-24 15:38:42,463 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-04 query=cat:cs.CL
-2026-04-24 15:39:20,571 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=887 added=0 duplicates=887
-2026-04-24 15:39:20,571 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-04 query=cat:cs.AI
-2026-04-24 15:40:12,642 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1094 added=0 duplicates=1094
-2026-04-24 15:40:12,643 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-04 query=cat:cs.LG
-2026-04-24 15:41:45,571 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1976 added=0 duplicates=1976
-Collecting arxiv papers: 402704paper [2:18:29, 6555.61s/paper, 2022-05]2026-04-24 15:41:45,574 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-05
-2026-04-24 15:41:45,574 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-05 query=cat:cs.CL
-2026-04-24 15:42:45,427 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1009 added=0 duplicates=1009
-2026-04-24 15:42:45,427 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-05 query=cat:cs.AI
-2026-04-24 15:44:16,767 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1432 added=0 duplicates=1432
-2026-04-24 15:44:16,768 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-05 query=cat:cs.LG
-2026-04-24 15:46:12,275 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2721 added=0 duplicates=2721
-Collecting arxiv papers: 402704paper [2:22:56, 6555.61s/paper, 2022-06]2026-04-24 15:46:12,280 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-06
-2026-04-24 15:46:12,280 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-06 query=cat:cs.CL
-2026-04-24 15:46:37,356 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=568 added=0 duplicates=568
-2026-04-24 15:46:37,356 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-06 query=cat:cs.AI
-2026-04-24 15:47:37,055 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1362 added=0 duplicates=1362
-2026-04-24 15:47:37,055 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-06 query=cat:cs.LG
-2026-04-24 15:49:41,879 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2903 added=0 duplicates=2903
-Collecting arxiv papers: 402704paper [2:26:26, 6555.61s/paper, 2022-07]2026-04-24 15:49:41,884 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-07
-2026-04-24 15:49:41,884 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-07 query=cat:cs.CL
-2026-04-24 15:50:02,472 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=442 added=0 duplicates=442
-2026-04-24 15:50:02,472 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-07 query=cat:cs.AI
-2026-04-24 15:50:54,708 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1182 added=0 duplicates=1182
-2026-04-24 15:50:54,709 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-07 query=cat:cs.LG
-2026-04-24 15:52:25,396 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2141 added=0 duplicates=2141
-Collecting arxiv papers: 402704paper [2:29:09, 6555.61s/paper, 2022-08]2026-04-24 15:52:25,402 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-08
-2026-04-24 15:52:25,402 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-08 query=cat:cs.CL
-2026-04-24 15:52:45,497 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=445 added=0 duplicates=445
-2026-04-24 15:52:45,497 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-08 query=cat:cs.AI
-2026-04-24 15:53:27,368 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=943 added=0 duplicates=943
-2026-04-24 15:53:27,369 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-08 query=cat:cs.LG
-2026-04-24 15:54:49,307 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1890 added=0 duplicates=1890
-Collecting arxiv papers: 402704paper [2:31:33, 6555.61s/paper, 2022-09]2026-04-24 15:54:49,309 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-09
-2026-04-24 15:54:49,309 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-09 query=cat:cs.CL
-2026-04-24 15:55:18,949 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=626 added=0 duplicates=626
-2026-04-24 15:55:18,949 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-09 query=cat:cs.AI
-2026-04-24 15:56:12,782 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1205 added=0 duplicates=1205
-2026-04-24 15:56:12,782 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-09 query=cat:cs.LG
-2026-04-24 15:57:48,431 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2226 added=0 duplicates=2226
-Collecting arxiv papers: 402704paper [2:34:32, 6555.61s/paper, 2022-10]2026-04-24 15:57:48,436 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-10
-2026-04-24 15:57:48,436 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-10 query=cat:cs.CL
-2026-04-24 15:58:57,078 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1427 added=0 duplicates=1427
-2026-04-24 15:58:57,078 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-10 query=cat:cs.AI
-2026-04-24 16:00:32,276 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
-2026-04-24 16:00:46,330 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/11). sleeping 10.00s
-2026-04-24 16:01:07,015 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/11). sleeping 14.00s
-2026-04-24 16:01:51,189 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 4/11). sleeping 28.00s
-2026-04-24 16:03:56,356 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1730 added=0 duplicates=1730
-2026-04-24 16:03:56,356 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-10 query=cat:cs.LG
-2026-04-24 16:07:07,613 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3267 added=0 duplicates=3267
-Collecting arxiv papers: 402704paper [2:43:51, 6555.61s/paper, 2022-11]2026-04-24 16:07:07,617 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-11
-2026-04-24 16:07:07,617 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-11 query=cat:cs.CL
-2026-04-24 16:07:45,494 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=896 added=0 duplicates=896
-2026-04-24 16:07:45,495 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-11 query=cat:cs.AI
-2026-04-24 16:08:46,783 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1425 added=0 duplicates=1425
-2026-04-24 16:08:46,783 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-11 query=cat:cs.LG
-2026-04-24 16:10:42,070 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2702 added=0 duplicates=2702
-Collecting arxiv papers: 402704paper [2:47:26, 6555.61s/paper, 2022-12]2026-04-24 16:10:42,074 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2022-12
-2026-04-24 16:10:42,074 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2022-2022 month=2022-12 query=cat:cs.CL
-2026-04-24 16:11:18,149 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=846 added=0 duplicates=846
-2026-04-24 16:11:18,149 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2022-2022 month=2022-12 query=cat:cs.AI
-2026-04-24 16:12:07,598 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1153 added=0 duplicates=1153
-2026-04-24 16:12:07,598 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2022-2022 month=2022-12 query=cat:cs.LG
-2026-04-24 16:13:38,248 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2025 added=0 duplicates=2025
-Collecting arxiv papers: 402704paper [2:50:22, 6555.61s/paper, 2023-01]2026-04-24 16:13:38,252 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-01
-2026-04-24 16:13:38,252 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-01 query=cat:cs.CL
-2026-04-24 16:14:02,794 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=520 added=0 duplicates=520
-2026-04-24 16:14:02,794 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-01 query=cat:cs.AI
-2026-04-24 16:14:48,820 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1054 added=0 duplicates=1054
-2026-04-24 16:14:48,820 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-01 query=cat:cs.LG
-2026-04-24 16:16:12,568 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=1963 added=0 duplicates=1963
-Collecting arxiv papers: 402704paper [2:52:56, 6555.61s/paper, 2023-02]2026-04-24 16:16:12,570 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-02
-2026-04-24 16:16:12,570 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-02 query=cat:cs.CL
-2026-04-24 16:16:47,417 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=715 added=0 duplicates=715
-2026-04-24 16:16:47,417 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-02 query=cat:cs.AI
-2026-04-24 16:17:48,566 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1462 added=0 duplicates=1462
-2026-04-24 16:17:48,566 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-02 query=cat:cs.LG
-2026-04-24 16:19:41,494 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2659 added=0 duplicates=2659
-Collecting arxiv papers: 402704paper [2:56:25, 6555.61s/paper, 2023-03]2026-04-24 16:19:41,501 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-03
-2026-04-24 16:19:41,502 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-03 query=cat:cs.CL
-2026-04-24 16:20:15,314 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=747 added=0 duplicates=747
-2026-04-24 16:20:15,314 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-03 query=cat:cs.AI
-2026-04-24 16:21:26,944 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1634 added=0 duplicates=1634
-2026-04-24 16:21:26,944 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-03 query=cat:cs.LG
-Collecting arxiv papers: 402705paper [3:00:08, 5201.21s/paper, 2023-03]2026-04-24 16:23:24,577 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2725 added=1 duplicates=2724
-Collecting arxiv papers: 402705paper [3:00:08, 5201.21s/paper, 2023-04]2026-04-24 16:23:24,580 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-04
-2026-04-24 16:23:24,580 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-04 query=cat:cs.CL
-2026-04-24 16:23:58,184 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=729 added=0 duplicates=729
-2026-04-24 16:23:58,184 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-04 query=cat:cs.AI
-2026-04-24 16:24:55,763 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1352 added=0 duplicates=1352
-2026-04-24 16:24:55,765 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-04 query=cat:cs.LG
-2026-04-24 16:26:27,436 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2194 added=0 duplicates=2194
-Collecting arxiv papers: 402705paper [3:03:11, 5201.21s/paper, 2023-05]2026-04-24 16:26:27,439 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-05
-2026-04-24 16:26:27,439 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-05 query=cat:cs.CL
-Collecting arxiv papers: 402706paper [3:05:03, 2960.80s/paper, 2023-05]2026-04-24 16:28:19,294 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=2371 added=1 duplicates=2370
-2026-04-24 16:28:19,294 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-05 query=cat:cs.AI
-2026-04-24 16:29:59,137 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2382 added=0 duplicates=2382
-2026-04-24 16:29:59,138 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-05 query=cat:cs.LG
-2026-04-24 16:32:29,666 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3434 added=0 duplicates=3434
-Collecting arxiv papers: 402706paper [3:09:13, 2960.80s/paper, 2023-06]2026-04-24 16:32:29,672 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-06
-2026-04-24 16:32:29,672 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-06 query=cat:cs.CL
-2026-04-24 16:33:22,482 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1231 added=0 duplicates=1231
-2026-04-24 16:33:22,482 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-06 query=cat:cs.AI
-2026-04-24 16:34:45,933 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1906 added=0 duplicates=1906
-2026-04-24 16:34:45,933 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-06 query=cat:cs.LG
-2026-04-24 16:37:01,322 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3195 added=0 duplicates=3195
-Collecting arxiv papers: 402706paper [3:13:45, 2960.80s/paper, 2023-07]2026-04-24 16:37:01,329 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-07
-2026-04-24 16:37:01,329 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-07 query=cat:cs.CL
-2026-04-24 16:37:39,065 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=895 added=0 duplicates=895
-2026-04-24 16:37:39,065 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-07 query=cat:cs.AI
-2026-04-24 16:38:50,877 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1644 added=0 duplicates=1644
-2026-04-24 16:38:50,877 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-07 query=cat:cs.LG
-2026-04-24 16:40:35,307 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2455 added=0 duplicates=2455
-Collecting arxiv papers: 402706paper [3:17:19, 2960.80s/paper, 2023-08]2026-04-24 16:40:35,313 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-08
-2026-04-24 16:40:35,313 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-08 query=cat:cs.CL
-2026-04-24 16:41:12,164 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=884 added=0 duplicates=884
-2026-04-24 16:41:12,164 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-08 query=cat:cs.AI
-2026-04-24 16:42:31,365 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1809 added=0 duplicates=1809
-2026-04-24 16:42:31,366 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-08 query=cat:cs.LG
-2026-04-24 16:44:09,829 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2351 added=0 duplicates=2351
-Collecting arxiv papers: 402706paper [3:20:53, 2960.80s/paper, 2023-09]2026-04-24 16:44:09,832 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-09
-2026-04-24 16:44:09,832 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-09 query=cat:cs.CL
-2026-04-24 16:44:56,451 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1096 added=0 duplicates=1096
-2026-04-24 16:44:56,452 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-09 query=cat:cs.AI
-2026-04-24 16:46:18,190 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1864 added=0 duplicates=1864
-2026-04-24 16:46:18,191 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-09 query=cat:cs.LG
-Collecting arxiv papers: 402707paper [3:24:54, 2262.29s/paper, 2023-09]2026-04-24 16:48:10,788 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2622 added=1 duplicates=2621
-Collecting arxiv papers: 402707paper [3:24:54, 2262.29s/paper, 2023-10]2026-04-24 16:48:10,792 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-10
-2026-04-24 16:48:10,792 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-10 query=cat:cs.CL
-2026-04-24 16:49:38,899 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1966 added=0 duplicates=1966
-2026-04-24 16:49:38,899 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-10 query=cat:cs.AI
-Collecting arxiv papers: 402708paper [3:28:09, 1516.61s/paper, 2023-10]2026-04-24 16:51:25,232 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2522 added=1 duplicates=2521
-2026-04-24 16:51:25,232 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-10 query=cat:cs.LG
-2026-04-24 16:54:02,941 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3759 added=0 duplicates=3759
-Collecting arxiv papers: 402708paper [3:30:47, 1516.61s/paper, 2023-11]2026-04-24 16:54:02,946 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-11
-2026-04-24 16:54:02,946 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-11 query=cat:cs.CL
-2026-04-24 16:55:06,276 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1445 added=0 duplicates=1445
-2026-04-24 16:55:06,276 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-11 query=cat:cs.AI
-2026-04-24 16:56:37,629 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2140 added=0 duplicates=2140
-2026-04-24 16:56:37,630 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-11 query=cat:cs.LG
-2026-04-24 16:58:38,994 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2868 added=0 duplicates=2868
-Collecting arxiv papers: 402708paper [3:35:23, 1516.61s/paper, 2023-12]2026-04-24 16:58:38,998 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2023-12
-2026-04-24 16:58:38,998 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2023-2023 month=2023-12 query=cat:cs.CL
-2026-04-24 16:59:26,031 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1002 added=0 duplicates=1002
-2026-04-24 16:59:26,031 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2023-2023 month=2023-12 query=cat:cs.AI
-2026-04-24 17:01:04,096 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2084 added=0 duplicates=2084
-2026-04-24 17:01:04,097 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2023-2023 month=2023-12 query=cat:cs.LG
-2026-04-24 17:03:07,080 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2794 added=0 duplicates=2794
-Collecting arxiv papers: 402708paper [3:39:51, 1516.61s/paper, 2024-01]2026-04-24 17:03:07,084 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-01
-2026-04-24 17:03:07,084 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-01 query=cat:cs.CL
-2026-04-24 17:04:02,036 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1204 added=0 duplicates=1204
-2026-04-24 17:04:02,036 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-01 query=cat:cs.AI
-2026-04-24 17:05:27,856 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=1957 added=0 duplicates=1957
-2026-04-24 17:05:27,856 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-01 query=cat:cs.LG
-2026-04-24 17:07:11,571 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2449 added=0 duplicates=2449
-Collecting arxiv papers: 402708paper [3:43:55, 1516.61s/paper, 2024-02]2026-04-24 17:07:11,574 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-02
-2026-04-24 17:07:11,574 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-02 query=cat:cs.CL
-2026-04-24 17:08:41,312 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=2112 added=0 duplicates=2112
-2026-04-24 17:08:41,312 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-02 query=cat:cs.AI
-2026-04-24 17:10:38,159 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2756 added=0 duplicates=2756
-2026-04-24 17:10:38,160 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-02 query=cat:cs.LG
-2026-04-24 17:13:22,939 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3970 added=0 duplicates=3970
-Collecting arxiv papers: 402708paper [3:50:07, 1516.61s/paper, 2024-03]2026-04-24 17:13:22,946 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-03
-2026-04-24 17:13:22,946 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-03 query=cat:cs.CL
-2026-04-24 17:14:35,488 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1698 added=0 duplicates=1698
-2026-04-24 17:14:35,488 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-03 query=cat:cs.AI
-2026-04-24 17:16:26,915 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2576 added=0 duplicates=2576
-2026-04-24 17:16:26,915 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-03 query=cat:cs.LG
-2026-04-24 17:18:38,154 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3170 added=0 duplicates=3170
-Collecting arxiv papers: 402708paper [3:55:22, 1516.61s/paper, 2024-04]2026-04-24 17:18:38,159 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-04
-2026-04-24 17:18:38,159 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-04 query=cat:cs.CL
-2026-04-24 17:19:43,443 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1583 added=0 duplicates=1583
-2026-04-24 17:19:43,443 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-04 query=cat:cs.AI
-2026-04-24 17:21:27,935 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2417 added=0 duplicates=2417
-2026-04-24 17:21:27,935 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-04 query=cat:cs.LG
-2026-04-24 17:23:25,009 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2779 added=0 duplicates=2779
-Collecting arxiv papers: 402708paper [4:00:09, 1516.61s/paper, 2024-05]2026-04-24 17:23:25,013 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-05
-2026-04-24 17:23:25,014 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-05 query=cat:cs.CL
-2026-04-24 17:24:34,239 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1618 added=0 duplicates=1618
-2026-04-24 17:24:34,239 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-05 query=cat:cs.AI
-2026-04-24 17:26:32,692 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2810 added=0 duplicates=2810
-2026-04-24 17:26:32,693 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-05 query=cat:cs.LG
-2026-04-24 17:29:09,563 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3789 added=0 duplicates=3789
-Collecting arxiv papers: 402708paper [4:05:53, 1516.61s/paper, 2024-06]2026-04-24 17:29:09,569 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-06
-2026-04-24 17:29:09,569 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-06 query=cat:cs.CL
-Collecting arxiv papers: 402709paper [4:07:41, 1807.47s/paper, 2024-06]2026-04-24 17:30:57,296 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=2454 added=1 duplicates=2453
-2026-04-24 17:30:57,296 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-06 query=cat:cs.AI
-2026-04-24 17:33:17,931 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=3251 added=0 duplicates=3251
-2026-04-24 17:33:17,931 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-06 query=cat:cs.LG
-2026-04-24 17:36:07,446 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3786 added=0 duplicates=3786
-Collecting arxiv papers: 402709paper [4:12:51, 1807.47s/paper, 2024-07]2026-04-24 17:36:07,452 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-07
-2026-04-24 17:36:07,452 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-07 query=cat:cs.CL
-2026-04-24 17:37:17,950 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1620 added=0 duplicates=1620
-2026-04-24 17:37:17,950 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-07 query=cat:cs.AI
-2026-04-24 17:39:12,005 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2692 added=0 duplicates=2692
-2026-04-24 17:39:12,005 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-07 query=cat:cs.LG
-Collecting arxiv papers: 402710paper [4:18:01, 1419.30s/paper, 2024-07]2026-04-24 17:41:17,491 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2911 added=1 duplicates=2910
-Collecting arxiv papers: 402710paper [4:18:01, 1419.30s/paper, 2024-08]2026-04-24 17:41:17,496 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-08
-2026-04-24 17:41:17,496 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-08 query=cat:cs.CL
-2026-04-24 17:42:10,560 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1295 added=0 duplicates=1295
-2026-04-24 17:42:10,560 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-08 query=cat:cs.AI
-2026-04-24 17:43:52,046 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2385 added=0 duplicates=2385
-2026-04-24 17:43:52,046 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-08 query=cat:cs.LG
-2026-04-24 17:45:38,527 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2550 added=0 duplicates=2550
-Collecting arxiv papers: 402710paper [4:22:22, 1419.30s/paper, 2024-09]2026-04-24 17:45:38,532 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-09
-2026-04-24 17:45:38,532 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-09 query=cat:cs.CL
-2026-04-24 17:46:45,230 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1502 added=0 duplicates=1502
-2026-04-24 17:46:45,231 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-09 query=cat:cs.AI
-2026-04-24 17:48:36,537 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2650 added=0 duplicates=2650
-2026-04-24 17:48:36,538 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-09 query=cat:cs.LG
-2026-04-24 17:50:46,050 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=2964 added=0 duplicates=2964
-Collecting arxiv papers: 402710paper [4:27:30, 1419.30s/paper, 2024-10]2026-04-24 17:50:46,054 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-10
-2026-04-24 17:50:46,054 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-10 query=cat:cs.CL
-Collecting arxiv papers: 402711paper [4:29:23, 1184.48s/paper, 2024-10]2026-04-24 17:52:39,147 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=2631 added=1 duplicates=2630
-2026-04-24 17:52:39,147 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-10 query=cat:cs.AI
-2026-04-24 17:55:40,280 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=3815 added=0 duplicates=3815
-2026-04-24 17:55:40,280 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-10 query=cat:cs.LG
-Collecting arxiv papers: 402712paper [4:35:48, 934.62s/paper, 2024-10] 2026-04-24 17:59:04,343 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=4831 added=2 duplicates=4829
-Collecting arxiv papers: 402713paper [4:35:48, 934.62s/paper, 2024-11]2026-04-24 17:59:04,350 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-11
-2026-04-24 17:59:04,350 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-11 query=cat:cs.CL
-Collecting arxiv papers: 402714paper [4:36:50, 508.20s/paper, 2024-11]2026-04-24 18:00:05,919 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1307 added=1 duplicates=1306
-2026-04-24 18:00:05,919 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-11 query=cat:cs.AI
-2026-04-24 18:01:06,327 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
-2026-04-24 18:01:37,839 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/11). sleeping 10.00s
-2026-04-24 18:02:34,111 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
-2026-04-24 18:02:38,119 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/11). sleeping 10.00s
-2026-04-24 18:05:29,804 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2651 added=0 duplicates=2651
-2026-04-24 18:05:29,804 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-11 query=cat:cs.LG
-Collecting arxiv papers: 402715paper [4:44:29, 495.86s/paper, 2024-11]2026-04-24 18:07:45,146 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3250 added=1 duplicates=3249
-Collecting arxiv papers: 402715paper [4:44:29, 495.86s/paper, 2024-12]2026-04-24 18:07:45,152 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2024-12
-2026-04-24 18:07:45,152 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2024-2024 month=2024-12 query=cat:cs.CL
-2026-04-24 18:08:55,505 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1665 added=0 duplicates=1665
-2026-04-24 18:08:55,506 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2024-2024 month=2024-12 query=cat:cs.AI
-Collecting arxiv papers: 402716paper [4:47:47, 417.12s/paper, 2024-12]2026-04-24 18:11:03,596 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=3075 added=1 duplicates=3074
-2026-04-24 18:11:03,597 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2024-2024 month=2024-12 query=cat:cs.LG
-2026-04-24 18:13:24,391 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3335 added=0 duplicates=3335
-Collecting arxiv papers: 402716paper [4:50:08, 417.12s/paper, 2025-01]2026-04-24 18:13:24,400 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-01
-2026-04-24 18:13:24,401 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2025-2025 month=2025-01 query=cat:cs.CL
-2026-04-24 18:14:27,817 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1312 added=0 duplicates=1312
-2026-04-24 18:14:27,817 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2025-2025 month=2025-01 query=cat:cs.AI
-2026-04-24 18:16:14,149 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=2485 added=0 duplicates=2485
-2026-04-24 18:16:14,149 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2025-2025 month=2025-01 query=cat:cs.LG
-Collecting arxiv papers: 402717paper [4:55:09, 423.95s/paper, 2025-01]2026-04-24 18:18:25,634 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3000 added=1 duplicates=2999
-Collecting arxiv papers: 402717paper [4:55:09, 423.95s/paper, 2025-02]2026-04-24 18:18:25,638 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-02
-2026-04-24 18:18:25,638 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2025-2025 month=2025-02 query=cat:cs.CL
-2026-04-24 18:20:09,171 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=2476 added=0 duplicates=2476
-2026-04-24 18:20:09,171 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2025-2025 month=2025-02 query=cat:cs.AI
-Collecting arxiv papers: 402718paper [4:59:36, 379.70s/paper, 2025-02]2026-04-24 18:22:52,441 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=3760 added=1 duplicates=3759
-2026-04-24 18:22:52,441 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2025-2025 month=2025-02 query=cat:cs.LG
-Collecting arxiv papers: 402719paper [5:02:41, 323.69s/paper, 2025-02]2026-04-24 18:25:56,912 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=4336 added=3 duplicates=4333
-Collecting arxiv papers: 402721paper [5:02:41, 323.69s/paper, 2025-03]2026-04-24 18:25:56,918 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-03
-2026-04-24 18:25:56,918 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2025-2025 month=2025-03 query=cat:cs.CL
-Collecting arxiv papers: 402722paper [5:04:03, 160.27s/paper, 2025-03]2026-04-24 18:27:18,967 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1878 added=2 duplicates=1876
-2026-04-24 18:27:18,967 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2025-2025 month=2025-03 query=cat:cs.AI
-2026-04-24 18:29:48,479 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
-2026-04-24 18:30:02,518 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 2/11). sleeping 10.00s
-2026-04-24 18:30:12,919 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/11). sleeping 14.00s
-2026-04-24 18:30:57,192 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 4/11). sleeping 28.00s
-2026-04-24 18:31:25,636 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 5/11). sleeping 56.00s
-2026-04-24 18:32:37,453 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 6/11). sleeping 112.00s
-2026-04-24 18:34:29,899 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 7/11). sleeping 120.00s
-2026-04-24 18:37:00,141 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 8/11). sleeping 120.00s
-2026-04-24 18:39:00,562 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 9/11). sleeping 120.00s
-Collecting arxiv papers: 402724paper [5:18:30, 254.45s/paper, 2025-03]2026-04-24 18:41:46,554 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=3406 added=1 duplicates=3405
-2026-04-24 18:41:46,554 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2025-2025 month=2025-03 query=cat:cs.LG
-Collecting arxiv papers: 402725paper [5:21:02, 234.20s/paper, 2025-03]2026-04-24 18:44:18,396 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3681 added=1 duplicates=3680
-Collecting arxiv papers: 402725paper [5:21:02, 234.20s/paper, 2025-04]2026-04-24 18:44:18,402 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-04
-2026-04-24 18:44:18,402 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2025-2025 month=2025-04 query=cat:cs.CL
-2026-04-24 18:45:27,612 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1606 added=0 duplicates=1606
-2026-04-24 18:45:27,612 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2025-2025 month=2025-04 query=cat:cs.AI
-Collecting arxiv papers: 402726paper [5:24:17, 225.63s/paper, 2025-04]2026-04-24 18:47:33,613 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=3029 added=1 duplicates=3028
-2026-04-24 18:47:33,613 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2025-2025 month=2025-04 query=cat:cs.LG
-2026-04-24 18:49:40,476 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3016 added=0 duplicates=3016
-Collecting arxiv papers: 402726paper [5:26:24, 225.63s/paper, 2025-05]2026-04-24 18:49:40,480 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-05
-2026-04-24 18:49:40,480 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2025-2025 month=2025-05 query=cat:cs.CL
-Collecting arxiv papers: 402727paper [5:28:33, 232.79s/paper, 2025-05]2026-04-24 18:51:49,209 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=2954 added=4 duplicates=2950
-2026-04-24 18:51:49,209 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2025-2025 month=2025-05 query=cat:cs.AI
-Collecting arxiv papers: 402731paper [5:31:55, 127.55s/paper, 2025-05]2026-04-24 18:55:11,290 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=4805 added=1 duplicates=4804
-2026-04-24 18:55:11,290 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2025-2025 month=2025-05 query=cat:cs.LG
-Collecting arxiv papers: 402732paper [5:35:28, 142.19s/paper, 2025-05]2026-04-24 18:58:44,517 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=5054 added=2 duplicates=5052
-Collecting arxiv papers: 402733paper [5:35:28, 142.19s/paper, 2025-06]2026-04-24 18:58:44,524 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-06
-2026-04-24 18:58:44,524 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2025-2025 month=2025-06 query=cat:cs.CL
-Collecting arxiv papers: 402734paper [5:37:22, 114.20s/paper, 2025-06]2026-04-24 19:00:38,284 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=2324 added=5 duplicates=2319
-2026-04-24 19:00:38,284 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2025-2025 month=2025-06 query=cat:cs.AI
-2026-04-24 19:01:56,330 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
-2026-04-24 19:02:33,545 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 1/11). sleeping 3.50s
-2026-04-24 19:03:07,145 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 2/11). sleeping 7.00s
-2026-04-24 19:03:31,293 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 3/11). sleeping 14.00s
-2026-04-24 19:04:01,356 WARNING not_an_llm.clients.arxiv: Retryable HTTP 429 from arXiv (attempt 4/11). sleeping 28.00s
-2026-04-24 19:04:59,505 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 5/11). sleeping 56.00s
-2026-04-24 19:06:25,756 WARNING not_an_llm.clients.arxiv: Network error from arXiv (attempt 6/11). sleeping 112.00s
-2026-04-24 19:10:45,397 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=3949 added=0 duplicates=3949
-2026-04-24 19:10:45,397 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2025-2025 month=2025-06 query=cat:cs.LG
-Collecting arxiv papers: 402739paper [5:50:17, 136.22s/paper, 2025-06]2026-04-24 19:13:33,335 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=4005 added=3 duplicates=4002
-Collecting arxiv papers: 402741paper [5:50:17, 136.22s/paper, 2025-07]2026-04-24 19:13:33,341 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-07
-2026-04-24 19:13:33,342 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2025-2025 month=2025-07 query=cat:cs.CL
-Collecting arxiv papers: 402742paper [5:51:26, 100.46s/paper, 2025-07]2026-04-24 19:14:42,771 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1639 added=3 duplicates=1636
-2026-04-24 19:14:42,771 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2025-2025 month=2025-07 query=cat:cs.AI
-Collecting arxiv papers: 402745paper [5:53:50, 84.12s/paper, 2025-07] 2026-04-24 19:17:06,633 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3 done: fetched=3474 added=2 duplicates=3472
-2026-04-24 19:17:06,633 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3: years=2025-2025 month=2025-07 query=cat:cs.LG
-Collecting arxiv papers: 402747paper [5:56:16, 81.58s/paper, 2025-07]2026-04-24 19:19:32,623 INFO not_an_llm.pipelines.collect: [arxiv] Query 3/3 done: fetched=3413 added=2 duplicates=3411
-Collecting arxiv papers: 402748paper [5:56:16, 81.58s/paper, 2025-08]2026-04-24 19:19:32,628 INFO not_an_llm.pipelines.collect: [arxiv] Collecting month bucket: 2025-08
-2026-04-24 19:19:32,628 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3: years=2025-2025 month=2025-08 query=cat:cs.CL
-Collecting arxiv papers: 402749paper [5:57:36, 71.31s/paper, 2025-08]2026-04-24 19:20:52,360 INFO not_an_llm.pipelines.collect: [arxiv] Query 1/3 done: fetched=1830 added=2 duplicates=1828
-2026-04-24 19:20:52,360 INFO not_an_llm.pipelines.collect: [arxiv] Query 2/3: years=2025-2025 month=2025-08 query=cat:cs.AI
-slurmstepd: error: *** JOB 2768103 ON bnode003 CANCELLED AT 2026-04-24T19:23:14 DUE TO TIME LIMIT ***
