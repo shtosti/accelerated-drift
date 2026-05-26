@@ -1,99 +1,0 @@
-Checked 1 package in 4ms
-2026-05-18 22:46:53,149 INFO not_an_llm.pipelines.analyze: Using 128 workers
-2026-05-18 22:47:52,649 INFO not_an_llm.analysis.topic_modeling.model: Using device: cuda for topic modeling (2040 documents, 38 requested topics)
-2026-05-18 22:47:52,649 INFO not_an_llm.analysis.topic_modeling.model: Using 16 threads for UMAP, 128 workers for HDBSCAN
-2026-05-18 22:47:52,805 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:52,812 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
-2026-05-18 22:47:52,923 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:52,932 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
-2026-05-18 22:47:52,933 INFO sentence_transformers.base.model: Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
-2026-05-18 22:47:53,045 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:53,053 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
-2026-05-18 22:47:53,176 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:53,184 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/README.md "HTTP/1.1 200 OK"
-2026-05-18 22:47:53,314 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:53,324 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
-2026-05-18 22:47:53,443 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:53,451 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/sentence_bert_config.json "HTTP/1.1 200 OK"
-2026-05-18 22:47:53,566 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
-2026-05-18 22:47:53,681 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:53,688 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 16994.35it/s]
-2026-05-18 22:47:53,872 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
-2026-05-18 22:47:53,987 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
-2026-05-18 22:47:54,111 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
-2026-05-18 22:47:54,229 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
-2026-05-18 22:47:54,343 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:54,350 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
-2026-05-18 22:47:54,467 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:54,474 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
-2026-05-18 22:47:54,591 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:54,599 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
-2026-05-18 22:47:54,712 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:54,720 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
-2026-05-18 22:47:54,838 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
-2026-05-18 22:47:54,956 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
-2026-05-18 22:47:55,123 INFO httpx: HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
-2026-05-18 22:47:55,131 INFO httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
-2026-05-18 22:47:55,246 INFO httpx: HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
-2026-05-18 22:47:55,423 INFO not_an_llm.analysis.topic_modeling.model: Encoding document embeddings...
-Batches:   0%|          | 0/8 [00:00<?, ?it/s]Batches:  12%|█▎        | 1/8 [00:00<00:02,  2.94it/s]Batches:  25%|██▌       | 2/8 [00:00<00:01,  3.89it/s]Batches:  38%|███▊      | 3/8 [00:00<00:01,  4.62it/s]Batches:  50%|█████     | 4/8 [00:00<00:00,  5.07it/s]Batches:  62%|██████▎   | 5/8 [00:01<00:00,  5.38it/s]Batches:  75%|███████▌  | 6/8 [00:01<00:00,  5.60it/s]Batches:  88%|████████▊ | 7/8 [00:01<00:00,  6.03it/s]Batches: 100%|██████████| 8/8 [00:01<00:00,  6.15it/s]Batches: 100%|██████████| 8/8 [00:01<00:00,  5.33it/s]
-2026-05-18 22:48:12,937 INFO not_an_llm.analysis.topic_modeling.model: Topic modeling completed in 20.29 seconds
-2026-05-18 22:48:12,938 INFO not_an_llm.analysis.topic_modeling.model: Created 53 topics (requested 38)
-2026-05-18 22:48:12,938 WARNING not_an_llm.analysis.topic_modeling.model: BERTopic created 53 topics instead of requested 38
-  0%|          | 0/51 [00:00<?, ?it/s] 53%|█████▎    | 27/51 [00:00<00:00, 263.45it/s]100%|██████████| 51/51 [00:00<00:00, 227.47it/s]
-2026-05-18 22:48:14,266 INFO not_an_llm.analysis.topic_modeling.selection: Topic selection finished with 15 final topics from 53 initial topics
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-2026-05-18 22:48:14,529 INFO not_an_llm.pipelines.analyze: Computing statistical summaries...
-2026-05-18 22:48:14,851 INFO not_an_llm.pipelines.analyze: Saved statistical summary to data/visuals/arxiv_mini/feature_stats.csv
-2026-05-18 22:48:14,852 INFO not_an_llm.pipelines.analyze: Generating grouped pre/post diff plot...
-2026-05-18 22:48:15,875 INFO not_an_llm.pipelines.analyze: Saved grouped pre/post diff plot to data/visuals/arxiv_mini/pre_post_diff.png
-2026-05-18 22:48:15,875 INFO not_an_llm.pipelines.analyze: Generating per-group pre/post diff plots...
-2026-05-18 22:48:17,046 INFO not_an_llm.pipelines.analyze: Saved 7 per-group diff plots
-2026-05-18 22:48:36,062 INFO not_an_llm.analysis.topic_modeling.pipeline: Starting topic analysis...
-2026-05-18 22:48:36,063 INFO not_an_llm.analysis.topic_modeling.pipeline: Running topic analysis for 15 selected topics
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/scipy/stats/_axis_nan_policy.py:592: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
-  res = hypotest_fun_out(*samples, **kwds)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/scipy/stats/_axis_nan_policy.py:592: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
-  res = hypotest_fun_out(*samples, **kwds)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/scipy/stats/_axis_nan_policy.py:592: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
-  res = hypotest_fun_out(*samples, **kwds)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/.venv/lib/python3.11/site-packages/scipy/stats/_axis_nan_policy.py:592: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
-  res = hypotest_fun_out(*samples, **kwds)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-/storage/homefs/hh25g551/ondemand/data/not-an-llm/src/not_an_llm/analysis/trends.py:126: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
-  yearly = df.groupby("year", as_index=False).agg(**agg)
-2026-05-18 22:54:29,210 INFO not_an_llm.pipelines.visualize: Computing statistical summaries...
-2026-05-18 22:54:29,529 INFO not_an_llm.pipelines.visualize: Saved statistical summary to data/visuals/arxiv_mini/feature_stats.csv
-2026-05-18 22:54:29,530 INFO not_an_llm.pipelines.visualize: Generating grouped pre/post diff plot...
-2026-05-18 22:54:30,561 INFO not_an_llm.pipelines.visualize: Saved grouped pre/post diff plot to data/visuals/arxiv_mini/pre_post_diff.png
-2026-05-18 22:54:30,561 INFO not_an_llm.pipelines.visualize: Generating per-group pre/post diff plots...
-2026-05-18 22:54:31,596 INFO not_an_llm.pipelines.visualize: Saved 7 per-group diff plots

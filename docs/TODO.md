@@ -1,2 +1,0 @@
-- [] analyse fields of study in both arxiv and medarchiv to see whether they can be grouped as an alternative to topic modelling.
-- [] maybe try automatic topic number generation? right now experimenting with e.g. n=7

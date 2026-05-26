@@ -1,4 +1,0 @@
-Checked 1 package in 12ms
-2026-04-29 17:18:32,688 INFO not_an_llm.pipelines.analyze: Using 4 workers
-2026-04-29 17:18:56,352 INFO not_an_llm.pipelines.analyze: Generating grouped pre/post diff plot...
-2026-04-29 17:18:56,987 INFO not_an_llm.pipelines.analyze: Saved grouped pre/post diff plot to data/analysis/plots/arxiv_mini/pre_post_feature_diff.png
