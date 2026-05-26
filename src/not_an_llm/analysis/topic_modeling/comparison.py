@@ -73,7 +73,8 @@ def select_top_its_features(
     ).abs()
     ranked = ranked.sort_values("abs_delta_beta_sd", ascending=False).reset_index(drop=True)
     ranked.insert(0, "global_rank", range(1, len(ranked) + 1))
-    ranked = ranked.drop_duplicates("feature", keep="first").head(top_n).copy()
+    ranked["plot_label"] = ranked["feature"].astype(str).map(pretty_feature_label)
+    ranked = ranked.drop_duplicates("plot_label", keep="first").head(top_n).copy()
     ranked.insert(0, "feature_rank", range(1, len(ranked) + 1))
 
     feature_columns = [
@@ -83,6 +84,7 @@ def select_top_its_features(
         "dataset",
         "family",
         "feature",
+        "plot_label",
         "pre_mean",
         "post_mean",
         "standardized_slope_change_per_year",

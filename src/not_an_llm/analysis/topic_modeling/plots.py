@@ -296,10 +296,20 @@ def save_topic_trend_plots(
     if "year" not in enriched.columns:
         return paths
 
+    metadata_columns = {
+        "year",
+        "month",
+        "topic_id",
+        "paper_count",
+        "abstract_count",
+        "abstract_share",
+    }
     feature_columns = [
         col
         for col in enriched.columns
-        if col.endswith("_per_1k_words") and pd.api.types.is_numeric_dtype(enriched[col])
+        if col not in metadata_columns
+        and not col.startswith("plot_umap_")
+        and pd.api.types.is_numeric_dtype(enriched[col])
     ]
     if not feature_columns:
         return paths

@@ -1,15 +1,4 @@
-# not-an-llm
-
 Modular research pipeline for studying writing-feature changes before and after broad LLM adoption.
-
-## Goal
-
-1. Download Semantic Scholar papers with rich metadata, title, and abstract.
-2. Build a longitudinal dataset around a configurable LLM introduction year.
-3. Test for two effects:
-	- post-introduction writing-feature shift
-	- later backlash trend where LLM-like markers decline
-4. Track readability and stylistic trends over time from preprocessed text.
 
 ## Experiment Control
 
@@ -90,10 +79,8 @@ Separate external dataset pipelines (kept independent from the main collect/prep
 
 To switch between HC3 and MAGE, edit the `dataset` value in [config_external.toml](config_external.toml) and adjust the matching output paths there. The Slurm wrappers point at this file directly.
 
-Optional: set S2_API_KEY for higher Semantic Scholar API limits.
 
 Collection sources:
-1. `semantic_scholar`: query-based Semantic Scholar API.
 2. `arxiv`: arXiv API with month-split full collection to avoid 10k offset failures.
 3. `medarxiv`: medRxiv API with date-range cursor pagination and the same month-split full collection strategy.
 
@@ -154,5 +141,3 @@ Topic modeling is a single BERTopic assignment pass with a configurable clustere
 6. A separate `topic_modeling_plot_umap_n_components` projection is used for `topic_clusters.png`.
 7. Remaining HDBSCAN outliers, if any, are preserved as `topic_id = -1` with label `-1 (outliers)` instead of being remapped to an ordinary topic.
 8. Topic labels are saved in `data/analysis/<stem>_topic_labels.csv`, topic counts in `data/analysis/<stem>_topic_summary.csv`, optional hierarchy review data in `data/analysis/<stem>_topic_merge_candidates.csv`, and dataset/topic counts in `data/analysis/<stem>_topic_modeling_stats.csv`.
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): brief module map
-- [docs/RESEARCH_PLAN.md](docs/RESEARCH_PLAN.md): brief study logic
