@@ -77,6 +77,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+notebooks/*.ipynb
 
 # IPython
 profile_default/
@@ -227,6 +228,6 @@ slurm_analyze_mini.sh
 
 
 docs/RESEARCH_PLAN.md
-docs/TODO.md
+docs/?ODO.md
 docs/field_log.md
 
