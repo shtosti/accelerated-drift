@@ -1,3 +1,0 @@
-Checked 1 package in 5ms
-2026-05-19 15:37:15,764 INFO not_an_llm.pipelines.analyze: Using 16 workers
-[2026-05-19T15:45:51.099] error: *** JOB 4316000 ON gnode28 CANCELLED AT 2026-05-19T15:45:51 DUE to SIGNAL Terminated ***

@@ -1,199 +1,0 @@
-2026-04-23 13:05:16,826 INFO not_an_llm.pipelines.collect: Starting bioarxiv collection: queries=1 years=2015-2026 (month-split)
-Collecting bioarxiv papers: 0paper [00:00, ?paper/s]Collecting bioarxiv papers: 0paper [00:00, ?paper/s, 2015-01]2026-04-23 13:05:16,846 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-01
-2026-04-23 13:05:16,846 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-01 query=*
-2026-04-23 13:05:17,248 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:00, ?paper/s, 2015-02]2026-04-23 13:05:17,249 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-02
-2026-04-23 13:05:17,249 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-02 query=*
-2026-04-23 13:05:21,062 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:04, ?paper/s, 2015-03]2026-04-23 13:05:21,063 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-03
-2026-04-23 13:05:21,063 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-03 query=*
-2026-04-23 13:05:24,876 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:08, ?paper/s, 2015-04]2026-04-23 13:05:24,876 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-04
-2026-04-23 13:05:24,876 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-04 query=*
-2026-04-23 13:05:28,694 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:11, ?paper/s, 2015-05]2026-04-23 13:05:28,694 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-05
-2026-04-23 13:05:28,694 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-05 query=*
-2026-04-23 13:05:32,509 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:15, ?paper/s, 2015-06]2026-04-23 13:05:32,510 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-06
-2026-04-23 13:05:32,510 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-06 query=*
-2026-04-23 13:05:36,325 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:19, ?paper/s, 2015-07]2026-04-23 13:05:36,325 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-07
-2026-04-23 13:05:36,325 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-07 query=*
-2026-04-23 13:05:40,177 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:23, ?paper/s, 2015-08]2026-04-23 13:05:40,177 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-08
-2026-04-23 13:05:40,177 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-08 query=*
-2026-04-23 13:05:43,990 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:27, ?paper/s, 2015-09]2026-04-23 13:05:43,991 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-09
-2026-04-23 13:05:43,991 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-09 query=*
-2026-04-23 13:05:47,810 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:30, ?paper/s, 2015-10]2026-04-23 13:05:47,811 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-10
-2026-04-23 13:05:47,811 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-10 query=*
-2026-04-23 13:05:51,624 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:34, ?paper/s, 2015-11]2026-04-23 13:05:51,624 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-11
-2026-04-23 13:05:51,624 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-11 query=*
-2026-04-23 13:05:55,436 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:38, ?paper/s, 2015-12]2026-04-23 13:05:55,436 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2015-12
-2026-04-23 13:05:55,436 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2015-2015 month=2015-12 query=*
-2026-04-23 13:05:59,249 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:42, ?paper/s, 2016-01]2026-04-23 13:05:59,249 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-01
-2026-04-23 13:05:59,249 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-01 query=*
-2026-04-23 13:06:03,066 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:46, ?paper/s, 2016-02]2026-04-23 13:06:03,066 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-02
-2026-04-23 13:06:03,066 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-02 query=*
-2026-04-23 13:06:06,879 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:50, ?paper/s, 2016-03]2026-04-23 13:06:06,879 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-03
-2026-04-23 13:06:06,879 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-03 query=*
-2026-04-23 13:06:10,695 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:53, ?paper/s, 2016-04]2026-04-23 13:06:10,695 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-04
-2026-04-23 13:06:10,695 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-04 query=*
-2026-04-23 13:06:14,534 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [00:57, ?paper/s, 2016-05]2026-04-23 13:06:14,535 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-05
-2026-04-23 13:06:14,535 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-05 query=*
-2026-04-23 13:06:18,345 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:01, ?paper/s, 2016-06]2026-04-23 13:06:18,345 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-06
-2026-04-23 13:06:18,345 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-06 query=*
-2026-04-23 13:06:22,162 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:05, ?paper/s, 2016-07]2026-04-23 13:06:22,162 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-07
-2026-04-23 13:06:22,162 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-07 query=*
-2026-04-23 13:06:25,975 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:09, ?paper/s, 2016-08]2026-04-23 13:06:25,975 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-08
-2026-04-23 13:06:25,975 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-08 query=*
-2026-04-23 13:06:29,789 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:12, ?paper/s, 2016-09]2026-04-23 13:06:29,789 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-09
-2026-04-23 13:06:29,790 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-09 query=*
-2026-04-23 13:06:33,602 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:16, ?paper/s, 2016-10]2026-04-23 13:06:33,603 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-10
-2026-04-23 13:06:33,603 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-10 query=*
-2026-04-23 13:06:37,419 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:20, ?paper/s, 2016-11]2026-04-23 13:06:37,420 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-11
-2026-04-23 13:06:37,420 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-11 query=*
-2026-04-23 13:06:41,232 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:24, ?paper/s, 2016-12]2026-04-23 13:06:41,233 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2016-12
-2026-04-23 13:06:41,233 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2016-2016 month=2016-12 query=*
-2026-04-23 13:06:45,059 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:28, ?paper/s, 2017-01]2026-04-23 13:06:45,060 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-01
-2026-04-23 13:06:45,060 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-01 query=*
-2026-04-23 13:06:48,873 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:32, ?paper/s, 2017-02]2026-04-23 13:06:48,874 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-02
-2026-04-23 13:06:48,874 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-02 query=*
-2026-04-23 13:06:52,687 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:35, ?paper/s, 2017-03]2026-04-23 13:06:52,687 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-03
-2026-04-23 13:06:52,687 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-03 query=*
-2026-04-23 13:06:56,501 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:39, ?paper/s, 2017-04]2026-04-23 13:06:56,501 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-04
-2026-04-23 13:06:56,501 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-04 query=*
-2026-04-23 13:07:00,315 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:43, ?paper/s, 2017-05]2026-04-23 13:07:00,315 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-05
-2026-04-23 13:07:00,315 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-05 query=*
-2026-04-23 13:07:04,130 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:47, ?paper/s, 2017-06]2026-04-23 13:07:04,130 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-06
-2026-04-23 13:07:04,130 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-06 query=*
-2026-04-23 13:07:07,945 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:51, ?paper/s, 2017-07]2026-04-23 13:07:07,946 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-07
-2026-04-23 13:07:07,946 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-07 query=*
-2026-04-23 13:07:11,768 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:54, ?paper/s, 2017-08]2026-04-23 13:07:11,769 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-08
-2026-04-23 13:07:11,769 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-08 query=*
-2026-04-23 13:07:15,592 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [01:58, ?paper/s, 2017-09]2026-04-23 13:07:15,592 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-09
-2026-04-23 13:07:15,592 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-09 query=*
-2026-04-23 13:07:19,407 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:02, ?paper/s, 2017-10]2026-04-23 13:07:19,407 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-10
-2026-04-23 13:07:19,407 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-10 query=*
-2026-04-23 13:07:23,221 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:06, ?paper/s, 2017-11]2026-04-23 13:07:23,222 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-11
-2026-04-23 13:07:23,222 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-11 query=*
-2026-04-23 13:07:27,060 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:10, ?paper/s, 2017-12]2026-04-23 13:07:27,060 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2017-12
-2026-04-23 13:07:27,060 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2017-2017 month=2017-12 query=*
-2026-04-23 13:07:30,878 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:14, ?paper/s, 2018-01]2026-04-23 13:07:30,879 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-01
-2026-04-23 13:07:30,879 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-01 query=*
-2026-04-23 13:07:34,698 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:17, ?paper/s, 2018-02]2026-04-23 13:07:34,699 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-02
-2026-04-23 13:07:34,699 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-02 query=*
-2026-04-23 13:07:38,511 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:21, ?paper/s, 2018-03]2026-04-23 13:07:38,512 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-03
-2026-04-23 13:07:38,512 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-03 query=*
-2026-04-23 13:07:42,324 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:25, ?paper/s, 2018-04]2026-04-23 13:07:42,325 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-04
-2026-04-23 13:07:42,325 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-04 query=*
-2026-04-23 13:07:46,139 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:29, ?paper/s, 2018-05]2026-04-23 13:07:46,140 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-05
-2026-04-23 13:07:46,140 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-05 query=*
-2026-04-23 13:07:49,960 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:33, ?paper/s, 2018-06]2026-04-23 13:07:49,961 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-06
-2026-04-23 13:07:49,961 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-06 query=*
-2026-04-23 13:07:53,774 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:36, ?paper/s, 2018-07]2026-04-23 13:07:53,775 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-07
-2026-04-23 13:07:53,775 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-07 query=*
-2026-04-23 13:07:57,593 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:40, ?paper/s, 2018-08]2026-04-23 13:07:57,594 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-08
-2026-04-23 13:07:57,594 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-08 query=*
-2026-04-23 13:08:01,408 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:44, ?paper/s, 2018-09]2026-04-23 13:08:01,408 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-09
-2026-04-23 13:08:01,408 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-09 query=*
-2026-04-23 13:08:05,223 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:48, ?paper/s, 2018-10]2026-04-23 13:08:05,224 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-10
-2026-04-23 13:08:05,224 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-10 query=*
-2026-04-23 13:08:09,037 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:52, ?paper/s, 2018-11]2026-04-23 13:08:09,037 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-11
-2026-04-23 13:08:09,037 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-11 query=*
-2026-04-23 13:08:12,853 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:56, ?paper/s, 2018-12]2026-04-23 13:08:12,854 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2018-12
-2026-04-23 13:08:12,854 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2018-2018 month=2018-12 query=*
-2026-04-23 13:08:16,666 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [02:59, ?paper/s, 2019-01]2026-04-23 13:08:16,667 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-01
-2026-04-23 13:08:16,667 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-01 query=*
-2026-04-23 13:08:20,486 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:03, ?paper/s, 2019-02]2026-04-23 13:08:20,487 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-02
-2026-04-23 13:08:20,487 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-02 query=*
-2026-04-23 13:08:24,310 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:07, ?paper/s, 2019-03]2026-04-23 13:08:24,310 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-03
-2026-04-23 13:08:24,310 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-03 query=*
-2026-04-23 13:08:28,125 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:11, ?paper/s, 2019-04]2026-04-23 13:08:28,126 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-04
-2026-04-23 13:08:28,126 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-04 query=*
-2026-04-23 13:08:31,942 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:15, ?paper/s, 2019-05]2026-04-23 13:08:31,942 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-05
-2026-04-23 13:08:31,942 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-05 query=*
-2026-04-23 13:08:35,759 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:18, ?paper/s, 2019-06]2026-04-23 13:08:35,760 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-06
-2026-04-23 13:08:35,760 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-06 query=*
-2026-04-23 13:08:39,574 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:22, ?paper/s, 2019-07]2026-04-23 13:08:39,574 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-07
-2026-04-23 13:08:39,574 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-07 query=*
-2026-04-23 13:08:43,393 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:26, ?paper/s, 2019-08]2026-04-23 13:08:43,394 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-08
-2026-04-23 13:08:43,394 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-08 query=*
-2026-04-23 13:08:47,209 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:30, ?paper/s, 2019-09]2026-04-23 13:08:47,211 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-09
-2026-04-23 13:08:47,211 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-09 query=*
-2026-04-23 13:08:51,074 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:34, ?paper/s, 2019-10]2026-04-23 13:08:51,074 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-10
-2026-04-23 13:08:51,074 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-10 query=*
-2026-04-23 13:08:54,890 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:38, ?paper/s, 2019-11]2026-04-23 13:08:54,891 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-11
-2026-04-23 13:08:54,891 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-11 query=*
-2026-04-23 13:08:58,708 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:41, ?paper/s, 2019-12]2026-04-23 13:08:58,709 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2019-12
-2026-04-23 13:08:58,709 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2019-2019 month=2019-12 query=*
-2026-04-23 13:09:02,521 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:45, ?paper/s, 2020-01]2026-04-23 13:09:02,521 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2020-01
-2026-04-23 13:09:02,521 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2020-2020 month=2020-01 query=*
-2026-04-23 13:09:06,370 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:49, ?paper/s, 2020-02]2026-04-23 13:09:06,370 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2020-02
-2026-04-23 13:09:06,371 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2020-2020 month=2020-02 query=*
-2026-04-23 13:09:10,184 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:53, ?paper/s, 2020-03]2026-04-23 13:09:10,185 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2020-03
-2026-04-23 13:09:10,185 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2020-2020 month=2020-03 query=*
-2026-04-23 13:09:14,002 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [03:57, ?paper/s, 2020-04]2026-04-23 13:09:14,002 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2020-04
-2026-04-23 13:09:14,002 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2020-2020 month=2020-04 query=*
-2026-04-23 13:09:17,820 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [04:00, ?paper/s, 2020-05]2026-04-23 13:09:17,821 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2020-05
-2026-04-23 13:09:17,821 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2020-2020 month=2020-05 query=*
-2026-04-23 13:09:21,666 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1 done: fetched=0 added=0 duplicates=0
-Collecting bioarxiv papers: 0paper [04:04, ?paper/s, 2020-06]2026-04-23 13:09:21,666 INFO not_an_llm.pipelines.collect: [bioarxiv] Collecting month bucket: 2020-06
-2026-04-23 13:09:21,666 INFO not_an_llm.pipelines.collect: [bioarxiv] Query 1/1: years=2020-2020 month=2020-06 query=*
-slurmstepd: error: *** JOB 2670922 ON bnode066 CANCELLED AT 2026-04-23T13:09:24 ***
