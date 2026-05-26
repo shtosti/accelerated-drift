@@ -1,13 +1,13 @@
 # Visuals and Analysis Documentation
 
-This document describes the data analysis outputs and visualizations produced by the `not-an-llm` repository for collected datasets.
+This document describes the data analysis outputs and visualizations produced by the repository for the arXiv and medRxiv preprint datasets.
 
 ## Pipeline overview
 
 The analysis pipeline separates three stages:
 
 1. `collect`
-   - Fetches paper metadata and text from Semantic Scholar, arXiv, medRxiv, or external pair datasets.
+   - Fetches preprint metadata and text from arXiv or medRxiv.
 2. `preprocess`
    - Cleans raw text, extracts normalized text fields, and saves preprocessed JSONL for feature analysis.
 3. `analyze` / `visualize`
@@ -46,17 +46,6 @@ The `analyze` step can produce both analysis artifacts and plots, while the `vis
   - Helps check whether the estimated ChatGPT-era slope change stands out from earlier arbitrary breaks.
 
 CSV statistics are kept only under `data/analysis/`. Plot directories under `data/visuals/` contain figures only. See `data/analysis/README.md` for the current table-level data dictionary.
-
-### External comparison outputs
-
-For paired external datasets such as HC3 or MAGE:
-
-- `data/external/..._features.jsonl`
-  - Feature-enriched paired records for human and AI text.
-
-- `data/external/..._comparison.csv`
-  - Mean and standard deviation for each feature by source group.
-  - Includes AI-human difference, ratio, and Cohen's d.
 
 ## Analysis feature categories
 
@@ -171,7 +160,7 @@ All plots are saved to `data/visuals/<dataset_stem>/` or the configured `trends_
    - Each feature gets its own y-axis while sharing the same ChatGPT event line for comparison.
 
 13. `punctuation_stack.png`
-   - TODO add
+   - Vertical stack of punctuation feature trends.
 
 14. `dependency_distribution_diff.png`
     - Change plot showing the top dependency roles by proportional change before vs after 2023.
@@ -224,13 +213,6 @@ The trend analysis pipeline also computes the following exploratory summaries fr
 
 These yearly summaries are computed in memory for exploratory diff plots only. They are no longer persisted as `feature_stats.csv` because the retained paper-facing statistics are the interrupted time-series and topic summary tables in `data/analysis/`.
 
-## External human-vs-AI comparison analysis
-
-The paired external analysis pipeline produces a comparison table and a top-difference plot for features that separate human-written from AI-written text.
-
-- `human_vs_ai_top_differences.png`
-  - Shows strongest positive and negative feature differences between AI and human text.
-
 ## Configurable behavior
 
 Plot and analysis behavior is controlled in `config.toml`, `config_mini.toml`, and `config_external.toml`.
@@ -258,7 +240,7 @@ Key settings include:
 
 - Run `analyze` to compute feature datasets and trend CSVs.
 - Run `visualize` to regenerate plots from existing trend CSVs.
-- Use the `external-analyze` pipeline for non-temporal, paired human/AI comparison datasets.
+- Run `analyze` before `visualize` when regenerating figures from a fresh collection.
 
 ## Key file locations
 

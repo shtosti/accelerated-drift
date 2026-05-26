@@ -2,7 +2,7 @@
 
 ## Principles
 
-1. Config-first: all experiment controls live in root config.toml.
+1. Config-first: experiment controls live in root configuration files.
 2. Small modules: each file owns one responsibility.
 3. Pipeline clarity: ingest first, analyze later.
 4. Analysis stages are explicit: preprocess -> feature extraction/readability -> trend analysis.
@@ -11,8 +11,10 @@
 
 - src/not_an_llm/config.py
   - Loads and validates typed settings from config.toml.
-- src/not_an_llm/clients/semantic_scholar.py
-  - Handles Semantic Scholar API requests and pagination.
+- src/not_an_llm/clients/arxiv.py
+  - Handles arXiv API requests and month-split collection.
+- src/not_an_llm/clients/medarxiv.py
+  - Handles medRxiv API requests and date-range pagination.
 - src/not_an_llm/pipelines/collect.py
   - Orchestrates collection and writes JSONL.
 - src/not_an_llm/preprocessing/text.py
@@ -35,10 +37,8 @@
   - Runs BERTopic topic assignment with configurable HDBSCAN or KMeans clustering, records topic summaries and optional hierarchy review candidates, and saves topic-level reports.
 - src/not_an_llm/pipelines/analyze.py
   - Orchestrates analysis modules and writes trend artifacts.
-- src/not_an_llm/analysis/features.py
-  - Defines high-level hypotheses.
 - src/not_an_llm/cli.py
-  - CLI routing for collection, preprocessing, and analysis.
+  - CLI routing for collection, preprocessing, analysis, and visualization.
 
 ## Data Contract (Current)
 

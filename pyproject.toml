@@ -1,7 +1,7 @@
 [project]
 name = "not-an-llm"
 version = "0.1.0"
-description = "Collect Semantic Scholar papers and analyze writing-feature shifts around LLM adoption"
+description = "Analyze stylistic change in scientific preprints around broad LLM adoption"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
