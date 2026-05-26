@@ -1,4 +1,6 @@
-Modular research pipeline for studying writing-feature changes before and after broad LLM adoption.
+Modular research pipeline for studying changes in scientific writing before and after broad LLM adoption.
+
+This repository supports the paper's arXiv/medRxiv analysis of post-ChatGPT stylistic drift in scientific preprint titles and abstracts. The primary workflow collects preprint metadata, preprocesses text, extracts lexical/readability/syntactic features, fits monthly interrupted time-series models, and generates publication figures.
 
 ## Experiment Control
 
@@ -7,137 +9,113 @@ The mini run is controlled by [config_mini.toml](config_mini.toml).
 
 Edit the matching file to control:
 
-1. query, year range, fields, output path
-2. LLM introduction year and pre/post windows
-3. analysis feature toggles and the explicit feature list used for plots/statistics
+1. collection source, categories, date range, and output paths
+2. intervention date and pre/post periods
+3. feature lists used for plots and statistics
+4. topic modeling settings
 
 ## Run
 
-### Full pipeline (with plots)
+### Full pipeline
 
-Full run:
-1. Collect papers:
-	uv run python main.py --config config.toml collect
+1. Collect records:
+   ```bash
+   uv run python main.py --config config.toml collect
+   ```
+
 2. Preprocess text:
-	uv run python main.py --config config.toml preprocess
-3. Analyze features/readability and save yearly trends with plots:
-	uv run python main.py --config config.toml analyze
+   ```bash
+   uv run python main.py --config config.toml preprocess
+   ```
 
-### Separated analysis and plotting workflow
+3. Analyze features and write statistics:
+   ```bash
+   uv run python main.py --config config.toml analyze
+   ```
 
-The analysis step can be separated from plot generation for efficiency. This is useful when:
-- Running analysis on a compute cluster without graphics support
-- Iterating on plots without recomputing analysis
-- Distributing analysis and visualization across different machines
+4. Regenerate plots from saved analysis tables:
+   ```bash
+   uv run python main.py --config config.toml visualize
+   ```
 
-**Key configuration:**
-- Set `generate_plots = false` in config to skip plotting during analysis (already set in config.toml)
-- The `visualize` command regenerates plots from previously computed analysis data
+The analysis and visualization steps are separated so that feature extraction and topic modeling can be run once, while figures can be regenerated quickly after styling changes.
 
-**Workflow:**
+### Mini Dataset
 
-1. **Run analysis only (no plots):**
-	uv run python main.py --config config.toml analyze
-	
-   This produces:
-   - Feature dataset: `data/analyzed/arxiv.jsonl` (features for each document)
-   - Yearly trends: `data/analysis/arxiv_year.csv`
-   - Monthly trends: `data/analysis/arxiv_month.csv`
-   - Monthly interrupted time-series statistics: `data/analysis/<stem>_its_stats.csv`
-   - Placebo interrupted time-series checks: `data/analysis/<stem>_its_placebo_stats.csv`
-   - Topic summaries and prevalence tables, when topic modeling is enabled: `data/analysis/<stem>_topic_*.csv`
+The mini configuration is intended for quick checks of the pipeline.
 
-2. **Generate plots separately:**
-	uv run python main.py --config config.toml visualize
-	
-   This reads the precomputed analysis CSVs and generates all plots in `data/visuals/<dataset_stem>/`. CSV artifacts stay in `data/analysis/`; `data/visuals/` is for rendered figures.
-   
-   Benefits:
-   - No need to rerun expensive feature extraction
-   - Plots can be regenerated with different styling by modifying `src/not_an_llm/analysis/trends.py`
-   - Can be run on a machine with graphics libraries after analysis completes
+```bash
+uv run python main.py --config config_mini.toml preprocess
+uv run python main.py --config config_mini.toml analyze
+uv run python main.py --config config_mini.toml visualize
+```
 
-### Mini dataset workflow
+## Main Outputs
 
-1. Preprocess the mini dataset:
-	uv run python main.py --config config_mini.toml preprocess
-2. Analyze the mini dataset (no plots):
-	uv run python main.py --config config_mini.toml analyze
-3. Generate plots for mini dataset:
-	uv run python main.py --config config_mini.toml visualize
+- `data/analyzed/<stem>_features.jsonl`: document-level feature output
+- `data/analysis/<stem>_year.csv`: yearly feature means
+- `data/analysis/<stem>_month.csv`: monthly feature means
+- `data/analysis/<stem>_its_stats.csv`: primary interrupted time-series statistics
+- `data/analysis/<stem>_its_placebo_stats.csv`: placebo interrupted time-series checks
+- `data/analysis/<stem>_topic_*.csv`: topic labels, prevalence, and summaries
+- `data/analysis/<stem>_topics/topic_*/`: topic-level trend tables
+- `data/visuals/<stem>/`: rendered figures
 
-### Other utilities
+The paper-facing inferential tables are the monthly interrupted time-series outputs in `data/analysis/<stem>_its_stats.csv`. Pre/post percentage-change plots are retained as descriptive summaries.
 
-Show built-in hypotheses:
-	uv run python main.py --config config.toml show-hypotheses
+## Statistical Design
 
-Separate external dataset pipelines (kept independent from the main collect/preprocess/analyze flow):
-1. Build paired external JSONL with raw+lemmatized text:
-	uv run python main.py --config config_external.toml external-preprocess
-2. Analyze paired external records without temporal trends:
-	uv run python main.py --config config_external.toml external-analyze
+For each feature, the primary model is a monthly interrupted time series:
 
-To switch between HC3 and MAGE, edit the `dataset` value in [config_external.toml](config_external.toml) and adjust the matching output paths there. The Slurm wrappers point at this file directly.
-
-
-Collection sources:
-2. `arxiv`: arXiv API with month-split full collection to avoid 10k offset failures.
-3. `medarxiv`: medRxiv API with date-range cursor pagination and the same month-split full collection strategy.
-
-## Structure
-
-- [config.toml](config.toml): full-run moderation file
-- [config_mini.toml](config_mini.toml): mini-run moderation file
-- [main.py](main.py): root entrypoint
-- [src/not_an_llm/config.py](src/not_an_llm/config.py): typed config loading
-- [src/not_an_llm/cli.py](src/not_an_llm/cli.py): CLI commands (collect, preprocess, analyze, visualize)
-- [src/not_an_llm/clients/semantic_scholar.py](src/not_an_llm/clients/semantic_scholar.py): API client
-- [src/not_an_llm/clients/arxiv.py](src/not_an_llm/clients/arxiv.py): arXiv API client
-- [src/not_an_llm/clients/medarxiv.py](src/not_an_llm/clients/medarxiv.py): medRxiv API client
-- [src/not_an_llm/pipelines/collect.py](src/not_an_llm/pipelines/collect.py): ingestion pipeline
-- [src/not_an_llm/pipelines/preprocess.py](src/not_an_llm/pipelines/preprocess.py): preprocessing pipeline
-- [src/not_an_llm/pipelines/analyze.py](src/not_an_llm/pipelines/analyze.py): feature/readability analysis pipeline (respects generate_plots flag)
-- [src/not_an_llm/pipelines/visualize.py](src/not_an_llm/pipelines/visualize.py): plot generation pipeline (reads precomputed analysis data)
-- [src/not_an_llm/pipelines/external_preprocess.py](src/not_an_llm/pipelines/external_preprocess.py): HC3/MAGE paired human/AI preprocessing pipelines
-- [src/not_an_llm/pipelines/external_analyze.py](src/not_an_llm/pipelines/external_analyze.py): non-temporal external human-vs-AI comparison pipeline
-- [src/not_an_llm/preprocessing/text.py](src/not_an_llm/preprocessing/text.py): text preprocessing class
-- [src/not_an_llm/analysis/feature_extractor.py](src/not_an_llm/analysis/feature_extractor.py): style feature extraction class
-- [src/not_an_llm/analysis/readability.py](src/not_an_llm/analysis/readability.py): readability metrics class
-- [src/not_an_llm/analysis/feature_selection.py](src/not_an_llm/analysis/feature_selection.py): shared feature selection rules used by analyze, visualize, and external analysis
-- [src/not_an_llm/analysis/feature_groups.py](src/not_an_llm/analysis/feature_groups.py): canonical grouped feature lists for diff and stack plots
-- [src/not_an_llm/analysis/trends.py](src/not_an_llm/analysis/trends.py): yearly/monthly trend aggregation and exploratory plotting
-- [src/not_an_llm/analysis/interrupted_time_series.py](src/not_an_llm/analysis/interrupted_time_series.py): monthly segmented regression, HAC standard errors, FDR correction, and placebo checks
-- [src/not_an_llm/analysis/topic_modeling/](src/not_an_llm/analysis/topic_modeling/): BERTopic/HDBSCAN topic assignment, topic summaries, hierarchical merge candidates for review, and topic-level reports
-- [src/not_an_llm/analysis/features.py](src/not_an_llm/analysis/features.py): analysis hypotheses scaffold
-
-### Statistical Design
-
-The paper-facing temporal test is monthly interrupted time series, not the older yearly pre/post mean comparison.
-
-For each feature, the model estimates:
-
-`feature_rate_t = beta0 + beta1 * time + beta2 * post_chatgpt + beta3 * time_after_chatgpt + error_t`
+```text
+feature_t = beta0 + beta1 * time + beta2 * post_chatgpt + beta3 * time_after_chatgpt + error_t
+```
 
 Interpretation:
 
-1. `beta1` is the pre-ChatGPT slope.
-2. `beta2` is the immediate level shift after the intervention date.
-3. `beta3` is the slope change after the intervention date.
-4. `beta1 + beta3` is the post-ChatGPT slope.
+1. `beta0` is the fitted baseline level.
+2. `beta1` is the pre-intervention monthly slope.
+3. `beta2` is the post-intervention level shift.
+4. `beta3` is the post-intervention slope change.
+5. `beta1 + beta3` is the post-intervention monthly slope.
 
-The main hypothesis tests use `slope_change_per_year`, its 95% confidence interval, `slope_change_p`, and family-level Benjamini-Hochberg `slope_change_q` from `data/analysis/<stem>_its_stats.csv`. Models are weighted by monthly paper count and use HAC/Newey-West style standard errors to reduce overconfidence from autocorrelated monthly residuals. Placebo intervention years are written to `data/analysis/<stem>_its_placebo_stats.csv`.
+The main tests use `slope_change_per_year`, its 95% confidence interval, `slope_change_p`, and family-level Benjamini-Hochberg `slope_change_q`. Models are weighted by monthly paper count and use HAC/Newey-West style standard errors for autocorrelated monthly residuals. Standardized effect sizes divide the annualized slope change by the pre-intervention monthly standard deviation.
 
-The pre/post diff plots are retained as exploratory visual summaries only; the old `feature_stats.csv` tables are no longer written because they duplicated non-primary yearly pre/post statistics. The inferential plot is `its_slope_changes.png`, annotated with delta slope/year, 95% CI, and q-value.
+## Topic Modeling
 
-### Topic Modeling Control
-
-Topic modeling is a single BERTopic assignment pass with a configurable clusterer:
+Topic modeling uses BERTopic with configurable clustering:
 
 1. SentenceTransformer embeddings are encoded for each document.
-2. UMAP projects embeddings to `topic_modeling_umap_n_components` dimensions for clustering.
-3. If `topic_modeling_clusterer = "hdbscan"`, HDBSCAN forms density-based topics using `topic_modeling_min_cluster_ratio` and `topic_modeling_hdbscan_min_samples`; optional `topic_modeling_reduce_outliers` reassigns `-1` documents to the nearest semantic topic.
-4. If `topic_modeling_clusterer = "kmeans"`, KMeans assigns every document to one of `topic_modeling_kmeans_num_clusters` clusters, or `topic_modeling_max_final_topics` when the KMeans override is `0`.
-5. BERTopic labels topics with `topic_modeling_top_n_terms`.
-6. A separate `topic_modeling_plot_umap_n_components` projection is used for `topic_clusters.png`.
-7. Remaining HDBSCAN outliers, if any, are preserved as `topic_id = -1` with label `-1 (outliers)` instead of being remapped to an ordinary topic.
-8. Topic labels are saved in `data/analysis/<stem>_topic_labels.csv`, topic counts in `data/analysis/<stem>_topic_summary.csv`, optional hierarchy review data in `data/analysis/<stem>_topic_merge_candidates.csv`, and dataset/topic counts in `data/analysis/<stem>_topic_modeling_stats.csv`.
+2. UMAP projects embeddings for clustering.
+3. HDBSCAN or KMeans assigns topic labels, depending on configuration.
+4. BERTopic labels topics with top c-TF-IDF terms.
+5. Topic-level ITS models are fit on the same feature set used in the corpus-level analysis.
+
+Outputs include topic labels, yearly prevalence, topic-level feature trends, and cross-topic standardized ITS heatmaps.
+
+## Repository Structure
+
+- [config.toml](config.toml): full-run configuration
+- [config_mini.toml](config_mini.toml): mini-run configuration
+- [main.py](main.py): root entry point
+- [src/not_an_llm/config.py](src/not_an_llm/config.py): typed config loading
+- [src/not_an_llm/cli.py](src/not_an_llm/cli.py): CLI commands
+- [src/not_an_llm/clients/arxiv.py](src/not_an_llm/clients/arxiv.py): arXiv API client
+- [src/not_an_llm/clients/medarxiv.py](src/not_an_llm/clients/medarxiv.py): medRxiv API client
+- [src/not_an_llm/pipelines/collect.py](src/not_an_llm/pipelines/collect.py): collection pipeline
+- [src/not_an_llm/pipelines/preprocess.py](src/not_an_llm/pipelines/preprocess.py): preprocessing pipeline
+- [src/not_an_llm/pipelines/analyze.py](src/not_an_llm/pipelines/analyze.py): feature extraction, trend aggregation, ITS, and topic analysis
+- [src/not_an_llm/pipelines/visualize.py](src/not_an_llm/pipelines/visualize.py): plot generation from saved analysis tables
+- [src/not_an_llm/analysis/feature_extractor.py](src/not_an_llm/analysis/feature_extractor.py): lexical, punctuation, discourse, and syntactic feature extraction
+- [src/not_an_llm/analysis/readability.py](src/not_an_llm/analysis/readability.py): readability metrics
+- [src/not_an_llm/analysis/feature_selection.py](src/not_an_llm/analysis/feature_selection.py): shared feature-selection rules
+- [src/not_an_llm/analysis/feature_groups.py](src/not_an_llm/analysis/feature_groups.py): canonical feature families
+- [src/not_an_llm/analysis/trends.py](src/not_an_llm/analysis/trends.py): yearly/monthly trend aggregation and plotting
+- [src/not_an_llm/analysis/interrupted_time_series.py](src/not_an_llm/analysis/interrupted_time_series.py): segmented regression, HAC standard errors, FDR correction, and placebo checks
+- [src/not_an_llm/analysis/topic_modeling/](src/not_an_llm/analysis/topic_modeling/): BERTopic assignment, topic summaries, and topic-level reports
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): brief module map
+- [docs/VISUALS_AND_ANALYSIS.md](docs/VISUALS_AND_ANALYSIS.md): output and visualization reference
+
+<!-- ## Anonymous Release Notes
+
+The repository is prepared for anonymous review. Runtime logs, local paths, raw/preprocessed JSONL data, and exploratory notebooks should not be included in the public artifact. Generated aggregate analysis tables and rendered figures may be included when needed for reproducibility. -->

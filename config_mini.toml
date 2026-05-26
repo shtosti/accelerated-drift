@@ -3,7 +3,7 @@ name = "not-an-llm"
 data_dir = "data"
 
 [collection]
-# Data source: semantic_scholar, arxiv, medarxiv, or biorxiv
+# Data source: arxiv, medarxiv, semantic_scholar, or biorxiv
 source = "arxiv"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
@@ -15,7 +15,7 @@ arxiv_queries = [
   "cat:cs.LG", # machine learning
 ]
 
-# For Semantic Scholar, use their query syntax.
+# For arXiv, use arXiv category/query syntax.
 semantic_scholar_queries = [
   "(\"artificial intelligence\" OR AI) AND language:English",
   "(\"deep learning\" OR \"machine learning\") AND language:English",
