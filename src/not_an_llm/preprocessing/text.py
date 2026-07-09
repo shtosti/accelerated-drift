@@ -16,9 +16,13 @@ class TextPreprocessor:
     - sentence count
     """
 
-    def __init__(self, *, keep_case: bool = False) -> None:
+    def __init__(
+        self, *, keep_case: bool = False, text_mode: str = "title_abstract"
+    ) -> None:
         self.keep_case = keep_case
+        self.text_mode = text_mode
         self.nlp = self._load_nlp()
+        self.nlp.max_length = max(self.nlp.max_length, 5_000_000)
 
     def preprocess_dataframe(self, frame: pd.DataFrame) -> pd.DataFrame:
         df = frame.copy()
@@ -36,7 +40,19 @@ class TextPreprocessor:
             .apply(self._normalize_whitespace)
         )
 
-        text_raw = (df["title"].str.strip() + " " + df["abstract"].str.strip()).str.strip()
+        title_abstract = (
+            df["title"].str.strip() + " " + df["abstract"].str.strip()
+        ).str.strip()
+        if self.text_mode == "full_text":
+            body = (
+                df.get("full_text_body", "")
+                .fillna("")
+                .astype(str)
+                .apply(self._normalize_whitespace)
+            )
+            text_raw = (title_abstract + " " + body.str.strip()).str.strip()
+        else:
+            text_raw = title_abstract
         df["text_raw"] = text_raw
         df["text_clean"] = text_raw.apply(self.normalize_text)
         docs = list(self.nlp.pipe(df["text_clean"].tolist(), batch_size=128, n_process=1))

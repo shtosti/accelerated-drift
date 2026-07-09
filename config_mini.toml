@@ -45,6 +45,9 @@ semantic_scholar_output_jsonl = "data/raw/semantic_scholar.jsonl"
 medarxiv_output_jsonl = "data/raw/medarxiv.jsonl"
 biorxiv_output_jsonl = "data/raw/biorxiv.jsonl"
 biorxiv_monthly_output_jsonl = "data/raw/biorxiv_monthly.jsonl"
+enriched_output_jsonl = "data/enriched/arxiv_mini.jsonl"
+full_text_cache_dir = "data/enriched/cache/arxiv"
+full_text_timeout_seconds = 120
 # Safe request pacing for collection APIs.
 min_request_interval_seconds = 3.5
 max_retries = 10
@@ -72,6 +75,8 @@ fields = [
 
 [analysis]
 enabled = true
+text_mode = "title_abstract"
+paired_full_text_only = false
 generate_plots = true
 include_readability = true
 topic_modeling_enabled = true

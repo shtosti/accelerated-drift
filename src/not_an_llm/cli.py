@@ -15,6 +15,7 @@ from not_an_llm.analysis.topic_modeling.comparison import (
 from not_an_llm.config import load_config
 from not_an_llm.pipelines.analyze import run_analysis
 from not_an_llm.pipelines.collect import run_collection
+from not_an_llm.pipelines.enrich import run_full_text_enrichment
 from not_an_llm.pipelines.external_analyze import (
     run_configured_external_analysis,
     run_external_analysis,
@@ -39,7 +40,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("collect", help="Download Semantic Scholar papers to JSONL.")
-    subparsers.add_parser("preprocess", help="Preprocess raw title/abstract text and save JSONL.")
+    subparsers.add_parser(
+        "enrich",
+        help="Create a same-record enriched corpus containing full text and status metadata.",
+    )
+    subparsers.add_parser("preprocess", help="Preprocess the configured text mode and save JSONL.")
     subparsers.add_parser("analyze", help="Run feature and readability analysis with yearly trends.")
     subparsers.add_parser("visualize", help="Generate plots from previously computed analysis data.")
     topic_compare = subparsers.add_parser(
@@ -217,6 +222,11 @@ def main() -> None:
     if args.command == "collect":
         output_path = run_collection(config)
         print(f"Saved paper records to {output_path}")
+        return
+
+    if args.command == "enrich":
+        output_path = run_full_text_enrichment(config)
+        print(f"Saved full-text-enriched records to {output_path}")
         return
 
     if args.command == "preprocess":

@@ -33,6 +33,46 @@ Edit the matching file to control:
    uv run python main.py --config config.toml analyze
    ```
 
+### Paired abstract and full-text analysis
+
+For arXiv or medRxiv, create an enriched corpus after collection:
+
+```bash
+uv run python main.py --config config.toml enrich
+```
+
+The enriched JSONL in `data/enriched/` contains every raw record plus
+`full_text_body`, extraction status, source URL, page/word counts, timestamp,
+and any extraction error. Successfully extracted PDFs are cached beneath
+`data/enriched/cache/`.
+
+Both comparison arms must use the successful full-text cohort:
+
+```toml
+# Abstract arm: title + abstract
+[analysis]
+text_mode = "title_abstract"
+paired_full_text_only = true
+preprocessed_jsonl = "data/processed/arxiv_title_abstract_paired.jsonl"
+```
+
+```toml
+# Full-text arm: title + abstract + extracted body
+[analysis]
+text_mode = "full_text"
+paired_full_text_only = true
+preprocessed_jsonl = "data/processed/arxiv_full_text_paired.jsonl"
+```
+
+Run `preprocess` and `analyze` once with each configuration. Since both modes
+read the same enriched file and retain only `full_text_status = "available"`,
+their paper IDs and sample sizes are identical. Full-text enrichment currently
+supports arXiv and medRxiv PDFs; failed records remain in the enriched corpus
+for auditing and retrying. Both sources use their versioned preprint PDFs. Set
+`enriched_output_jsonl` and `full_text_cache_dir` to source-specific paths,
+for example `data/enriched/medarxiv.jsonl` and
+`data/enriched/cache/medarxiv`.
+
 4. Regenerate plots from saved analysis tables:
    ```bash
    uv run python main.py --config config.toml visualize

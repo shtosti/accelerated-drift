@@ -209,6 +209,7 @@ __marimo__/
 
 # heavy data
 data/raw/*.jsonl
+data/enriched/
 data/processed/*.jsonl
 data/analyzed/*.jsonl
 data/external/

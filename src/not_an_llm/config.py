@@ -30,6 +30,9 @@ class CollectionConfig:
     semantic_scholar_output_jsonl: Path
     medarxiv_output_jsonl: Path
     biorxiv_output_jsonl: Path
+    enriched_output_jsonl: Path
+    full_text_cache_dir: Path
+    full_text_timeout_seconds: int
 
     fields: list[str]
 
@@ -83,6 +86,8 @@ class AnalysisConfig:
     certainty_terms: list[str]
 
     preprocessed_jsonl: Path
+    text_mode: str
+    paired_full_text_only: bool
     feature_dataset_jsonl: Path
     trends_csv: Path
     monthly_trends_csv: Path
@@ -173,6 +178,17 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             "biorxiv_output_jsonl",
             "bioarxiv_output_jsonl",
         ),
+        enriched_output_jsonl=_load_optional_path(
+            collection,
+            "enriched_output_jsonl",
+            Path(f"data/enriched/{source}.jsonl"),
+        ),
+        full_text_cache_dir=_load_optional_path(
+            collection,
+            "full_text_cache_dir",
+            Path(f"data/enriched/cache/{source}"),
+        ),
+        full_text_timeout_seconds=int(collection.get("full_text_timeout_seconds", 120)),
 
         fields=[str(x) for x in collection["fields"]],
 
@@ -232,6 +248,8 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             certainty_terms=_load_query_list(lexicon.get("certainty_terms", analysis.get("certainty_terms", []))),
 
             preprocessed_jsonl=preprocessed_jsonl,
+            text_mode=_load_text_mode(analysis),
+            paired_full_text_only=bool(analysis.get("paired_full_text_only", False)),
             feature_dataset_jsonl=feature_dataset_jsonl,
             trends_csv=trends_csv,
             monthly_trends_csv=monthly_trends_csv,
@@ -322,6 +340,15 @@ def _load_syntactic_features(analysis: dict[str, Any]) -> dict[str, str]:
 
 def _load_readability_metrics(analysis: dict[str, Any]) -> list[str]:
     return _load_query_list(analysis.get("readability_metrics", []))
+
+
+def _load_text_mode(analysis: dict[str, Any]) -> str:
+    mode = str(analysis.get("text_mode", "title_abstract")).strip().lower()
+    if mode not in {"title_abstract", "full_text"}:
+        raise ValueError(
+            "[analysis].text_mode must be 'title_abstract' or 'full_text'"
+        )
+    return mode
 
 
 def _default_analysis_paths(path: Path):
