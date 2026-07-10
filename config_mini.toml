@@ -3,7 +3,7 @@ name = "not-an-llm"
 data_dir = "data"
 
 [collection]
-# Data source: arxiv, medarxiv, semantic_scholar, or biorxiv
+# Data source: arxiv, medarxiv
 source = "arxiv"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
@@ -16,21 +16,9 @@ arxiv_queries = [
 ]
 
 # For arXiv, use arXiv category/query syntax.
-semantic_scholar_queries = [
-  "(\"artificial intelligence\" OR AI) AND language:English",
-  "(\"deep learning\" OR \"machine learning\") AND language:English",
-  "(\"computer science\") AND language:English",
-  "(\"natural language processing\" OR NLP) AND language:English",
-  "(\"large language models\" OR LLM) AND language:English",
-]
-
 # For medRxiv, query is a local text filter over title/abstract/category.
 # Use ["*"] to collect all records in the date range.
 medarxiv_queries = ["*"]
-
-# For bioRxiv, query is a local text filter over title/abstract/category.
-# Use ["*"] to collect all records in the date range.
-biorxiv_queries = ["*"]
 
 year_min = 2015
 year_max = 2026
@@ -72,7 +60,7 @@ fields = [
 
 [analysis]
 enabled = true
-text_source = "title_abstract" # title_abstract or title
+text_source = "title" # title_abstract or title
 generate_plots = true
 include_readability = true
 topic_modeling_enabled = true
