@@ -7,9 +7,7 @@ import logging
 from tqdm import tqdm
 
 from not_an_llm.clients.arxiv import ArxivClient
-from not_an_llm.clients.biorxiv import BiorxivClient
 from not_an_llm.clients.medarxiv import MedarxivClient
-from not_an_llm.clients.semantic_scholar import SemanticScholarClient
 from not_an_llm.config import AppConfig
 
 
@@ -172,100 +170,9 @@ def _run_monthly_arxiv_collection(config: AppConfig) -> Path:
 
     return output_path
 
-def _run_full_biorxiv_collection(config: AppConfig) -> Path:
-    output_path = _get_output_path(config)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    seen_keys, _ = _load_existing_keys(output_path)
-
-    client = BiorxivClient()
-
-    new_count = 0
-    with output_path.open("a", encoding="utf-8") as f:
-        for query in config.collection.queries:
-            papers = client.search_papers(
-                query=query,
-                fields=config.collection.fields,
-                year_min=config.collection.year_min,
-                year_max=config.collection.year_max,
-                limit=None,
-                page_size=config.collection.page_size,
-            )
-
-            for p in papers:
-                key = _paper_key(p)
-                if key in seen_keys:
-                    continue
-                seen_keys.add(key)
-
-                f.write(json.dumps(p, ensure_ascii=False) + "\n")
-                new_count += 1
-
-    logger.info("biorxiv full collection done: new=%s", new_count)
-    return output_path
-
-def _run_monthly_biorxiv_collection(config: AppConfig) -> Path:
-    output_path = _get_output_path(config)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    seen_keys, existing_total, month_counts = _load_existing_monthly_state(
-        output_path,
-        year_min=config.collection.year_min,
-        year_max=config.collection.year_max,
-    )
-
-    client = BiorxivClient()
-
-    month_plan = _build_month_plan(
-        config.collection.year_min,
-        config.collection.year_max,
-    )
-
-    new_count = 0
-
-    with tqdm(desc="Collecting monthly biorxiv", initial=existing_total, unit="paper") as progress:
-        with output_path.open("a", encoding="utf-8") as f:
-            for year, month in month_plan:
-                existing_month = month_counts.get((year, month), 0)
-                needed = max(0, config.collection.samples_per_month - existing_month)
-
-                if needed == 0:
-                    continue
-
-                for query in config.collection.queries:
-                    papers = client.search_papers(
-                        query=query,
-                        fields=config.collection.fields,
-                        year_min=config.collection.year_min,
-                        year_max=config.collection.year_max,
-                        limit=needed,
-                        page_size=config.collection.page_size,
-                        published_year=year,
-                        published_month=month,
-                    )
-
-                    for paper in papers:
-                        key = _paper_key(paper)
-                        if key in seen_keys:
-                            continue
-
-                        seen_keys.add(key)
-
-                        f.write(json.dumps(paper, ensure_ascii=False) + "\n")
-                        new_count += 1
-                        progress.update(1)
-
-                        if new_count >= needed:
-                            break
-
-                f.flush()
-
-    logger.info("biorxiv monthly collection done: new=%s", new_count)
-    return output_path
-
 
 def _collect_all_papers_for_queries(
-    client: SemanticScholarClient | ArxivClient | MedarxivClient | BiorxivClient,
+    client: ArxivClient | MedarxivClient,
     config: AppConfig,
     *,
     seen_keys: set[str],
@@ -302,7 +209,7 @@ def _collect_all_papers_for_queries(
             "limit": None,
             "page_size": config.collection.page_size,
         }
-        if isinstance(client, (ArxivClient, MedarxivClient, BiorxivClient)):
+        if isinstance(client, (ArxivClient, MedarxivClient)):
             search_kwargs["published_year"] = published_year
             search_kwargs["published_month"] = published_month
 
@@ -402,7 +309,7 @@ def _run_query_based_collection(config: AppConfig) -> Path:
 
 
 def _collect_papers_for_queries(
-    client: SemanticScholarClient | ArxivClient | MedarxivClient | BiorxivClient,
+    client:  ArxivClient | MedarxivClient,
     config: AppConfig,
     *,
     seen_keys: set[str],
@@ -460,7 +367,7 @@ def _collect_papers_for_queries(
 
 
 def _collect_month_bucket(
-    client: SemanticScholarClient | ArxivClient | MedarxivClient | BiorxivClient,
+    client: ArxivClient | MedarxivClient,
     config: AppConfig,
     *,
     seen_keys: set[str],
@@ -632,7 +539,7 @@ def _build_year_plan(year_min: int, year_max: int) -> list[int]:
     return list(range(year_min, year_max + 1))
 
 
-def _build_collection_client(config: AppConfig) -> SemanticScholarClient | ArxivClient | MedarxivClient | BiorxivClient:
+def _build_collection_client(config: AppConfig) -> ArxivClient | MedarxivClient: 
     common_kwargs = {
         "min_request_interval_seconds": config.collection.min_request_interval_seconds,
         "max_retries": config.collection.max_retries,
@@ -646,6 +553,4 @@ def _build_collection_client(config: AppConfig) -> SemanticScholarClient | Arxiv
         return ArxivClient(**common_kwargs)
     if source == "medarxiv":
         return MedarxivClient(**common_kwargs)
-    if source == "biorxiv":
-        return BiorxivClient(**common_kwargs)
-    return SemanticScholarClient(**common_kwargs)
+    raise ValueError(f"Unsupported collection source: {source}")

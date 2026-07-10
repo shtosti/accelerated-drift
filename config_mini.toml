@@ -25,13 +25,10 @@ year_max = 2026
 page_size = 100
 arxiv_collection_mode = "monthly" # full or monthly
 medarxiv_collection_mode = "full" # full or monthly
-biorxiv_collection_mode = "full" # full or monthly
 samples_per_month = 2 # used only when *_collection_mode = "monthly"
 arxiv_monthly_output_jsonl = "data/raw/arxiv_mini.jsonl"
-semantic_scholar_output_jsonl = "data/raw/semantic_scholar.jsonl"
-medarxiv_output_jsonl = "data/raw/medarxiv.jsonl"
-biorxiv_output_jsonl = "data/raw/biorxiv.jsonl"
-biorxiv_monthly_output_jsonl = "data/raw/biorxiv_monthly.jsonl"
+medarxiv_output_jsonl = "data/raw/medarxisv.jsonl"
+
 # Safe request pacing for collection APIs.
 min_request_interval_seconds = 3.5
 max_retries = 10

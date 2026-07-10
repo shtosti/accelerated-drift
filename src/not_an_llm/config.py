@@ -27,9 +27,7 @@ class CollectionConfig:
     # FIXED: explicit outputs (no dict)
     arxiv_output_jsonl: Path
     arxiv_monthly_output_jsonl: Path
-    semantic_scholar_output_jsonl: Path
     medarxiv_output_jsonl: Path
-    biorxiv_output_jsonl: Path
 
     fields: list[str]
 
@@ -47,10 +45,6 @@ class CollectionConfig:
             return self.arxiv_output_jsonl
         if self.source == "medarxiv":
             return self.medarxiv_output_jsonl
-        if self.source == "biorxiv":
-            return self.biorxiv_output_jsonl
-        if self.source == "semantic_scholar":
-            return self.semantic_scholar_output_jsonl
 
         raise ValueError(f"Unknown collection source: {self.source}")
 
@@ -177,13 +171,7 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             "arxiv_monthly_output_jsonl",
             Path("data/raw/arxiv_monthly.jsonl"),
         ),
-        semantic_scholar_output_jsonl=Path(collection["semantic_scholar_output_jsonl"]),
         medarxiv_output_jsonl=Path(collection["medarxiv_output_jsonl"]),
-        biorxiv_output_jsonl=_load_optional_collection_path(
-            collection,
-            "biorxiv_output_jsonl",
-            "bioarxiv_output_jsonl",
-        ),
 
         fields=[str(x) for x in collection["fields"]],
 
