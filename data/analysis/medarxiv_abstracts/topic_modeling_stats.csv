@@ -1,0 +1,23 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,82011.0
+dataset,all,,,topics,9.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_count,0.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_share,0.0
+topic,model,0.0,"sars, cov, sars cov, infection, 95, transmission, ci",abstract_count,30167.0
+topic,model,0.0,"sars, cov, sars cov, infection, 95, transmission, ci",abstract_share,0.367840899391545
+topic,model,1.0,"care, 95, ci, 95 ci, women, mental, healthcare",abstract_count,12381.0
+topic,model,1.0,"care, 95, ci, 95 ci, women, mental, healthcare",abstract_share,0.1509675531331163
+topic,model,2.0,"brain, sleep, ad, stroke, dementia, pd, functional",abstract_count,9891.0
+topic,model,2.0,"brain, sleep, ad, stroke, dementia, pd, functional",abstract_share,0.12060577239638585
+topic,model,3.0,"genetic, variants, genes, association, genome, wide, expression",abstract_count,9249.0
+topic,model,3.0,"genetic, variants, genes, association, genome, wide, expression",abstract_share,0.11277755423053006
+topic,model,5.0,"pain, 95, ci, 95 ci, care, physical, heart",abstract_count,8292.0
+topic,model,5.0,"pain, 95, ci, 95 ci, care, physical, heart",abstract_share,0.10110838789918425
+topic,model,4.0,"learning, ai, images, machine, machine learning, prediction, deep",abstract_count,7024.0
+topic,model,4.0,"learning, ai, images, machine, machine learning, prediction, deep",abstract_share,0.08564704734730706
+topic,model,6.0,"cancer, tumor, breast, breast cancer, 95, tumors, expression",abstract_count,4294.0
+topic,model,6.0,"cancer, tumor, breast, breast cancer, 95, tumors, expression",abstract_share,0.05235882991306044
+topic,model,7.0,"hearing, loss, hearing loss, tinnitus, olfactory, speech, smell",abstract_count,542.0
+topic,model,7.0,"hearing, loss, hearing loss, tinnitus, olfactory, speech, smell",abstract_share,0.006608869541890722
+topic,model,8.0,"questions contact, wish work, project questions, work cited, cited reference, contact corresponding, reference project",abstract_count,171.0
+topic,model,8.0,"questions contact, wish work, project questions, work cited, cited reference, contact corresponding, reference project",abstract_share,0.0020850861469802833
