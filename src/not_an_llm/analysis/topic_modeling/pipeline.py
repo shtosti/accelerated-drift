@@ -138,7 +138,7 @@ def _annotate_merge_candidates(
     if merge_candidates is None or merge_candidates.empty or topic_summary.empty:
         return merge_candidates
 
-    text_label = "title" if text_source == "title" else "abstract"
+    text_label = _topic_text_label(text_source)
     count_col = f"{text_label}_count"
     share_col = f"{text_label}_share"
     summary = topic_summary.set_index("topic_id")
@@ -164,7 +164,7 @@ def _topic_summary(
     if "topic_id" not in enriched.columns:
         return pd.DataFrame()
 
-    text_label = "title" if text_source == "title" else "abstract"
+    text_label = _topic_text_label(text_source)
     count_col = f"{text_label}_count"
     share_col = f"{text_label}_share"
     topic_counts = enriched["topic_id"].value_counts().rename_axis("topic_id").reset_index(name=count_col)
@@ -172,3 +172,11 @@ def _topic_summary(
     topic_counts[share_col] = topic_counts[count_col] / total if total else 0.0
     topic_counts["topic_label"] = topic_counts["topic_id"].map(topic_labels)
     return topic_counts.sort_values([count_col, "topic_id"], ascending=[False, True]).reset_index(drop=True)
+
+
+def _topic_text_label(text_source: str) -> str:
+    if text_source == "title":
+        return "title"
+    if text_source == "abstract":
+        return "abstract"
+    return "title_abstract"

@@ -369,7 +369,7 @@ def _load_readability_metrics(analysis: dict[str, Any]) -> list[str]:
 
 def _load_analysis_text_source(analysis: dict[str, Any]) -> str:
     value = str(analysis.get("text_source", "title_abstract")).strip().lower()
-    allowed = {"title", "title_abstract"}
+    allowed = {"abstract", "title", "title_abstract"}
     if value not in allowed:
         raise ValueError(
             f"Invalid analysis.text_source: {value!r}. Expected one of: {', '.join(sorted(allowed))}"
@@ -378,9 +378,11 @@ def _load_analysis_text_source(analysis: dict[str, Any]) -> str:
 
 
 def _apply_text_source_slug(path: Path, text_source: str) -> Path:
-    if text_source != "title":
-        return path
-    return _append_path_slug(path, "_titles")
+    if text_source == "title":
+        return _append_path_slug(path, "_titles")
+    if text_source == "abstract":
+        return _append_path_slug(path, "_abstracts")
+    return path
 
 
 def _append_path_slug(path: Path, slug: str) -> Path:

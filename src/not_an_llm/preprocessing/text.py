@@ -82,12 +82,14 @@ class TextPreprocessor:
     def _build_text_raw(self, df: pd.DataFrame) -> pd.Series:
         if self.text_source == "title":
             return df["title"].str.strip()
+        if self.text_source == "abstract":
+            return df["abstract"].str.strip()
 
         return (df["title"].str.strip() + " " + df["abstract"].str.strip()).str.strip()
 
     def _select_output_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         columns = list(BASE_OUTPUT_COLUMNS)
-        if self.text_source == "title_abstract":
+        if self.text_source in {"abstract", "title_abstract"}:
             columns.insert(2, "abstract")
 
         return df[[col for col in columns if col in df.columns]]
@@ -95,7 +97,7 @@ class TextPreprocessor:
     @staticmethod
     def _validate_text_source(text_source: str) -> str:
         value = str(text_source).strip().lower()
-        allowed = {"title", "title_abstract"}
+        allowed = {"abstract", "title", "title_abstract"}
         if value not in allowed:
             raise ValueError(
                 f"Invalid text_source: {value!r}. Expected one of: {', '.join(sorted(allowed))}"

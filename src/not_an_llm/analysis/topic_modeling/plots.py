@@ -180,7 +180,7 @@ def save_topic_prevalence(
         )
         bottom += values
     ax.set_xlabel("Year")
-    ax.set_ylabel("Title count" if text_source == "title" else "Abstract count")
+    ax.set_ylabel(_text_count_label(text_source))
     legend = ax.legend(loc="best", fontsize=8)
     save_legend_only(ax, plot_dir / "topic_evolution_stacked_counts_legend.png")
     legend.remove()
@@ -364,6 +364,14 @@ def save_topic_trend_plots(
         paths.append(plot_path)
 
     return paths
+
+
+def _text_count_label(text_source: str) -> str:
+    if text_source == "title":
+        return "Title count"
+    if text_source == "abstract":
+        return "Abstract count"
+    return "Title+abstract count"
 
 
 def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) -> Path | None:
