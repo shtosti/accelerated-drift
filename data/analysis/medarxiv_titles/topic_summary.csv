@@ -1,0 +1,11 @@
+topic_id,title_count,title_share,topic_label
+0,35632,0.4344783016912365,"19, covid 19, covid, sars, cov, sars cov, vaccination"
+1,11283,0.13757910524197972,"disease, alzheimer, parkinson disease, alzheimer disease, parkinson, brain, disorder"
+2,9798,0.11947177817609833,"health, study, care, review, clinical, data, language"
+3,7220,0.08803697065027861,"cancer, learning, cell, breast, deep, breast cancer, based"
+4,6189,0.07546548633719867,"stroke, study, pain, patients, injury, review, brain"
+5,5849,0.0713197010157174,"diabetes, study, health, type, type diabetes, risk, women"
+6,4467,0.05446830303252003,"heart, cardiovascular, patients, risk, disease, coronary, heart failure"
+7,860,0.01048639816609967,"dental, caries, hygiene, oral, cleft, sanitation, study"
+8,712,0.008681762202631354,"gastric, study, patients, urinary, surgery, laparoscopic, review"
+-1,1,1.2193486239650779e-05,-1 (outliers)
