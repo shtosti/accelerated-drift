@@ -3,7 +3,7 @@ name = "not-an-llm"
 data_dir = "data"
 
 [collection]
-# Data source: arxiv, medarxiv
+# Data source: arxiv, arxiv_qbio, medarxiv
 source = "arxiv"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
@@ -15,7 +15,20 @@ arxiv_queries = [
   "cat:cs.LG", # machine learning
 ]
 
-# For arXiv, use arXiv category/query syntax.
+# q-bio is collected from arXiv, but kept as a separate source/output namespace.
+arxiv_qbio_queries = [
+  "cat:q-bio.BM", # biomolecules
+  "cat:q-bio.CB", # cell behavior
+  "cat:q-bio.GN", # genomics
+  "cat:q-bio.MN", # molecular networks
+  "cat:q-bio.NC", # neurons and cognition
+  "cat:q-bio.OT", # other quantitative biology
+  "cat:q-bio.PE", # populations and evolution
+  "cat:q-bio.QM", # quantitative methods
+  "cat:q-bio.SC", # subcellular processes
+  "cat:q-bio.TO", # tissues and organs
+]
+
 # For medRxiv, query is a local text filter over title/abstract/category.
 # Use ["*"] to collect all records in the date range.
 medarxiv_queries = ["*"]
@@ -24,10 +37,12 @@ year_min = 2015
 year_max = 2026
 page_size = 100
 arxiv_collection_mode = "monthly" # full or monthly
+arxiv_qbio_collection_mode = "monthly" # full or monthly
 medarxiv_collection_mode = "full" # full or monthly
 samples_per_month = 2 # used only when *_collection_mode = "monthly"
 arxiv_monthly_output_jsonl = "data/raw/arxiv_mini.jsonl"
-medarxiv_output_jsonl = "data/raw/medarxisv.jsonl"
+arxiv_qbio_monthly_output_jsonl = "data/raw/arxiv_qbio_mini.jsonl"
+medarxiv_output_jsonl = "data/raw/medarxiv.jsonl"
 
 # Safe request pacing for collection APIs.
 min_request_interval_seconds = 3.5
@@ -92,7 +107,7 @@ readability_metrics = [
 ]
 
 # Full run config. Use config_mini.toml for the mini run.
-preprocessed_jsonl = "data/processed/arxiv_mini.jsonl"
+preprocessed_jsonl = ""
 feature_dataset_jsonl = ""
 trends_csv = ""
 monthly_trends_csv = ""

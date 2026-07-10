@@ -24,6 +24,12 @@ def run_collection(config: AppConfig) -> Path:
             return _run_monthly_arxiv_collection(config)
         return _run_full_arxiv_collection(config)
 
+    if config.collection.source == "arxiv_qbio":
+        mode = config.collection.arxiv_qbio_collection_mode
+        if mode == "monthly":
+            return _run_monthly_arxiv_collection(config)
+        return _run_full_arxiv_collection(config)
+
     if config.collection.source == "medarxiv":
         mode = config.collection.medarxiv_collection_mode
         if mode == "monthly":
@@ -235,15 +241,10 @@ def _collect_all_papers_for_queries(
             enriched_paper["source_query"] = query
 
             # arXiv category extraction
-            if config.collection.source == "arxiv":
-                if "cs.CL" in query:
-                    enriched_paper["arxiv_category"] = "cs.CL"
-                elif "cs.AI" in query:
-                    enriched_paper["arxiv_category"] = "cs.AI"
-                elif "cs.LG" in query:
-                    enriched_paper["arxiv_category"] = "cs.LG"
-                else:
-                    enriched_paper["arxiv_category"] = "other"
+            if config.collection.source in {"arxiv", "arxiv_qbio"}:
+                arxiv_category = _extract_arxiv_category(query)
+                enriched_paper["arxiv_category"] = arxiv_category
+                enriched_paper["arxiv_domain"] = _extract_arxiv_domain(arxiv_category)
 
             yield enriched_paper
 
@@ -549,8 +550,24 @@ def _build_collection_client(config: AppConfig) -> ArxivClient | MedarxivClient:
     }
 
     source = config.collection.source
-    if source == "arxiv":
+    if source in {"arxiv", "arxiv_qbio"}:
         return ArxivClient(**common_kwargs)
     if source == "medarxiv":
         return MedarxivClient(**common_kwargs)
     raise ValueError(f"Unsupported collection source: {source}")
+
+
+def _extract_arxiv_category(query: str) -> str:
+    for token in query.replace("(", " ").replace(")", " ").split():
+        token = token.strip()
+        if not token.startswith("cat:"):
+            continue
+        category = token.removeprefix("cat:").strip()
+        return category or "other"
+    return "other"
+
+
+def _extract_arxiv_domain(category: str) -> str:
+    if "." in category:
+        return category.split(".", 1)[0]
+    return category

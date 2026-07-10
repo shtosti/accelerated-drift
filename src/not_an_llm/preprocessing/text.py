@@ -11,6 +11,8 @@ BASE_OUTPUT_COLUMNS = [
     "year",
     "publicationDate",
     "month",
+    "arxiv_category",
+    "arxiv_domain",
     "text_raw",
     "text_clean",
     "text_lemma",
