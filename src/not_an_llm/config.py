@@ -42,6 +42,8 @@ class CollectionConfig:
     @property
     def output_jsonl(self) -> Path:
         if self.source == "arxiv":
+            if self.arxiv_collection_mode == "monthly":
+                return self.arxiv_monthly_output_jsonl
             return self.arxiv_output_jsonl
         if self.source == "medarxiv":
             return self.medarxiv_output_jsonl
@@ -165,8 +167,16 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         year_max=int(collection["year_max"]),
         page_size=int(collection["page_size"]),
 
-        arxiv_output_jsonl=Path(collection["arxiv_output_jsonl"]),
-        arxiv_monthly_output_jsonl=Path(collection["arxiv_monthly_output_jsonl"]),
+        arxiv_output_jsonl=_load_collection_path(
+            collection,
+            "arxiv_output_jsonl",
+            Path("data/raw/arxiv.jsonl"),
+        ),
+        arxiv_monthly_output_jsonl=_load_collection_path(
+            collection,
+            "arxiv_monthly_output_jsonl",
+            Path("data/raw/arxiv_monthly.jsonl"),
+        ),
         semantic_scholar_output_jsonl=Path(collection["semantic_scholar_output_jsonl"]),
         medarxiv_output_jsonl=Path(collection["medarxiv_output_jsonl"]),
         biorxiv_output_jsonl=_load_optional_collection_path(
@@ -303,6 +313,14 @@ def _load_query_list(raw: Any) -> list[str]:
 
 def _load_optional_path(section: dict[str, Any], key: str, default: Path) -> Path:
     value = section.get(key)
+    if value is None:
+        return default
+    value_str = str(value).strip()
+    return Path(value_str) if value_str else default
+
+
+def _load_collection_path(collection: dict[str, Any], key: str, default: Path) -> Path:
+    value = collection.get(key)
     if value is None:
         return default
     value_str = str(value).strip()

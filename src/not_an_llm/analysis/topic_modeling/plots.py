@@ -128,6 +128,7 @@ def save_topic_prevalence(
     analysis_dir: Path,
     input_stem: str,
     topic_labels: dict[int, str],
+    text_source: str = "title_abstract",
 ) -> list[Path]:
     plot_dir.mkdir(parents=True, exist_ok=True)
     analysis_dir.mkdir(parents=True, exist_ok=True)
@@ -180,7 +181,7 @@ def save_topic_prevalence(
         )
         bottom += values
     ax.set_xlabel("Year")
-    ax.set_ylabel("Abstract count")
+    ax.set_ylabel("Title count" if text_source == "title" else "Abstract count")
     legend = ax.legend(loc="best", fontsize=8)
     save_legend_only(ax, plot_dir / "topic_evolution_stacked_counts_legend.png")
     legend.remove()
@@ -303,6 +304,8 @@ def save_topic_trend_plots(
         "paper_count",
         "abstract_count",
         "abstract_share",
+        "title_count",
+        "title_share",
     }
     feature_columns = [
         col
