@@ -1,0 +1,9 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_title_count,child_left_title_share,child_right_title_count,child_right_title_share,parent_title_count,parent_title_share
+16,study_patients_health_risk_disease,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",14,study_patients_disease_risk_health,15,19_covid 19_covid_study_dental,0.8610204106279199,,,,,,,,,
+15,19_covid 19_covid_study_dental,"[0, 7]",7,dental_caries_hygiene_oral_cleft,0,19_covid 19_covid_sars_cov,0.7749700945172715,,,,,,,,,
+14,study_patients_disease_risk_health,"[1, 2, 3, 4, 5, 6, 8]",8,gastric_study_patients_urinary_surgery,13,study_risk_disease_patients_health,0.7660196222368029,,,,,,,,,
+13,study_risk_disease_patients_health,"[1, 2, 3, 4, 5, 6]",12,study_disease_health_risk_patients,3,cancer_learning_cell_breast_deep,0.7075386445943094,,,,,,,,,
+12,study_disease_health_risk_patients,"[1, 2, 4, 5, 6]",9,health_study_care_diabetes_review,11,disease_study_patients_risk_stroke,0.6780878905188866,,,,,,,,,
+11,disease_study_patients_risk_stroke,"[1, 4, 6]",10,disease_study_stroke_brain_alzheimer,6,heart_cardiovascular_patients_risk_disease,0.6585385431114097,,,,,,,,,
+10,disease_study_stroke_brain_alzheimer,"[1, 4]",1,disease_alzheimer_parkinson disease_alzheimer disease_parkinson,4,stroke_study_pain_patients_injury,0.5893287947849981,,,,,,,,,
+9,health_study_care_diabetes_review,"[2, 5]",5,diabetes_study_health_type_type diabetes,2,health_study_care_review_clinical,0.4752048089501185,,,,,,,,,
