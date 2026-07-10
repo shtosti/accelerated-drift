@@ -407,9 +407,10 @@ def _append_path_slug(path: Path, slug: str) -> Path:
 
 
 def _default_analysis_paths(path: Path):
+    analysis_dir = Path("data/analysis") / path.stem
     return (
-        Path("data/analyzed/" + path.name),
-        Path("data/analysis/" + path.stem + "_year.csv"),
-        Path("data/analysis/" + path.stem + "_month.csv"),
+        analysis_dir / "features.jsonl",
+        analysis_dir / "trends_by_year.csv",
+        analysis_dir / "trends_by_month.csv",
         Path("data/visuals/" + path.stem),
     )

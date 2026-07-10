@@ -89,9 +89,8 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
     # =========================
     # LOAD PRIMARY STATISTICS
     # =========================
-    input_stem = config.analysis.preprocessed_jsonl.stem
-    analysis_dir = Path(config.data_dir) / "analysis"
-    its_stats_path = analysis_dir / f"{input_stem}_its_stats.csv"
+    analysis_dir = config.analysis.feature_dataset_jsonl.parent
+    its_stats_path = analysis_dir / "its_stats.csv"
     if its_stats_path.exists():
         its_stats = pd.read_csv(its_stats_path)
         logger.info("Loaded monthly interrupted time-series statistics from %s", its_stats_path)

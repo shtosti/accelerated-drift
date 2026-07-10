@@ -126,7 +126,6 @@ def save_topic_prevalence(
     enriched: pd.DataFrame,
     plot_dir: Path,
     analysis_dir: Path,
-    input_stem: str,
     topic_labels: dict[int, str],
     text_source: str = "title_abstract",
 ) -> list[Path]:
@@ -151,7 +150,7 @@ def save_topic_prevalence(
     yearly["pct"] = yearly["count"] / yearly["total"] * 100
     yearly["topic_label"] = yearly["topic_id"].map(topic_labels)
 
-    yearly_csv = analysis_dir / f"{input_stem}_topic_prevalence_yearly.csv"
+    yearly_csv = analysis_dir / "topic_prevalence_yearly.csv"
     yearly.to_csv(yearly_csv, index=False)
     paths.append(yearly_csv)
 
@@ -251,7 +250,7 @@ def save_topic_prevalence(
         monthly["pct"] = monthly["count"] / monthly["total"] * 100
         monthly["topic_label"] = monthly["topic_id"].map(topic_labels)
 
-        monthly_csv = analysis_dir / f"{input_stem}_topic_prevalence_monthly.csv"
+        monthly_csv = analysis_dir / "topic_prevalence_monthly.csv"
         monthly.to_csv(monthly_csv, index=False)
         paths.append(monthly_csv)
 
