@@ -5,6 +5,20 @@ import pandas as pd
 import spacy
 
 
+BASE_OUTPUT_COLUMNS = [
+    "paperId",
+    "title",
+    "year",
+    "publicationDate",
+    "month",
+    "text_raw",
+    "text_clean",
+    "text_lemma",
+    "word_count",
+    "sentence_count",
+]
+
+
 class TextPreprocessor:
     """
     Normalize and structure raw title/abstract text.
@@ -46,7 +60,7 @@ class TextPreprocessor:
         df["word_count"] = self._word_counts(docs)
         df["sentence_count"] = self._sentence_counts(docs)
         df["year"] = pd.to_numeric(df.get("year"), errors="coerce").astype("Int64")
-        df = self._drop_unused_text_columns(df)
+        df = self._select_output_columns(df)
 
         return df
 
@@ -71,13 +85,12 @@ class TextPreprocessor:
 
         return (df["title"].str.strip() + " " + df["abstract"].str.strip()).str.strip()
 
-    def _drop_unused_text_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        if self.text_source != "title":
-            return df
+    def _select_output_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        columns = list(BASE_OUTPUT_COLUMNS)
+        if self.text_source == "title_abstract":
+            columns.insert(2, "abstract")
 
-        return df.drop(
-            columns=[col for col in ("abstract", "tldr") if col in df.columns],
-        )
+        return df[[col for col in columns if col in df.columns]]
 
     @staticmethod
     def _validate_text_source(text_source: str) -> str:
