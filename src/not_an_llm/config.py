@@ -27,6 +27,9 @@ class CollectionConfig:
     # FIXED: explicit outputs (no dict)
     arxiv_output_jsonl: Path
     arxiv_monthly_output_jsonl: Path
+    arxiv_qbio_output_jsonl: Path
+    arxiv_qbio_monthly_output_jsonl: Path
+    arxiv_qbio_collection_mode: str
     medarxiv_output_jsonl: Path
 
     fields: list[str]
@@ -43,6 +46,10 @@ class CollectionConfig:
             if self.arxiv_collection_mode == "monthly":
                 return self.arxiv_monthly_output_jsonl
             return self.arxiv_output_jsonl
+        if self.source == "arxiv_qbio":
+            if self.arxiv_qbio_collection_mode == "monthly":
+                return self.arxiv_qbio_monthly_output_jsonl
+            return self.arxiv_qbio_output_jsonl
         if self.source == "medarxiv":
             return self.medarxiv_output_jsonl
 
@@ -153,6 +160,7 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         queries=_load_collection_queries(collection, source),
 
         arxiv_collection_mode=_load_arxiv_collection_mode(collection),
+        arxiv_qbio_collection_mode=_load_arxiv_qbio_collection_mode(collection),
         medarxiv_collection_mode=_load_medarxiv_collection_mode(collection),
         biorxiv_collection_mode=_load_biorxiv_collection_mode(collection),
 
@@ -171,6 +179,18 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             "arxiv_monthly_output_jsonl",
             Path("data/raw/arxiv_monthly.jsonl"),
         ),
+        arxiv_qbio_output_jsonl=_load_collection_path_aliases(
+            collection,
+            Path("data/raw/arxiv_qbio.jsonl"),
+            "arxiv_qbio_output_jsonl",
+            "arxiv_q_bio_output_jsonl",
+        ),
+        arxiv_qbio_monthly_output_jsonl=_load_collection_path_aliases(
+            collection,
+            Path("data/raw/arxiv_qbio_mini.jsonl"),
+            "arxiv_qbio_monthly_output_jsonl",
+            "arxiv_q_bio_monthly_output_jsonl",
+        ),
         medarxiv_output_jsonl=Path(collection["medarxiv_output_jsonl"]),
 
         fields=[str(x) for x in collection["fields"]],
@@ -184,7 +204,7 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
 
     text_source = _load_analysis_text_source(analysis)
 
-    default_preprocessed = Path("data/processed/" + source + ".jsonl")
+    default_preprocessed = Path("data/processed") / collection_config.output_jsonl.name
     preprocessed_jsonl = _load_optional_path(analysis, "preprocessed_jsonl", default_preprocessed)
     preprocessed_jsonl = _apply_text_source_slug(preprocessed_jsonl, text_source)
 
@@ -315,6 +335,16 @@ def _load_collection_path(collection: dict[str, Any], key: str, default: Path) -
     return Path(value_str) if value_str else default
 
 
+def _load_collection_path_aliases(collection: dict[str, Any], default: Path, *keys: str) -> Path:
+    for key in keys:
+        value = collection.get(key)
+        if value is None:
+            continue
+        value_str = str(value).strip()
+        return Path(value_str) if value_str else default
+    return default
+
+
 def _load_analysis_path(
     analysis: dict[str, Any],
     key: str,
@@ -328,7 +358,13 @@ def _load_analysis_path(
 
 
 def _load_collection_source(collection: dict[str, Any]) -> str:
-    return str(collection.get("source", "semantic_scholar")).lower()
+    raw = str(collection.get("source", "semantic_scholar")).strip().lower()
+    normalized = raw.replace("-", "_")
+    aliases = {
+        "arxiv_qbio": "arxiv_qbio",
+        "arxiv_q_bio": "arxiv_qbio",
+    }
+    return aliases.get(normalized, normalized)
 
 
 def _load_optional_collection_path(collection: dict[str, Any], *keys: str) -> Path:
@@ -341,6 +377,15 @@ def _load_optional_collection_path(collection: dict[str, Any], *keys: str) -> Pa
 
 def _load_arxiv_collection_mode(c: dict[str, Any]) -> str:
     return str(c.get("arxiv_collection_mode", "full")).lower()
+
+
+def _load_arxiv_qbio_collection_mode(c: dict[str, Any]) -> str:
+    return str(
+        c.get(
+            "arxiv_qbio_collection_mode",
+            c.get("arxiv_q_bio_collection_mode", c.get("arxiv_collection_mode", "full")),
+        )
+    ).lower()
 
 
 def _load_medarxiv_collection_mode(c: dict[str, Any]) -> str:
