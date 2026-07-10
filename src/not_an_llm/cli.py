@@ -44,7 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("visualize", help="Generate plots from previously computed analysis data.")
     topic_compare = subparsers.add_parser(
         "topic-compare",
-        help="Compare topic prevalence and post/pre feature strength for arXiv and medRxiv.",
+        help="Compare topic prevalence and post/pre feature strength for arXiv AI and medRxiv.",
     )
     topic_compare.add_argument(
         "--analysis-dir",
@@ -59,7 +59,7 @@ def build_parser() -> argparse.ArgumentParser:
     topic_compare.add_argument(
         "--domains",
         nargs="+",
-        default=["arxiv", "medarxiv"],
+        default=["arxiv_ai", "medarxiv"],
         help="Dataset prefixes to compare.",
     )
     topic_compare.add_argument(

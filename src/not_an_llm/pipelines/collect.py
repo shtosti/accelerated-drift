@@ -19,8 +19,8 @@ def _get_output_path(config: AppConfig) -> Path:
     return config.collection.output_jsonl
 
 def run_collection(config: AppConfig) -> Path:
-    if config.collection.source == "arxiv":
-        mode = config.collection.arxiv_collection_mode
+    if config.collection.source == "arxiv_ai":
+        mode = config.collection.arxiv_ai_collection_mode
         if mode == "monthly":
             return _run_monthly_arxiv_collection(config)
         return _run_full_arxiv_collection(config)
@@ -42,12 +42,6 @@ def run_collection(config: AppConfig) -> Path:
         if mode == "monthly":
             return _run_monthly_arxiv_collection(config)
         return _run_full_arxiv_collection(config)
-
-    if config.collection.source == "biorxiv":
-        mode = config.collection.biorxiv_collection_mode
-        if mode == "monthly":
-            return _run_monthly_biorxiv_collection(config)
-        return _run_full_biorxiv_collection(config)
 
     return _run_query_based_collection(config)
 
@@ -261,7 +255,7 @@ def _collect_all_papers_for_queries(
             enriched_paper["source_query"] = query
 
             # arXiv category extraction
-            if config.collection.source in {"arxiv", "arxiv_qbio", "arxiv_stat"}:
+            if config.collection.source in {"arxiv_ai", "arxiv_qbio", "arxiv_stat"}:
                 arxiv_category = _extract_arxiv_category(query)
                 enriched_paper["arxiv_category"] = arxiv_category
                 enriched_paper["arxiv_domain"] = _extract_arxiv_domain(arxiv_category)
@@ -599,7 +593,7 @@ def _build_collection_client(config: AppConfig) -> ArxivClient | MedarxivClient:
     }
 
     source = config.collection.source
-    if source in {"arxiv", "arxiv_qbio", "arxiv_stat"}:
+    if source in {"arxiv_ai", "arxiv_qbio", "arxiv_stat"}:
         return ArxivClient(**common_kwargs)
     if source == "medarxiv":
         return MedarxivClient(**common_kwargs)

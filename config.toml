@@ -3,13 +3,13 @@ name = "not-an-llm"
 data_dir = "data"
 
 [collection]
-# Data source: arxiv, arxiv_qbio, arxiv_stat, medarxiv
-source = "arxiv_qbio"
+# Data source: arxiv_ai, arxiv_qbio, arxiv_stat, medarxiv
+source = "arxiv_stat"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
 
 # For arXiv, use search_query syntax (https://info.arxiv.org/help/api/user-manual.html).
-arxiv_queries = [
+arxiv_ai_queries = [
   "cat:cs.CL", # computation and language
   "cat:cs.AI", # AI
   "cat:cs.LG", # machine learning
@@ -47,13 +47,13 @@ year_min = 2015
 year_max = 2026
 cutoff_date = "2026-04-30"
 page_size = 100
-arxiv_collection_mode = "full" # full or monthly
+arxiv_ai_collection_mode = "full" # full or monthly
 arxiv_qbio_collection_mode = "full" # full or monthly
 arxiv_stat_collection_mode = "full" # full or monthly
 medarxiv_collection_mode = "full" # full or monthly
 samples_per_month = 2 # used only when *_collection_mode = "monthly"
-arxiv_output_jsonl = "data/raw/arxiv.jsonl"
-arxiv_monthly_output_jsonl = "data/raw/arxiv_monthly.jsonl"
+arxiv_ai_output_jsonl = "data/raw/arxiv_ai.jsonl"
+arxiv_ai_monthly_output_jsonl = "data/raw/arxiv_ai_mini.jsonl"
 arxiv_qbio_output_jsonl = "data/raw/arxiv_qbio.jsonl"
 arxiv_qbio_monthly_output_jsonl = "data/raw/arxiv_qbio_mini.jsonl"
 arxiv_stat_output_jsonl = "data/raw/arxiv_stat.jsonl"
