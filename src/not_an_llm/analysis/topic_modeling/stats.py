@@ -12,7 +12,7 @@ def save_topic_modeling_stats(
     summary: pd.DataFrame,
     text_source: str = "title_abstract",
 ) -> Path:
-    text_label = "title" if text_source == "title" else "abstract"
+    text_label = _topic_text_label(text_source)
     count_col = f"{text_label}_count"
     share_col = f"{text_label}_share"
     total_documents = len(enriched)
@@ -75,3 +75,11 @@ def _topic_stats_rows(
         rows.append(_stats_row("topic", stage, topic_id, topic_label, count_col, getattr(topic, count_col)))
         rows.append(_stats_row("topic", stage, topic_id, topic_label, share_col, getattr(topic, share_col)))
     return rows
+
+
+def _topic_text_label(text_source: str) -> str:
+    if text_source == "title":
+        return "title"
+    if text_source == "abstract":
+        return "abstract"
+    return "title_abstract"
