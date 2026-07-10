@@ -58,7 +58,7 @@ def select_top_its_features(
     """Select top unique features with the same ranking logic used for the main ITS table."""
     rows = []
     for domain in domains:
-        path = analysis_dir / f"{domain}_its_stats.csv"
+        path = _domain_analysis_dir(analysis_dir, domain) / "its_stats.csv"
         _require_file(path)
         df = pd.read_csv(path)
         df["domain"] = domain
@@ -111,9 +111,8 @@ def compare_topic_distributions_and_features(
 ) -> TopicComparisonArtifacts:
     """Compare topic prevalence and feature strength for existing topic outputs.
 
-    The function expects files produced by the main analysis pipeline:
-    ``{domain}_topic_summary.csv``, ``{domain}_topic_prevalence_yearly.csv``,
-    and ``{domain}_topics/topic_{id}/trends_by_year.csv``.
+    The function expects files produced by the main analysis pipeline under
+    ``{analysis_dir}/{domain}/``.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -216,8 +215,9 @@ def _load_topic_distribution(
     latest_year: int | None,
     min_topic_share: float,
 ) -> pd.DataFrame:
-    summary_path = analysis_dir / f"{domain}_topic_summary.csv"
-    prevalence_path = analysis_dir / f"{domain}_topic_prevalence_yearly.csv"
+    domain_dir = _domain_analysis_dir(analysis_dir, domain)
+    summary_path = domain_dir / "topic_summary.csv"
+    prevalence_path = domain_dir / "topic_prevalence_yearly.csv"
     _require_file(summary_path)
     _require_file(prevalence_path)
 
@@ -269,7 +269,8 @@ def _load_topic_feature_strength(
     post_start_year: int,
     min_topic_share: float,
 ) -> pd.DataFrame:
-    summary_path = analysis_dir / f"{domain}_topic_summary.csv"
+    domain_dir = _domain_analysis_dir(analysis_dir, domain)
+    summary_path = domain_dir / "topic_summary.csv"
     _require_file(summary_path)
 
     summary = pd.read_csv(summary_path)
@@ -278,7 +279,7 @@ def _load_topic_feature_strength(
     rows = []
     for topic in summary.itertuples(index=False):
         topic_id = int(topic.topic_id)
-        trends_path = analysis_dir / f"{domain}_topics" / f"topic_{topic_id}" / "trends_by_year.csv"
+        trends_path = domain_dir / "topics" / f"topic_{topic_id}" / "trends_by_year.csv"
         _require_file(trends_path)
         trends = pd.read_csv(trends_path)
         pre = trends[trends["year"] <= intervention_year]
@@ -317,7 +318,8 @@ def _load_topic_its_stats(
     features: tuple[str, ...],
     min_topic_share: float,
 ) -> pd.DataFrame:
-    summary_path = analysis_dir / f"{domain}_topic_summary.csv"
+    domain_dir = _domain_analysis_dir(analysis_dir, domain)
+    summary_path = domain_dir / "topic_summary.csv"
     _require_file(summary_path)
 
     summary = pd.read_csv(summary_path)
@@ -326,7 +328,7 @@ def _load_topic_its_stats(
     rows = []
     for topic in summary.itertuples(index=False):
         topic_id = int(topic.topic_id)
-        trends_path = analysis_dir / f"{domain}_topics" / f"topic_{topic_id}" / "trends_by_month.csv"
+        trends_path = domain_dir / "topics" / f"topic_{topic_id}" / "trends_by_month.csv"
         _require_file(trends_path)
         monthly = pd.read_csv(trends_path)
         available_features = [
@@ -443,6 +445,10 @@ def _save_standardized_its_heatmap(df: pd.DataFrame, features: tuple[str, ...], 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_path, dpi=200)
     plt.close(fig)
+
+
+def _domain_analysis_dir(analysis_dir: Path, domain: str) -> Path:
+    return analysis_dir / domain
 
 
 def _weighted_mean(df: pd.DataFrame, column: str) -> float:

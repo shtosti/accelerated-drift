@@ -59,7 +59,7 @@ class AnalysisArtifacts:
 def _resolve_analysis_paths(config: AppConfig):
     # Derive output names from the preprocessed input file basename to distinguish mini/full runs
     input_stem = config.analysis.preprocessed_jsonl.stem
-    analysis_dir = Path(config.data_dir) / "analysis"
+    analysis_dir = Path(config.data_dir) / "analysis" / input_stem
     visuals_dir = Path(config.data_dir) / "visuals"
 
     analysis_dir.mkdir(parents=True, exist_ok=True)
@@ -72,17 +72,17 @@ def _resolve_analysis_paths(config: AppConfig):
 
     feature_dataset = _maybe(
         config.analysis.feature_dataset_jsonl,
-        analysis_dir / f"{input_stem}.jsonl",
+        analysis_dir / "features.jsonl",
     )
 
     trends_csv = _maybe(
         config.analysis.trends_csv,
-        analysis_dir / f"{input_stem}_trends_by_year.csv",
+        analysis_dir / "trends_by_year.csv",
     )
 
     monthly_csv = _maybe(
         config.analysis.monthly_trends_csv,
-        analysis_dir / f"{input_stem}_trends_by_month.csv",
+        analysis_dir / "trends_by_month.csv",
     )
 
     plot_dir = _maybe(
@@ -90,7 +90,7 @@ def _resolve_analysis_paths(config: AppConfig):
         visuals_dir / input_stem,
     )
 
-    return feature_dataset, trends_csv, monthly_csv, plot_dir
+    return analysis_dir, feature_dataset, trends_csv, monthly_csv, plot_dir
 
 
 # =========================================================
@@ -155,6 +155,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         )
 
     (
+        analysis_dir,
         enriched_output_path,
         trends_csv,
         monthly_trends_csv,
@@ -243,7 +244,6 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         if col.endswith("_per_1k_words"):
             enriched[col] = pd.to_numeric(enriched[col], errors="coerce").fillna(0.0)
 
-    analysis_dir = Path(config.data_dir) / "analysis"
     logger.info("Running topic modeling step: enabled=%s", config.analysis.topic_modeling_enabled)
     enriched, topic_labels, embeddings_2d, topic_modeling_paths = run_topic_modeling(
         enriched=enriched,
@@ -274,14 +274,13 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     # STATISTICAL ANALYSIS
     # =========================
     logger.info("Computing monthly interrupted time-series statistics...")
-    input_stem = config.analysis.preprocessed_jsonl.stem
     its_stats = compute_interrupted_time_series(monthly, feature_columns)
-    its_stats_path = analysis_dir / f"{input_stem}_its_stats.csv"
+    its_stats_path = analysis_dir / "its_stats.csv"
     its_stats.to_csv(its_stats_path, index=False)
     logger.info("Saved monthly interrupted time-series statistics to %s", its_stats_path)
 
     placebo_stats = compute_placebo_interrupted_time_series(monthly, feature_columns)
-    placebo_stats_path = analysis_dir / f"{input_stem}_its_placebo_stats.csv"
+    placebo_stats_path = analysis_dir / "its_placebo_stats.csv"
     placebo_stats.to_csv(placebo_stats_path, index=False)
     logger.info("Saved placebo interrupted time-series statistics to %s", placebo_stats_path)
 
@@ -457,6 +456,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         topic_paths = run_topic_analysis(
             enriched=enriched,
             config=config,
+            analysis_dir=analysis_dir,
             plot_dir=plot_dir,
             trend_analyzer=trend_analyzer,
             group_specs=marker_group_specs,
@@ -465,7 +465,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
             embeddings_2d=embeddings_2d,
         )
         trend_plots.extend(topic_paths)
-        trend_plots.extend(_maybe_run_cross_domain_topic_comparison(analysis_dir))
+        trend_plots.extend(_maybe_run_cross_domain_topic_comparison(Path(config.data_dir) / "analysis"))
         logger.info("Completed topic analysis; total_plot_artifacts=%s", len(trend_plots))
 
     logger.info(
@@ -487,12 +487,13 @@ def _maybe_run_cross_domain_topic_comparison(analysis_dir: Path) -> list[Path]:
     domains = ("arxiv", "medarxiv")
     required_paths = []
     for domain in domains:
+        domain_dir = analysis_dir / domain
         required_paths.extend(
             [
-                analysis_dir / f"{domain}_its_stats.csv",
-                analysis_dir / f"{domain}_topic_summary.csv",
-                analysis_dir / f"{domain}_topic_prevalence_yearly.csv",
-                analysis_dir / f"{domain}_topics",
+                domain_dir / "its_stats.csv",
+                domain_dir / "topic_summary.csv",
+                domain_dir / "topic_prevalence_yearly.csv",
+                domain_dir / "topics",
             ]
         )
 

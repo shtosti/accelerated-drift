@@ -29,18 +29,17 @@ def run_topic_modeling(
         return enriched, {}, None, []
 
     paths: list[Path] = []
-    input_stem = config.analysis.preprocessed_jsonl.stem
     result = assign_topics(enriched, config)
 
-    labels_path = save_topic_labels(result.topic_labels, analysis_dir / f"{input_stem}_topic_labels.csv")
+    labels_path = save_topic_labels(result.topic_labels, analysis_dir / "topic_labels.csv")
     paths.append(labels_path)
 
     summary = _topic_summary(result.enriched, result.topic_labels, config.analysis.text_source)
-    summary_path = analysis_dir / f"{input_stem}_topic_summary.csv"
+    summary_path = analysis_dir / "topic_summary.csv"
     summary.to_csv(summary_path, index=False)
     paths.append(summary_path)
 
-    stats_path = analysis_dir / f"{input_stem}_topic_modeling_stats.csv"
+    stats_path = analysis_dir / "topic_modeling_stats.csv"
     save_topic_modeling_stats(
         stats_path,
         enriched=result.enriched,
@@ -56,7 +55,7 @@ def run_topic_modeling(
     )
     merge_path = save_merge_candidates(
         merge_candidates,
-        analysis_dir / f"{input_stem}_topic_merge_candidates.csv",
+        analysis_dir / "topic_merge_candidates.csv",
     )
     if merge_path is not None:
         paths.append(merge_path)
@@ -71,6 +70,7 @@ def run_topic_modeling(
 def run_topic_analysis(
     enriched: pd.DataFrame,
     config: AppConfig,
+    analysis_dir: Path,
     plot_dir: Path,
     trend_analyzer: TrendAnalyzer,
     group_specs: dict[str, dict[str, object]],
@@ -98,16 +98,14 @@ def run_topic_analysis(
         for topic in unique_labels
     }
 
-    analysis_dir = Path(config.data_dir) / "analysis"
     analysis_dir.mkdir(parents=True, exist_ok=True)
-    analysis_topic_base = analysis_dir / f"{config.analysis.preprocessed_jsonl.stem}_topics"
+    analysis_topic_base = analysis_dir / "topics"
     analysis_topic_base.mkdir(parents=True, exist_ok=True)
 
     paths = save_topic_prevalence(
         enriched,
         topic_plot_dir,
         analysis_dir,
-        config.analysis.preprocessed_jsonl.stem,
         topic_labels,
         text_source=config.analysis.text_source,
     )
