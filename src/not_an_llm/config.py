@@ -56,6 +56,7 @@ class CollectionConfig:
 @dataclass(slots=True)
 class AnalysisConfig:
     enabled: bool
+    text_source: str
     features: list[str]
     spacy_features: list[str]
     include_readability: bool
@@ -183,8 +184,11 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         backoff_jitter_seconds=float(collection.get("backoff_jitter_seconds", 0.25)),
     )
 
+    text_source = _load_analysis_text_source(analysis)
+
     default_preprocessed = Path("data/processed/" + source + ".jsonl")
     preprocessed_jsonl = _load_optional_path(analysis, "preprocessed_jsonl", default_preprocessed)
+    preprocessed_jsonl = _apply_text_source_slug(preprocessed_jsonl, text_source)
 
     (
         default_feature_dataset,
@@ -193,10 +197,30 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         default_trends_plot_dir,
     ) = _default_analysis_paths(preprocessed_jsonl)
 
-    feature_dataset_jsonl = _load_optional_path(analysis, "feature_dataset_jsonl", default_feature_dataset)
-    trends_csv = _load_optional_path(analysis, "trends_csv", default_trends_csv)
-    monthly_trends_csv = _load_optional_path(analysis, "monthly_trends_csv", default_monthly_trends_csv)
-    trends_plot_dir = _load_optional_path(analysis, "trends_plot_dir", default_trends_plot_dir)
+    feature_dataset_jsonl = _load_analysis_path(
+        analysis,
+        "feature_dataset_jsonl",
+        default_feature_dataset,
+        text_source,
+    )
+    trends_csv = _load_analysis_path(
+        analysis,
+        "trends_csv",
+        default_trends_csv,
+        text_source,
+    )
+    monthly_trends_csv = _load_analysis_path(
+        analysis,
+        "monthly_trends_csv",
+        default_monthly_trends_csv,
+        text_source,
+    )
+    trends_plot_dir = _load_analysis_path(
+        analysis,
+        "trends_plot_dir",
+        default_trends_plot_dir,
+        text_source,
+    )
 
     return AppConfig(
         project_name=str(project["name"]),
@@ -205,6 +229,7 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
 
         analysis=AnalysisConfig(
             enabled=bool(analysis["enabled"]),
+            text_source=text_source,
             features=[str(x) for x in analysis["features"]],
             spacy_features=_load_query_list(analysis.get("spacy_features", [])),
             include_readability=bool(analysis.get("include_readability", True)),
@@ -284,6 +309,18 @@ def _load_optional_path(section: dict[str, Any], key: str, default: Path) -> Pat
     return Path(value_str) if value_str else default
 
 
+def _load_analysis_path(
+    analysis: dict[str, Any],
+    key: str,
+    default: Path,
+    text_source: str,
+) -> Path:
+    value = analysis.get(key)
+    if value is None or not str(value).strip():
+        return default
+    return _apply_text_source_slug(Path(str(value).strip()), text_source)
+
+
 def _load_collection_source(collection: dict[str, Any]) -> str:
     return str(collection.get("source", "semantic_scholar")).lower()
 
@@ -322,6 +359,33 @@ def _load_syntactic_features(analysis: dict[str, Any]) -> dict[str, str]:
 
 def _load_readability_metrics(analysis: dict[str, Any]) -> list[str]:
     return _load_query_list(analysis.get("readability_metrics", []))
+
+
+def _load_analysis_text_source(analysis: dict[str, Any]) -> str:
+    value = str(analysis.get("text_source", "title_abstract")).strip().lower()
+    allowed = {"title", "title_abstract"}
+    if value not in allowed:
+        raise ValueError(
+            f"Invalid analysis.text_source: {value!r}. Expected one of: {', '.join(sorted(allowed))}"
+        )
+    return value
+
+
+def _apply_text_source_slug(path: Path, text_source: str) -> Path:
+    if text_source != "title":
+        return path
+    return _append_path_slug(path, "_titles")
+
+
+def _append_path_slug(path: Path, slug: str) -> Path:
+    if path.suffix:
+        if path.stem.endswith(slug):
+            return path
+        return path.with_name(f"{path.stem}{slug}{path.suffix}")
+
+    if path.name.endswith(slug):
+        return path
+    return path.with_name(f"{path.name}{slug}")
 
 
 def _default_analysis_paths(path: Path):

@@ -24,7 +24,10 @@ def run_preprocessing(config: AppConfig) -> Path:
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    preprocessor = TextPreprocessor(keep_case=False)
+    preprocessor = TextPreprocessor(
+        keep_case=False,
+        text_source=config.analysis.text_source,
+    )
     chunk_iter = pd.read_json(input_path, lines=True, chunksize=DEFAULT_CHUNK_SIZE)
 
     wrote_any = False
