@@ -67,8 +67,10 @@ preprocessed_jsonl = "data/processed/arxiv_full_text_paired.jsonl"
 Run `preprocess` and `analyze` once with each configuration. Since both modes
 read the same enriched file and retain only `full_text_status = "available"`,
 their paper IDs and sample sizes are identical. Full-text enrichment currently
-supports arXiv and medRxiv PDFs; failed records remain in the enriched corpus
-for auditing and retrying. Both sources use their versioned preprint PDFs. Set
+supports arXiv and medRxiv; failed records remain in the enriched corpus for
+auditing and retrying. arXiv uses versioned PDFs. medRxiv prefers structured
+full-text HTML so tables, figures, references, and site furniture can be
+excluded; cached medRxiv PDFs use a page-aware cleaning fallback. Set
 `enriched_output_jsonl` and `full_text_cache_dir` to source-specific paths,
 for example `data/enriched/medarxiv.jsonl` and
 `data/enriched/cache/medarxiv`.
@@ -89,6 +91,11 @@ uv run python main.py --config config_mini.toml preprocess
 uv run python main.py --config config_mini.toml analyze
 uv run python main.py --config config_mini.toml visualize
 ```
+
+For the paired medRxiv pilot, the repository includes two inheriting configs:
+`config_mini_medarxiv_abstract.toml` and
+`config_mini_medarxiv_fulltext.toml`. Collection and enrichment are shared;
+the two configurations differ only in their selected text and processed output.
 
 ## Main Outputs
 

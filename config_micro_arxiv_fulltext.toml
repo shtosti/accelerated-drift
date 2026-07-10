@@ -1,0 +1,5 @@
+extends = "config_micro_arxiv_abstract.toml"
+
+[analysis]
+text_mode = "full_text"
+preprocessed_jsonl = "data/processed/arxiv_micro_full_text.jsonl"

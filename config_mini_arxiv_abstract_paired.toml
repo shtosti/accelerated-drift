@@ -1,0 +1,12 @@
+extends = "config_mini.toml"
+
+[collection]
+source = "arxiv"
+arxiv_output_jsonl = "data/raw/arxiv_mini.jsonl"
+enriched_output_jsonl = "data/enriched/arxiv_mini.jsonl"
+full_text_cache_dir = "data/enriched/cache/arxiv_mini"
+
+[analysis]
+text_mode = "title_abstract"
+paired_full_text_only = true
+preprocessed_jsonl = "data/processed/arxiv_mini_title_abstract_paired.jsonl"

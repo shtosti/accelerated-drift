@@ -8,7 +8,10 @@ import logging
 from tqdm import tqdm
 
 from not_an_llm.config import AppConfig
-from not_an_llm.full_text import build_full_text_provider
+from not_an_llm.full_text import (
+    FULL_TEXT_EXTRACTOR_VERSION,
+    build_full_text_provider,
+)
 
 
 LOGGER = logging.getLogger(__name__)
@@ -28,6 +31,12 @@ def run_full_text_enrichment(config: AppConfig) -> Path:
         config.collection.source,
         cache_dir=config.collection.full_text_cache_dir,
         timeout_seconds=config.collection.full_text_timeout_seconds,
+        min_request_interval_seconds=(
+            config.collection.min_request_interval_seconds
+        ),
+        max_retries=config.collection.max_retries,
+        initial_backoff_seconds=config.collection.initial_backoff_seconds,
+        max_backoff_seconds=config.collection.max_backoff_seconds,
     )
 
     temporary_path = output_path.with_suffix(output_path.suffix + ".tmp")
@@ -40,7 +49,12 @@ def run_full_text_enrichment(config: AppConfig) -> Path:
                 raw_record = json.loads(line)
                 total += 1
                 prior = existing.get(_paper_key(raw_record))
-                if prior and prior.get("full_text_status") == "available":
+                if (
+                    prior
+                    and prior.get("full_text_status") == "available"
+                    and prior.get("full_text_extractor_version")
+                    == FULL_TEXT_EXTRACTOR_VERSION
+                ):
                     enriched = {**raw_record, **_enrichment_fields(prior)}
                     available += 1
                 else:
@@ -72,6 +86,11 @@ def _enrich_record(record, provider):
             "full_text_content_type": result.content_type,
             "full_text_page_count": result.page_count,
             "full_text_word_count": len(result.body.split()),
+            "full_text_extractor_version": FULL_TEXT_EXTRACTOR_VERSION,
+            "full_text_removed_page_furniture_blocks": (
+                result.removed_page_furniture_blocks
+            ),
+            "full_text_removed_table_blocks": result.removed_table_blocks,
             "full_text_error": None,
             "full_text_enriched_at": enriched_at,
         }
@@ -86,6 +105,9 @@ def _enrich_record(record, provider):
             "full_text_content_type": None,
             "full_text_page_count": None,
             "full_text_word_count": 0,
+            "full_text_extractor_version": FULL_TEXT_EXTRACTOR_VERSION,
+            "full_text_removed_page_furniture_blocks": 0,
+            "full_text_removed_table_blocks": 0,
             "full_text_error": f"{type(error).__name__}: {error}",
             "full_text_enriched_at": enriched_at,
         }

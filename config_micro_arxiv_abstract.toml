@@ -1,0 +1,14 @@
+extends = "config_mini.toml"
+
+[collection]
+source = "arxiv"
+arxiv_output_jsonl = "data/raw/arxiv_micro.jsonl"
+enriched_output_jsonl = "data/enriched/arxiv_micro.jsonl"
+full_text_cache_dir = "data/enriched/cache/arxiv_micro"
+
+[analysis]
+text_mode = "title_abstract"
+paired_full_text_only = true
+preprocessed_jsonl = "data/processed/arxiv_micro_title_abstract.jsonl"
+topic_modeling_enabled = false
+generate_plots = false

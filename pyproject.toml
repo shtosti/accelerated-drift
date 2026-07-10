@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "bertopic>=0.17.4",
+    "beautifulsoup4>=4.14.0",
     "datasets==2.21.0",
     "ipykernel>=7.2.0",
     "jupyter>=1.1.1",

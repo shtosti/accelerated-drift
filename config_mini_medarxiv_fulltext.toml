@@ -1,0 +1,5 @@
+extends = "config_mini_medarxiv_abstract.toml"
+
+[analysis]
+text_mode = "full_text"
+preprocessed_jsonl = "data/processed/medarxiv_mini_full_text.jsonl"

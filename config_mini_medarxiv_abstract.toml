@@ -1,0 +1,22 @@
+extends = "config_mini.toml"
+
+[collection]
+source = "medarxiv"
+medarxiv_collection_mode = "monthly"
+samples_per_month = 2
+year_min = 2022
+year_max = 2024
+medarxiv_output_jsonl = "data/raw/medarxiv_mini.jsonl"
+enriched_output_jsonl = "data/enriched/medarxiv_mini.jsonl"
+full_text_cache_dir = "data/enriched/cache/medarxiv_mini"
+# medRxiv's static PDF service rate-limits bulk clients more strictly than
+# its metadata API, so this pilot deliberately uses conservative pacing.
+min_request_interval_seconds = 10.0
+max_retries = 3
+initial_backoff_seconds = 15.0
+max_backoff_seconds = 60.0
+
+[analysis]
+text_mode = "title_abstract"
+paired_full_text_only = true
+preprocessed_jsonl = "data/processed/medarxiv_mini_title_abstract.jsonl"

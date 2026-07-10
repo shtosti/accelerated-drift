@@ -146,7 +146,7 @@ class AppConfig:
 
 def load_config(config_path: str | Path = "config.toml") -> AppConfig:
     path = Path(config_path)
-    raw = tomllib.loads(path.read_text(encoding="utf-8"))
+    raw = _load_toml_with_extends(path)
 
     project = _require_dict(raw, "project")
     collection = _require_dict(raw, "collection")
@@ -281,6 +281,37 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
 # =========================
 # HELPERS (unchanged)
 # =========================
+
+def _load_toml_with_extends(
+    path: Path, *, seen: set[Path] | None = None
+) -> dict[str, Any]:
+    resolved = path.resolve()
+    visited = set() if seen is None else seen
+    if resolved in visited:
+        raise ValueError(f"Circular config inheritance involving {path}")
+    visited.add(resolved)
+
+    raw = tomllib.loads(path.read_text(encoding="utf-8"))
+    parent_value = raw.pop("extends", None)
+    if parent_value is None:
+        return raw
+
+    parent_path = Path(str(parent_value))
+    if not parent_path.is_absolute():
+        parent_path = path.parent / parent_path
+    parent = _load_toml_with_extends(parent_path, seen=visited)
+    return _deep_merge(parent, raw)
+
+
+def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    merged = dict(base)
+    for key, value in override.items():
+        current = merged.get(key)
+        if isinstance(current, dict) and isinstance(value, dict):
+            merged[key] = _deep_merge(current, value)
+        else:
+            merged[key] = value
+    return merged
 
 def _require_dict(raw: dict[str, Any], key: str) -> dict[str, Any]:
     if key not in raw or not isinstance(raw[key], dict):

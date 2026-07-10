@@ -1,0 +1,5 @@
+extends = "config_mini_arxiv_abstract_paired.toml"
+
+[analysis]
+text_mode = "full_text"
+preprocessed_jsonl = "data/processed/arxiv_mini_full_text.jsonl"

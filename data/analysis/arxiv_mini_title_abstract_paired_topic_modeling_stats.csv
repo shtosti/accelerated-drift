@@ -1,0 +1,13 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,2033.0
+dataset,all,,,topics,4.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_count,0.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_share,0.0
+topic,model,0.0,"llms, language models, text, dataset, large language, llm, image",abstract_count,1402.0
+topic,model,0.0,"llms, language models, text, dataset, large language, llm, image",abstract_share,0.6896212493851451
+topic,model,1.0,"reinforcement, reinforcement learning, rl, end, quantum, imitation learning, imitation",abstract_count,359.0
+topic,model,1.0,"reinforcement, reinforcement learning, rl, end, quantum, imitation learning, imitation",abstract_share,0.17658632562715199
+topic,model,3.0,"semantics, fuzzy, ontology, revision, logics, neutrosophic, asp",abstract_count,149.0
+topic,model,3.0,"semantics, fuzzy, ontology, revision, logics, neutrosophic, asp",abstract_share,0.07329070339399901
+topic,model,2.0,"routing, price, reinforcement learning, reinforcement, fairness, multiagent, bribery",abstract_count,123.0
+topic,model,2.0,"routing, price, reinforcement learning, reinforcement, fairness, multiagent, bribery",abstract_share,0.060501721593703886
