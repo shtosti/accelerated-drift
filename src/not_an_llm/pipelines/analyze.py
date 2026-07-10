@@ -465,7 +465,12 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
             embeddings_2d=embeddings_2d,
         )
         trend_plots.extend(topic_paths)
-        trend_plots.extend(_maybe_run_cross_domain_topic_comparison(Path(config.data_dir) / "analysis"))
+        trend_plots.extend(
+            _maybe_run_cross_domain_topic_comparison(
+                Path(config.data_dir) / "analysis",
+                config.analysis.preprocessed_jsonl.stem,
+            )
+        )
         logger.info("Completed topic analysis; total_plot_artifacts=%s", len(trend_plots))
 
     logger.info(
@@ -483,8 +488,8 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     )
 
 
-def _maybe_run_cross_domain_topic_comparison(analysis_dir: Path) -> list[Path]:
-    domains = ("arxiv", "medarxiv")
+def _maybe_run_cross_domain_topic_comparison(analysis_dir: Path, current_stem: str) -> list[Path]:
+    domains = _comparison_domains_for_stem(current_stem)
     required_paths = []
     for domain in domains:
         domain_dir = analysis_dir / domain
@@ -504,7 +509,7 @@ def _maybe_run_cross_domain_topic_comparison(analysis_dir: Path) -> list[Path]:
         )
         return []
 
-    output_dir = analysis_dir / "topic_comparison"
+    output_dir = analysis_dir / "topic_comparison" / "__".join(domains)
     features, selected = select_top_its_features(
         analysis_dir=analysis_dir,
         domains=domains,
@@ -538,4 +543,12 @@ def _maybe_run_cross_domain_topic_comparison(analysis_dir: Path) -> list[Path]:
 
     logger.info("Saved cross-domain topic comparison outputs to %s", output_dir)
     return paths
+
+
+def _comparison_domains_for_stem(stem: str) -> tuple[str, str]:
+    for source in ("arxiv", "medarxiv"):
+        if stem == source or stem.startswith(f"{source}_"):
+            suffix = stem.removeprefix(source)
+            return f"arxiv{suffix}", f"medarxiv{suffix}"
+    return "arxiv", "medarxiv"
 

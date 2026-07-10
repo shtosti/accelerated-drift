@@ -53,8 +53,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     topic_compare.add_argument(
         "--output-dir",
-        default="data/analysis/topic_comparison",
-        help="Directory where topic comparison CSVs and plots are written.",
+        default=None,
+        help="Directory where topic comparison CSVs and plots are written. Defaults to data/analysis/topic_comparison/<domains>.",
     )
     topic_compare.add_argument(
         "--domains",
@@ -239,7 +239,11 @@ def main() -> None:
 
     if args.command == "topic-compare":
         analysis_dir = Path(args.analysis_dir)
-        output_dir = Path(args.output_dir)
+        output_dir = (
+            Path(args.output_dir)
+            if args.output_dir
+            else analysis_dir / "topic_comparison" / "__".join(args.domains)
+        )
         selected_features_csv = None
         if args.features:
             features = tuple(args.features)
