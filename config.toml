@@ -3,7 +3,7 @@ name = "not-an-llm"
 data_dir = "data"
 
 [collection]
-# Data source: arxiv, arxiv_qbio, medarxiv
+# Data source: arxiv, arxiv_qbio, arxiv_stat, medarxiv
 source = "medarxiv"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
@@ -29,6 +29,16 @@ arxiv_qbio_queries = [
   "cat:q-bio.TO", # tissues and organs
 ]
 
+# Statistics is collected from arXiv, but kept as a separate source/output namespace.
+arxiv_stat_queries = [
+  "cat:stat.AP", # applications
+  "cat:stat.CO", # computation
+  "cat:stat.ME", # methodology
+  "cat:stat.ML", # machine learning
+  "cat:stat.OT", # other statistics
+  "cat:stat.TH", # statistics theory
+]
+
 # For medRxiv, query is a local text filter over title/abstract/category.
 # Use ["*"] to collect all records in the date range.
 medarxiv_queries = ["*"]
@@ -39,12 +49,15 @@ cutoff_date = "2026-04-30"
 page_size = 100
 arxiv_collection_mode = "full" # full or monthly
 arxiv_qbio_collection_mode = "full" # full or monthly
+arxiv_stat_collection_mode = "full" # full or monthly
 medarxiv_collection_mode = "full" # full or monthly
 samples_per_month = 2 # used only when *_collection_mode = "monthly"
 arxiv_output_jsonl = "data/raw/arxiv.jsonl"
 arxiv_monthly_output_jsonl = "data/raw/arxiv_monthly.jsonl"
 arxiv_qbio_output_jsonl = "data/raw/arxiv_qbio.jsonl"
 arxiv_qbio_monthly_output_jsonl = "data/raw/arxiv_qbio_mini.jsonl"
+arxiv_stat_output_jsonl = "data/raw/arxiv_stat.jsonl"
+arxiv_stat_monthly_output_jsonl = "data/raw/arxiv_stat_mini.jsonl"
 medarxiv_output_jsonl = "data/raw/medarxiv.jsonl"
 
 # Safe request pacing for collection APIs.
