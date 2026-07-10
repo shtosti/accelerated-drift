@@ -5,7 +5,7 @@
 #SBATCH --error=logs/analysis_gpu_%j.err
 #SBATCH --partition=gpu-invest
 #SBATCH --qos=job_gpu_preemptable
-#SBATCH --gres=gpu:h100:1
+#SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=80G
 #SBATCH --time=06:00:00
