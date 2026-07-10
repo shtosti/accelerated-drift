@@ -32,6 +32,9 @@ class CollectionConfig:
     arxiv_qbio_output_jsonl: Path
     arxiv_qbio_monthly_output_jsonl: Path
     arxiv_qbio_collection_mode: str
+    arxiv_stat_output_jsonl: Path
+    arxiv_stat_monthly_output_jsonl: Path
+    arxiv_stat_collection_mode: str
     medarxiv_output_jsonl: Path
 
     fields: list[str]
@@ -52,6 +55,10 @@ class CollectionConfig:
             if self.arxiv_qbio_collection_mode == "monthly":
                 return self.arxiv_qbio_monthly_output_jsonl
             return self.arxiv_qbio_output_jsonl
+        if self.source == "arxiv_stat":
+            if self.arxiv_stat_collection_mode == "monthly":
+                return self.arxiv_stat_monthly_output_jsonl
+            return self.arxiv_stat_output_jsonl
         if self.source == "medarxiv":
             return self.medarxiv_output_jsonl
 
@@ -163,6 +170,7 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
 
         arxiv_collection_mode=_load_arxiv_collection_mode(collection),
         arxiv_qbio_collection_mode=_load_arxiv_qbio_collection_mode(collection),
+        arxiv_stat_collection_mode=_load_arxiv_stat_collection_mode(collection),
         medarxiv_collection_mode=_load_medarxiv_collection_mode(collection),
         biorxiv_collection_mode=_load_biorxiv_collection_mode(collection),
 
@@ -193,6 +201,16 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             Path("data/raw/arxiv_qbio_mini.jsonl"),
             "arxiv_qbio_monthly_output_jsonl",
             "arxiv_q_bio_monthly_output_jsonl",
+        ),
+        arxiv_stat_output_jsonl=_load_collection_path(
+            collection,
+            "arxiv_stat_output_jsonl",
+            Path("data/raw/arxiv_stat.jsonl"),
+        ),
+        arxiv_stat_monthly_output_jsonl=_load_collection_path(
+            collection,
+            "arxiv_stat_monthly_output_jsonl",
+            Path("data/raw/arxiv_stat_mini.jsonl"),
         ),
         medarxiv_output_jsonl=Path(collection["medarxiv_output_jsonl"]),
 
@@ -401,6 +419,10 @@ def _load_arxiv_qbio_collection_mode(c: dict[str, Any]) -> str:
             c.get("arxiv_q_bio_collection_mode", c.get("arxiv_collection_mode", "full")),
         )
     ).lower()
+
+
+def _load_arxiv_stat_collection_mode(c: dict[str, Any]) -> str:
+    return str(c.get("arxiv_stat_collection_mode", c.get("arxiv_collection_mode", "full"))).lower()
 
 
 def _load_medarxiv_collection_mode(c: dict[str, Any]) -> str:
