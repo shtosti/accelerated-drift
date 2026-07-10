@@ -46,6 +46,7 @@ class TextPreprocessor:
         df["word_count"] = self._word_counts(docs)
         df["sentence_count"] = self._sentence_counts(docs)
         df["year"] = pd.to_numeric(df.get("year"), errors="coerce").astype("Int64")
+        df = self._drop_unused_text_columns(df)
 
         return df
 
@@ -69,6 +70,14 @@ class TextPreprocessor:
             return df["title"].str.strip()
 
         return (df["title"].str.strip() + " " + df["abstract"].str.strip()).str.strip()
+
+    def _drop_unused_text_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        if self.text_source != "title":
+            return df
+
+        return df.drop(
+            columns=[col for col in ("abstract", "tldr") if col in df.columns],
+        )
 
     @staticmethod
     def _validate_text_source(text_source: str) -> str:

@@ -4,7 +4,7 @@ import logging
 from dataclasses import dataclass
 from pathlib import Path
 import pandas as pd
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 from not_an_llm.analysis.topic_modeling import run_topic_analysis, run_topic_modeling
 from not_an_llm.analysis.topic_modeling.comparison import (
@@ -81,7 +81,7 @@ def _resolve_analysis_paths(config: AppConfig):
 # WORKER (PARALLEL CHUNK PROCESSING)
 # =========================================================
 def _process_chunk_worker(args):
-    chunk, config = args
+    chunk_index, chunk, config = args
 
     import spacy
     from not_an_llm.analysis.feature_extractor import FeatureExtractor
@@ -117,7 +117,7 @@ def _process_chunk_worker(args):
     if readability:
         enriched = readability.transform(enriched)
 
-    return enriched
+    return chunk_index, enriched
 
 
 # =========================================================
@@ -137,16 +137,29 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         plot_dir,
     ) = _resolve_analysis_paths(config)
 
-    print("Saving feature dataset to:", enriched_output_path)
-    print("Saving yearly trends to:", trends_csv)
-    print("Saving monthly trends to:", monthly_trends_csv)
-    print("Saving plots to:", plot_dir)
+    logger.info(
+        "Starting analysis: input=%s feature_output=%s text_source=%s",
+        input_path,
+        enriched_output_path,
+        config.analysis.text_source,
+    )
+    logger.info("Saving yearly trends to %s", trends_csv)
+    logger.info("Saving monthly trends to %s", monthly_trends_csv)
+    logger.info("Saving plots to %s", plot_dir)
 
     # =========================
     # CHUNK LOADING
     # =========================
+    logger.info("Loading preprocessed chunks from %s", input_path)
     chunks = pd.read_json(input_path, lines=True, chunksize=2000)
     chunks_list = list(chunks)
+    total_input_rows = sum(len(chunk) for chunk in chunks_list)
+    logger.info(
+        "Loaded %s chunks from %s: total_rows=%s",
+        len(chunks_list),
+        input_path,
+        total_input_rows,
+    )
 
     enriched_output_path.parent.mkdir(parents=True, exist_ok=True)
     plot_dir.mkdir(parents=True, exist_ok=True)
@@ -161,32 +174,51 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
 
     num_workers = config.analysis.topic_modeling_num_workers or multiprocessing.cpu_count()
     num_workers = max(1, min(num_workers, multiprocessing.cpu_count()))
-    logger.info(f"Using {num_workers} workers")
+    logger.info("Extracting features with %s workers", num_workers)
 
     results = []
+    completed_rows = 0
 
     with ProcessPoolExecutor(max_workers=num_workers) as executor:
-        for i, enriched_chunk in enumerate(
-            executor.map(_process_chunk_worker, [(c, config) for c in chunks_list])
-        ):
+        futures = {
+            executor.submit(_process_chunk_worker, (i, chunk, config)): i
+            for i, chunk in enumerate(chunks_list)
+        }
+        for completed_count, future in enumerate(as_completed(futures), start=1):
+            chunk_index, enriched_chunk = future.result()
             enriched_chunk.to_json(
                 enriched_output_path,
                 orient="records",
                 lines=True,
                 force_ascii=False,
-                mode="w" if i == 0 else "a",
+                mode="w" if completed_count == 1 else "a",
             )
-            results.append(enriched_chunk)
+            results.append((chunk_index, enriched_chunk))
+            completed_rows += len(enriched_chunk)
+            logger.info(
+                "Finished analysis chunk %s/%s: chunk=%s rows=%s completed_rows=%s/%s output=%s",
+                completed_count,
+                len(chunks_list),
+                chunk_index + 1,
+                len(enriched_chunk),
+                completed_rows,
+                total_input_rows,
+                enriched_output_path,
+            )
 
     # =========================
     # CONCAT
     # =========================
+    logger.info("Combining %s analyzed chunks", len(results))
+    results = [chunk for _, chunk in sorted(results, key=lambda item: item[0])]
     enriched = pd.concat(results, ignore_index=True)
+    logger.info("Combined feature dataset rows=%s columns=%s", len(enriched), len(enriched.columns))
     for col in enriched.columns:
         if col.endswith("_per_1k_words"):
             enriched[col] = pd.to_numeric(enriched[col], errors="coerce").fillna(0.0)
 
     analysis_dir = Path(config.data_dir) / "analysis"
+    logger.info("Running topic modeling step: enabled=%s", config.analysis.topic_modeling_enabled)
     enriched, topic_labels, embeddings_2d, topic_modeling_paths = run_topic_modeling(
         enriched=enriched,
         config=config,
@@ -199,14 +231,18 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         force_ascii=False,
         mode="w",
     )
+    logger.info("Saved feature dataset to %s", enriched_output_path)
 
     feature_columns = resolve_feature_columns(config, enriched)
+    logger.info("Resolved %s feature columns for trends and ITS", len(feature_columns))
 
     trend_analyzer = TrendAnalyzer(feature_columns)
     marker_group_specs, summary_features = build_marker_group_specs(config)
 
+    logger.info("Aggregating yearly and monthly trends")
     yearly = trend_analyzer.aggregate_yearly(enriched)
     monthly = trend_analyzer.aggregate_monthly(enriched)
+    logger.info("Aggregated trends: yearly_rows=%s monthly_rows=%s", len(yearly), len(monthly))
 
     # =========================
     # STATISTICAL ANALYSIS
@@ -303,9 +339,11 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     # =========================
     trends_csv.parent.mkdir(parents=True, exist_ok=True)
     yearly.to_csv(trends_csv, index=False)
+    logger.info("Saved yearly trends to %s", trends_csv)
 
     monthly_trends_csv.parent.mkdir(parents=True, exist_ok=True)
     monthly.to_csv(monthly_trends_csv, index=False)
+    logger.info("Saved monthly trends to %s", monthly_trends_csv)
 
     # =========================
     # PLOTS
@@ -316,6 +354,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
 
     trend_plots = list(topic_modeling_paths)
     if config.analysis.generate_plots:
+        logger.info("Generating ITS and trend plots")
         its_plot_path = save_its_slope_change_plot(
             its_stats,
             plot_dir / "its_slope_changes.png",
@@ -385,8 +424,10 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         )
 
         trend_plots.append(stacked_plot_path)
+        logger.info("Generated %s plot artifacts so far", len(trend_plots))
 
     if config.analysis.topic_modeling_enabled:
+        logger.info("Running per-topic analysis and plots")
         topic_paths = run_topic_analysis(
             enriched=enriched,
             config=config,
@@ -399,7 +440,15 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         )
         trend_plots.extend(topic_paths)
         trend_plots.extend(_maybe_run_cross_domain_topic_comparison(analysis_dir))
+        logger.info("Completed topic analysis; total_plot_artifacts=%s", len(trend_plots))
 
+    logger.info(
+        "Analysis complete: feature_dataset=%s yearly=%s monthly=%s plots=%s",
+        enriched_output_path,
+        trends_csv,
+        monthly_trends_csv,
+        len(trend_plots),
+    )
     return AnalysisArtifacts(
         feature_dataset_jsonl=enriched_output_path,
         trends_csv=trends_csv,

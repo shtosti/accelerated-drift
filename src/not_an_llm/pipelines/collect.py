@@ -17,18 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 def _get_output_path(config: AppConfig) -> Path:
-    source = config.collection.source
-
-    if source == "arxiv":
-        return config.collection.arxiv_output_jsonl
-    if source == "medarxiv":
-        return config.collection.medarxiv_output_jsonl
-    if source == "biorxiv":
-        return config.collection.biorxiv_output_jsonl
-    if source == "semantic_scholar":
-        return config.collection.semantic_scholar_output_jsonl
-
-    raise ValueError(f"Unknown source: {source}")
+    return config.collection.output_jsonl
 
 def run_collection(config: AppConfig) -> Path:
     if config.collection.source == "arxiv":
