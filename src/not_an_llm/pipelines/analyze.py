@@ -546,9 +546,10 @@ def _maybe_run_cross_domain_topic_comparison(analysis_dir: Path, current_stem: s
 
 
 def _comparison_domains_for_stem(stem: str) -> tuple[str, str]:
-    for source in ("arxiv", "medarxiv"):
+    for source in ("arxiv_ai", "arxiv", "medarxiv"):
         if stem == source or stem.startswith(f"{source}_"):
             suffix = stem.removeprefix(source)
-            return f"arxiv{suffix}", f"medarxiv{suffix}"
-    return "arxiv", "medarxiv"
+            arxiv_domain = f"{source}{suffix}" if source in {"arxiv_ai", "arxiv"} else f"arxiv_ai{suffix}"
+            return arxiv_domain, f"medarxiv{suffix}"
+    return "arxiv_ai", "medarxiv"
 

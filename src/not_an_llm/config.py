@@ -16,9 +16,8 @@ class CollectionConfig:
     source: str
     queries: list[str]
 
-    arxiv_collection_mode: str
+    arxiv_ai_collection_mode: str
     medarxiv_collection_mode: str
-    biorxiv_collection_mode: str
 
     samples_per_month: int
     year_min: int
@@ -27,8 +26,8 @@ class CollectionConfig:
     page_size: int
 
     # FIXED: explicit outputs (no dict)
-    arxiv_output_jsonl: Path
-    arxiv_monthly_output_jsonl: Path
+    arxiv_ai_output_jsonl: Path
+    arxiv_ai_monthly_output_jsonl: Path
     arxiv_qbio_output_jsonl: Path
     arxiv_qbio_monthly_output_jsonl: Path
     arxiv_qbio_collection_mode: str
@@ -47,10 +46,10 @@ class CollectionConfig:
 
     @property
     def output_jsonl(self) -> Path:
-        if self.source == "arxiv":
-            if self.arxiv_collection_mode == "monthly":
-                return self.arxiv_monthly_output_jsonl
-            return self.arxiv_output_jsonl
+        if self.source == "arxiv_ai":
+            if self.arxiv_ai_collection_mode == "monthly":
+                return self.arxiv_ai_monthly_output_jsonl
+            return self.arxiv_ai_output_jsonl
         if self.source == "arxiv_qbio":
             if self.arxiv_qbio_collection_mode == "monthly":
                 return self.arxiv_qbio_monthly_output_jsonl
@@ -168,11 +167,10 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         source=source,
         queries=_load_collection_queries(collection, source),
 
-        arxiv_collection_mode=_load_arxiv_collection_mode(collection),
+        arxiv_ai_collection_mode=_load_arxiv_ai_collection_mode(collection),
         arxiv_qbio_collection_mode=_load_arxiv_qbio_collection_mode(collection),
         arxiv_stat_collection_mode=_load_arxiv_stat_collection_mode(collection),
         medarxiv_collection_mode=_load_medarxiv_collection_mode(collection),
-        biorxiv_collection_mode=_load_biorxiv_collection_mode(collection),
 
         samples_per_month=int(collection.get("samples_per_month", 5)),
         year_min=int(collection["year_min"]),
@@ -180,15 +178,17 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         cutoff_date=_load_collection_cutoff_date(collection),
         page_size=int(collection["page_size"]),
 
-        arxiv_output_jsonl=_load_collection_path(
+        arxiv_ai_output_jsonl=_load_collection_path_aliases(
             collection,
+            Path("data/raw/arxiv_ai.jsonl"),
+            "arxiv_ai_output_jsonl",
             "arxiv_output_jsonl",
-            Path("data/raw/arxiv.jsonl"),
         ),
-        arxiv_monthly_output_jsonl=_load_collection_path(
+        arxiv_ai_monthly_output_jsonl=_load_collection_path_aliases(
             collection,
+            Path("data/raw/arxiv_ai_mini.jsonl"),
+            "arxiv_ai_monthly_output_jsonl",
             "arxiv_monthly_output_jsonl",
-            Path("data/raw/arxiv_monthly.jsonl"),
         ),
         arxiv_qbio_output_jsonl=_load_collection_path_aliases(
             collection,
@@ -382,6 +382,8 @@ def _load_collection_source(collection: dict[str, Any]) -> str:
     raw = str(collection.get("source", "semantic_scholar")).strip().lower()
     normalized = raw.replace("-", "_")
     aliases = {
+        "arxiv": "arxiv_ai",
+        "arxiv_ai": "arxiv_ai",
         "arxiv_qbio": "arxiv_qbio",
         "arxiv_q_bio": "arxiv_qbio",
     }
@@ -408,32 +410,40 @@ def _load_optional_collection_path(collection: dict[str, Any], *keys: str) -> Pa
     raise KeyError(keys[0])
 
 
-def _load_arxiv_collection_mode(c: dict[str, Any]) -> str:
-    return str(c.get("arxiv_collection_mode", "full")).lower()
+def _load_arxiv_ai_collection_mode(c: dict[str, Any]) -> str:
+    return str(c.get("arxiv_ai_collection_mode", c.get("arxiv_collection_mode", "full"))).lower()
 
 
 def _load_arxiv_qbio_collection_mode(c: dict[str, Any]) -> str:
     return str(
         c.get(
             "arxiv_qbio_collection_mode",
-            c.get("arxiv_q_bio_collection_mode", c.get("arxiv_collection_mode", "full")),
+            c.get(
+                "arxiv_q_bio_collection_mode",
+                c.get("arxiv_ai_collection_mode", c.get("arxiv_collection_mode", "full")),
+            ),
         )
     ).lower()
 
 
 def _load_arxiv_stat_collection_mode(c: dict[str, Any]) -> str:
-    return str(c.get("arxiv_stat_collection_mode", c.get("arxiv_collection_mode", "full"))).lower()
+    return str(
+        c.get(
+            "arxiv_stat_collection_mode",
+            c.get("arxiv_ai_collection_mode", c.get("arxiv_collection_mode", "full")),
+        )
+    ).lower()
 
 
 def _load_medarxiv_collection_mode(c: dict[str, Any]) -> str:
     return str(c.get("medarxiv_collection_mode", "full")).lower()
 
 
-def _load_biorxiv_collection_mode(c: dict[str, Any]) -> str:
-    return str(c.get("biorxiv_collection_mode", "full")).lower()
-
-
 def _load_collection_queries(collection: dict[str, Any], source: str) -> list[str]:
+    if source == "arxiv_ai":
+        return _load_query_list(
+            collection.get("arxiv_ai_queries", collection.get("arxiv_queries", ["*"]))
+        )
     key = f"{source}_queries"
     return _load_query_list(collection.get(key, ["*"]))
 

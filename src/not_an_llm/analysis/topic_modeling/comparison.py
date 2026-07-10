@@ -25,7 +25,8 @@ DEFAULT_TOPIC_FEATURES = [
 
 
 DOMAIN_LABELS = {
-    "arxiv": "arXiv",
+    "arxiv": "arXiv AI",
+    "arxiv_ai": "arXiv AI",
     "medarxiv": "medRxiv",
 }
 
@@ -101,7 +102,7 @@ def compare_topic_distributions_and_features(
     *,
     analysis_dir: Path,
     output_dir: Path,
-    domains: tuple[str, ...] = ("arxiv", "medarxiv"),
+    domains: tuple[str, ...] = ("arxiv_ai", "medarxiv"),
     features: tuple[str, ...] = tuple(DEFAULT_TOPIC_FEATURES),
     intervention_year: int = 2022,
     post_start_year: int = 2023,
