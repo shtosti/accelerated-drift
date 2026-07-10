@@ -1,0 +1,9 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_title_count,child_left_title_share,child_right_title_count,child_right_title_share,parent_title_count,parent_title_share
+16,learning_based_models_data_model,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",14,models_ai_language_based_data,15,learning_based_fuzzy_neural_networks,0.8653476248970493,,,,,,,,,
+15,learning_based_fuzzy_neural_networks,"[0, 2, 3, 8]",11,learning_graph_neural_reinforcement_reinforcement learning,8,fuzzy_based_algorithm_decision_optimization,0.7703966403012653,,,,,,,,,
+14,models_ai_language_based_data,"[1, 4, 5, 6, 7]",7,rag_fashion_3d_generation_human,13,models_ai_language_data_knowledge,0.7652353890299004,,,,,,,,,
+13,models_ai_language_data_knowledge,"[1, 4, 5, 6]",12,models_language_data_knowledge_model,5,ai_intelligence_artificial_human_artificial intelligence,0.760552538221309,,,,,,,,,
+12,models_language_data_knowledge_model,"[1, 4, 6]",6,foundation_knowledge_ontology_models_foundation models,10,language_models_language models_causal_learning,0.6158856918051776,,,,,,,,,
+11,learning_graph_neural_reinforcement_reinforcement learning,"[0, 2, 3]",3,learning_reinforcement_reinforcement learning_policy_multi,9,learning_graph_neural_networks_deep,0.5821306213983506,,,,,,,,,
+10,language_models_language models_causal_learning,"[1, 4]",1,language_models_language models_large_large language,4,causal_learning_clinical_data_medical,0.5003261987238012,,,,,,,,,
+9,learning_graph_neural_networks_deep,"[0, 2]",0,learning_neural_deep_networks_based,2,graph_learning_federated_federated learning_networks,0.39512303656805237,,,,,,,,,
