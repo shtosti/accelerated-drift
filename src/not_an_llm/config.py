@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Any
 import tomllib
@@ -22,6 +23,7 @@ class CollectionConfig:
     samples_per_month: int
     year_min: int
     year_max: int
+    cutoff_date: date | None
     page_size: int
 
     # FIXED: explicit outputs (no dict)
@@ -167,6 +169,7 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         samples_per_month=int(collection.get("samples_per_month", 5)),
         year_min=int(collection["year_min"]),
         year_max=int(collection["year_max"]),
+        cutoff_date=_load_collection_cutoff_date(collection),
         page_size=int(collection["page_size"]),
 
         arxiv_output_jsonl=_load_collection_path(
@@ -365,6 +368,18 @@ def _load_collection_source(collection: dict[str, Any]) -> str:
         "arxiv_q_bio": "arxiv_qbio",
     }
     return aliases.get(normalized, normalized)
+
+
+def _load_collection_cutoff_date(collection: dict[str, Any]) -> date | None:
+    raw = collection.get("cutoff_date")
+    if raw is None or not str(raw).strip():
+        return None
+    try:
+        return date.fromisoformat(str(raw).strip())
+    except ValueError as exc:
+        raise ValueError(
+            f"Invalid collection.cutoff_date: {raw!r}. Expected YYYY-MM-DD."
+        ) from exc
 
 
 def _load_optional_collection_path(collection: dict[str, Any], *keys: str) -> Path:

@@ -35,6 +35,7 @@ medarxiv_queries = ["*"]
 
 year_min = 2015
 year_max = 2026
+cutoff_date = "2026-04-30"
 page_size = 100
 arxiv_collection_mode = "monthly" # full or monthly
 arxiv_qbio_collection_mode = "monthly" # full or monthly

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date
 from pathlib import Path
 from typing import Iterator
 import json
@@ -52,11 +53,12 @@ def _run_full_arxiv_collection(config: AppConfig) -> Path:
     seen_keys, existing_total = _load_existing_keys(output_path)
 
     logger.info(
-        "Starting %s collection: queries=%s years=%s-%s (month-split)",
+        "Starting %s collection: queries=%s years=%s-%s cutoff=%s (month-split)",
         config.collection.source,
         len(config.collection.queries),
         config.collection.year_min,
         config.collection.year_max,
+        config.collection.cutoff_date or "none",
     )
 
     if existing_total > 0:
@@ -72,7 +74,11 @@ def _run_full_arxiv_collection(config: AppConfig) -> Path:
 
     client = _build_collection_client(config)
 
-    month_plan = _build_month_plan(config.collection.year_min, config.collection.year_max)
+    month_plan = _build_month_plan(
+        config.collection.year_min,
+        config.collection.year_max,
+        cutoff_date=config.collection.cutoff_date,
+    )
 
     new_count = 0
     with tqdm(desc=f"Collecting {config.collection.source} papers", initial=existing_total, unit="paper") as progress:
@@ -116,14 +122,16 @@ def _run_monthly_arxiv_collection(config: AppConfig) -> Path:
         output_path,
         year_min=config.collection.year_min,
         year_max=config.collection.year_max,
+        cutoff_date=config.collection.cutoff_date,
     )
 
     logger.info(
-        "Starting monthly %s collection: queries=%s years=%s-%s samples_per_month=%s",
+        "Starting monthly %s collection: queries=%s years=%s-%s cutoff=%s samples_per_month=%s",
         config.collection.source,
         len(config.collection.queries),
         config.collection.year_min,
         config.collection.year_max,
+        config.collection.cutoff_date or "none",
         config.collection.samples_per_month,
     )
 
@@ -139,7 +147,11 @@ def _run_monthly_arxiv_collection(config: AppConfig) -> Path:
         return output_path
 
     client = _build_collection_client(config)
-    month_plan = _build_month_plan(config.collection.year_min, config.collection.year_max)
+    month_plan = _build_month_plan(
+        config.collection.year_min,
+        config.collection.year_max,
+        cutoff_date=config.collection.cutoff_date,
+    )
 
     new_count = 0
     with tqdm(desc=f"Collecting monthly {config.collection.source} papers", initial=existing_total, unit="paper") as progress:
@@ -225,6 +237,8 @@ def _collect_all_papers_for_queries(
         duplicate_count = 0
 
         for paper in batch:
+            if not _is_within_collection_cutoff(paper, config.collection.cutoff_date):
+                continue
             key = _paper_key(paper)
             if key in seen_keys:
                 duplicate_count += 1
@@ -261,11 +275,12 @@ def _collect_all_papers_for_queries(
 
 def _run_query_based_collection(config: AppConfig) -> Path:
     logger.info(
-        "Starting collection: queries=%s page_size=%s years=%s-%s",
+        "Starting collection: queries=%s page_size=%s years=%s-%s cutoff=%s",
         len(config.collection.queries),
         config.collection.page_size,
         config.collection.year_min,
         config.collection.year_max,
+        config.collection.cutoff_date or "none",
     )
 
     output_path = _get_output_path(config)
@@ -348,6 +363,8 @@ def _collect_papers_for_queries(
         duplicate_count = 0
 
         for paper in batch:
+            if not _is_within_collection_cutoff(paper, config.collection.cutoff_date):
+                continue
             key = _paper_key(paper)
             if key in seen_keys:
                 duplicate_count += 1
@@ -407,6 +424,8 @@ def _collect_month_bucket(
         )
 
         for paper in batch:
+            if not _is_within_collection_cutoff(paper, config.collection.cutoff_date):
+                continue
             key = _paper_key(paper)
             if key in seen_keys:
                 continue
@@ -453,6 +472,7 @@ def _load_existing_monthly_state(
     *,
     year_min: int,
     year_max: int,
+    cutoff_date: date | None,
 ) -> tuple[set[str], int, dict[tuple[int, int], int]]:
     seen_keys, total = _load_existing_keys(output_path)
     month_counts: dict[tuple[int, int], int] = {}
@@ -480,6 +500,8 @@ def _load_existing_monthly_state(
             if year is None or month is None:
                 continue
             if year < year_min or year > year_max:
+                continue
+            if not _is_within_collection_cutoff(payload, cutoff_date):
                 continue
 
             key = _paper_key(payload)
@@ -518,6 +540,25 @@ def _paper_year_month(paper: dict[str, object]) -> tuple[int | None, int | None]
     return year, month
 
 
+def _is_within_collection_cutoff(paper: dict[str, object], cutoff_date: date | None) -> bool:
+    if cutoff_date is None:
+        return True
+
+    raw_publication_date = paper.get("publicationDate")
+    if isinstance(raw_publication_date, str):
+        try:
+            return date.fromisoformat(raw_publication_date[:10]) <= cutoff_date
+        except ValueError:
+            pass
+
+    year, month = _paper_year_month(paper)
+    if year is None:
+        return True
+    if month is None:
+        return year <= cutoff_date.year
+    return (year, month) <= (cutoff_date.year, cutoff_date.month)
+
+
 def _paper_key(paper: dict[str, object]) -> str:
     paper_id = paper.get("paperId")
     if isinstance(paper_id, str) and paper_id.strip():
@@ -528,10 +569,12 @@ def _paper_key(paper: dict[str, object]) -> str:
     return f"fallback:{title}|{year}"
 
 
-def _build_month_plan(year_min: int, year_max: int) -> list[tuple[int, int]]:
+def _build_month_plan(year_min: int, year_max: int, *, cutoff_date: date | None = None) -> list[tuple[int, int]]:
     months: list[tuple[int, int]] = []
     for year in range(year_min, year_max + 1):
         for month in range(1, 13):
+            if cutoff_date is not None and (year, month) > (cutoff_date.year, cutoff_date.month):
+                continue
             months.append((year, month))
     return months
 
