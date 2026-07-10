@@ -1,0 +1,11 @@
+topic_id,abstract_count,abstract_share,topic_label
+0,11311,0.2943733083489486,"data, learning, based, models, methods, model, protein"
+2,8666,0.22553612325629815,"neural, brain, model, learning, eeg, neurons, network"
+1,7722,0.2009681449094316,"cell, model, cells, protein, dynamics, models, time"
+3,4046,0.10529877160108266,"model, epidemic, covid, 19, covid 19, disease, infection"
+4,3867,0.10064022485946283,"species, population, model, dynamics, models, cooperation, evolutionary"
+5,1091,0.028393712263168853,"model, data, cardiac, using, models, blood, heart"
+7,690,0.017957526545908806,"cells, cell, tissue, drug, model, bone, cancer"
+6,522,0.01358525921299188,"plant, study, crop, results, using, data, growth"
+8,508,0.01322090360191547,"life, light, model, energy, earth, atp, mitochondrial"
+-1,1,2.6025400791172185e-05,-1 (outliers)

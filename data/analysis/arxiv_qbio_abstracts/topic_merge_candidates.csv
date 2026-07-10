@@ -1,0 +1,9 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_abstract_count,child_left_abstract_share,child_right_abstract_count,child_right_abstract_share,parent_abstract_count,parent_abstract_share
+16,model_data_models_based_using,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",14,model_data_models_based_time,15,cells_cell_model_study_results,0.7629741908796263,,,,,,,,,
+15,cells_cell_model_study_results,"[6, 7, 8]",13,cells_cell_model_life_results,6,plant_study_crop_results_using,0.620674272065455,,,,,,,,,
+14,model_data_models_based_time,"[0, 1, 2, 3, 4, 5]",3,model_epidemic_covid_19_covid 19,12,model_data_models_based_using,0.6173679721477536,,,,,,,,,
+13,cells_cell_model_life_results,"[7, 8]",7,cells_cell_tissue_drug_model,8,life_light_model_energy_earth,0.6084372137052394,,,,,,,,,
+12,model_data_models_based_using,"[0, 1, 2, 4, 5]",10,model_species_dynamics_population_models,11,data_model_models_based_brain,0.5318257887285566,,,,,,,,,
+11,data_model_models_based_brain,"[0, 2, 5]",9,data_brain_neural_learning_model,5,model_data_cardiac_using_models,0.47383900287916575,,,,,,,,,
+10,model_species_dynamics_population_models,"[1, 4]",4,species_population_model_dynamics_models,1,cell_model_cells_protein_dynamics,0.34739983945867203,,,,,,,,,
+9,data_brain_neural_learning_model,"[0, 2]",2,neural_brain_model_learning_eeg,0,data_learning_based_models_methods,0.3217287117790283,,,,,,,,,
