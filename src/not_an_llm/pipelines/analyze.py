@@ -29,6 +29,22 @@ from not_an_llm.config import AppConfig
 logger = logging.getLogger(__name__)
 
 
+RAW_METADATA_COLUMNS = {
+    "authors",
+    "venue",
+    "fieldsOfStudy",
+    "publicationTypes",
+    "journal",
+    "citationCount",
+    "influentialCitationCount",
+    "isOpenAccess",
+    "openAccessPdf",
+    "externalIds",
+    "url",
+    "tldr",
+}
+
+
 @dataclass(slots=True)
 class AnalysisArtifacts:
     feature_dataset_jsonl: Path
@@ -112,12 +128,20 @@ def _process_chunk_worker(args):
     if config.analysis.include_readability:
         readability = ReadabilityAnalyzer(metrics=config.analysis.readability_metrics)
 
+    chunk = _drop_raw_metadata_columns(chunk)
     enriched = feature_extractor.transform(chunk)
 
     if readability:
         enriched = readability.transform(enriched)
 
     return chunk_index, enriched
+
+
+def _drop_raw_metadata_columns(frame: pd.DataFrame) -> pd.DataFrame:
+    return frame.drop(
+        columns=[col for col in RAW_METADATA_COLUMNS if col in frame.columns],
+        errors="ignore",
+    )
 
 
 # =========================================================
@@ -186,6 +210,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         }
         for completed_count, future in enumerate(as_completed(futures), start=1):
             chunk_index, enriched_chunk = future.result()
+            enriched_chunk = _drop_raw_metadata_columns(enriched_chunk)
             enriched_chunk.to_json(
                 enriched_output_path,
                 orient="records",
@@ -212,6 +237,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     logger.info("Combining %s analyzed chunks", len(results))
     results = [chunk for _, chunk in sorted(results, key=lambda item: item[0])]
     enriched = pd.concat(results, ignore_index=True)
+    enriched = _drop_raw_metadata_columns(enriched)
     logger.info("Combined feature dataset rows=%s columns=%s", len(enriched), len(enriched.columns))
     for col in enriched.columns:
         if col.endswith("_per_1k_words"):
