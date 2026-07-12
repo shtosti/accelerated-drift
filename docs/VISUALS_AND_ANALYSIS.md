@@ -47,6 +47,11 @@ The `analyze` step can produce both analysis artifacts and plots, while the `vis
   - Robustness table using placebo intervention years.
   - Helps check whether the estimated ChatGPT-era slope change stands out from earlier arbitrary breaks.
 
+- `data/analysis/<dataset>/first_post_year_counterfactual_excess.csv`
+  - Complementary first-post-year excess table.
+  - Fits a pre-intervention linear counterfactual and tests whether the observed 2023 mean is elevated or depressed relative to that trend.
+  - Useful for features with short-lived spikes or hump-shaped post-ChatGPT trajectories.
+
 - `data/analysis/<dataset>/additional_analysis/determiner_decomposition_documents.csv`
   - Document-level counts used in the determiner decomposition follow-up analysis.
   - Includes total words, determiner counts attached to prepositional objects, other determiner counts, and dependency-role counts used for the role-proportion comparison.

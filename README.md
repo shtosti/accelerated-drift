@@ -93,6 +93,7 @@ uv run python main.py --config config_mini.toml visualize
 - `data/analysis/<stem>/trends_by_month.csv`: monthly feature means
 - `data/analysis/<stem>/its_stats.csv`: primary interrupted time-series statistics
 - `data/analysis/<stem>/its_placebo_stats.csv`: placebo interrupted time-series checks
+- `data/analysis/<stem>/first_post_year_counterfactual_excess.csv`: 2023 excess over the pre-ChatGPT trend counterfactual
 - `data/analysis/<stem>/topic_*.csv`: topic labels, prevalence, and summaries
 - `data/analysis/<stem>/topics/topic_*/`: topic-level trend tables
 - `data/analysis/<stem>/additional_analysis/`: targeted follow-up outputs such as the determiner decomposition CSVs and plot
@@ -118,6 +119,8 @@ Interpretation:
 5. `beta1 + beta3` is the post-intervention monthly slope.
 
 The main tests use `slope_change_per_year`, its 95% confidence interval, `slope_change_p`, and family-level Benjamini-Hochberg `slope_change_q`. Models are weighted by monthly paper count and use HAC/Newey-West style standard errors for autocorrelated monthly residuals. Standardized effect sizes divide the annualized slope change by the pre-intervention monthly standard deviation.
+
+As a complementary check for short-lived post-ChatGPT elevations, the pipeline also estimates a first-post-year counterfactual excess. For each feature, it fits the pre-intervention linear trend and a 2023 indicator using pre-intervention months plus 2023 months. The output table reports raw and standardized excess estimates, confidence intervals, p-values, and family-level FDR q-values.
 
 ## Topic Modeling
 

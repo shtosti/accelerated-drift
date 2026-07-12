@@ -16,8 +16,11 @@ from not_an_llm.analysis.trends import TrendAnalyzer, is_group_total_feature
 from not_an_llm.analysis.feature_groups import FEATURE_GROUPS
 from not_an_llm.analysis.feature_selection import build_marker_group_specs, resolve_feature_columns
 from not_an_llm.analysis.interrupted_time_series import (
+    compute_first_post_year_counterfactual_excess,
     compute_interrupted_time_series,
     compute_placebo_interrupted_time_series,
+    save_first_post_year_excess_plot,
+    save_first_post_year_grouped_excess_plots,
     save_its_slope_change_plot,
     save_its_standardized_grouped_slope_change_plots,
     save_its_standardized_slope_change_plot,
@@ -284,6 +287,11 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     placebo_stats.to_csv(placebo_stats_path, index=False)
     logger.info("Saved placebo interrupted time-series statistics to %s", placebo_stats_path)
 
+    first_post_year_excess = compute_first_post_year_counterfactual_excess(monthly, feature_columns)
+    first_post_year_excess_path = analysis_dir / "first_post_year_counterfactual_excess.csv"
+    first_post_year_excess.to_csv(first_post_year_excess_path, index=False)
+    logger.info("Saved first-post-year counterfactual excess statistics to %s", first_post_year_excess_path)
+
     # =========================
     # PRE/POST DIFF PLOTS
     # =========================
@@ -395,6 +403,16 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
             plot_dir / "its_slope_changes_standardized_groups",
             label_map=LABEL_MAP,
         )
+        first_post_year_excess_plot_path = save_first_post_year_excess_plot(
+            first_post_year_excess,
+            plot_dir / "first_post_year_counterfactual_excess" / "overall.png",
+            label_map=LABEL_MAP,
+        )
+        first_post_year_excess_grouped_plot_paths = save_first_post_year_grouped_excess_plots(
+            first_post_year_excess,
+            plot_dir / "first_post_year_counterfactual_excess" / "groups",
+            label_map=LABEL_MAP,
+        )
 
         trend_plots.extend(
             trend_analyzer.save_plots(
@@ -410,6 +428,9 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         if standardized_its_plot_path is not None:
             trend_plots.append(standardized_its_plot_path)
         trend_plots.extend(standardized_grouped_its_plot_paths)
+        if first_post_year_excess_plot_path is not None:
+            trend_plots.append(first_post_year_excess_plot_path)
+        trend_plots.extend(first_post_year_excess_grouped_plot_paths)
 
         trend_plots.extend(
             trend_analyzer.save_grouped_word_plots(
