@@ -4,7 +4,7 @@ data_dir = "data"
 
 [collection]
 # Data source: arxiv_ai, arxiv_qbio, arxiv_stat, medarxiv
-source = "arxiv_stat"
+source = "arxiv_qbio"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
 
