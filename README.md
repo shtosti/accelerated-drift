@@ -68,6 +68,14 @@ uv run python main.py --config config.toml additional-analysis
 
 This currently runs the dependency-based determiner decomposition used to examine whether determiner decline is concentrated in prepositional-object contexts. By default, it reads the configured feature dataset if present, otherwise the configured preprocessed JSONL, and writes outputs to `<analysis_dir>/additional_analysis/`. Use `--input`, `--output-dir`, or `--chunk-size` to override those defaults.
 
+To compare title-only and abstract-only trend analyses after both have been run:
+
+```bash
+uv run python scripts/compare_title_abstract_trends.py
+```
+
+This writes paired ITS comparison tables and dependency/syntax comparison plots to `data/analysis/title_abstract_comparison/`.
+
 ### Mini Dataset
 
 The mini configuration is intended for quick checks of the pipeline.
@@ -88,6 +96,7 @@ uv run python main.py --config config_mini.toml visualize
 - `data/analysis/<stem>/topic_*.csv`: topic labels, prevalence, and summaries
 - `data/analysis/<stem>/topics/topic_*/`: topic-level trend tables
 - `data/analysis/<stem>/additional_analysis/`: targeted follow-up outputs such as the determiner decomposition CSVs and plot
+- `data/analysis/title_abstract_comparison/`: title-versus-abstract ITS comparison tables and plots
 - `data/visuals/<stem>/`: rendered figures
 
 The paper-facing inferential tables are the monthly interrupted time-series outputs in `data/analysis/<stem>/its_stats.csv`. Pre/post percentage-change plots are retained as descriptive summaries.
