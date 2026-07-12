@@ -16,6 +16,24 @@ Edit the matching file to control:
 
 ## Run
 
+### One-command reproduction
+
+The reproduction script recreates the Python environment from `uv.lock`, installs the required spaCy English model if missing, and runs the selected pipeline stages.
+
+Linux/macOS or any Bash environment:
+
+```bash
+bash scripts/reproduce.sh all
+```
+
+Use `config_mini.toml` for a faster smoke test:
+
+```bash
+bash scripts/reproduce.sh --config config_mini.toml preprocess analyze visualize
+```
+
+Valid stages are `collect`, `preprocess`, `analyze`, `visualize`, `additional-analysis`, and `topic-compare`. Passing `all` runs `collect`, `preprocess`, `analyze`, and `visualize` in order. Add `--recreate-env` to remove and rebuild `.venv` before running; add `--dry-run` to print the selected commands without executing them. The collection cut-off date is set in `[collection].cutoff_date` in the config files.
+
 ### Full pipeline
 
 1. Collect records:
@@ -40,6 +58,16 @@ Edit the matching file to control:
 
 The analysis and visualization steps are separated so that feature extraction and topic modeling can be run once, while figures can be regenerated quickly after styling changes.
 
+### Additional analysis
+
+Targeted follow-up analyses can be run after `preprocess` or `analyze` with:
+
+```bash
+uv run python main.py --config config.toml additional-analysis
+```
+
+This currently runs the dependency-based determiner decomposition used to examine whether determiner decline is concentrated in prepositional-object contexts. By default, it reads the configured feature dataset if present, otherwise the configured preprocessed JSONL, and writes outputs to `<analysis_dir>/additional_analysis/`. Use `--input`, `--output-dir`, or `--chunk-size` to override those defaults.
+
 ### Mini Dataset
 
 The mini configuration is intended for quick checks of the pipeline.
@@ -52,16 +80,17 @@ uv run python main.py --config config_mini.toml visualize
 
 ## Main Outputs
 
-- `data/analyzed/<stem>_features.jsonl`: document-level feature output
-- `data/analysis/<stem>_year.csv`: yearly feature means
-- `data/analysis/<stem>_month.csv`: monthly feature means
-- `data/analysis/<stem>_its_stats.csv`: primary interrupted time-series statistics
-- `data/analysis/<stem>_its_placebo_stats.csv`: placebo interrupted time-series checks
-- `data/analysis/<stem>_topic_*.csv`: topic labels, prevalence, and summaries
-- `data/analysis/<stem>_topics/topic_*/`: topic-level trend tables
+- `data/analysis/<stem>/features.jsonl`: document-level feature output
+- `data/analysis/<stem>/trends_by_year.csv`: yearly feature means
+- `data/analysis/<stem>/trends_by_month.csv`: monthly feature means
+- `data/analysis/<stem>/its_stats.csv`: primary interrupted time-series statistics
+- `data/analysis/<stem>/its_placebo_stats.csv`: placebo interrupted time-series checks
+- `data/analysis/<stem>/topic_*.csv`: topic labels, prevalence, and summaries
+- `data/analysis/<stem>/topics/topic_*/`: topic-level trend tables
+- `data/analysis/<stem>/additional_analysis/`: targeted follow-up outputs such as the determiner decomposition CSVs and plot
 - `data/visuals/<stem>/`: rendered figures
 
-The paper-facing inferential tables are the monthly interrupted time-series outputs in `data/analysis/<stem>_its_stats.csv`. Pre/post percentage-change plots are retained as descriptive summaries.
+The paper-facing inferential tables are the monthly interrupted time-series outputs in `data/analysis/<stem>/its_stats.csv`. Pre/post percentage-change plots are retained as descriptive summaries.
 
 ## Statistical Design
 
@@ -105,6 +134,7 @@ Outputs include topic labels, yearly prevalence, topic-level feature trends, and
 - [src/not_an_llm/pipelines/collect.py](src/not_an_llm/pipelines/collect.py): collection pipeline
 - [src/not_an_llm/pipelines/preprocess.py](src/not_an_llm/pipelines/preprocess.py): preprocessing pipeline
 - [src/not_an_llm/pipelines/analyze.py](src/not_an_llm/pipelines/analyze.py): feature extraction, trend aggregation, ITS, and topic analysis
+- [src/not_an_llm/pipelines/additional_analysis.py](src/not_an_llm/pipelines/additional_analysis.py): targeted follow-up analyses such as determiner decomposition
 - [src/not_an_llm/pipelines/visualize.py](src/not_an_llm/pipelines/visualize.py): plot generation from saved analysis tables
 - [src/not_an_llm/analysis/feature_extractor.py](src/not_an_llm/analysis/feature_extractor.py): lexical, punctuation, discourse, and syntactic feature extraction
 - [src/not_an_llm/analysis/readability.py](src/not_an_llm/analysis/readability.py): readability metrics

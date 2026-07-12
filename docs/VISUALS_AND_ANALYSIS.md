@@ -4,7 +4,7 @@ This document describes the data analysis outputs and visualizations produced by
 
 ## Pipeline overview
 
-The analysis pipeline separates three stages:
+The analysis pipeline separates four main stages plus optional targeted follow-up analyses:
 
 1. `collect`
    - Fetches preprint metadata and text from arXiv or medRxiv.
@@ -12,6 +12,8 @@ The analysis pipeline separates three stages:
    - Cleans raw text, extracts normalized text fields, and saves preprocessed JSONL for feature analysis.
 3. `analyze` / `visualize`
    - Computes style and readability features, aggregates them over time, and then generates plots from aggregated trends.
+4. `additional-analysis`
+   - Runs targeted follow-up analyses that are not part of the core feature/ITS tables.
 
 The `analyze` step can produce both analysis artifacts and plots, while the `visualize` step regenerates plots from precomputed trend CSVs.
 
@@ -19,31 +21,39 @@ The `analyze` step can produce both analysis artifacts and plots, while the `vis
 
 ### Preprocessing output
 
-- `data/analyzed/<dataset>.jsonl`
+- `data/processed/<dataset>.jsonl`
   - Preprocessed records with normalized text fields (`text_clean`, `text_lemma`, etc.) and metadata.
 
 ### Feature analysis output
 
-- `data/analyzed/<dataset>_features.jsonl`
+- `data/analysis/<dataset>/features.jsonl`
   - Document-level feature-enriched JSONL output from the analysis pipeline.
   - Includes extracted style features, syntactic counts, discourse markers, readability metrics, and dependency statistics.
 
 ### Trend CSV outputs
 
-- `data/analysis/<dataset>_trends_by_year.csv`
+- `data/analysis/<dataset>/trends_by_year.csv`
   - Yearly aggregated feature means, standard deviations, and counts.
 
-- `data/analysis/<dataset>_trends_by_month.csv`
+- `data/analysis/<dataset>/trends_by_month.csv`
   - Monthly aggregated feature means for the same features.
 
-- `data/analysis/<dataset>_its_stats.csv`
+- `data/analysis/<dataset>/its_stats.csv`
   - Primary hypothesis-test table.
   - Fits monthly segmented regressions around the ChatGPT intervention date.
   - Reports pre-intervention slope, level shift, slope change, 95% confidence intervals, post-intervention slope, HAC p-values, and family-level FDR q-values.
 
-- `data/analysis/<dataset>_its_placebo_stats.csv`
+- `data/analysis/<dataset>/its_placebo_stats.csv`
   - Robustness table using placebo intervention years.
   - Helps check whether the estimated ChatGPT-era slope change stands out from earlier arbitrary breaks.
+
+- `data/analysis/<dataset>/additional_analysis/determiner_decomposition_documents.csv`
+  - Document-level counts used in the determiner decomposition follow-up analysis.
+  - Includes total words, determiner counts attached to prepositional objects, other determiner counts, and dependency-role counts used for the role-proportion comparison.
+
+- `data/analysis/<dataset>/additional_analysis/determiner_decomposition_yearly.csv`
+  - Yearly aggregate table for the determiner decomposition.
+  - Reports determiner rates per 1,000 words and the relative prevalence of `prep + pobj` versus `amod + compound` dependency roles.
 
 CSV statistics are kept only under `data/analysis/`. Plot directories under `data/visuals/` contain figures only. See `data/analysis/README.md` for the current table-level data dictionary.
 
@@ -175,6 +185,14 @@ All plots are saved to `data/visuals/<dataset_stem>/` or the configured `trends_
 
 When `generate_plots = true`, the `analyze` pipeline can also generate the same trend plots during analysis and save them directly alongside trend CSVs.
 
+### Targeted follow-up plots from `additional-analysis`
+
+1. `additional_analysis/determiner_decomposition_yearly.png`
+   - Two-panel yearly plot for the determiner decomposition follow-up.
+   - The first panel compares determiners attached to prepositional objects against other determiner contexts.
+   - The second panel compares the relative prevalence of `prep + pobj` structures against `amod + compound` structures.
+   - This plot is used to interpret whether determiner decline reflects a broader shift toward compact, modifier-heavy noun phrases.
+
 ## Statistical analysis performed
 
 ### Primary temporal model
@@ -240,11 +258,13 @@ Key settings include:
 
 - Run `analyze` to compute feature datasets and trend CSVs.
 - Run `visualize` to regenerate plots from existing trend CSVs.
+- Run `additional-analysis` after `preprocess` or `analyze` to regenerate targeted follow-up analyses such as the determiner decomposition.
 - Run `analyze` before `visualize` when regenerating figures from a fresh collection.
 
 ## Key file locations
 
 - `src/not_an_llm/pipelines/analyze.py`
+- `src/not_an_llm/pipelines/additional_analysis.py`
 - `src/not_an_llm/pipelines/visualize.py`
 - `src/not_an_llm/analysis/feature_selection.py`
 - `src/not_an_llm/analysis/feature_groups.py`
