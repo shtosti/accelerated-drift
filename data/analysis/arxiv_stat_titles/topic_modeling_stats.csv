@@ -1,0 +1,25 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_titles,115255.0
+dataset,all,,,topics,9.0
+dataset,all,-1.0,-1 (outliers),outlier_title_count,1.0
+dataset,all,-1.0,-1 (outliers),outlier_title_share,8.676413170795193e-06
+topic,model,0.0,"learning, data, models, networks, bayesian, neural, regression",title_count,94233.0
+topic,model,0.0,"learning, data, models, networks, bayesian, neural, regression",title_share,0.8176044423235435
+topic,model,1.0,"data, forecasting, using, learning, model, prediction, time",title_count,6804.0
+topic,model,1.0,"data, forecasting, using, learning, model, prediction, time",title_share,0.05903431521409049
+topic,model,2.0,"brain, data, learning, using, health, disease, analysis",title_count,5078.0
+topic,model,2.0,"brain, data, learning, using, health, disease, analysis",title_share,0.04405882608129799
+topic,model,3.0,"language, language models, speech, learning, models, text, neural",title_count,4277.0
+topic,model,3.0,"language, language models, speech, learning, models, text, neural",title_share,0.03710901913149104
+topic,model,4.0,"covid, 19, covid 19, epidemic, data, disease, pandemic",title_count,2441.0
+topic,model,4.0,"covid, 19, covid 19, epidemic, data, disease, pandemic",title_share,0.021179124549911065
+topic,model,6.0,"attacks, learning, malware, detection, adversarial, cyber, machine learning",title_count,790.0
+topic,model,6.0,"attacks, learning, malware, detection, adversarial, cyber, machine learning",title_share,0.006854366404928203
+topic,model,8.0,"distribution, weibull, distributions, test, weibull distribution, estimation, based",title_count,760.0
+topic,model,8.0,"distribution, weibull, distributions, test, weibull distribution, estimation, based",title_share,0.006594074009804347
+topic,model,5.0,"hawkes, hawkes processes, processes, hawkes process, process, time, multivariate hawkes",title_count,440.0
+topic,model,5.0,"hawkes, hawkes processes, processes, hawkes process, process, time, multivariate hawkes",title_share,0.003817621795149885
+topic,model,7.0,"arm identification, best arm, arm, best, identification, bandits, optimal",title_count,431.0
+topic,model,7.0,"arm identification, best arm, arm, best, identification, bandits, optimal",title_share,0.0037395340766127284
+topic,model,-1.0,-1 (outliers),title_count,1.0
+topic,model,-1.0,-1 (outliers),title_share,8.676413170795193e-06

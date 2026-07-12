@@ -1,0 +1,9 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_title_count,child_left_title_share,child_right_title_count,child_right_title_share,parent_title_count,parent_title_share
+16,learning_data_using_based_models,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",12,learning_data_using_models_deep,15,hawkes_arm identification_best arm_distribution_covid,1.0527628687944341,,,,,,,,,
+15,hawkes_arm identification_best arm_distribution_covid,"[4, 5, 7, 8]",14,hawkes_distribution_covid_hawkes processes_19,7,arm identification_best arm_arm_best_identification,0.9709478552140967,,,,,,,,,
+14,hawkes_distribution_covid_hawkes processes_19,"[4, 5, 8]",5,hawkes_hawkes processes_processes_hawkes process_process,13,covid_distribution_19_covid 19_weibull,0.9074106723460693,,,,,,,,,
+13,covid_distribution_19_covid 19_weibull,"[4, 8]",8,distribution_weibull_distributions_test_weibull distribution,4,covid_19_covid 19_epidemic_data,0.8614335923785407,,,,,,,,,
+12,learning_data_using_models_deep,"[0, 1, 2, 3, 6]",6,attacks_learning_malware_detection_adversarial,11,learning_data_using_models_neural,0.7483595680446551,,,,,,,,,
+11,learning_data_using_models_neural,"[0, 1, 2, 3]",10,learning_data_using_models_based,3,language_language models_speech_learning_models,0.6726090851971749,,,,,,,,,
+10,learning_data_using_models_based,"[0, 1, 2]",2,brain_data_learning_using_health,9,learning_data_using_models_model,0.49788218485195956,,,,,,,,,
+9,learning_data_using_models_model,"[0, 1]",0,learning_data_models_networks_bayesian,1,data_forecasting_using_learning_model,0.43881215889308267,,,,,,,,,
