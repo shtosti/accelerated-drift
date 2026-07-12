@@ -1,0 +1,11 @@
+topic_id,title_count,title_share,topic_label
+0,11546,0.30048927753487403,"protein, learning, prediction, cell, data, gene, molecular"
+1,9456,0.24609618988132417,"neural, brain, learning, networks, eeg, fmri, spiking"
+2,7741,0.20146262752446387,"networks, model, dynamics, phylogenetic, models, systems, evolution"
+3,3983,0.10365917135123881,"19, covid 19, covid, epidemic, sars, sars cov, cov"
+6,1651,0.04296793670622528,"cell, membrane, dynamics, cells, molecular, transport, ion"
+4,1474,0.0383614407661878,"microbial, bacterial, bacteria, microbiome, growth, resistance, model"
+5,1246,0.03242764938580054,"cardiac, model, atrial, heart, atrial fibrillation, tissue, using"
+7,1162,0.03024151571934208,"cryo, microscopy, imaging, cryo em, images, using, retinal"
+8,164,0.004268165729752238,"pregnancy, fetal, mineralocorticoid, maternal, prenatal, mineralocorticoid receptor, birth"
+-1,1,2.6025400791172185e-05,-1 (outliers)

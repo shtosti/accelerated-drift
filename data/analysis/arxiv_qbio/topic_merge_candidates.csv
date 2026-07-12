@@ -1,0 +1,9 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_title_abstract_count,child_left_title_abstract_share,child_right_title_abstract_count,child_right_title_abstract_share,parent_title_abstract_count,parent_title_abstract_share
+16,protein_social_drug_cooperation_tissue,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",14,tissue_crop_stress_radiation_protein,15,protein_social_cooperation_epidemic_game,1.0637953091394377,,,,,,,,,
+15,protein_social_cooperation_epidemic_game,"[0, 1, 2, 3, 4, 5]",10,protein_proteins_drug_graph_eeg,12,social_cooperation_epidemic_game_games,1.0206518760579721,,,,,,,,,
+14,tissue_crop_stress_radiation_protein,"[6, 7, 8]",6,crop_breeding_cuttings_stress_germination,13,tissue_radiation_nanoparticles_drug_bone,0.9099711341207326,,,,,,,,,
+13,tissue_radiation_nanoparticles_drug_bone,"[7, 8]",7,drug_bone_nanoparticles_tissue_mesoporous,8,radiation_photosynthetic_oxygen_photosynthesis_electron,0.9006104015461308,,,,,,,,,
+12,social_cooperation_epidemic_game_games,"[3, 4, 5]",11,cooperation_game_social_games_predator,4,epidemic_infected_pandemic_outbreak_vaccination,0.8913629812483831,,,,,,,,,
+11,cooperation_game_social_games_predator,"[3, 5]",5,cooperation_game_social_games_punishment,3,predator_prey_extinction_dispersal_coexistence,0.8066712564298081,,,,,,,,,
+10,protein_proteins_drug_graph_eeg,"[0, 1, 2]",1,eeg_fmri_connectivity_task_neural networks,9,protein_proteins_drug_graph_tumor,0.7426757309403207,,,,,,,,,
+9,protein_proteins_drug_graph_tumor,"[0, 2]",0,protein_drug_datasets_graph_language,2,protein_proteins_membrane_tissue_folding,0.6132247032719924,,,,,,,,,
