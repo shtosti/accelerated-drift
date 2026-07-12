@@ -13,6 +13,7 @@ from not_an_llm.analysis.topic_modeling.comparison import (
     select_top_its_features,
 )
 from not_an_llm.config import load_config
+from not_an_llm.pipelines.additional_analysis import run_additional_analysis
 from not_an_llm.pipelines.analyze import run_analysis
 from not_an_llm.pipelines.collect import run_collection
 from not_an_llm.pipelines.external_analyze import (
@@ -41,6 +42,27 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("collect", help="Download Semantic Scholar papers to JSONL.")
     subparsers.add_parser("preprocess", help="Preprocess raw title/abstract text and save JSONL.")
     subparsers.add_parser("analyze", help="Run feature and readability analysis with yearly trends.")
+    additional = subparsers.add_parser(
+        "additional-analysis",
+        aliases=["additional_analysis"],
+        help="Run targeted follow-up analyses from existing feature or preprocessed outputs.",
+    )
+    additional.add_argument(
+        "--input",
+        default=None,
+        help="Optional feature_dataset.jsonl or preprocessed JSONL. Defaults to the configured feature dataset if present.",
+    )
+    additional.add_argument(
+        "--output-dir",
+        default=None,
+        help="Optional output directory. Defaults to <analysis_dir>/additional_analysis.",
+    )
+    additional.add_argument(
+        "--chunk-size",
+        type=int,
+        default=2000,
+        help="Rows to parse per chunk for targeted dependency analyses.",
+    )
     subparsers.add_parser("visualize", help="Generate plots from previously computed analysis data.")
     topic_compare = subparsers.add_parser(
         "topic-compare",
@@ -230,6 +252,18 @@ def main() -> None:
         print(f"Saved yearly trends to {artifacts.trends_csv}")
         print(f"Saved monthly trends to {artifacts.monthly_trends_csv}")
         print(f"Saved trend plots to {config.analysis.trends_plot_dir} ({len(artifacts.trends_plot_paths)} files)")
+        return
+
+    if args.command in {"additional-analysis", "additional_analysis"}:
+        artifacts = run_additional_analysis(
+            config,
+            input_path=args.input,
+            output_dir=args.output_dir,
+            chunk_size=args.chunk_size,
+        )
+        print(f"Saved determiner decomposition documents to {artifacts.per_document_csv}")
+        print(f"Saved determiner decomposition yearly trends to {artifacts.yearly_csv}")
+        print(f"Saved determiner decomposition plot to {artifacts.plot_path}")
         return
 
     if args.command == "visualize":
