@@ -1,0 +1,25 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_abstracts,115255.0
+dataset,all,,,topics,9.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_count,2.0
+dataset,all,-1.0,-1 (outliers),outlier_abstract_share,1.7352826341590385e-05
+topic,model,0.0,"learning, data, model, networks, training, neural, network",abstract_count,46953.0
+topic,model,0.0,"learning, data, model, networks, training, neural, network",abstract_share,0.40738362760834673
+topic,model,1.0,"data, model, models, method, based, methods, time",abstract_count,32253.0
+topic,model,1.0,"data, model, models, method, based, methods, time",abstract_share,0.2798403539976574
+topic,model,2.0,"data, model, treatment, models, methods, method, based",abstract_count,21410.0
+topic,model,2.0,"data, model, treatment, models, methods, method, based",abstract_share,0.1857620059867251
+topic,model,3.0,"model, time, data, series, models, learning, time series",abstract_count,4994.0
+topic,model,3.0,"model, time, data, series, models, learning, time series",abstract_share,0.04333000737495119
+topic,model,4.0,"data, brain, model, learning, based, time, using",abstract_count,4638.0
+topic,model,4.0,"data, brain, model, learning, based, time, using",abstract_share,0.04024120428614811
+topic,model,5.0,"fairness, data, learning, fair, model, bias, machine",abstract_count,2094.0
+topic,model,5.0,"fairness, data, learning, fair, model, bias, machine",abstract_share,0.018168409179645136
+topic,model,7.0,"data, research, students, science, analysis, statistical, study",abstract_count,1319.0
+topic,model,7.0,"data, research, students, science, analysis, statistical, study",abstract_share,0.011444188972278859
+topic,model,8.0,"design, designs, optimal, model, optimal designs, optimization, experimental",abstract_count,858.0
+topic,model,8.0,"design, designs, optimal, model, optimal designs, optimization, experimental",abstract_share,0.0074443625005422755
+topic,model,6.0,"players, player, model, team, game, football, data",abstract_count,734.0
+topic,model,6.0,"players, player, model, team, game, football, data",abstract_share,0.006368487267363672
+topic,model,-1.0,-1 (outliers),abstract_count,2.0
+topic,model,-1.0,-1 (outliers),abstract_share,1.7352826341590385e-05

@@ -1,0 +1,25 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_title_abstracts,115255.0
+dataset,all,,,topics,9.0
+dataset,all,-1.0,-1 (outliers),outlier_title_abstract_count,1.0
+dataset,all,-1.0,-1 (outliers),outlier_title_abstract_share,8.676413170795193e-06
+topic,model,0.0,"learning, data, model, neural, models, based, method",title_abstract_count,51752.0
+topic,model,0.0,"learning, data, model, neural, models, based, method",title_abstract_share,0.4490217344149928
+topic,model,1.0,"data, model, treatment, models, methods, based, method",title_abstract_count,23222.0
+topic,model,1.0,"data, model, treatment, models, methods, based, method",title_abstract_share,0.201483666652206
+topic,model,2.0,"learning, adversarial, policy, algorithm, reinforcement, reinforcement learning, regret",title_abstract_count,14023.0
+topic,model,2.0,"learning, adversarial, policy, algorithm, reinforcement, reinforcement learning, regret",title_abstract_share,0.12166934189406099
+topic,model,3.0,"graph, network, networks, model, data, causal, graphs",title_abstract_count,9039.0
+topic,model,3.0,"graph, network, networks, model, data, causal, graphs",title_abstract_share,0.07842609865081775
+topic,model,4.0,"data, model, spatial, models, using, time, based",title_abstract_count,7344.0
+topic,model,4.0,"data, model, spatial, models, using, time, based",title_abstract_share,0.0637195783263199
+topic,model,5.0,"time, series, time series, model, data, forecasting, models",title_abstract_count,3544.0
+topic,model,5.0,"time, series, time series, model, data, forecasting, models",title_abstract_share,0.030749208277298164
+topic,model,7.0,"time, data, detection, series, point, change point, time series",title_abstract_count,2855.0
+topic,model,7.0,"time, data, detection, series, point, change point, time series",title_abstract_share,0.024771159602620278
+topic,model,6.0,"fairness, data, model, fair, learning, models, bias",title_abstract_count,2468.0
+topic,model,6.0,"fairness, data, model, fair, learning, models, bias",title_abstract_share,0.02141338770552254
+topic,model,8.0,"data, students, science, research, learning, data science, student",title_abstract_count,1007.0
+topic,model,8.0,"data, students, science, research, learning, data science, student",title_abstract_share,0.00873714806299076
+topic,model,-1.0,-1 (outliers),title_abstract_count,1.0
+topic,model,-1.0,-1 (outliers),title_abstract_share,8.676413170795193e-06

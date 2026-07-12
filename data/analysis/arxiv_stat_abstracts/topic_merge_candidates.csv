@@ -1,0 +1,9 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_abstract_count,child_left_abstract_share,child_right_abstract_count,child_right_abstract_share,parent_abstract_count,parent_abstract_share
+16,data_model_models_based_learning,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",6,players_player_model_team_game,15,data_model_models_based_learning,0.6736416440700825,,,,,,,,,
+15,data_model_models_based_learning,"[0, 1, 2, 3, 4, 5, 7, 8]",14,data_model_learning_models_based,8,design_designs_optimal_model_optimal designs,0.5937308137173033,,,,,,,,,
+14,data_model_learning_models_based,"[0, 1, 2, 3, 4, 5, 7]",7,data_research_students_science_analysis,13,data_model_learning_models_based,0.5246154241491582,,,,,,,,,
+13,data_model_learning_models_based,"[0, 1, 2, 3, 4, 5]",12,data_model_models_learning_based,5,fairness_data_learning_fair_model,0.4495693539712126,,,,,,,,,
+12,data_model_models_learning_based,"[0, 1, 2, 3, 4]",11,data_model_learning_models_based,2,data_model_treatment_models_methods,0.3277729331696845,,,,,,,,,
+11,data_model_learning_models_based,"[0, 1, 3, 4]",4,data_brain_model_learning_based,10,data_model_learning_models_based,0.29824447730143705,,,,,,,,,
+10,data_model_learning_models_based,"[0, 1, 3]",9,data_learning_model_models_based,3,model_time_data_series_models,0.23965009850416433,,,,,,,,,
+9,data_learning_model_models_based,"[0, 1]",0,learning_data_model_networks_training,1,data_model_models_method_based,0.18085889257786347,,,,,,,,,
