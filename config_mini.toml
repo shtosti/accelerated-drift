@@ -4,7 +4,7 @@ data_dir = "data"
 
 [collection]
 # Data source: arxiv_ai, arxiv_qbio, arxiv_stat, medarxiv
-source = "arxiv_ai"
+source = "arxiv_qbio"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
 
@@ -44,7 +44,7 @@ arxiv_stat_queries = [
 medarxiv_queries = ["*"]
 
 year_min = 2015
-year_max = 2026
+year_max = 2016
 cutoff_date = "2026-04-30"
 page_size = 100
 arxiv_ai_collection_mode = "monthly" # full or monthly
