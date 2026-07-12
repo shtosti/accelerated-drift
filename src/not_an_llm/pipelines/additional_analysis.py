@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator, StrMethodFormatter
 import pandas as pd
 import spacy
 
@@ -236,6 +237,8 @@ def _save_determiner_decomposition_plot(yearly: pd.DataFrame, output_path: Path)
     axes[1].legend(fontsize=8)
 
     for ax in axes:
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.xaxis.set_major_formatter(StrMethodFormatter("{x:.0f}"))
         ax.tick_params(axis="x", rotation=45)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
