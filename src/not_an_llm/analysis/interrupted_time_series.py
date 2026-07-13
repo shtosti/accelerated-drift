@@ -134,6 +134,51 @@ def compute_first_post_year_counterfactual_excess(
     ).reset_index(drop=True)
 
 
+def compute_first_two_year_counterfactual_excess(
+    monthly: pd.DataFrame,
+    features: list[str] | None = None,
+    *,
+    config: ITSConfig | None = None,
+    target_years: tuple[int, int] = (2023, 2024),
+) -> pd.DataFrame:
+    """Estimate early post-period excess over a pre-intervention counterfactual.
+
+    This is the two-year companion to
+    :func:`compute_first_post_year_counterfactual_excess`: it estimates whether
+    the first two full post-ChatGPT years are elevated relative to the
+    pre-intervention trend.
+    """
+
+    config = config or ITSConfig()
+    features = features or _features_from_monthly(monthly)
+    intervention = pd.Timestamp(config.intervention_date)
+    rows = [
+        row
+        for feature in features
+        if (
+            row := _fit_first_two_year_excess(
+                monthly,
+                feature,
+                intervention,
+                config,
+                target_years,
+            )
+        )
+        is not None
+    ]
+    result = pd.DataFrame(rows)
+    if result.empty:
+        return _empty_first_two_year_excess_frame()
+
+    result["first_two_year_excess_q"] = _adjust_p_values_by_family(result, "first_two_year_excess_p")
+    return _sort_by_effect_significance(
+        result,
+        q_column="first_two_year_excess_q",
+        p_column="first_two_year_excess_p",
+        effect_column="standardized_first_two_year_excess",
+    ).reset_index(drop=True)
+
+
 def add_standardized_slope_change_columns(
     stats: pd.DataFrame,
     monthly: pd.DataFrame,
@@ -224,6 +269,60 @@ def save_first_post_year_grouped_excess_plots(
             ci_high_column="standardized_first_post_year_excess_ci_high",
             q_column="first_post_year_excess_q",
             xlabel=rf"2023 excess over pre-trend (pre $\sigma$)",
+            delta_label="excess",
+            label_map=label_map,
+            top_n=top_n_per_group,
+        )
+        if saved_path is not None:
+            paths.append(saved_path)
+
+    return paths
+
+
+def save_first_two_year_excess_plot(
+    stats: pd.DataFrame,
+    output_path: Path,
+    *,
+    label_map: dict[str, str] | None = None,
+    top_n: int = 25,
+) -> Path | None:
+    return _save_effect_plot(
+        stats,
+        output_path,
+        value_column="standardized_first_two_year_excess",
+        ci_low_column="standardized_first_two_year_excess_ci_low",
+        ci_high_column="standardized_first_two_year_excess_ci_high",
+        q_column="first_two_year_excess_q",
+        xlabel=rf"2023-2024 excess over pre-trend (pre $\sigma$)",
+        delta_label="excess",
+        label_map=label_map,
+        top_n=top_n,
+    )
+
+
+def save_first_two_year_grouped_excess_plots(
+    stats: pd.DataFrame,
+    output_dir: Path,
+    *,
+    label_map: dict[str, str] | None = None,
+    top_n_per_group: int = 25,
+) -> list[Path]:
+    if stats.empty or "feature" not in stats.columns or "family" not in stats.columns:
+        return []
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths: list[Path] = []
+    for family, group_df in stats.groupby("family", sort=True):
+        family_slug = str(family).replace(" ", "_").replace("/", "_")
+        path = output_dir / f"first_two_year_excess_{family_slug}.png"
+        saved_path = _save_effect_plot(
+            group_df,
+            path,
+            value_column="standardized_first_two_year_excess",
+            ci_low_column="standardized_first_two_year_excess_ci_low",
+            ci_high_column="standardized_first_two_year_excess_ci_high",
+            q_column="first_two_year_excess_q",
+            xlabel=rf"2023-2024 excess over pre-trend (pre $\sigma$)",
             delta_label="excess",
             label_map=label_map,
             top_n=top_n_per_group,
@@ -495,6 +594,86 @@ def _fit_first_post_year_excess(
         "first_post_year_excess_p": float(fit["p_values"][2]),
         "r_squared": float(fit["r_squared"]),
         "model": "pretrend_plus_first_post_year_indicator_wls_hac",
+        "hac_lags": config.hac_lags,
+    }
+
+
+def _fit_first_two_year_excess(
+    monthly: pd.DataFrame,
+    feature: str,
+    intervention_date: pd.Timestamp,
+    config: ITSConfig,
+    target_years: tuple[int, int],
+) -> dict[str, object] | None:
+    value_col = f"{feature}_monthly_mean"
+    if value_col not in monthly.columns:
+        return None
+
+    frame = _monthly_model_frame(monthly, value_col, intervention_date)
+    if frame is None:
+        return None
+
+    target_year_set = {int(year) for year in target_years}
+    frame["year"] = frame["month_ts"].dt.year
+    frame = frame[(frame["post"] == 0) | (frame["year"].isin(target_year_set))].copy()
+    if frame.empty:
+        return None
+
+    frame["target_period"] = frame["year"].isin(target_year_set).astype(float)
+    pre_count = int((frame["post"] == 0).sum())
+    target_count = int(frame["target_period"].sum())
+    if pre_count < config.min_pre_months or target_count < config.min_post_months:
+        return None
+
+    x = frame[["const", "time", "target_period"]].to_numpy(dtype=float)
+    y = frame["value"].to_numpy(dtype=float)
+    weights = frame["paper_count"].clip(lower=1.0).to_numpy(dtype=float)
+
+    fit = _fit_weighted_hac(x, y, weights, config.hac_lags)
+    if fit is None:
+        return None
+
+    excess = float(fit["params"][2])
+    excess_se = float(fit["se"][2])
+    pre_values = frame.loc[frame["post"] == 0, "value"]
+    pre_sd = float(pre_values.std(ddof=1)) if len(pre_values) > 1 else np.nan
+
+    def _standardize(value: float) -> float:
+        return value / pre_sd if np.isfinite(pre_sd) and pre_sd > 0 else np.nan
+
+    target_frame = frame[frame["target_period"] == 1].copy()
+    target_weights = target_frame["paper_count"].clip(lower=1.0).to_numpy(dtype=float)
+    target_x_without_indicator = target_frame[["const", "time"]].to_numpy(dtype=float)
+    pretrend_params = np.asarray(fit["params"][:2], dtype=float)
+    observed_target_mean = float(np.average(target_frame["value"], weights=target_weights))
+    counterfactual_target_mean = float(np.average(target_x_without_indicator @ pretrend_params, weights=target_weights))
+    target_years_label = "-".join(str(year) for year in sorted(target_year_set))
+
+    return {
+        "feature": feature,
+        "family": _feature_family(feature),
+        "intervention_date": intervention_date.date().isoformat(),
+        "target_years": target_years_label,
+        "n_months": len(frame),
+        "n_pre_months": pre_count,
+        "n_target_period_months": target_count,
+        "pre_mean": float(pre_values.mean()),
+        "target_period_observed_mean": observed_target_mean,
+        "target_period_counterfactual_mean": counterfactual_target_mean,
+        "pre_sd": pre_sd,
+        "pre_slope_per_month": float(fit["params"][1]),
+        "pre_slope_per_year": float(fit["params"][1]) * 12.0,
+        "first_two_year_excess": excess,
+        "first_two_year_excess_se": excess_se,
+        "first_two_year_excess_ci_low": excess - 1.96 * excess_se,
+        "first_two_year_excess_ci_high": excess + 1.96 * excess_se,
+        "standardized_first_two_year_excess": _standardize(excess),
+        "standardized_first_two_year_excess_se": _standardize(excess_se),
+        "standardized_first_two_year_excess_ci_low": _standardize(excess - 1.96 * excess_se),
+        "standardized_first_two_year_excess_ci_high": _standardize(excess + 1.96 * excess_se),
+        "first_two_year_excess_p": float(fit["p_values"][2]),
+        "r_squared": float(fit["r_squared"]),
+        "model": "pretrend_plus_first_two_year_indicator_wls_hac",
         "hac_lags": config.hac_lags,
     }
 
@@ -936,6 +1115,38 @@ def _empty_first_post_year_excess_frame() -> pd.DataFrame:
             "standardized_first_post_year_excess_ci_high",
             "first_post_year_excess_p",
             "first_post_year_excess_q",
+            "r_squared",
+            "model",
+            "hac_lags",
+        ]
+    )
+
+
+def _empty_first_two_year_excess_frame() -> pd.DataFrame:
+    return pd.DataFrame(
+        columns=[
+            "feature",
+            "family",
+            "intervention_date",
+            "target_years",
+            "n_months",
+            "n_pre_months",
+            "n_target_period_months",
+            "pre_mean",
+            "target_period_observed_mean",
+            "target_period_counterfactual_mean",
+            "pre_sd",
+            "pre_slope_per_year",
+            "first_two_year_excess",
+            "first_two_year_excess_se",
+            "first_two_year_excess_ci_low",
+            "first_two_year_excess_ci_high",
+            "standardized_first_two_year_excess",
+            "standardized_first_two_year_excess_se",
+            "standardized_first_two_year_excess_ci_low",
+            "standardized_first_two_year_excess_ci_high",
+            "first_two_year_excess_p",
+            "first_two_year_excess_q",
             "r_squared",
             "model",
             "hac_lags",
