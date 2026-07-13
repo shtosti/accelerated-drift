@@ -66,7 +66,7 @@ Targeted follow-up analyses can be run after `preprocess` or `analyze` with:
 uv run python main.py --config config.toml additional-analysis
 ```
 
-This currently runs the dependency-based determiner decomposition used to examine whether determiner decline is concentrated in prepositional-object contexts. By default, it reads the configured feature dataset if present, otherwise the configured preprocessed JSONL, and writes outputs to `<analysis_dir>/additional_analysis/`. Use `--input`, `--output-dir`, or `--chunk-size` to override those defaults.
+This currently runs the dependency-based determiner decomposition used to examine whether determiner decline is concentrated in prepositional-object contexts, plus dependency-edge bigram trends such as `prep->pobj`, `pobj->amod`, and `pobj->compound`. By default, it reads the configured feature dataset if present, otherwise the configured preprocessed JSONL, and writes outputs to `<analysis_dir>/additional_analysis/`. Use `--input`, `--output-dir`, or `--chunk-size` to override those defaults.
 
 To compare title-only and abstract-only trend analyses after both have been run:
 
@@ -93,6 +93,8 @@ uv run python main.py --config config_mini.toml visualize
 - `data/analysis/<stem>/trends_by_month.csv`: monthly feature means
 - `data/analysis/<stem>/its_stats.csv`: primary interrupted time-series statistics
 - `data/analysis/<stem>/its_placebo_stats.csv`: placebo interrupted time-series checks
+- `data/analysis/<stem>/first_post_year_counterfactual_excess.csv`: 2023 excess over the pre-ChatGPT trend counterfactual
+- `data/analysis/<stem>/first_two_year_counterfactual_excess.csv`: 2023-2024 excess over the pre-ChatGPT trend counterfactual
 - `data/analysis/<stem>/topic_*.csv`: topic labels, prevalence, and summaries
 - `data/analysis/<stem>/topics/topic_*/`: topic-level trend tables
 - `data/analysis/<stem>/additional_analysis/`: targeted follow-up outputs such as the determiner decomposition CSVs and plot
@@ -118,6 +120,8 @@ Interpretation:
 5. `beta1 + beta3` is the post-intervention monthly slope.
 
 The main tests use `slope_change_per_year`, its 95% confidence interval, `slope_change_p`, and family-level Benjamini-Hochberg `slope_change_q`. Models are weighted by monthly paper count and use HAC/Newey-West style standard errors for autocorrelated monthly residuals. Standardized effect sizes divide the annualized slope change by the pre-intervention monthly standard deviation.
+
+As a complementary check for short-lived post-ChatGPT elevations, the pipeline also estimates counterfactual excess over the pre-intervention trend. It reports both a 2023 first-post-year excess and a combined 2023-2024 early post-period excess. The output tables include raw and standardized excess estimates, confidence intervals, p-values, and family-level FDR q-values.
 
 ## Topic Modeling
 

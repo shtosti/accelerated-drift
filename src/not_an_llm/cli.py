@@ -264,6 +264,9 @@ def main() -> None:
         print(f"Saved determiner decomposition documents to {artifacts.per_document_csv}")
         print(f"Saved determiner decomposition yearly trends to {artifacts.yearly_csv}")
         print(f"Saved determiner decomposition plot to {artifacts.plot_path}")
+        print(f"Saved dependency bigram yearly trends to {artifacts.dependency_bigram_yearly_csv}")
+        print(f"Saved dependency bigram change table to {artifacts.dependency_bigram_change_csv}")
+        print(f"Saved dependency bigram trend plot to {artifacts.dependency_bigram_plot_path}")
         return
 
     if args.command == "visualize":
