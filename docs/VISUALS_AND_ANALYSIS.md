@@ -52,6 +52,10 @@ The `analyze` step can produce both analysis artifacts and plots, while the `vis
   - Fits a pre-intervention linear counterfactual and tests whether the observed 2023 mean is elevated or depressed relative to that trend.
   - Useful for features with short-lived spikes or hump-shaped post-ChatGPT trajectories.
 
+- `data/analysis/<dataset>/first_two_year_counterfactual_excess.csv`
+  - Complementary early post-period excess table.
+  - Uses the same pre-intervention counterfactual design, but tests the combined 2023-2024 period.
+
 - `data/analysis/<dataset>/additional_analysis/determiner_decomposition_documents.csv`
   - Document-level counts used in the determiner decomposition follow-up analysis.
   - Includes total words, determiner counts attached to prepositional objects, other determiner counts, and dependency-role counts used for the role-proportion comparison.
@@ -59,6 +63,13 @@ The `analyze` step can produce both analysis artifacts and plots, while the `vis
 - `data/analysis/<dataset>/additional_analysis/determiner_decomposition_yearly.csv`
   - Yearly aggregate table for the determiner decomposition.
   - Reports determiner rates per 1,000 words and the relative prevalence of `prep + pobj` versus `amod + compound` dependency roles.
+
+- `data/analysis/<dataset>/additional_analysis/dependency_bigram_yearly.csv`
+  - Yearly prevalence of directed dependency-edge bigrams, encoded as `head_dep->child_dep`.
+  - Useful for checking whether declines in prepositional phrase structure co-occur with increases in adjectival or compound modifier structures.
+
+- `data/analysis/<dataset>/additional_analysis/dependency_bigram_change.csv`
+  - Pre/post change table for dependency-edge bigrams, ranked by absolute change in edge-share.
 
 CSV statistics are kept only under `data/analysis/`. Plot directories under `data/visuals/` contain figures only. See `data/analysis/README.md` for the current table-level data dictionary.
 
