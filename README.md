@@ -76,6 +76,14 @@ uv run python scripts/compare_title_abstract_trends.py
 
 This writes paired ITS comparison tables and dependency/syntax comparison plots to `data/analysis/title_abstract_comparison/`.
 
+To compare ITS slope-change profiles across the title-only and abstract-only corpora:
+
+```bash
+uv run python scripts/compare_corpus_trends.py
+```
+
+This writes corpus-correlation tables to `data/analysis/corpus_comparison/` and figures to `data/visuals/corpus_comparison/`, including overall correlations, feature-group correlations, syntax/dependency slope comparisons, dependency-role and dependency-bigram correlations when source files are available, and largest cross-corpus feature differences. Combined title+abstract datasets are ignored by default.
+
 ### Mini Dataset
 
 The mini configuration is intended for quick checks of the pipeline.
@@ -99,7 +107,9 @@ uv run python main.py --config config_mini.toml visualize
 - `data/analysis/<stem>/topics/topic_*/`: topic-level trend tables
 - `data/analysis/<stem>/additional_analysis/`: targeted follow-up outputs such as the determiner decomposition CSVs and plot
 - `data/analysis/title_abstract_comparison/`: title-versus-abstract ITS comparison tables and plots
+- `data/analysis/corpus_comparison/`: cross-corpus ITS slope-correlation and feature-difference tables
 - `data/visuals/<stem>/`: rendered figures
+- `data/visuals/corpus_comparison/`: cross-corpus comparison figures
 
 The paper-facing inferential tables are the monthly interrupted time-series outputs in `data/analysis/<stem>/its_stats.csv`. Pre/post percentage-change plots are retained as descriptive summaries.
 
