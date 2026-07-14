@@ -87,7 +87,7 @@ fields = [
 
 [analysis]
 enabled = true
-text_source = "abstract" # title_abstract, abstract, or title
+text_source = "title" # title_abstract, abstract, or title
 generate_plots = true
 include_readability = true
 topic_modeling_enabled = true

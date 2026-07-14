@@ -66,6 +66,14 @@ Targeted follow-up analyses can be run after `preprocess` or `analyze` with:
 uv run python main.py --config config.toml additional-analysis
 ```
 
+To refresh only the strict pre-intervention counterfactual tables and plots
+from an existing `trends_by_month.csv`, without feature extraction, topic
+modeling, or dependency parsing:
+
+```bash
+uv run python main.py --config config.toml additional-analysis --counterfactual-only
+```
+
 This currently runs the dependency-based determiner decomposition used to examine whether determiner decline is concentrated in prepositional-object contexts, plus dependency-edge bigram trends such as `prep->pobj`, `pobj->amod`, and `pobj->compound`. By default, it reads the configured feature dataset if present, otherwise the configured preprocessed JSONL, and writes outputs to `<analysis_dir>/additional_analysis/`. Use `--input`, `--output-dir`, or `--chunk-size` to override those defaults.
 
 To compare title-only and abstract-only trend analyses after both have been run:
