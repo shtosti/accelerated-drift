@@ -11,11 +11,11 @@ import pandas as pd
 import spacy
 
 from not_an_llm.config import AppConfig
+from not_an_llm.analysis.trends import DEPENDENCY_ROLE_COLORS
 from not_an_llm.pipelines.analyze import _resolve_analysis_paths
 
 
 LOGGER = logging.getLogger(__name__)
-
 
 @dataclass(slots=True)
 class AdditionalAnalysisArtifacts:
@@ -373,7 +373,7 @@ def _save_dependency_bigram_trend_plot(
     change: pd.DataFrame,
     output_path: Path,
     *,
-    top_n: int = 12,
+    top_n: int = 10,
 ) -> None:
     if yearly.empty or change.empty:
         return
@@ -383,24 +383,60 @@ def _save_dependency_bigram_trend_plot(
     if plot_df.empty:
         return
 
-    fig, ax = plt.subplots(figsize=(7.0, 4.2))
-    for bigram in top_bigrams:
+    fig, ax = plt.subplots(figsize=(3.35, 2.05))
+    for index, bigram in enumerate(top_bigrams):
         series = plot_df[plot_df["dependency_bigram"] == bigram].sort_values("year")
         if series.empty:
             continue
-        ax.plot(series["year"], series["proportion"], marker="o", linewidth=1.5, label=bigram)
+        ax.plot(
+            series["year"],
+            series["proportion"],
+            marker="o",
+            markersize=2.4,
+            linewidth=0.9,
+            color=DEPENDENCY_ROLE_COLORS[index % len(DEPENDENCY_ROLE_COLORS)],
+            label=bigram,
+        )
 
     ax.axvline(2022.92, color="#333333", linestyle="--", linewidth=0.9, alpha=0.7)
-    ax.set_xlabel("Year")
-    ax.set_ylabel("Share of dependency edges")
+    ax.set_xlabel("Year", fontsize=7)
+    ax.set_ylabel("Edge share", fontsize=7)
     ax.grid(alpha=0.25)
-    ax.legend(fontsize=7, ncol=2, frameon=True)
-    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.xaxis.set_major_locator(MaxNLocator(nbins=5, integer=True))
     ax.xaxis.set_major_formatter(StrMethodFormatter("{x:.0f}"))
-    ax.tick_params(axis="x", rotation=45)
+    ax.tick_params(axis="both", labelsize=6)
+    ax.tick_params(axis="x", rotation=45, pad=1)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
-    fig.savefig(output_path, dpi=200, bbox_inches="tight")
+    fig.savefig(output_path, dpi=200, bbox_inches="tight", pad_inches=0.03)
+    _save_dependency_bigram_legend(ax, output_path.with_name(f"{output_path.stem}_legend{output_path.suffix}"))
+    plt.close(fig)
+
+
+def _save_dependency_bigram_legend(ax: plt.Axes, output_path: Path) -> None:
+    handles, labels = ax.get_legend_handles_labels()
+    if not handles:
+        return
+    ncol = 2
+    rows = (len(handles) + ncol - 1) // ncol
+    fig, legend_ax = plt.subplots(figsize=(2.65, 0.14 * rows + 0.08))
+    legend_ax.axis("off")
+    legend_ax.legend(
+        handles,
+        labels,
+        loc="center left",
+        bbox_to_anchor=(0, 0.5, 1, 0.01),
+        mode="expand",
+        ncol=ncol,
+        fontsize=5.2,
+        frameon=False,
+        handlelength=1.0,
+        columnspacing=0.25,
+        handletextpad=0.35,
+        borderaxespad=0,
+        labelspacing=0.25,
+    )
+    fig.savefig(output_path, dpi=200, bbox_inches="tight", pad_inches=0)
     plt.close(fig)
 
 
