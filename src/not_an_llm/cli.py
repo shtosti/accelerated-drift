@@ -63,6 +63,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=2000,
         help="Rows to parse per chunk for targeted dependency analyses.",
     )
+    additional.add_argument(
+        "--counterfactual-only",
+        action="store_true",
+        help="Refresh strict counterfactual tables and plots from existing monthly trends; skip dependency parsing.",
+    )
     subparsers.add_parser("visualize", help="Generate plots from previously computed analysis data.")
     topic_compare = subparsers.add_parser(
         "topic-compare",
@@ -260,13 +265,19 @@ def main() -> None:
             input_path=args.input,
             output_dir=args.output_dir,
             chunk_size=args.chunk_size,
+            counterfactual_only=args.counterfactual_only,
         )
-        print(f"Saved determiner decomposition documents to {artifacts.per_document_csv}")
-        print(f"Saved determiner decomposition yearly trends to {artifacts.yearly_csv}")
-        print(f"Saved determiner decomposition plot to {artifacts.plot_path}")
-        print(f"Saved dependency bigram yearly trends to {artifacts.dependency_bigram_yearly_csv}")
-        print(f"Saved dependency bigram change table to {artifacts.dependency_bigram_change_csv}")
-        print(f"Saved dependency bigram trend plot to {artifacts.dependency_bigram_plot_path}")
+        if artifacts.first_post_year_counterfactual_csv is not None:
+            print(f"Saved first-post-year counterfactual statistics to {artifacts.first_post_year_counterfactual_csv}")
+            print(f"Saved first-two-year counterfactual statistics to {artifacts.first_two_year_counterfactual_csv}")
+            print(f"Saved counterfactual plots ({len(artifacts.counterfactual_plot_paths)} files)")
+        if artifacts.per_document_csv is not None:
+            print(f"Saved determiner decomposition documents to {artifacts.per_document_csv}")
+            print(f"Saved determiner decomposition yearly trends to {artifacts.yearly_csv}")
+            print(f"Saved determiner decomposition plot to {artifacts.plot_path}")
+            print(f"Saved dependency bigram yearly trends to {artifacts.dependency_bigram_yearly_csv}")
+            print(f"Saved dependency bigram change table to {artifacts.dependency_bigram_change_csv}")
+            print(f"Saved dependency bigram trend plot to {artifacts.dependency_bigram_plot_path}")
         return
 
     if args.command == "visualize":
