@@ -98,10 +98,10 @@ def compute_first_post_year_counterfactual_excess(
 ) -> pd.DataFrame:
     """Estimate first-post-year excess over a pre-intervention counterfactual.
 
-    For each feature, fit a linear pre-intervention trend and a target-year
-    indicator using pre-intervention months plus months in ``target_year``. The
-    target-year coefficient estimates how far the observed first full post-LLM
-    year sits above or below the continuation of the pre-existing trend.
+    For each feature, fit a linear trend using pre-intervention months only,
+    extrapolate it into ``target_year``, and estimate the weighted mean
+    observed-minus-counterfactual deviation. Post-intervention observations
+    never contribute to estimation of the counterfactual trend.
     """
 
     config = config or ITSConfig()
@@ -536,53 +536,66 @@ def _fit_first_post_year_excess(
         return None
 
     frame["year"] = frame["month_ts"].dt.year
-    frame = frame[(frame["post"] == 0) | (frame["year"] == int(target_year))].copy()
-    if frame.empty:
+    pre_frame = frame[frame["post"] == 0].copy()
+    target_frame = frame[frame["year"] == int(target_year)].copy()
+    if pre_frame.empty or target_frame.empty:
         return None
 
-    frame["target_year"] = (frame["year"] == int(target_year)).astype(float)
-    pre_count = int((frame["post"] == 0).sum())
-    target_count = int(frame["target_year"].sum())
+    pre_count = len(pre_frame)
+    target_count = len(target_frame)
     if pre_count < config.min_pre_months or target_count < config.min_post_months:
         return None
 
-    x = frame[["const", "time", "target_year"]].to_numpy(dtype=float)
-    y = frame["value"].to_numpy(dtype=float)
-    weights = frame["paper_count"].clip(lower=1.0).to_numpy(dtype=float)
-
-    fit = _fit_weighted_hac(x, y, weights, config.hac_lags)
-    if fit is None:
+    pre_x = pre_frame[["const", "time"]].to_numpy(dtype=float)
+    pre_y = pre_frame["value"].to_numpy(dtype=float)
+    pre_weights = pre_frame["paper_count"].clip(lower=1.0).to_numpy(dtype=float)
+    pre_fit = _fit_weighted_hac(pre_x, pre_y, pre_weights, config.hac_lags)
+    if pre_fit is None:
         return None
 
-    excess = float(fit["params"][2])
-    excess_se = float(fit["se"][2])
-    pre_values = frame.loc[frame["post"] == 0, "value"]
+    target_x = target_frame[["const", "time"]].to_numpy(dtype=float)
+    target_y = target_frame["value"].to_numpy(dtype=float)
+    target_weights = target_frame["paper_count"].clip(lower=1.0).to_numpy(dtype=float)
+    counterfactual_values = target_x @ np.asarray(pre_fit["params"], dtype=float)
+    target_residuals = target_y - counterfactual_values
+    target_mean_fit = _fit_weighted_hac(
+        np.ones((target_count, 1), dtype=float),
+        target_residuals,
+        target_weights,
+        config.hac_lags,
+    )
+    if target_mean_fit is None:
+        return None
+
+    excess = float(np.average(target_residuals, weights=target_weights))
+    target_sampling_variance = float(target_mean_fit["se"][0]) ** 2
+    target_mean_x = np.average(target_x, axis=0, weights=target_weights)
+    pretrend_covariance = np.asarray(pre_fit["covariance"], dtype=float)
+    counterfactual_variance = float(target_mean_x @ pretrend_covariance @ target_mean_x)
+    excess_se = sqrt(max(0.0, target_sampling_variance + counterfactual_variance))
+    pre_values = pre_frame["value"]
     pre_sd = float(pre_values.std(ddof=1)) if len(pre_values) > 1 else np.nan
 
     def _standardize(value: float) -> float:
         return value / pre_sd if np.isfinite(pre_sd) and pre_sd > 0 else np.nan
 
-    target_frame = frame[frame["target_year"] == 1].copy()
-    target_weights = target_frame["paper_count"].clip(lower=1.0).to_numpy(dtype=float)
-    target_x_without_indicator = target_frame[["const", "time"]].to_numpy(dtype=float)
-    pretrend_params = np.asarray(fit["params"][:2], dtype=float)
-    observed_target_mean = float(np.average(target_frame["value"], weights=target_weights))
-    counterfactual_target_mean = float(np.average(target_x_without_indicator @ pretrend_params, weights=target_weights))
+    observed_target_mean = float(np.average(target_y, weights=target_weights))
+    counterfactual_target_mean = float(np.average(counterfactual_values, weights=target_weights))
 
     return {
         "feature": feature,
         "family": _feature_family(feature),
         "intervention_date": intervention_date.date().isoformat(),
         "target_year": int(target_year),
-        "n_months": len(frame),
+        "n_months": pre_count + target_count,
         "n_pre_months": pre_count,
         "n_target_year_months": target_count,
         "pre_mean": float(pre_values.mean()),
         "target_year_observed_mean": observed_target_mean,
         "target_year_counterfactual_mean": counterfactual_target_mean,
         "pre_sd": pre_sd,
-        "pre_slope_per_month": float(fit["params"][1]),
-        "pre_slope_per_year": float(fit["params"][1]) * 12.0,
+        "pre_slope_per_month": float(pre_fit["params"][1]),
+        "pre_slope_per_year": float(pre_fit["params"][1]) * 12.0,
         "first_post_year_excess": excess,
         "first_post_year_excess_se": excess_se,
         "first_post_year_excess_ci_low": excess - 1.96 * excess_se,
@@ -591,9 +604,13 @@ def _fit_first_post_year_excess(
         "standardized_first_post_year_excess_se": _standardize(excess_se),
         "standardized_first_post_year_excess_ci_low": _standardize(excess - 1.96 * excess_se),
         "standardized_first_post_year_excess_ci_high": _standardize(excess + 1.96 * excess_se),
-        "first_post_year_excess_p": float(fit["p_values"][2]),
-        "r_squared": float(fit["r_squared"]),
-        "model": "pretrend_plus_first_post_year_indicator_wls_hac",
+        "first_post_year_excess_p": (
+            erfc(abs(excess / excess_se) / sqrt(2.0))
+            if excess_se > 0
+            else (1.0 if abs(excess) <= 1e-12 else 0.0)
+        ),
+        "r_squared": float(pre_fit["r_squared"]),
+        "model": "strict_pretrend_counterfactual_wls_hac",
         "hac_lags": config.hac_lags,
     }
 
@@ -615,38 +632,51 @@ def _fit_first_two_year_excess(
 
     target_year_set = {int(year) for year in target_years}
     frame["year"] = frame["month_ts"].dt.year
-    frame = frame[(frame["post"] == 0) | (frame["year"].isin(target_year_set))].copy()
-    if frame.empty:
+    pre_frame = frame[frame["post"] == 0].copy()
+    target_frame = frame[frame["year"].isin(target_year_set)].copy()
+    if pre_frame.empty or target_frame.empty:
         return None
 
-    frame["target_period"] = frame["year"].isin(target_year_set).astype(float)
-    pre_count = int((frame["post"] == 0).sum())
-    target_count = int(frame["target_period"].sum())
+    pre_count = len(pre_frame)
+    target_count = len(target_frame)
     if pre_count < config.min_pre_months or target_count < config.min_post_months:
         return None
 
-    x = frame[["const", "time", "target_period"]].to_numpy(dtype=float)
-    y = frame["value"].to_numpy(dtype=float)
-    weights = frame["paper_count"].clip(lower=1.0).to_numpy(dtype=float)
-
-    fit = _fit_weighted_hac(x, y, weights, config.hac_lags)
-    if fit is None:
+    pre_x = pre_frame[["const", "time"]].to_numpy(dtype=float)
+    pre_y = pre_frame["value"].to_numpy(dtype=float)
+    pre_weights = pre_frame["paper_count"].clip(lower=1.0).to_numpy(dtype=float)
+    pre_fit = _fit_weighted_hac(pre_x, pre_y, pre_weights, config.hac_lags)
+    if pre_fit is None:
         return None
 
-    excess = float(fit["params"][2])
-    excess_se = float(fit["se"][2])
-    pre_values = frame.loc[frame["post"] == 0, "value"]
+    target_x = target_frame[["const", "time"]].to_numpy(dtype=float)
+    target_y = target_frame["value"].to_numpy(dtype=float)
+    target_weights = target_frame["paper_count"].clip(lower=1.0).to_numpy(dtype=float)
+    counterfactual_values = target_x @ np.asarray(pre_fit["params"], dtype=float)
+    target_residuals = target_y - counterfactual_values
+    target_mean_fit = _fit_weighted_hac(
+        np.ones((target_count, 1), dtype=float),
+        target_residuals,
+        target_weights,
+        config.hac_lags,
+    )
+    if target_mean_fit is None:
+        return None
+
+    excess = float(np.average(target_residuals, weights=target_weights))
+    target_sampling_variance = float(target_mean_fit["se"][0]) ** 2
+    target_mean_x = np.average(target_x, axis=0, weights=target_weights)
+    pretrend_covariance = np.asarray(pre_fit["covariance"], dtype=float)
+    counterfactual_variance = float(target_mean_x @ pretrend_covariance @ target_mean_x)
+    excess_se = sqrt(max(0.0, target_sampling_variance + counterfactual_variance))
+    pre_values = pre_frame["value"]
     pre_sd = float(pre_values.std(ddof=1)) if len(pre_values) > 1 else np.nan
 
     def _standardize(value: float) -> float:
         return value / pre_sd if np.isfinite(pre_sd) and pre_sd > 0 else np.nan
 
-    target_frame = frame[frame["target_period"] == 1].copy()
-    target_weights = target_frame["paper_count"].clip(lower=1.0).to_numpy(dtype=float)
-    target_x_without_indicator = target_frame[["const", "time"]].to_numpy(dtype=float)
-    pretrend_params = np.asarray(fit["params"][:2], dtype=float)
-    observed_target_mean = float(np.average(target_frame["value"], weights=target_weights))
-    counterfactual_target_mean = float(np.average(target_x_without_indicator @ pretrend_params, weights=target_weights))
+    observed_target_mean = float(np.average(target_y, weights=target_weights))
+    counterfactual_target_mean = float(np.average(counterfactual_values, weights=target_weights))
     target_years_label = "-".join(str(year) for year in sorted(target_year_set))
 
     return {
@@ -654,15 +684,15 @@ def _fit_first_two_year_excess(
         "family": _feature_family(feature),
         "intervention_date": intervention_date.date().isoformat(),
         "target_years": target_years_label,
-        "n_months": len(frame),
+        "n_months": pre_count + target_count,
         "n_pre_months": pre_count,
         "n_target_period_months": target_count,
         "pre_mean": float(pre_values.mean()),
         "target_period_observed_mean": observed_target_mean,
         "target_period_counterfactual_mean": counterfactual_target_mean,
         "pre_sd": pre_sd,
-        "pre_slope_per_month": float(fit["params"][1]),
-        "pre_slope_per_year": float(fit["params"][1]) * 12.0,
+        "pre_slope_per_month": float(pre_fit["params"][1]),
+        "pre_slope_per_year": float(pre_fit["params"][1]) * 12.0,
         "first_two_year_excess": excess,
         "first_two_year_excess_se": excess_se,
         "first_two_year_excess_ci_low": excess - 1.96 * excess_se,
@@ -671,9 +701,13 @@ def _fit_first_two_year_excess(
         "standardized_first_two_year_excess_se": _standardize(excess_se),
         "standardized_first_two_year_excess_ci_low": _standardize(excess - 1.96 * excess_se),
         "standardized_first_two_year_excess_ci_high": _standardize(excess + 1.96 * excess_se),
-        "first_two_year_excess_p": float(fit["p_values"][2]),
-        "r_squared": float(fit["r_squared"]),
-        "model": "pretrend_plus_first_two_year_indicator_wls_hac",
+        "first_two_year_excess_p": (
+            erfc(abs(excess / excess_se) / sqrt(2.0))
+            if excess_se > 0
+            else (1.0 if abs(excess) <= 1e-12 else 0.0)
+        ),
+        "r_squared": float(pre_fit["r_squared"]),
+        "model": "strict_pretrend_counterfactual_wls_hac",
         "hac_lags": config.hac_lags,
     }
 
@@ -727,6 +761,7 @@ def _fit_weighted_hac(
     return {
         "params": params,
         "se": se,
+        "covariance": covariance,
         "p_values": p_values,
         "r_squared": r_squared,
     }

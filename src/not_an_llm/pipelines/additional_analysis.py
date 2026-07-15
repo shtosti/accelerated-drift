@@ -11,6 +11,16 @@ import pandas as pd
 import spacy
 
 from not_an_llm.config import AppConfig
+from not_an_llm.analysis.feature_selection import resolve_feature_columns
+from not_an_llm.analysis.interrupted_time_series import (
+    compute_first_post_year_counterfactual_excess,
+    compute_first_two_year_counterfactual_excess,
+    save_first_post_year_excess_plot,
+    save_first_post_year_grouped_excess_plots,
+    save_first_two_year_excess_plot,
+    save_first_two_year_grouped_excess_plots,
+)
+from not_an_llm.analysis.label_map import LABEL_MAP
 from not_an_llm.analysis.trends import DEPENDENCY_ROLE_COLORS
 from not_an_llm.pipelines.analyze import _resolve_analysis_paths
 
@@ -19,12 +29,15 @@ LOGGER = logging.getLogger(__name__)
 
 @dataclass(slots=True)
 class AdditionalAnalysisArtifacts:
-    per_document_csv: Path
-    yearly_csv: Path
-    plot_path: Path
-    dependency_bigram_yearly_csv: Path
-    dependency_bigram_change_csv: Path
-    dependency_bigram_plot_path: Path
+    per_document_csv: Path | None
+    yearly_csv: Path | None
+    plot_path: Path | None
+    dependency_bigram_yearly_csv: Path | None
+    dependency_bigram_change_csv: Path | None
+    dependency_bigram_plot_path: Path | None
+    first_post_year_counterfactual_csv: Path | None
+    first_two_year_counterfactual_csv: Path | None
+    counterfactual_plot_paths: list[Path]
 
 
 def run_additional_analysis(
@@ -33,11 +46,33 @@ def run_additional_analysis(
     input_path: str | Path | None = None,
     output_dir: str | Path | None = None,
     chunk_size: int = 2000,
+    counterfactual_only: bool = False,
 ) -> AdditionalAnalysisArtifacts:
     """Run small, targeted follow-up analyses without rerunning the full pipeline."""
 
+    analysis_dir, _, _, monthly_csv, plot_dir = _resolve_analysis_paths(config)
+    if monthly_csv.exists():
+        counterfactual_paths = _run_counterfactual_analysis(config, monthly_csv, analysis_dir, plot_dir)
+    elif counterfactual_only:
+        raise FileNotFoundError(
+            f"Monthly trends not found at {monthly_csv}. Run analyze once before "
+            "running additional-analysis --counterfactual-only."
+        )
+    else:
+        LOGGER.warning("Skipping counterfactual refresh because %s does not exist", monthly_csv)
+        counterfactual_paths = (None, None, [])
+    if counterfactual_only:
+        return AdditionalAnalysisArtifacts(
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            *counterfactual_paths,
+        )
+
     source_path = _resolve_additional_input(config, input_path)
-    analysis_dir, _, _, _, plot_dir = _resolve_analysis_paths(config)
     out_dir = Path(output_dir) if output_dir is not None else analysis_dir / "additional_analysis"
     visual_out_dir = _resolve_additional_visual_output_dir(config, output_dir, plot_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -103,6 +138,7 @@ def run_additional_analysis(
             bigram_yearly_path,
             bigram_change_path,
             bigram_plot_path,
+            *counterfactual_paths,
         )
 
     per_doc = pd.concat(yearly_parts, ignore_index=True)
@@ -125,7 +161,63 @@ def run_additional_analysis(
         bigram_yearly_path,
         bigram_change_path,
         bigram_plot_path,
+        *counterfactual_paths,
     )
+
+
+def _run_counterfactual_analysis(
+    config: AppConfig,
+    monthly_csv: Path,
+    analysis_dir: Path,
+    plot_dir: Path,
+) -> tuple[Path, Path, list[Path]]:
+    """Refresh strict pre-intervention counterfactual outputs from monthly trends."""
+
+    monthly = pd.read_csv(monthly_csv)
+    features = resolve_feature_columns(config, monthly)
+    if not features:
+        raise ValueError(f"No configured analysis features were found in {monthly_csv}")
+
+    LOGGER.info("Computing strict counterfactual analyses from %s", monthly_csv)
+    first_post_year = compute_first_post_year_counterfactual_excess(monthly, features)
+    first_two_year = compute_first_two_year_counterfactual_excess(monthly, features)
+
+    first_post_year_csv = analysis_dir / "first_post_year_counterfactual_excess.csv"
+    first_two_year_csv = analysis_dir / "first_two_year_counterfactual_excess.csv"
+    first_post_year.to_csv(first_post_year_csv, index=False)
+    first_two_year.to_csv(first_two_year_csv, index=False)
+
+    plot_paths: list[Path] = []
+    first_plot = save_first_post_year_excess_plot(
+        first_post_year,
+        plot_dir / "first_post_year_counterfactual_excess" / "overall.png",
+        label_map=LABEL_MAP,
+    )
+    if first_plot is not None:
+        plot_paths.append(first_plot)
+    plot_paths.extend(
+        save_first_post_year_grouped_excess_plots(
+            first_post_year,
+            plot_dir / "first_post_year_counterfactual_excess" / "groups",
+            label_map=LABEL_MAP,
+        )
+    )
+
+    second_plot = save_first_two_year_excess_plot(
+        first_two_year,
+        plot_dir / "first_two_year_counterfactual_excess" / "overall.png",
+        label_map=LABEL_MAP,
+    )
+    if second_plot is not None:
+        plot_paths.append(second_plot)
+    plot_paths.extend(
+        save_first_two_year_grouped_excess_plots(
+            first_two_year,
+            plot_dir / "first_two_year_counterfactual_excess" / "groups",
+            label_map=LABEL_MAP,
+        )
+    )
+    return first_post_year_csv, first_two_year_csv, plot_paths
 
 
 def _resolve_additional_input(config: AppConfig, input_path: str | Path | None) -> Path:

@@ -14,6 +14,8 @@ The analysis pipeline separates four main stages plus optional targeted follow-u
    - Computes style and readability features, aggregates them over time, and then generates plots from aggregated trends.
 4. `additional-analysis`
    - Runs targeted follow-up analyses that are not part of the core feature/ITS tables.
+   - Can refresh strict pre-intervention counterfactual tables and plots directly
+     from existing monthly trends with `--counterfactual-only`.
 
 The `analyze` step can produce both analysis artifacts and plots, while the `visualize` step regenerates plots from precomputed trend CSVs.
 
