@@ -490,7 +490,7 @@ def _save_dependency_bigram_trend_plot(
     if plot_df.empty:
         return
 
-    fig, ax = plt.subplots(figsize=(3.35, 2.05))
+    fig, ax = plt.subplots(figsize=(3, 2.5))
     for index, bigram in enumerate(top_bigrams):
         series = plot_df[plot_df["dependency_bigram"] == bigram].sort_values("year")
         if series.empty:
