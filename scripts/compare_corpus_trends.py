@@ -10,6 +10,8 @@ import numpy as np
 import pandas as pd
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import Patch
+from matplotlib.lines import Line2D
+from matplotlib.ticker import MaxNLocator
 from scipy import stats
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -68,6 +70,14 @@ DATASET_COLORS = {
     "arxiv_stat_titles": "#B873AA",
     "medarxiv_titles": "#D3A8CD",
 }
+
+CORPUS_LINESTYLES = {
+    "arxiv_ai": "-",
+    "arxiv_qbio": "--",
+    "arxiv_stat": ":",
+    "medarxiv": "-.",
+}
+DEPENDENCY_TREND_COLORS = plt.get_cmap("tab10").colors
 
 
 def main() -> None:
@@ -205,6 +215,29 @@ def main() -> None:
             dependency_bigrams,
             primary_datasets or datasets[:4],
             visuals_output_dir / "dependency_bigram_slope_bars.png",
+        )
+    for text_kind in ("titles", "abstracts"):
+        kind_datasets = [dataset for dataset in datasets if dataset.endswith(f"_{text_kind}")]
+        ai_dataset = f"arxiv_ai_{text_kind}"
+        if ai_dataset not in kind_datasets:
+            continue
+        dependency_role_yearly = load_dependency_role_yearly(analysis_dir, kind_datasets)
+        save_cross_corpus_dependency_trends(
+            dependency_role_yearly,
+            unit_column="dependency_role",
+            ai_dataset=ai_dataset,
+            datasets=kind_datasets,
+            path=visuals_output_dir / f"dependency_role_trends_{text_kind}.png",
+            ylabel="Dependency role share",
+        )
+        dependency_bigram_yearly = load_dependency_bigram_yearly(analysis_dir, kind_datasets)
+        save_cross_corpus_dependency_trends(
+            dependency_bigram_yearly,
+            unit_column="dependency_bigram",
+            ai_dataset=ai_dataset,
+            datasets=kind_datasets,
+            path=visuals_output_dir / f"dependency_edge_bigram_trends_{text_kind}.png",
+            ylabel="Dependency edge share",
         )
     save_pairwise_correlation_heatmap(
         dependency_bigram_corr,
@@ -407,6 +440,121 @@ def compute_dependency_role_slopes(analysis_dir: Path, datasets: list[str]) -> p
             "slope_change_per_year_ci_high",
         ],
     )
+
+
+def load_dependency_role_yearly(analysis_dir: Path, datasets: list[str]) -> pd.DataFrame:
+    """Load yearly role shares, retaining counts so the AI corpus can define the top ten."""
+    rows = []
+    for dataset in datasets:
+        path = analysis_dir / dataset / "features.jsonl"
+        if not path.exists():
+            continue
+        records = []
+        for chunk in pd.read_json(path, lines=True, chunksize=5000):
+            if not {"year", "dependency_distribution"}.issubset(chunk.columns):
+                continue
+            for row in chunk[["year", "dependency_distribution"]].itertuples(index=False):
+                if not isinstance(row.dependency_distribution, dict):
+                    continue
+                for role, count in row.dependency_distribution.items():
+                    records.append({"year": row.year, "dependency_role": role, "count": count})
+        if not records:
+            continue
+        yearly = pd.DataFrame(records)
+        yearly["year"] = pd.to_numeric(yearly["year"], errors="coerce")
+        yearly["count"] = pd.to_numeric(yearly["count"], errors="coerce")
+        yearly = yearly.dropna(subset=["year", "dependency_role", "count"])
+        yearly = yearly.groupby(["year", "dependency_role"], as_index=False)["count"].sum()
+        totals = yearly.groupby("year")["count"].transform("sum")
+        yearly["proportion"] = yearly["count"] / totals.where(totals > 0)
+        yearly.insert(0, "dataset", dataset)
+        rows.append(yearly)
+    return pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
+
+
+def load_dependency_bigram_yearly(analysis_dir: Path, datasets: list[str]) -> pd.DataFrame:
+    rows = []
+    for dataset in datasets:
+        path = analysis_dir / dataset / "additional_analysis" / "dependency_bigram_yearly.csv"
+        if not path.exists():
+            continue
+        frame = pd.read_csv(path)
+        required = {"year", "dependency_bigram", "count", "proportion"}
+        if frame.empty or not required.issubset(frame.columns):
+            continue
+        frame = frame[["year", "dependency_bigram", "count", "proportion"]].copy()
+        frame.insert(0, "dataset", dataset)
+        rows.append(frame)
+    return pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
+
+
+def save_cross_corpus_dependency_trends(
+    yearly: pd.DataFrame,
+    *,
+    unit_column: str,
+    ai_dataset: str,
+    datasets: list[str],
+    path: Path,
+    ylabel: str,
+    top_n: int = 10,
+) -> None:
+    """Plot AI-ranked dependency units with color=unit and line style=corpus."""
+    required = {"dataset", "year", unit_column, "count", "proportion"}
+    if yearly.empty or not required.issubset(yearly.columns):
+        return
+    data = yearly.copy()
+    data["year"] = pd.to_numeric(data["year"], errors="coerce")
+    data["count"] = pd.to_numeric(data["count"], errors="coerce")
+    data["proportion"] = pd.to_numeric(data["proportion"], errors="coerce")
+    data = data.dropna(subset=["year", unit_column, "count", "proportion"])
+    top_units = (
+        data[data["dataset"] == ai_dataset]
+        .groupby(unit_column)["count"]
+        .sum()
+        .nlargest(top_n)
+        .index.astype(str)
+        .tolist()
+    )
+    if not top_units:
+        return
+    data[unit_column] = data[unit_column].astype(str)
+    data = data[data[unit_column].isin(top_units)]
+    colors = {unit: DEPENDENCY_TREND_COLORS[i % len(DEPENDENCY_TREND_COLORS)] for i, unit in enumerate(top_units)}
+
+    fig, ax = plt.subplots(figsize=(5.4, 3.35))
+    for dataset in datasets:
+        corpus = dataset.removesuffix("_titles").removesuffix("_abstracts")
+        for unit in top_units:
+            series = data[(data["dataset"] == dataset) & (data[unit_column] == unit)].sort_values("year")
+            if series.empty:
+                continue
+            ax.plot(
+                series["year"], series["proportion"],
+                color=colors[unit], linestyle=CORPUS_LINESTYLES.get(corpus, "-"),
+                linewidth=1.15,
+            )
+    ax.axvline(2022.92, color="0.25", linestyle="--", linewidth=0.8, alpha=0.65)
+    ax.set_xlabel("Year", fontsize=8)
+    ax.set_ylabel(ylabel, fontsize=8)
+    ax.grid(alpha=0.22)
+    ax.xaxis.set_major_locator(MaxNLocator(nbins=7, integer=True))
+    ax.tick_params(axis="both", labelsize=7)
+    unit_handles = [Line2D([0], [0], color=colors[unit], linewidth=1.5, label=unit) for unit in top_units]
+    corpus_handles = [
+        Line2D([0], [0], color="0.2", linestyle=CORPUS_LINESTYLES[corpus], linewidth=1.4,
+               label=SHORT_DATASET_LABELS.get(corpus, corpus))
+        for corpus in CORPUS_LINESTYLES
+        if f"{corpus}_{ai_dataset.rsplit('_', 1)[1]}" in datasets
+    ]
+    first = ax.legend(handles=unit_handles, loc="upper left", bbox_to_anchor=(1.01, 1), fontsize=6,
+                      frameon=False, title="Dependency", title_fontsize=6.5)
+    ax.add_artist(first)
+    ax.legend(handles=corpus_handles, loc="lower left", bbox_to_anchor=(1.01, 0), fontsize=6,
+              frameon=False, title="Corpus", title_fontsize=6.5)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.tight_layout()
+    fig.savefig(path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
 
 
 def compute_dependency_bigram_slopes(analysis_dir: Path, datasets: list[str]) -> pd.DataFrame:
