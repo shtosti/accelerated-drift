@@ -18,12 +18,14 @@ from not_an_llm.analysis.label_map import pretty_feature_label
 DEFAULT_PAIRS = {
     "arxiv_ai": ("arxiv_ai_abstracts", "arxiv_ai_titles"),
     "arxiv_qbio": ("arxiv_qbio_abstracts", "arxiv_qbio_titles"),
+    "arxiv_stat": ("arxiv_stat_abstracts", "arxiv_stat_titles"),
     "medarxiv": ("medarxiv_abstracts", "medarxiv_titles"),
 }
 
 CORPUS_LABELS = {
     "arxiv_ai": "arXiv AI",
     "arxiv_qbio": "arXiv q-bio",
+    "arxiv_stat": "arXiv Statistics",
     "medarxiv": "medRxiv",
 }
 
@@ -207,6 +209,7 @@ def save_scatter(data: pd.DataFrame, path: Path, *, title: str) -> None:
     colors = {
         "arxiv_ai": "#1f77b4",
         "arxiv_qbio": "#ff7f0e",
+        "arxiv_stat": "#9467bd",
         "medarxiv": "#2ca02c",
     }
 

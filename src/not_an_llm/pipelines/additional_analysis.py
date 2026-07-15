@@ -4,6 +4,8 @@ from collections import Counter
 from dataclasses import dataclass
 import logging
 from pathlib import Path
+import subprocess
+import sys
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator, StrMethodFormatter
@@ -26,6 +28,19 @@ from not_an_llm.pipelines.analyze import _resolve_analysis_paths
 
 
 LOGGER = logging.getLogger(__name__)
+
+
+def run_comparison_analyses() -> None:
+    """Regenerate cross-corpus and title-vs-abstract comparisons."""
+
+    root = Path(__file__).resolve().parents[3]
+    scripts = (
+        root / "scripts" / "compare_corpus_trends.py",
+        root / "scripts" / "compare_title_abstract_trends.py",
+    )
+    for script in scripts:
+        LOGGER.info("Running comparison analysis %s", script.name)
+        subprocess.run([sys.executable, str(script)], cwd=root, check=True)
 
 @dataclass(slots=True)
 class AdditionalAnalysisArtifacts:

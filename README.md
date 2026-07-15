@@ -74,6 +74,16 @@ modeling, or dependency parsing:
 uv run python main.py --config config.toml additional-analysis --counterfactual-only
 ```
 
+Add `--comparisons` to regenerate both the cross-corpus and title-vs-abstract
+comparison tables and figures after the selected follow-up analyses:
+
+```bash
+uv run python main.py --config config.toml additional-analysis --counterfactual-only --comparisons
+```
+
+Full reproduction (`scripts/reproduce.sh all`) always runs both comparison
+scripts. They can also be selected directly with `scripts/reproduce.sh comparisons`.
+
 This currently runs the dependency-based determiner decomposition used to examine whether determiner decline is concentrated in prepositional-object contexts, plus dependency-edge bigram trends such as `prep->pobj`, `pobj->amod`, and `pobj->compound`. By default, it reads the configured feature dataset if present, otherwise the configured preprocessed JSONL, and writes outputs to `<analysis_dir>/additional_analysis/`. Use `--input`, `--output-dir`, or `--chunk-size` to override those defaults.
 
 To compare title-only and abstract-only trend analyses after both have been run:

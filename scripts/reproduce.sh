@@ -27,7 +27,7 @@ Options:
   -h, --help       Show this help
 
 Stages:
-  collect preprocess analyze visualize additional-analysis topic-compare corpus-compare
+  collect preprocess analyze visualize additional-analysis topic-compare comparisons corpus-compare
 EOF
 }
 
@@ -65,7 +65,7 @@ if [[ "${#STAGES[@]}" -eq 0 ]]; then
 fi
 
 if [[ " ${STAGES[*]} " == *" all "* ]]; then
-  STAGES=("collect" "preprocess" "analyze" "visualize" "corpus-compare")
+  STAGES=("collect" "preprocess" "analyze" "visualize" "comparisons")
 fi
 
 uv_cmd() {
@@ -105,6 +105,17 @@ for stage in "${STAGES[@]}"; do
         echo "uv run python main.py --config $CONFIG $stage"
       else
         uv_cmd run python main.py --config "$CONFIG" "$stage"
+      fi
+      ;;
+    comparisons)
+      echo
+      echo "=== $stage ==="
+      if [[ "$DRY_RUN" -eq 1 ]]; then
+        echo "uv run python scripts/compare_corpus_trends.py"
+        echo "uv run python scripts/compare_title_abstract_trends.py"
+      else
+        uv_cmd run python scripts/compare_corpus_trends.py
+        uv_cmd run python scripts/compare_title_abstract_trends.py
       fi
       ;;
     corpus-compare)
