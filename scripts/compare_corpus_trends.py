@@ -225,7 +225,6 @@ def main() -> None:
         save_cross_corpus_dependency_trends(
             dependency_role_yearly,
             unit_column="dependency_role",
-            ai_dataset=ai_dataset,
             datasets=kind_datasets,
             path=visuals_output_dir / f"dependency_role_trends_{text_kind}.png",
             ylabel="Dependency role share",
@@ -234,7 +233,6 @@ def main() -> None:
         save_cross_corpus_dependency_trends(
             dependency_bigram_yearly,
             unit_column="dependency_bigram",
-            ai_dataset=ai_dataset,
             datasets=kind_datasets,
             path=visuals_output_dir / f"dependency_edge_bigram_trends_{text_kind}.png",
             ylabel="Dependency edge share",
@@ -492,39 +490,47 @@ def save_cross_corpus_dependency_trends(
     yearly: pd.DataFrame,
     *,
     unit_column: str,
-    ai_dataset: str,
     datasets: list[str],
     path: Path,
     ylabel: str,
     top_n: int = 10,
+    min_mean_prevalence: float = 0.001,
 ) -> None:
-    """Plot AI-ranked dependency units with color=unit and line style=corpus."""
+    """Plot ITS-ranked dependency units with color=unit and line style=corpus."""
     required = {"dataset", "year", unit_column, "count", "proportion"}
     if yearly.empty or not required.issubset(yearly.columns):
+        _remove_dependency_trend_artifacts(path)
         return
     data = yearly.copy()
     data["year"] = pd.to_numeric(data["year"], errors="coerce")
     data["count"] = pd.to_numeric(data["count"], errors="coerce")
     data["proportion"] = pd.to_numeric(data["proportion"], errors="coerce")
     data = data.dropna(subset=["year", unit_column, "count", "proportion"])
-    top_units = (
-        data[data["dataset"] == ai_dataset]
-        .groupby(unit_column)["count"]
-        .sum()
-        .nlargest(top_n)
-        .index.astype(str)
-        .tolist()
+    data[unit_column] = data[unit_column].astype(str)
+    top_units = _top_units_by_standardized_its_change(
+        data,
+        unit_column=unit_column,
+        datasets=datasets,
+        top_n=top_n,
+        min_mean_prevalence=min_mean_prevalence,
     )
     if not top_units:
+        _remove_dependency_trend_artifacts(path)
         return
-    data[unit_column] = data[unit_column].astype(str)
     data = data[data[unit_column].isin(top_units)]
     colors = {unit: DEPENDENCY_TREND_COLORS[i % len(DEPENDENCY_TREND_COLORS)] for i, unit in enumerate(top_units)}
 
-    fig, ax = plt.subplots(figsize=(5.4, 3.35))
-    for dataset in datasets:
-        corpus = dataset.removesuffix("_titles").removesuffix("_abstracts")
-        for unit in top_units:
+    fig, axes = plt.subplots(
+        2,
+        4,
+        figsize=(7, 3.5),
+        sharex=True,
+        sharey=True,
+        constrained_layout=True,
+    )
+    for index, (ax, unit) in enumerate(zip(axes.flat, top_units, strict=False)):
+        for dataset in datasets:
+            corpus = dataset.removesuffix("_titles").removesuffix("_abstracts")
             series = data[(data["dataset"] == dataset) & (data[unit_column] == unit)].sort_values("year")
             if series.empty:
                 continue
@@ -533,27 +539,139 @@ def save_cross_corpus_dependency_trends(
                 color=colors[unit], linestyle=CORPUS_LINESTYLES.get(corpus, "-"),
                 linewidth=1.15,
             )
-    ax.axvline(2022.92, color="0.25", linestyle="--", linewidth=0.8, alpha=0.65)
-    ax.set_xlabel("Year", fontsize=8)
-    ax.set_ylabel(ylabel, fontsize=8)
-    ax.grid(alpha=0.22)
-    ax.xaxis.set_major_locator(MaxNLocator(nbins=7, integer=True))
-    ax.tick_params(axis="both", labelsize=7)
+        ax.axvline(2022.92, color="0.25", linestyle="--", linewidth=0.7, alpha=0.65)
+        ax.set_title(unit, color=colors[unit], fontsize=7.5, pad=3)
+        ax.grid(alpha=0.22)
+        ax.xaxis.set_major_locator(MaxNLocator(nbins=4, integer=True))
+        ax.tick_params(axis="both", labelsize=6)
+        ax.tick_params(axis="x", rotation=45)
+    for ax in axes.flat[len(top_units):]:
+        ax.set_visible(False)
+    fig.supylabel(ylabel, fontsize=8)
+    fig.supxlabel("Year", fontsize=8)
     unit_handles = [Line2D([0], [0], color=colors[unit], linewidth=1.5, label=unit) for unit in top_units]
     corpus_handles = [
         Line2D([0], [0], color="0.2", linestyle=CORPUS_LINESTYLES[corpus], linewidth=1.4,
                label=SHORT_DATASET_LABELS.get(corpus, corpus))
         for corpus in CORPUS_LINESTYLES
-        if f"{corpus}_{ai_dataset.rsplit('_', 1)[1]}" in datasets
+        if any(dataset.startswith(f"{corpus}_") for dataset in datasets)
     ]
-    first = ax.legend(handles=unit_handles, loc="upper left", bbox_to_anchor=(1.01, 1), fontsize=6,
-                      frameon=False, title="Dependency", title_fontsize=6.5)
-    ax.add_artist(first)
-    ax.legend(handles=corpus_handles, loc="lower left", bbox_to_anchor=(1.01, 0), fontsize=6,
-              frameon=False, title="Corpus", title_fontsize=6.5)
     path.parent.mkdir(parents=True, exist_ok=True)
-    fig.tight_layout()
-    fig.savefig(path, dpi=200, bbox_inches="tight")
+    fig.savefig(path, dpi=200, bbox_inches="tight", facecolor="white", pad_inches=0.04)
+    plt.close(fig)
+    _save_cross_corpus_dependency_legend(
+        unit_handles,
+        corpus_handles,
+        path.with_name(f"{path.stem}_legend{path.suffix}"),
+    )
+
+
+def _remove_dependency_trend_artifacts(path: Path) -> None:
+    """Remove stale figures when a complete four-corpus comparison cannot be built."""
+    for candidate in (path, path.with_name(f"{path.stem}_legend{path.suffix}")):
+        candidate.unlink(missing_ok=True)
+
+
+def _top_units_by_standardized_its_change(
+    data: pd.DataFrame,
+    *,
+    unit_column: str,
+    datasets: list[str],
+    top_n: int,
+    min_mean_prevalence: float,
+) -> list[str]:
+    """Rank prevalent units by equal-weighted absolute standardized ITS slope change."""
+    observed_datasets = set(data["dataset"])
+    if not set(datasets).issubset(observed_datasets):
+        return []
+    units = data[unit_column].astype(str).unique().tolist()
+    rows = []
+    for dataset in datasets:
+        corpus = data[data["dataset"] == dataset]
+        years = sorted(corpus["year"].unique())
+        if not years:
+            return []
+        proportions = (
+            corpus.pivot_table(
+                index="year",
+                columns=unit_column,
+                values="proportion",
+                aggfunc="sum",
+                fill_value=0.0,
+            )
+            .reindex(years, fill_value=0.0)
+            .reindex(columns=units, fill_value=0.0)
+        )
+        for unit in units:
+            series = pd.DataFrame({"year": years, "proportion": proportions[unit].to_numpy()})
+            fit = _simple_post_slope_change(series, "proportion")
+            pre_values = series.loc[series["year"] <= 2022, "proportion"]
+            pre_sd = float(pre_values.std(ddof=1)) if len(pre_values) > 1 else float("nan")
+            standardized_change = (
+                float(fit["slope_change_per_year"]) / pre_sd
+                if fit is not None and np.isfinite(pre_sd) and pre_sd > 0
+                else float("nan")
+            )
+            rows.append(
+                {
+                    "dataset": dataset,
+                    unit_column: unit,
+                    "mean_prevalence": float(series["proportion"].mean()),
+                    "standardized_slope_change_per_year": standardized_change,
+                }
+            )
+    ranking = pd.DataFrame(rows)
+    if ranking.empty:
+        return []
+    summary = ranking.groupby(unit_column, as_index=True).agg(
+        mean_prevalence=("mean_prevalence", "mean"),
+        n_valid_corpora=("standardized_slope_change_per_year", "count"),
+        mean_abs_standardized_change=(
+            "standardized_slope_change_per_year",
+            lambda values: values.abs().mean(),
+        ),
+    )
+    eligible = summary[
+        (summary["mean_prevalence"] >= min_mean_prevalence)
+        & (summary["n_valid_corpora"] == len(datasets))
+    ]
+    return eligible.nlargest(top_n, "mean_abs_standardized_change").index.astype(str).tolist()
+
+
+def _save_cross_corpus_dependency_legend(
+    unit_handles: list[Line2D],
+    corpus_handles: list[Line2D],
+    path: Path,
+) -> None:
+    """Save dependency colors and corpus line styles as a standalone figure."""
+    fig, ax = plt.subplots(figsize=(4.8, 1.05))
+    ax.axis("off")
+    dependency_legend = ax.legend(
+        handles=unit_handles,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.0),
+        ncol=4,
+        fontsize=6.5,
+        frameon=False,
+        title="Dependency",
+        title_fontsize=7,
+        handlelength=1.8,
+        columnspacing=0.9,
+    )
+    ax.add_artist(dependency_legend)
+    ax.legend(
+        handles=corpus_handles,
+        loc="lower center",
+        bbox_to_anchor=(0.5, 0.0),
+        ncol=4,
+        fontsize=6.5,
+        frameon=False,
+        title="Corpus",
+        title_fontsize=7,
+        handlelength=2.4,
+        columnspacing=1.2,
+    )
+    fig.savefig(path, dpi=200, bbox_inches="tight", facecolor="white", pad_inches=0.04)
     plt.close(fig)
 
 
