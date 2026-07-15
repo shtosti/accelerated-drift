@@ -92,7 +92,8 @@ To compare title-only and abstract-only trend analyses after both have been run:
 uv run python scripts/compare_title_abstract_trends.py
 ```
 
-This writes paired ITS comparison tables and dependency/syntax comparison plots to `data/analysis/title_abstract_comparison/`.
+This writes paired ITS comparison tables to `data/analysis/title_abstract_comparison/`
+and dependency/syntax comparison plots to `data/visuals/title_abstract_comparison/`.
 
 To compare ITS slope-change profiles across the title-only and abstract-only corpora:
 
@@ -124,9 +125,10 @@ uv run python main.py --config config_mini.toml visualize
 - `data/analysis/<stem>/topic_*.csv`: topic labels, prevalence, and summaries
 - `data/analysis/<stem>/topics/topic_*/`: topic-level trend tables
 - `data/analysis/<stem>/additional_analysis/`: targeted follow-up outputs such as the determiner decomposition CSVs and plot
-- `data/analysis/title_abstract_comparison/`: title-versus-abstract ITS comparison tables and plots
+- `data/analysis/title_abstract_comparison/`: title-versus-abstract ITS comparison tables
 - `data/analysis/corpus_comparison/`: cross-corpus ITS slope-correlation and feature-difference tables
 - `data/visuals/<stem>/`: rendered figures
+- `data/visuals/title_abstract_comparison/`: title-versus-abstract comparison figures
 - `data/visuals/corpus_comparison/`: cross-corpus comparison figures
 
 The paper-facing inferential tables are the monthly interrupted time-series outputs in `data/analysis/<stem>/its_stats.csv`. Pre/post percentage-change plots are retained as descriptive summaries.
