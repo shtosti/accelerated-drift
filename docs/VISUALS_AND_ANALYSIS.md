@@ -16,6 +16,8 @@ The analysis pipeline separates four main stages plus optional targeted follow-u
    - Runs targeted follow-up analyses that are not part of the core feature/ITS tables.
    - Can refresh strict pre-intervention counterfactual tables and plots directly
      from existing monthly trends with `--counterfactual-only`.
+   - Can regenerate cross-corpus and title-vs-abstract comparisons with
+     `--comparisons`.
 
 The `analyze` step can produce both analysis artifacts and plots, while the `visualize` step regenerates plots from precomputed trend CSVs.
 

@@ -13,7 +13,7 @@ from not_an_llm.analysis.topic_modeling.comparison import (
     select_top_its_features,
 )
 from not_an_llm.config import load_config
-from not_an_llm.pipelines.additional_analysis import run_additional_analysis
+from not_an_llm.pipelines.additional_analysis import run_additional_analysis, run_comparison_analyses
 from not_an_llm.pipelines.analyze import run_analysis
 from not_an_llm.pipelines.collect import run_collection
 from not_an_llm.pipelines.external_analyze import (
@@ -67,6 +67,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--counterfactual-only",
         action="store_true",
         help="Refresh strict counterfactual tables and plots from existing monthly trends; skip dependency parsing.",
+    )
+    additional.add_argument(
+        "--comparisons",
+        action="store_true",
+        help="Also regenerate cross-corpus and title-vs-abstract comparison outputs.",
     )
     subparsers.add_parser("visualize", help="Generate plots from previously computed analysis data.")
     topic_compare = subparsers.add_parser(
@@ -278,6 +283,9 @@ def main() -> None:
             print(f"Saved dependency bigram yearly trends to {artifacts.dependency_bigram_yearly_csv}")
             print(f"Saved dependency bigram change table to {artifacts.dependency_bigram_change_csv}")
             print(f"Saved dependency bigram trend plot to {artifacts.dependency_bigram_plot_path}")
+        if args.comparisons:
+            run_comparison_analyses()
+            print("Regenerated cross-corpus and title-vs-abstract comparisons")
         return
 
     if args.command == "visualize":
