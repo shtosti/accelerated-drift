@@ -60,42 +60,60 @@ def main() -> None:
         description="Compare title-only and abstract-only ITS trends."
     )
     parser.add_argument("--analysis-dir", default="data/analysis")
-    parser.add_argument("--output-dir", default="data/analysis/title_abstract_comparison")
+    parser.add_argument(
+        "--analysis-output-dir",
+        default="data/analysis/title_abstract_comparison",
+        help="Directory for comparison CSV tables.",
+    )
+    parser.add_argument(
+        "--visuals-output-dir",
+        default="data/visuals/title_abstract_comparison",
+        help="Directory for all comparison figures.",
+    )
+    parser.add_argument(
+        "--output-dir",
+        dest="legacy_analysis_output_dir",
+        default=None,
+        help=argparse.SUPPRESS,
+    )
     args = parser.parse_args()
 
     analysis_dir = Path(args.analysis_dir)
-    output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    analysis_output_dir = Path(args.legacy_analysis_output_dir or args.analysis_output_dir)
+    visuals_output_dir = Path(args.visuals_output_dir)
+    analysis_output_dir.mkdir(parents=True, exist_ok=True)
+    visuals_output_dir.mkdir(parents=True, exist_ok=True)
 
     comparison = build_comparison(analysis_dir)
-    comparison.to_csv(output_dir / "title_abstract_its_comparison.csv", index=False)
+    comparison.to_csv(analysis_output_dir / "title_abstract_its_comparison.csv", index=False)
 
     dependency = comparison[comparison["is_dependency_or_syntax"]].copy()
-    dependency.to_csv(output_dir / "dependency_title_abstract_its_comparison.csv", index=False)
+    dependency.to_csv(analysis_output_dir / "dependency_title_abstract_its_comparison.csv", index=False)
 
     summary = summarize(comparison)
-    summary.to_csv(output_dir / "title_abstract_comparison_summary.csv", index=False)
+    summary.to_csv(analysis_output_dir / "title_abstract_comparison_summary.csv", index=False)
 
     save_scatter(
         comparison,
-        output_dir / "title_abstract_standardized_slope_scatter.png",
+        visuals_output_dir / "title_abstract_standardized_slope_scatter.png",
         title="Title vs abstract ITS slope changes",
     )
     save_scatter(
         dependency,
-        output_dir / "dependency_title_abstract_standardized_slope_scatter.png",
+        visuals_output_dir / "dependency_title_abstract_standardized_slope_scatter.png",
         title="Dependency/syntax ITS slope changes",
     )
     save_dependency_bars(
         dependency,
-        output_dir / "dependency_title_abstract_standardized_slope_bars.png",
+        visuals_output_dir / "dependency_title_abstract_standardized_slope_bars.png",
     )
     save_top_difference_bars(
         comparison,
-        output_dir / "top_title_abstract_standardized_slope_differences.png",
+        visuals_output_dir / "top_title_abstract_standardized_slope_differences.png",
     )
 
-    print(f"Saved comparison outputs to {output_dir}")
+    print(f"Saved comparison tables to {analysis_output_dir}")
+    print(f"Saved comparison figures to {visuals_output_dir}")
     print(summary.to_string(index=False))
 
 

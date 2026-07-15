@@ -217,6 +217,48 @@ When `generate_plots = true`, the `analyze` pipeline can also generate the same 
    - The second panel compares the relative prevalence of `prep + pobj` structures against `amod + compound` structures.
    - This plot is used to interpret whether determiner decline reflects a broader shift toward compact, modifier-heavy noun phrases.
 
+### Cross-corpus dependency trend plots
+
+`scripts/compare_corpus_trends.py` writes separate title-only and abstract-only
+figures to `data/visuals/corpus_comparison/`:
+
+- `dependency_role_trends_<titles|abstracts>.png`
+- `dependency_edge_bigram_trends_<titles|abstracts>.png`
+- A standalone `*_legend.png` companion for each generated trend figure.
+
+Each trend figure is a 2-by-4 small-multiple grid with one dependency role or
+directed dependency-edge bigram per panel. Within a panel, corpus is encoded by
+line style: solid for arXiv AI, dashed for arXiv q-bio, dotted for arXiv
+Statistics, and dash-dot for medRxiv. Dependency identity is encoded by a stable
+panel color and stated in the panel title.
+
+The eight displayed dependencies are selected separately for titles and
+abstracts by their cross-corpus standardized ITS slope change. For every
+dependency-corpus pair, the script fits the yearly segmented model used by the
+dependency comparison and takes the post-2023 slope-change coefficient. It then
+divides that coefficient by the dependency's pre-2023 standard deviation in the
+same corpus:
+
+`standardized slope change/year = raw slope change/year / pre-2023 SD`
+
+The resulting value states how much the annual trend changed after the
+intervention in units of that corpus's ordinary pre-intervention variation. For
+example, `-0.8` means that the post-2023 annual slope became 0.8 pre-period
+standard deviations more negative than the pre-2023 slope. Standardization makes
+dependencies with different baseline shares and variability more comparable; it
+does not turn the estimate into a percentage change.
+
+To avoid selecting unstable rare structures, dependencies must first have an
+equally weighted mean prevalence of at least 0.5% across the four corpora. The
+eligible dependencies are ranked by the mean absolute standardized slope change
+across corpora, giving every corpus equal weight, and the top eight are shown.
+Absolute values are used only for ranking, so strong increases and strong
+decreases are both eligible. Missing dependency-years are treated as zero, and a
+unit must have a valid standardized estimate in all four corpora. A plot is
+skipped when any required corpus artifact is missing. The panel lines themselves
+remain raw yearly shares so readers can inspect the trajectories behind the ITS
+ranking.
+
 ## Statistical analysis performed
 
 ### Primary temporal model
