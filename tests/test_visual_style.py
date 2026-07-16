@@ -16,6 +16,7 @@ from not_an_llm.analysis.visual_style import (
 
 ROOT = Path(__file__).resolve().parents[1]
 PLOTTING_FILES = [
+    ROOT / "scripts" / "analyze_syntax_readability_abstracts.py",
     ROOT / "scripts" / "decompose_readability_abstracts.py",
     ROOT / "scripts" / "compare_corpus_trends.py",
     ROOT / "scripts" / "compare_title_abstract_trends.py",

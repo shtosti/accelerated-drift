@@ -313,6 +313,60 @@ Tables are written to `data/analysis/readability_abstract_decomposition/`, while
 the colorblind-accessible plots and separate legends are written to
 `data/visuals/readability_abstract_decomposition/`.
 
+### Standalone syntax-readability association for abstracts
+
+`scripts/analyze_syntax_readability_abstracts.py` connects document-level
+syntax/readability associations to temporal syntax changes without modifying
+the core pipeline. It requires the four abstract-only `features.jsonl` files.
+On its first run it parses dependency edges with spaCy and stores a reusable
+compressed JSONL cache under
+`data/analysis/syntax_readability_abstracts/cache/`; later runs reuse that cache.
+`--skip-bigrams` omits parsing and uses the stored syntax features and
+dependency-role distributions only.
+
+The analysis uses three aligned outcomes: ARI, FKGL, and a readability-complexity
+composite. The composite averages pre-2023 standardized ARI, FKGL, Gunning Fog,
+SMOG, Dale-Chall, and reversed Flesch Reading Ease within each corpus, so larger
+values consistently denote greater formula-based complexity.
+
+Two model specifications are retained:
+
+1. `total_association` controls for corpus, year, topic when available, and
+   abstract length. It asks which syntactic patterns characterize texts with
+   higher automatic readability complexity overall.
+2. `beyond_formula` additionally controls for words per sentence and syllables
+   per word and is fitted to the multi-metric composite. It asks whether syntax
+   carries information beyond the most obvious readability-formula primitives.
+
+Predictors include dependency-edge bigram proportions, dependency-role
+proportions, dependency length and entropy, clause and sentence depth,
+coordination, and list-of-three frequency. They are standardized and fitted with
+elastic net because dependency proportions are numerous and correlated.
+Hyperparameters are selected with cross-validation grouped by publication year;
+the output also includes year-grouped permutation importance, bootstrap
+coefficient intervals, and bootstrap selection frequency.
+
+The script then fits the ordinary monthly segmented ITS model to every syntax
+predictor within each corpus. Its descriptive alignment score is:
+
+`alignment = standardized readability coefficient * mean standardized syntax ITS slope change`
+
+A positive value means either that a complexity-associated structure increased
+or that a readability-associated structure decreased. A negative value denotes
+change in the opposite direction. This product is a prioritization device, not
+a causal effect or a decomposition of the readability-score change.
+
+Outputs under `data/analysis/syntax_readability_abstracts/` include the modeling
+document table, `syntax_readability_coefficients.csv`, `syntax_its_changes.csv`,
+and `syntax_readability_its_alignment.csv`. Colorblind-accessible coefficient
+and alignment-quadrant plots, each with a separate legend, are written under
+`data/visuals/syntax_readability_abstracts/`.
+
+All findings must be described as associations. Automatic readability scores
+are proxies rather than human judgments, correlated syntax predictors can share
+explanatory signal, and the alignment score does not identify a syntactic cause
+of reading difficulty.
+
 ## Statistical analysis performed
 
 ### Primary temporal model

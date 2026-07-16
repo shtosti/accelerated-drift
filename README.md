@@ -114,6 +114,21 @@ ITS tables to `data/analysis/readability_abstract_decomposition/`, and writes
 separate ARI/FKGL figures and legends to
 `data/visuals/readability_abstract_decomposition/`.
 
+To associate document-level syntax with readability and combine those
+associations with post-2022 syntax changes:
+
+```bash
+uv run python scripts/analyze_syntax_readability_abstracts.py
+```
+
+This standalone abstract-only analysis reads existing `features.jsonl` files.
+It caches document-level dependency-edge bigrams on its first run, fits
+year-grouped elastic-net models for ARI, FKGL, and a multi-metric readability
+composite, and writes tables to `data/analysis/syntax_readability_abstracts/`
+and figures to `data/visuals/syntax_readability_abstracts/`. Use
+`--skip-bigrams` for a faster analysis of stored syntax features and dependency
+roles only.
+
 ### Mini Dataset
 
 The mini configuration is intended for quick checks of the pipeline.
