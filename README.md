@@ -103,6 +103,17 @@ uv run python scripts/compare_corpus_trends.py
 
 This writes corpus-correlation tables to `data/analysis/corpus_comparison/` and figures to `data/visuals/corpus_comparison/`, including overall correlations, feature-group correlations, syntax/dependency slope comparisons, dependency-role and dependency-bigram correlations when source files are available, and largest cross-corpus feature differences. Combined title+abstract datasets are ignored by default.
 
+To decompose abstract ARI and FKGL slope changes without rerunning the pipeline:
+
+```bash
+uv run python scripts/decompose_readability_abstracts.py
+```
+
+This reads the existing abstract `trends_by_month.csv` files, writes component
+ITS tables to `data/analysis/readability_abstract_decomposition/`, and writes
+separate ARI/FKGL figures and legends to
+`data/visuals/readability_abstract_decomposition/`.
+
 ### Mini Dataset
 
 The mini configuration is intended for quick checks of the pipeline.
