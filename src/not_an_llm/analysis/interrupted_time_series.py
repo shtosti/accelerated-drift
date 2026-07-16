@@ -10,6 +10,7 @@ import pandas as pd
 
 from not_an_llm.analysis.feature_groups import FEATURE_GROUPS
 from not_an_llm.analysis.label_map import LABEL_MAP
+from not_an_llm.analysis.visual_style import DARK_GREY, sign_color, sign_hatch
 
 
 DEFAULT_INTERVENTION_DATE = "2022-11-30"
@@ -895,7 +896,7 @@ def _save_effect_plot(
 
     fig_height = max(1.0, len(plot_df) * 0.2 + 0.8)
     fig, ax = plt.subplots(figsize=(7, fig_height))
-    colors = ["#943F8B" if value < 0 else "#54A066" for value in plot_df[value_column]]
+    colors = [sign_color(value) for value in plot_df[value_column]]
     xerr = None
     if {ci_low_column, ci_high_column}.issubset(plot_df.columns):
         xerr = np.vstack(
@@ -905,7 +906,9 @@ def _save_effect_plot(
             ]
         )
     bars = ax.barh(plot_df["label"], plot_df[value_column], color=colors, xerr=xerr, capsize=2)
-    ax.axvline(0, color="#333333", linewidth=0.8)
+    for bar, value in zip(bars, plot_df[value_column], strict=False):
+        bar.set_hatch(sign_hatch(value))
+    ax.axvline(0, color=DARK_GREY, linewidth=0.8)
     ax.set_xlabel(xlabel)
     # ax.text(
     #     0.0,
@@ -915,7 +918,7 @@ def _save_effect_plot(
     #     ha="left",
     #     va="bottom",
     #     fontsize=9,
-    #     color="#333333",
+    #     color=DARK_GREY,
     # )
 
     for bar, annotation in zip(bars, plot_df["annotation"]):
@@ -927,7 +930,7 @@ def _save_effect_plot(
             va="center",
             ha="left",
             fontsize=9,
-            color="#333333",
+            color=DARK_GREY,
         )
 
     fig.tight_layout(rect=(0, 0, 0.78, 1))

@@ -24,6 +24,7 @@ from not_an_llm.analysis.interrupted_time_series import (
 )
 from not_an_llm.analysis.label_map import LABEL_MAP
 from not_an_llm.analysis.trends import DEPENDENCY_ROLE_COLORS
+from not_an_llm.analysis.visual_style import DARK_GREY, GREEN, MARKERS, ORCHID
 from not_an_llm.pipelines.analyze import _resolve_analysis_paths
 
 
@@ -498,14 +499,14 @@ def _save_dependency_bigram_trend_plot(
         ax.plot(
             series["year"],
             series["proportion"],
-            marker="o",
+            marker=MARKERS[index % len(MARKERS)],
             markersize=2.4,
             linewidth=0.9,
             color=DEPENDENCY_ROLE_COLORS[index % len(DEPENDENCY_ROLE_COLORS)],
             label=bigram,
         )
 
-    ax.axvline(2022.92, color="#333333", linestyle="--", linewidth=0.9, alpha=0.7)
+    ax.axvline(2022.92, color=DARK_GREY, linestyle="--", linewidth=0.9, alpha=0.7)
     ax.set_xlabel("Year", fontsize=7)
     ax.set_ylabel("Edge share", fontsize=7)
     ax.grid(alpha=0.25)
@@ -588,15 +589,27 @@ def _save_determiner_decomposition_plot(yearly: pd.DataFrame, output_path: Path)
     x = yearly["year"]
     fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.8))
 
-    axes[0].plot(x, yearly["det_pobj_per_1k_words"], marker="o", label="det attached to pobj")
-    axes[0].plot(x, yearly["det_non_pobj_per_1k_words"], marker="o", label="other det")
+    axes[0].plot(
+        x, yearly["det_pobj_per_1k_words"], color=GREEN, marker=MARKERS[0],
+        linestyle="-", label="det attached to pobj",
+    )
+    axes[0].plot(
+        x, yearly["det_non_pobj_per_1k_words"], color=ORCHID, marker=MARKERS[1],
+        linestyle="--", label="other det",
+    )
     axes[0].set_xlabel("Year")
     axes[0].set_ylabel("Determiners per 1k words")
     axes[0].grid(alpha=0.3)
     axes[0].legend(fontsize=8)
 
-    axes[1].plot(x, yearly["prepositional_modifier_role_prop"], marker="o", label="prep + pobj")
-    axes[1].plot(x, yearly["prenominal_modifier_role_prop"], marker="o", label="amod + compound")
+    axes[1].plot(
+        x, yearly["prepositional_modifier_role_prop"], color=GREEN, marker=MARKERS[0],
+        linestyle="-", label="prep + pobj",
+    )
+    axes[1].plot(
+        x, yearly["prenominal_modifier_role_prop"], color=ORCHID, marker=MARKERS[1],
+        linestyle="--", label="amod + compound",
+    )
     axes[1].set_xlabel("Year")
     axes[1].set_ylabel("Role proportion")
     axes[1].grid(alpha=0.3)
