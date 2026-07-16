@@ -991,8 +991,8 @@ def save_grouped_horizontal_bars(
         return
     y = np.arange(len(data))
     height = min(0.8 / len(value_cols), 0.22)
-    fig_height = max(2.2, 0.22 * len(data) + 0.8)
-    fig, ax = plt.subplots(figsize=(3.35, fig_height))
+    fig_height = max(2.2, 0.2 * len(data) + 0.3)
+    fig, ax = plt.subplots(figsize=(3, fig_height))
     offsets = np.linspace(-height * (len(value_cols) - 1) / 2, height * (len(value_cols) - 1) / 2, len(value_cols))
     for offset, column in zip(offsets, value_cols, strict=True):
         bars = ax.barh(
@@ -1031,7 +1031,7 @@ def save_separate_legend(value_cols: list[str], path: Path) -> None:
         return
     ncol = min(4, len(handles))
     rows = int(np.ceil(len(handles) / ncol))
-    fig, ax = plt.subplots(figsize=(3.35, 0.24 * rows + 0.18))
+    fig, ax = plt.subplots(figsize=(3, 0.2 * rows + 0.15))
     ax.axis("off")
     ax.legend(
         handles=handles,
