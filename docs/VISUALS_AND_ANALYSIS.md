@@ -283,6 +283,36 @@ skipped when any required corpus artifact is missing. The panel lines themselves
 remain raw yearly shares so readers can inspect the trajectories behind the ITS
 ranking.
 
+### Standalone ARI and FKGL decomposition for abstracts
+
+`scripts/decompose_readability_abstracts.py` uses existing abstract-only monthly trend
+tables and does not modify or rerun the analysis pipeline. It decomposes the
+Automated Readability Index identity into:
+
+- sentence-length contribution: `0.5 * words per sentence`;
+- implied character/word contribution: the remaining non-intercept ARI term.
+
+It also decomposes Flesch-Kincaid Grade Level into:
+
+- sentence-length contribution: `0.39 * words per sentence`;
+- syllabic-complexity contribution: `11.8 * syllables per word`;
+- formula-reconciliation contribution: the remaining difference between the
+  stored FKGL score and those two reconstructed terms.
+
+The script fits the same monthly interrupted time-series specification to both
+scores and their components. Because each decomposition is performed for every
+month before fitting ITS, the component slope changes reconstruct the total
+score slope change (up to floating-point error). The ARI character/word term is
+labelled *implied* because characters per word are not retained in the monthly
+tables. FKGL uses the stored syllables/word values directly and reports a
+separate reconciliation term, making tokenization differences between
+`textstat` and the pipeline visible instead of assigning them to syllabic
+complexity.
+
+Tables are written to `data/analysis/readability_abstract_decomposition/`, while
+the colorblind-accessible plots and separate legends are written to
+`data/visuals/readability_abstract_decomposition/`.
+
 ## Statistical analysis performed
 
 ### Primary temporal model
