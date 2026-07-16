@@ -13,6 +13,12 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from not_an_llm.analysis.label_map import pretty_feature_label
+from not_an_llm.analysis.visual_style import (
+    DATASET_COLORS,
+    DATASET_MARKERS,
+    GREEN,
+    ORCHID,
+)
 
 
 DEFAULT_PAIRS = {
@@ -224,19 +230,13 @@ def save_scatter(data: pd.DataFrame, path: Path, *, title: str) -> None:
     )
     limit = max(1.0, float(max_abs) * 1.1)
 
-    colors = {
-        "arxiv_ai": "#1f77b4",
-        "arxiv_qbio": "#ff7f0e",
-        "arxiv_stat": "#9467bd",
-        "medarxiv": "#2ca02c",
-    }
-
     for ax, corpus in zip(axes, corpora, strict=True):
         subset = data[data["corpus"] == corpus]
         ax.scatter(
             subset["standardized_slope_change_per_year_abstract"],
             subset["standardized_slope_change_per_year_title"],
-            color=colors[corpus],
+            color=DATASET_COLORS[f"{corpus}_abstracts"],
+            marker=DATASET_MARKERS[f"{corpus}_abstracts"],
             label=CORPUS_LABELS.get(corpus, corpus),
             s=24,
             alpha=0.75,
@@ -386,21 +386,26 @@ def save_single_bar_panel(
 
 
 def _draw_pair_bars(ax, data: pd.DataFrame, *, include_family: bool) -> None:
-    abstract_color = "#1f77b4"
-    title_color = "#ff7f0e"
+    abstract_color = GREEN
+    title_color = ORCHID
     y = range(len(data))
-    ax.barh(
+    abstract_bars = ax.barh(
         [i - 0.18 for i in y],
         data["standardized_slope_change_per_year_abstract"],
         height=0.34,
         color=abstract_color,
+        edgecolor="0.25",
+        linewidth=0.35,
         label="abstract",
     )
-    ax.barh(
+    title_bars = ax.barh(
         [i + 0.18 for i in y],
         data["standardized_slope_change_per_year_title"],
         height=0.34,
         color=title_color,
+        hatch="///",
+        edgecolor="0.25",
+        linewidth=0.35,
         label="title",
     )
     labels = [

@@ -4,12 +4,16 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 import pandas as pd
 
 from not_an_llm.analysis.interrupted_time_series import compute_interrupted_time_series
 from not_an_llm.analysis.label_map import pretty_feature_label
+from not_an_llm.analysis.visual_style import (
+    DECREASE_COLOR,
+    INCREASE_COLOR,
+    ORCHID_GREEN_DIVERGING_CMAP,
+)
 
 
 DEFAULT_TOPIC_FEATURES = [
@@ -30,12 +34,7 @@ DOMAIN_LABELS = {
     "medarxiv": "medRxiv",
 }
 
-DECREASE_COLOR = "#943F8B"
-INCREASE_COLOR = "#54A066"
-TOPIC_HEATMAP_CMAP = LinearSegmentedColormap.from_list(
-    "orchid_white_green",
-    [DECREASE_COLOR, "#FFFFFF", INCREASE_COLOR],
-)
+TOPIC_HEATMAP_CMAP = ORCHID_GREEN_DIVERGING_CMAP
 
 
 @dataclass(slots=True)

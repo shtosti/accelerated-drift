@@ -8,7 +8,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.colors import Colormap
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 from matplotlib.ticker import MaxNLocator
@@ -20,6 +20,16 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from not_an_llm.analysis.label_map import pretty_feature_label
+from not_an_llm.analysis.visual_style import (
+    CATEGORICAL_COLORS,
+    CORPUS_LINESTYLES,
+    DATASET_COLORS,
+    DATASET_HATCHES,
+    DECREASE_COLOR,
+    INCREASE_COLOR,
+    ORCHID_GREEN_DIVERGING_CMAP,
+    sign_hatch,
+)
 
 
 DEFAULT_PRIMARY_DATASETS = (
@@ -54,30 +64,8 @@ SHORT_DATASET_LABELS = {
     "arxiv_stat_titles": "stat title",
     "medarxiv_titles": "medRxiv title",
 }
-DECREASE_COLOR = "#943F8B"
-INCREASE_COLOR = "#54A066"
-COMPARISON_HEATMAP_CMAP = LinearSegmentedColormap.from_list(
-    "orchid_white_green",
-    [DECREASE_COLOR, "#FFFFFF", INCREASE_COLOR],
-)
-DATASET_COLORS = {
-    "arxiv_ai_abstracts": "#2F7E41",
-    "arxiv_qbio_abstracts": "#54A066",
-    "arxiv_stat_abstracts": "#86BD8A",
-    "medarxiv_abstracts": "#B7D8B1",
-    "arxiv_ai_titles": "#6D286D",
-    "arxiv_qbio_titles": "#943F8B",
-    "arxiv_stat_titles": "#B873AA",
-    "medarxiv_titles": "#D3A8CD",
-}
-
-CORPUS_LINESTYLES = {
-    "arxiv_ai": "-",
-    "arxiv_qbio": "--",
-    "arxiv_stat": ":",
-    "medarxiv": "-.",
-}
-DEPENDENCY_TREND_COLORS = plt.get_cmap("tab10").colors
+COMPARISON_HEATMAP_CMAP = ORCHID_GREEN_DIVERGING_CMAP
+DEPENDENCY_TREND_COLORS = CATEGORICAL_COLORS
 
 
 def main() -> None:
@@ -843,7 +831,10 @@ def save_group_correlation_heatmap(group_corr: pd.DataFrame, path: Path) -> None
     fig_height = max(1.8, 0.22 * len(summary) + 0.5)
     fig, ax = plt.subplots(figsize=(4, fig_height))
     colors = [INCREASE_COLOR if value >= 0 else DECREASE_COLOR for value in summary]
-    ax.barh(summary.index[::-1], summary.iloc[::-1], color=colors[::-1])
+    ordered = summary.iloc[::-1]
+    bars = ax.barh(ordered.index, ordered, color=colors[::-1], edgecolor="0.25", linewidth=0.35)
+    for bar, value in zip(bars, ordered, strict=False):
+        bar.set_hatch(sign_hatch(value))
     ax.axvline(0, color="0.3", linewidth=0.8)
     ax.set_xlabel("mean Pearson r", fontsize=8)
     ax.tick_params(axis="both", labelsize=7)
@@ -1004,7 +995,16 @@ def save_grouped_horizontal_bars(
     fig, ax = plt.subplots(figsize=(3.35, fig_height))
     offsets = np.linspace(-height * (len(value_cols) - 1) / 2, height * (len(value_cols) - 1) / 2, len(value_cols))
     for offset, column in zip(offsets, value_cols, strict=True):
-        ax.barh(y + offset, data[column], height=height, color=DATASET_COLORS.get(column, "0.5"), label=label(column))
+        bars = ax.barh(
+            y + offset,
+            data[column],
+            height=height,
+            color=DATASET_COLORS.get(column, "0.5"),
+            hatch=DATASET_HATCHES.get(column, ""),
+            edgecolor="0.25",
+            linewidth=0.35,
+            label=label(column),
+        )
     labels = [short_feature_label(row.feature, getattr(row, "family", "")) for row in data.itertuples(index=False)]
     ax.axvline(0, color="0.3", linewidth=0.8)
     ax.set_yticks(y, labels)
@@ -1019,7 +1019,12 @@ def save_grouped_horizontal_bars(
 
 def save_separate_legend(value_cols: list[str], path: Path) -> None:
     handles = [
-        Patch(facecolor=DATASET_COLORS.get(column, "0.5"), edgecolor="none", label=label(column))
+        Patch(
+            facecolor=DATASET_COLORS.get(column, "0.5"),
+            edgecolor="0.25",
+            hatch=DATASET_HATCHES.get(column, ""),
+            label=label(column),
+        )
         for column in value_cols
     ]
     if not handles:
@@ -1047,7 +1052,7 @@ def save_heatmap(
     *,
     vmin: float,
     vmax: float,
-    cmap: str | LinearSegmentedColormap,
+    cmap: str | Colormap,
     fmt: str,
     colorbar_label: str | None = None,
 ) -> None:

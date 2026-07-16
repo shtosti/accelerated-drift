@@ -13,6 +13,16 @@ import ruptures as rpt
 
 from .label_map import LABEL_MAP, pretty_feature_label
 from .feature_groups import FEATURE_GROUPS
+from .visual_style import (
+    CATEGORICAL_COLORS,
+    DARK_GREY,
+    GREEN,
+    HATCHES,
+    MARKERS,
+    ORCHID,
+    sign_color,
+    sign_hatch,
+)
 
 
 def _simple_percent_change(pre_value: float, post_value: float) -> float:
@@ -41,47 +51,7 @@ DEPENDENCY_ROLE_ORDER = [
     "appos",
 ]
 
-DEPENDENCY_ROLE_COLORS = [
-    "#4E79A7",
-    "#F28E2B",
-    "#E15759",
-    "#76B7B2",
-    "#59A14F",
-    "#EDC948",
-    "#B07AA1",
-    "#FF9DA7",
-    "#1F77B4",
-    "#8C564B",
-    "#E377C2",
-    "#7F7F7F",
-    "#BCBD22",
-    "#17BECF",
-    "#AEC7E8",
-    "#FFBB78",
-    "#98DF8A",
-    "#FF9896",
-    "#C5B0D5",
-    "#C49C94",
-    "#F7B6D2",
-    "#C7C7C7",
-    "#DBDB8D",
-    "#9EDAE5",
-    "#393B79",
-    "#637939",
-    "#8C6D31",
-    "#843C39",
-    "#7B4173",
-    "#3182BD",
-    "#31A354",
-    "#756BB1",
-    "#636363",
-    "#E6550D",
-    "#969696",
-    "#6BAED6",
-    "#74C476",
-    "#9E9AC8",
-    "#BDBDBD",
-]
+DEPENDENCY_ROLE_COLORS = list(CATEGORICAL_COLORS)
 
 
 def dependency_role_color_map(roles) -> dict[str, str]:
@@ -107,8 +77,11 @@ def save_dependency_role_legend(
     roles.extend(sorted(observed_roles.difference(DEPENDENCY_ROLE_ORDER)))
     color_map = dependency_role_color_map(roles)
     handles = [
-        Line2D([0], [0], color=color_map[role], marker="o", linewidth=1.8, markersize=4, label=role)
-        for role in roles
+        Line2D(
+            [0], [0], color=color_map[role], marker=MARKERS[index % len(MARKERS)],
+            linewidth=1.8, markersize=4, label=role,
+        )
+        for index, role in enumerate(roles)
     ]
 
     rows = max(1, int(np.ceil(len(handles) / ncol)))
@@ -143,9 +116,9 @@ class TrendAnalyzer:
         self.label_map = label_map if label_map is not None else LABEL_MAP
 
         self.colors = {
-            "monthly": "#1E9B4C",
-            "yearly": "#9B4D8C",
-            "events": "#484A59",
+            "monthly": GREEN,
+            "yearly": ORCHID,
+            "events": DARK_GREY,
         }
 
     # =========================================================
@@ -169,7 +142,7 @@ class TrendAnalyzer:
 
     def _add_event_lines(self, ax, event_dates: dict[str, pd.Timestamp]) -> None:
         for label, d in event_dates.items():
-            ax.axvline(d, linestyle="--", alpha=0.7, color="black")
+            ax.axvline(d, linestyle="--", alpha=0.7, color=DARK_GREY)
 
     def _filter_features(self, features, exclude=None):
         if not exclude:
@@ -472,14 +445,14 @@ class TrendAnalyzer:
 
             # Plot yearly first to establish datetime x-axis converter.
             y = yearly[ycol]
-            ax.plot(x, y, marker="o", color="purple", label="Yearly")
+            ax.plot(x, y, marker=MARKERS[0], linestyle="-", color=ORCHID, label="Yearly")
 
             if mcol in monthly.columns and "month_ts" in monthly.columns:
                 y_m = monthly[mcol]
                 if smoothing_window:
                     y_m = y_m.rolling(smoothing_window, center=True).mean()
 
-                ax.plot(monthly["month_ts"], y_m, color="green", label="Monthly")
+                ax.plot(monthly["month_ts"], y_m, linestyle="--", color=GREEN, label="Monthly")
 
             self._add_event_lines(ax, event_dates)
 
@@ -1091,7 +1064,12 @@ class TrendAnalyzer:
         # Save diff plot
         diff_fig, diff_ax = plt.subplots(figsize=(4.0, 0.2 * len(diff_df) + 0.2))
         colors = [color_map[str(role)] for role in diff_df["feature"]]
-        diff_ax.barh(diff_df["feature"], diff_df["diff_pct"], color=colors)
+        bars = diff_ax.barh(
+            diff_df["feature"], diff_df["diff_pct"], color=colors,
+            edgecolor="0.25", linewidth=0.35,
+        )
+        for index, bar in enumerate(bars):
+            bar.set_hatch(HATCHES[index % len(HATCHES)])
         diff_ax.axvline(0, color="black", linewidth=1)
         diff_ax.set_xlabel(rf"$\Delta$ role proportion (%)")
         # diff_ax.set_title("Top dependency role proportion changes after 2023")
@@ -1109,11 +1087,11 @@ class TrendAnalyzer:
         year_ts = pd.to_datetime(plot_yearly.index.astype(str) + "-01-01")
 
         trend_fig, trend_ax = plt.subplots(figsize=(3.2, 3.5 + 0.2))
-        for role in top_roles:
+        for role_index, role in enumerate(top_roles):
             trend_ax.plot(
                 year_ts,
                 plot_yearly[role],
-                marker="o",
+                marker=MARKERS[role_index % len(MARKERS)],
                 linewidth=1,
                 color=color_map[str(role)],
                 label=role,
@@ -1267,17 +1245,15 @@ def save_grouped_difference_plot(
         )
     )
 
-    colors = [
-        "#943F8B" if v < 0
-        else "#54A066"
-        for v in df[diff_column]
-    ]
+    colors = [sign_color(v) for v in df[diff_column]]
 
     bars = ax.barh(
         df["label"],
         df[plot_column],
         color=colors,
     )
+    for bar, value in zip(bars, df[diff_column], strict=False):
+        bar.set_hatch(sign_hatch(value))
 
     ax.axvline(
         0,
