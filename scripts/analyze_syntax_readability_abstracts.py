@@ -277,20 +277,30 @@ def load_or_build_bigram_cache(
 ) -> dict[str, dict[str, float]]:
     cache_path = cache_dir / "document_dependency_bigrams.jsonl.gz"
     expected_keys = set(documents["document_key"].astype(str))
+    cached: dict[str, dict[str, float]] = {}
     if cache_path.exists():
         cached = read_bigram_cache(cache_path)
         if expected_keys.issubset(cached):
             return {key: cached[key] for key in expected_keys}
+
+    # Retain valid records from an interrupted run and parse only documents
+    # that are still missing. Appending creates another valid gzip member;
+    # Python's gzip reader transparently reads concatenated members.
+    result = {key: value for key, value in cached.items() if key in expected_keys}
+    missing_keys = expected_keys.difference(result)
 
     import spacy
 
     nlp = spacy.load(spacy_model, disable=["ner", "textcat"])
     nlp.max_length = 2_000_000
     cache_dir.mkdir(parents=True, exist_ok=True)
-    result: dict[str, dict[str, float]] = {}
-    texts = documents["text_clean"].fillna("").astype(str).tolist()
-    keys = documents["document_key"].astype(str).tolist()
-    with gzip.open(cache_path, "wt", encoding="utf-8") as handle:
+    missing_documents = documents[
+        documents["document_key"].astype(str).isin(missing_keys)
+    ]
+    texts = missing_documents["text_clean"].fillna("").astype(str).tolist()
+    keys = missing_documents["document_key"].astype(str).tolist()
+    mode = "at" if cache_path.exists() else "wt"
+    with gzip.open(cache_path, mode, encoding="utf-8") as handle:
         for key, doc in zip(keys, nlp.pipe(texts, batch_size=128, n_process=1), strict=False):
             counts: Counter[str] = Counter()
             total = 0

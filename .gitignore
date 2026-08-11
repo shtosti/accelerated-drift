@@ -233,3 +233,4 @@ docs/field_log.md
 
 data/analysis/*/features.jsonl
 data/analysis/syntax_readability_abstracts/cache/document_dependency_bigrams.jsonl.gz
+docs/MANUSCRIPT_EVIDENCE_AUDIT.md
