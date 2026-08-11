@@ -133,6 +133,14 @@ def main() -> None:
         bigram_maps=bigram_maps,
         top_bigrams=args.top_bigrams,
     )
+    bigram_columns = [
+        column for column in syntax_columns if column.startswith("dep_bigram__")
+    ]
+    if not bigram_columns:
+        raise SystemExit(
+            "No dependency-edge bigram predictors are available. "
+            "Run without --skip-bigrams and verify the bigram cache."
+        )
     save_document_model_frame(model_frame, table_dir)
 
     model_specs = [
@@ -145,7 +153,7 @@ def main() -> None:
     for model_spec, outcome, extra_controls in model_specs:
         result = fit_syntax_association(
             model_frame,
-            syntax_columns,
+            bigram_columns,
             outcome=outcome,
             model_spec=model_spec,
             extra_controls=list(extra_controls),
@@ -156,7 +164,9 @@ def main() -> None:
     coefficients = pd.concat(coefficient_parts, ignore_index=True)
     coefficients.to_csv(table_dir / "syntax_readability_coefficients.csv", index=False)
 
-    syntax_its = compute_syntax_its(model_frame, syntax_columns)
+    syntax_its = compute_syntax_its(model_frame, bigram_columns)
+    if not syntax_its.empty:
+        syntax_its["family"] = syntax_its["feature"].map(feature_family)
     syntax_its.to_csv(table_dir / "syntax_its_changes.csv", index=False)
     alignment = build_alignment_table(coefficients, syntax_its)
     alignment.to_csv(table_dir / "syntax_readability_its_alignment.csv", index=False)
