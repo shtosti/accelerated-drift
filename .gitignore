@@ -214,15 +214,15 @@ data/analyzed/*.jsonl
 data/external/
 logs/
 slurm.sh
-slurm_analyze.sh
-slurm_collect.sh
-slurm_preprocess.sh
+# slurm_analyze.sh
+# slurm_collect.sh
+# slurm_preprocess.sh
 logs/preprocessing_external_*.err
 logs/preprocessing_external_*.out
 logs/analyze_external_*.err
 logs/analyze_external_*.out
-slurm_preprocess_external.sh
-slurm_analyze_external.sh
+# slurm_preprocess_external.sh
+# slurm_analyze_external.sh
 slurm_preprocess_mini.sh
 slurm_analyze_mini.sh
 
@@ -232,3 +232,4 @@ docs/?ODO.md
 docs/field_log.md
 
 data/analysis/*/features.jsonl
+data/analysis/syntax_readability_abstracts/cache/document_dependency_bigrams.jsonl.gz
