@@ -313,11 +313,12 @@ Tables are written to `data/analysis/readability_abstract_decomposition/`, while
 the colorblind-accessible plots and separate legends are written to
 `data/visuals/readability_abstract_decomposition/`.
 
-### Standalone syntax-readability association for abstracts
+### Standalone dependency-bigram/readability association for abstracts
 
 `scripts/analyze_syntax_readability_abstracts.py` connects document-level
-syntax/readability associations to temporal syntax changes without modifying
-the core pipeline. It requires the four abstract-only `features.jsonl` files.
+dependency-edge-bigram/readability associations to temporal bigram changes
+without modifying the core pipeline. It requires the four abstract-only
+`features.jsonl` files.
 On its first run it parses dependency edges with spaCy and stores a reusable
 compressed JSONL cache under
 `data/analysis/syntax_readability_abstracts/cache/`; later runs reuse that cache.
@@ -338,10 +339,12 @@ Two model specifications are retained:
    per word and is fitted to the multi-metric composite. It asks whether syntax
    carries information beyond the most obvious readability-formula primitives.
 
-Predictors include dependency-edge bigram proportions, dependency-role
-proportions, dependency length and entropy, clause and sentence depth,
-coordination, and list-of-three frequency. They are standardized and fitted with
-elastic net because dependency proportions are numerous and correlated.
+Predictors are the most prevalent dependency-edge-bigram proportions selected
+by `--top-bigrams` (40 by default). Dependency-role proportions, dependency
+length and entropy, clause and sentence depth, coordination, and list-of-three
+frequency are not included in this focused model. The bigram predictors are
+standardized and fitted with elastic net because their proportions are
+correlated.
 Hyperparameters are selected with cross-validation grouped by publication year;
 the output also includes year-grouped permutation importance, bootstrap
 coefficient intervals, and bootstrap selection frequency.
