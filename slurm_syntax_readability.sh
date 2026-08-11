@@ -36,14 +36,14 @@ do
   echo "OK: ${feature_file}"
 done
 
-echo "--- Running full syntax-readability analysis without dependency bigrams ---"
+echo "--- Running full syntax-readability analysis with resumable dependency bigrams ---"
 python scripts/analyze_syntax_readability_abstracts.py \
-  --skip-bigrams \
+  --top-bigrams 40 \
   --bootstrap 50 \
   --permutation-repeats 5 \
-  --output-name syntax_readability_abstracts_no_bigrams
+  --output-name syntax_readability_abstracts
 
 echo "--- Output files ---"
-find data/analysis/syntax_readability_abstracts_no_bigrams \
-  data/visuals/syntax_readability_abstracts_no_bigrams \
+find data/analysis/syntax_readability_abstracts \
+  data/visuals/syntax_readability_abstracts \
   -maxdepth 2 -type f -print
