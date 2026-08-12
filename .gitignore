@@ -236,6 +236,6 @@ data/analysis/syntax_readability_abstracts/cache/document_dependency_bigrams.jso
 docs/MANUSCRIPT_EVIDENCE_AUDIT.md
 data/analysis/syntax_readability_abstracts/syntax_readability_documents.parquet
 docs/METHODS_REWRITE.md
-docs/RESULTS_REWRITE.md
-docs/RESULTS_VISUALS_UPDATE.md
-docs/VISUALS_AND_ANALYSIS.md
+# docs/RESULTS_REWRITE.md
+# docs/RESULTS_VISUALS_UPDATE.md
+# docs/VISUALS_AND_ANALYSIS.md
