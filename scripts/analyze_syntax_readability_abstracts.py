@@ -24,11 +24,10 @@ if str(SRC) not in sys.path:
 
 from not_an_llm.analysis.interrupted_time_series import compute_interrupted_time_series
 from not_an_llm.analysis.visual_style import (
-    BLUE,
-    CATEGORICAL_COLORS,
     DARK_GREY,
     GREEN,
     MARKERS,
+    ORANGE,
     ORCHID,
     WHITE,
 )
@@ -65,9 +64,9 @@ BASE_SYNTAX_FEATURES = (
 FORMULA_CONTROLS = ("avg_words_per_sentence", "avg_syllables_per_word")
 FAMILY_MARKERS = {"syntax": MARKERS[0], "dependency role": MARKERS[1], "dependency bigram": MARKERS[2]}
 FAMILY_COLORS = {
-    "syntax": CATEGORICAL_COLORS[0],
-    "dependency role": CATEGORICAL_COLORS[2],
-    "dependency bigram": CATEGORICAL_COLORS[3],
+    "syntax": GREEN,
+    "dependency role": ORCHID,
+    "dependency bigram": ORANGE,
 }
 
 
