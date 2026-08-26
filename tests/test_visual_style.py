@@ -10,7 +10,11 @@ from not_an_llm.analysis.visual_style import (
     DATASET_HATCHES,
     DATASET_MARKERS,
     DECREASE_HATCH,
+    GREEN,
+    HATCHES,
+    INCREASE_COLOR,
     INCREASE_HATCH,
+    ORCHID,
 )
 
 
@@ -29,6 +33,38 @@ PLOTTING_FILES = [
 
 
 class VisualStyleTests(unittest.TestCase):
+    def test_primary_colors_match_previous_manuscript(self) -> None:
+        self.assertEqual(GREEN.upper(), "#54A066")
+        self.assertEqual(ORCHID.upper(), "#963E8D")
+
+    def test_hatches_are_varied_and_not_diagonal_only(self) -> None:
+        self.assertIn("..", HATCHES)
+        self.assertIn("xx", HATCHES)
+        self.assertIn("--", HATCHES)
+        self.assertIn("///", HATCHES)
+        self.assertNotEqual("..", "///")
+
+    def test_abstract_corpus_palette_has_no_teal_sky_blue_or_grey(self) -> None:
+        abstract_colors = {
+            color.upper() for dataset, color in DATASET_COLORS.items()
+            if dataset.endswith("_abstracts")
+        }
+        self.assertTrue({GREEN.upper(), ORCHID.upper()}.issubset(abstract_colors))
+        self.assertNotIn("#00876C", abstract_colors)
+        self.assertNotIn("#56B4E9", abstract_colors)
+        self.assertNotIn("#666666", abstract_colors)
+
+    def test_each_corpus_keeps_one_color_across_scopes(self) -> None:
+        for corpus in ("arxiv_ai", "arxiv_qbio", "arxiv_stat", "medarxiv"):
+            self.assertEqual(
+                DATASET_COLORS[f"{corpus}_abstracts"],
+                DATASET_COLORS[f"{corpus}_titles"],
+            )
+
+    def test_positive_effect_and_ai_corpus_share_exact_green(self) -> None:
+        self.assertEqual(INCREASE_COLOR, GREEN)
+        self.assertEqual(DATASET_COLORS["arxiv_ai_abstracts"], GREEN)
+
     def test_dataset_encodings_cover_the_same_datasets(self) -> None:
         self.assertEqual(set(DATASET_COLORS), set(DATASET_MARKERS))
         self.assertEqual(set(DATASET_COLORS), set(DATASET_HATCHES))

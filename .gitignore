@@ -239,3 +239,7 @@ docs/METHODS_REWRITE.md
 # docs/RESULTS_REWRITE.md
 # docs/RESULTS_VISUALS_UPDATE.md
 # docs/VISUALS_AND_ANALYSIS.md
+
+tmp/
+docs/
+data/analysis/manuscript/

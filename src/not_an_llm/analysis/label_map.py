@@ -15,8 +15,8 @@ LABEL_MAP = {
     "em_dash_per_1k_words": "em dash",
     "word_count": "word count",
     "sentence_count": "sent. count",
-    "clause_depth": "clause depth",
-    "clause_depth_std": r"clause depth $\sigma$",
+    "clause_depth": "max tree depth",
+    "clause_depth_std": r"tree depth $\sigma$",
     "contrast_marker_however_per_1k_words": "`however`",
     "verb_exhibit_per_1k_words": "`exhibit`",
     "verb_delve_per_1k_words": "`delve`",
@@ -96,4 +96,16 @@ LABEL_MAP = {
 def pretty_feature_label(feature: str, label_map: dict[str, str] | None = None) -> str:
     label_map = label_map or LABEL_MAP
     mapped = label_map.get(feature, feature)
+    if mapped.startswith("`") and mapped.endswith("`"):
+        lexical_label = mapped[1:-1].replace(" ", r"\ ")
+        return rf"$\it{{{lexical_label}}}$"
+    lexical_prefixes = (
+        "word_", "verb_", "adjective_", "phrase_",
+        "sequential_marker_", "causal_marker_", "contrast_marker_",
+        "emphasis_marker_", "summary_marker_",
+    )
+    if mapped == feature and feature.startswith(lexical_prefixes):
+        token = feature.removesuffix("_per_1k_words").split("_", 1)[1].replace("_", " ")
+        lexical_label = token.replace(" ", r"\ ")
+        return rf"$\it{{{lexical_label}}}$"
     return mapped

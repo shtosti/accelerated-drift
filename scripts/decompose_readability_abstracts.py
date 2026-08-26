@@ -17,13 +17,12 @@ if str(SRC) not in sys.path:
 
 from not_an_llm.analysis.interrupted_time_series import compute_interrupted_time_series
 from not_an_llm.analysis.visual_style import (
-    BLUE,
     DARK_GREY,
-    DECREASE_HATCH,
     GREEN,
     HATCHES,
     ORCHID,
     WHITE,
+    sign_color,
 )
 
 
@@ -113,7 +112,7 @@ def main() -> None:
         metric_label="ARI",
         sentence_column="sentence_length_contribution_per_year",
         second_column="implied_character_word_contribution_per_year",
-        second_label="implied characters/word",
+        second_label="implied chars/word",
     )
     save_decomposition_plot(
         fkgl_summary,
@@ -123,7 +122,7 @@ def main() -> None:
         second_column="syllables_word_contribution_per_year",
         second_label="syllables/word",
         residual_column="formula_reconciliation_contribution_per_year",
-        residual_label="formula reconciliation",
+        residual_label="formula residual",
     )
 
     print(f"Saved ARI/FKGL decomposition tables to {table_dir}")
@@ -215,7 +214,7 @@ def summarize_ari_decomposition(dataset: str, stats: pd.DataFrame) -> dict[str, 
         "sentence_length_absolute_share": abs(sentence) / absolute_total if absolute_total else np.nan,
         "implied_character_word_absolute_share": abs(character) / absolute_total if absolute_total else np.nan,
         "dominant_component": (
-            "sentence length" if abs(sentence) > abs(character) else "implied characters per word"
+            "sent. length" if abs(sentence) > abs(character) else "implied chars/word"
         ),
         "reconstruction_error": total - sentence - character,
     }
@@ -241,9 +240,9 @@ def summarize_fkgl_decomposition(dataset: str, stats: pd.DataFrame) -> dict[str,
     syllable = float(slopes[FKGL_SYLLABLE_COMPONENT])
     reconciliation = float(slopes[FKGL_RECONCILIATION_COMPONENT])
     component_changes = {
-        "sentence length": sentence,
-        "syllables per word": syllable,
-        "formula reconciliation": reconciliation,
+        "sent. length": sentence,
+        "syllables/word": syllable,
+        "formula residual": reconciliation,
     }
     absolute_total = sum(abs(value) for value in component_changes.values())
     return {
@@ -273,67 +272,99 @@ def save_decomposition_plot(
     residual_column: str | None = None,
     residual_label: str | None = None,
 ) -> None:
+    # Increase PLOT_WIDTH_IN if labels
+    # become crowded, or ROW_SPACING for more vertical separation.
+    PLOT_WIDTH_IN = 1.5
+    PLOT_HEIGHT_IN = 1.5
+    ROW_SPACING = 0.65
+    AXIS_FONT_SIZE = 5.5
+    LEGEND_WIDTH_IN = 2
+    LEGEND_HEIGHT_IN = 0.3
+    LEGEND_COLUMNS = 2
+
     plot = summary.copy()
     labels = plot["dataset"].map(
         {
-            "arxiv_ai_abstracts": "arXiv AI",
-            "arxiv_qbio_abstracts": "arXiv q-bio",
-            "arxiv_stat_abstracts": "arXiv stat",
+            "arxiv_ai_abstracts": "AI",
+            "arxiv_qbio_abstracts": "q-bio",
+            "arxiv_stat_abstracts": "stat",
             "medarxiv_abstracts": "medRxiv",
         }
     ).fillna(plot["dataset"])
-    y = np.arange(len(plot))
+    y = np.arange(len(plot)) * ROW_SPACING
     component_count = 3 if residual_column is not None else 2
-    height = 0.24 if component_count == 3 else 0.34
+    height = 0.25 if component_count == 3 else 0.3
     offsets = np.linspace(
         -height * (component_count - 1) / 2,
         height * (component_count - 1) / 2,
         component_count,
     )
-    fig, ax = plt.subplots(figsize=(3.5, max(2, 0.55 * len(plot) + 0.8)))
+    fig, ax = plt.subplots(figsize=(PLOT_WIDTH_IN, PLOT_HEIGHT_IN))
+    sentence_values = plot[sentence_column].to_numpy(dtype=float)
+    second_values = plot[second_column].to_numpy(dtype=float)
     ax.barh(
-        y + offsets[0], plot[sentence_column], height=height, color=GREEN,
-        edgecolor=DARK_GREY, linewidth=0.4, label="sentence length",
+        y + offsets[0], sentence_values, height=height,
+        color=[sign_color(value) for value in sentence_values], hatch=HATCHES[0],
+        edgecolor=DARK_GREY, linewidth=0.4, label="sent. length",
     )
     ax.barh(
-        y + offsets[1], plot[second_column], height=height, color=ORCHID,
-        hatch=DECREASE_HATCH, edgecolor=DARK_GREY, linewidth=0.4, label=second_label,
+        y + offsets[1], second_values, height=height,
+        color=[sign_color(value) for value in second_values],
+        hatch=HATCHES[1], edgecolor=DARK_GREY, linewidth=0.4, label=second_label,
     )
     if residual_column is not None:
+        residual_values = plot[residual_column].to_numpy(dtype=float)
         ax.barh(
-            y + offsets[2], plot[residual_column], height=height, color=BLUE,
+            y + offsets[2], residual_values, height=height,
+            color=[sign_color(value) for value in residual_values],
             hatch=HATCHES[3], edgecolor=DARK_GREY, linewidth=0.4, label=residual_label,
         )
     ax.axvline(0, color=DARK_GREY, linewidth=0.9)
     ax.set_yticks(y, labels)
-    ax.set_xlabel(f"Contribution to {metric_label} slope $\Delta$/year", fontsize=8)
-    ax.tick_params(axis="both", labelsize=8)
+    ax.set_xlabel(f"contribution to {metric_label} $\Delta$/year", fontsize=AXIS_FONT_SIZE)
+    ax.tick_params(axis="both", labelsize=AXIS_FONT_SIZE, length=2, pad=0.8)
     ax.grid(axis="x", alpha=0.25)
     path.parent.mkdir(parents=True, exist_ok=True)
-    fig.tight_layout()
-    fig.savefig(path, dpi=200, bbox_inches="tight", facecolor=WHITE)
+    fig.tight_layout(pad=0.25)
+    fig.savefig(path, dpi=300, bbox_inches="tight", facecolor=WHITE, pad_inches=0.01)
     plt.close(fig)
 
     handles = [
-        Patch(facecolor=GREEN, edgecolor=DARK_GREY, label="sentence length"),
+        Patch(facecolor=WHITE, edgecolor=DARK_GREY, hatch=HATCHES[0], label="sent. length"),
         Patch(
-            facecolor=ORCHID, edgecolor=DARK_GREY, hatch=DECREASE_HATCH,
+            facecolor=WHITE, edgecolor=DARK_GREY, hatch=HATCHES[1],
             label=second_label,
         ),
     ]
     if residual_column is not None:
         handles.append(
             Patch(
-                facecolor=BLUE, edgecolor=DARK_GREY, hatch=HATCHES[3],
+                facecolor=WHITE, edgecolor=DARK_GREY, hatch=HATCHES[3],
                 label=residual_label,
             )
         )
+    handles.extend(
+        [
+            Patch(facecolor=GREEN, edgecolor=DARK_GREY, label="pos. contribution"),
+            Patch(facecolor=ORCHID, edgecolor=DARK_GREY, label="neg. contribution"),
+        ]
+    )
     legend_path = path.with_name(f"{path.stem}_legend{path.suffix}")
-    legend_fig, legend_ax = plt.subplots(figsize=(4.8 if len(handles) == 3 else 3.5, 0.4))
+    legend_fig, legend_ax = plt.subplots(figsize=(LEGEND_WIDTH_IN, LEGEND_HEIGHT_IN))
     legend_ax.axis("off")
-    legend_ax.legend(handles=handles, loc="center", ncol=len(handles), frameon=False, fontsize=8)
+    legend_ax.legend(
+        handles=handles,
+        loc="center",
+        ncol=LEGEND_COLUMNS,
+        frameon=False,
+        fontsize=5.5,
+        handlelength=1.1,
+        handleheight=0.8,
+        columnspacing=0.8,
+        labelspacing=0.35,
+    )
     legend_fig.savefig(
-        legend_path, dpi=200, bbox_inches="tight", facecolor=WHITE, pad_inches=0.02,
+        legend_path, dpi=300, bbox_inches="tight", facecolor=WHITE, pad_inches=0.01,
     )
     plt.close(legend_fig)
 

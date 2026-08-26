@@ -1,0 +1,9 @@
+word_across_per_1k_words
+verb_align_per_1k_words
+em_dash_per_1k_words
+avg_syllables_per_word
+flesch_reading_ease
+clause_depth
+clause_depth_std
+sequential_marker_moreover_per_1k_words
+emphasis_marker_crucially_per_1k_words

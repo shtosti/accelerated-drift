@@ -6,9 +6,12 @@ from pathlib import Path
 import sys
 
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import numpy as np
 import pandas as pd
 from matplotlib.colors import Colormap
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 from matplotlib.ticker import MaxNLocator
@@ -25,9 +28,12 @@ from not_an_llm.analysis.visual_style import (
     CORPUS_LINESTYLES,
     DATASET_COLORS,
     DATASET_HATCHES,
+    DATASET_MARKERS,
+    DARK_GREY,
     DECREASE_COLOR,
     INCREASE_COLOR,
     ORCHID_GREEN_DIVERGING_CMAP,
+    WHITE,
     sign_hatch,
 )
 
@@ -37,11 +43,70 @@ DEFAULT_PRIMARY_DATASETS = (
     "arxiv_qbio_abstracts",
     "arxiv_stat_abstracts",
     "medarxiv_abstracts",
-    "arxiv_ai_titles",
-    "arxiv_qbio_titles",
-    "arxiv_stat_titles",
-    "medarxiv_titles",
 )
+
+MANUSCRIPT_ABSTRACT_FEATURES = (
+    "word_across_per_1k_words",
+    "marker_words_total_per_1k_words",
+    "verb_align_per_1k_words",
+    "em_dash_per_1k_words",
+    "avg_syllables_per_word",
+    "flesch_kincaid_grade",
+    "flesch_reading_ease",
+    "clause_depth",
+    "clause_depth_std",
+    "dependency_entropy",
+    "hedge_ratio",
+    "certainty_ratio",
+)
+MANUSCRIPT_FEATURE_LABELS = {
+    "word_across_per_1k_words": r"$\it{across}$",
+    "marker_words_total_per_1k_words": "marker words",
+    "verb_align_per_1k_words": r"$\it{align}$",
+    "em_dash_per_1k_words": "em dash",
+    "avg_syllables_per_word": "syllables/word",
+    "flesch_kincaid_grade": "FKGL",
+    "flesch_reading_ease": "FRE",
+    "clause_depth": "max tree depth",
+    "clause_depth_std": r"tree depth $\sigma$",
+    "dependency_entropy": "dep. entropy",
+    "hedge_ratio": "hedging",
+    "certainty_ratio": "certainty",
+}
+READABILITY_FEATURES = (
+    "avg_syllables_per_word",
+    "dale_chall",
+    "automated_readability_index",
+    "flesch_kincaid_grade",
+    "gunning_fog",
+    "smog_index",
+    "flesch_reading_ease",
+)
+READABILITY_FEATURE_LABELS = {
+    "avg_syllables_per_word": "syllables/word",
+    "dale_chall": "Dale-Chall",
+    "automated_readability_index": "ARI",
+    "flesch_kincaid_grade": "FKGL",
+    "gunning_fog": "Gunning Fog",
+    "smog_index": "SMOG",
+    "flesch_reading_ease": "FRE",
+}
+MANUSCRIPT_TABLE_GROUPS = {
+    "Lexical markers": {"marker_words", "verbs", "adjectives", "phrases"},
+    "Punctuation": {"punctuation"},
+    "Readability": {"readability"},
+    "Syntax": {"syntax"},
+    "Rhetorical stance": {
+        "causal_markers", "contrast_markers", "discourse_marker_totals",
+        "emphasis_markers", "sequential_markers", "summary_markers", "other",
+    },
+}
+FAMILY_AGGREGATE_FEATURES = {
+    "marker_words_total_per_1k_words",
+    "marker_verbs_total_per_1k_words",
+    "marker_adjectives_total_per_1k_words",
+    "marker_phrases_total_per_1k_words",
+}
 SYNTAX_FEATURE_HINTS = (
     "dependency",
     "clause",
@@ -55,10 +120,10 @@ SHORT_DATASET_LABELS = {
     "arxiv_qbio": "qbio",
     "arxiv_stat": "stat",
     "medarxiv": "medRxiv",
-    "arxiv_ai_abstracts": "AI abs.",
-    "arxiv_qbio_abstracts": "q-bio abs.",
-    "arxiv_stat_abstracts": "stat abs.",
-    "medarxiv_abstracts": "medRxiv abs.",
+    "arxiv_ai_abstracts": "AI",
+    "arxiv_qbio_abstracts": "q-bio",
+    "arxiv_stat_abstracts": "stat",
+    "medarxiv_abstracts": "medRxiv",
     "arxiv_ai_titles": "AI title",
     "arxiv_qbio_titles": "q-bio title",
     "arxiv_stat_titles": "stat title",
@@ -104,6 +169,15 @@ def main() -> None:
 
     matrix = build_slope_matrix(stats)
     matrix.to_csv(analysis_output_dir / "standardized_slope_matrix.csv", index=False)
+
+    table_rows, table_audit = build_manuscript_feature_table(stats, primary_datasets)
+    table_rows.to_csv(analysis_output_dir / "manuscript_feature_table.csv", index=False)
+    table_audit.to_csv(analysis_output_dir / "manuscript_feature_selection_audit.csv", index=False)
+    save_manuscript_feature_table_latex(
+        table_rows,
+        primary_datasets,
+        analysis_output_dir / "manuscript_feature_table.tex",
+    )
 
     pairwise = pairwise_correlations(matrix, datasets)
     pairwise.to_csv(analysis_output_dir / "corpus_pairwise_correlations.csv", index=False)
@@ -169,6 +243,43 @@ def main() -> None:
         matrix,
         primary_datasets or datasets[:4],
         visuals_output_dir / "primary_corpus_slope_scatter.png",
+    )
+    save_abstract_replicated_effects(
+        stats,
+        primary_datasets,
+        visuals_output_dir / "abstract_replicated_effects.png",
+    )
+    save_readability_effects(
+        stats,
+        primary_datasets,
+        visuals_output_dir / "readability_standardized_effects.png",
+    )
+    save_readability_syntax_heatmap(
+        stats,
+        primary_datasets,
+        visuals_output_dir / "readability_syntax_heatmap.png",
+    )
+    save_all_feature_family_effects(
+        stats,
+        primary_datasets,
+        visuals_output_dir / "feature_group_effects",
+    )
+    save_determiner_context_trends(
+        analysis_dir,
+        primary_datasets,
+        visuals_output_dir / "determiner_context_trends.png",
+    )
+    save_cross_corpus_feature_trends(
+        analysis_dir,
+        primary_datasets,
+        features=(
+            "word_across_per_1k_words",
+            "word_insight_per_1k_words",
+            "verb_delve_per_1k_words",
+            "avg_syllables_per_word",
+            "clause_depth",
+        ),
+        path=visuals_output_dir / "lexical_example_trajectories.png",
     )
     save_syntax_dependency_bars(
         syntax,
@@ -237,6 +348,91 @@ def main() -> None:
     print(summary.to_string(index=False))
 
 
+def save_cross_corpus_feature_trends(
+    analysis_dir: Path,
+    datasets: list[str],
+    features: tuple[str, ...],
+    path: Path,
+) -> None:
+    """Plot compact monthly and yearly trajectories for the same features across corpora."""
+    datasets = [dataset for dataset in datasets if dataset in DATASET_COLORS]
+    if not datasets or not features:
+        return
+
+    loaded: dict[str, tuple[pd.DataFrame, pd.DataFrame]] = {}
+    for dataset in datasets:
+        monthly_path = analysis_dir / dataset / "trends_by_month.csv"
+        yearly_path = analysis_dir / dataset / "trends_by_year.csv"
+        if not monthly_path.exists() or not yearly_path.exists():
+            continue
+        monthly = pd.read_csv(monthly_path)
+        yearly = pd.read_csv(yearly_path).copy()
+        monthly["month_ts"] = pd.to_datetime(monthly["month_ts"], errors="coerce")
+        yearly["year"] = pd.to_numeric(yearly["year"], errors="coerce")
+        yearly["year_ts"] = pd.to_datetime(yearly["year"].astype("Int64").astype(str), errors="coerce")
+        loaded[dataset] = (monthly, yearly)
+    if not loaded:
+        return
+
+    fig_width = 1.5 * len(features)
+    fig, axes = plt.subplots(1, len(features), figsize=(fig_width, 1.62), squeeze=False, sharex=True)
+    axes = axes.ravel()
+    for index, (ax, feature) in enumerate(zip(axes, features)):
+        yearly_col = f"{feature}_yearly_mean"
+        for dataset in datasets:
+            if dataset not in loaded:
+                continue
+            _, yearly = loaded[dataset]
+            color = DATASET_COLORS[dataset]
+            if yearly_col in yearly:
+                values = pd.to_numeric(yearly[yearly_col], errors="coerce")
+                ax.plot(
+                    yearly["year_ts"], values, color=color, lw=0.85,
+                    marker=DATASET_MARKERS[dataset], markersize=2.4,
+                )
+        ax.axvline(pd.Timestamp("2022-11-30"), color="0.25", lw=0.65, ls="--")
+        if feature.startswith(("word_", "verb_")) and feature.endswith("_per_1k_words"):
+            word = feature.split("_", 1)[1].removesuffix("_per_1k_words")
+            ylabel = rf"$\it{{{word}}}$"
+        else:
+            ylabel = {
+                "avg_syllables_per_word": "syllables/word",
+                "clause_depth": "max tree depth",
+            }.get(feature, pretty_feature_label(feature))
+        ax.set_ylabel(ylabel, fontsize=6)
+        ax.set_xlabel("Year", fontsize=6)
+        ax.set_xlim(pd.Timestamp("2015-01-01"), pd.Timestamp("2026-03-01"))
+        ax.xaxis.set_major_locator(mdates.YearLocator(3))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+        ax.tick_params(axis="both", labelsize=5.5, length=2, pad=1.5)
+        plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
+        ax.grid(alpha=0.22)
+    fig.tight_layout(pad=0.35, w_pad=0.8)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=300, bbox_inches="tight", facecolor=WHITE, pad_inches=0.015)
+    plt.close(fig)
+
+    handles = [
+        Line2D(
+            [0], [0], color=DATASET_COLORS[dataset], lw=1.35,
+            marker=DATASET_MARKERS[dataset], markersize=3.2,
+            label=SHORT_DATASET_LABELS.get(dataset, dataset),
+        )
+        for dataset in datasets if dataset in loaded
+    ]
+    legend_fig = plt.figure(figsize=(2.15, 0.43))
+    legend_fig.legend(
+        handles=handles, loc="center", ncol=2, frameon=False,
+        fontsize=7, handlelength=1.8, columnspacing=1.0, handletextpad=0.4,
+        borderaxespad=0,
+    )
+    legend_fig.savefig(
+        path.with_name(f"{path.stem}_legend{path.suffix}"), dpi=300,
+        bbox_inches="tight", facecolor=WHITE, pad_inches=0.005,
+    )
+    plt.close(legend_fig)
+
+
 def discover_datasets(analysis_dir: Path) -> list[str]:
     datasets = []
     for path in sorted(analysis_dir.iterdir()):
@@ -284,6 +480,181 @@ def build_slope_matrix(stats: pd.DataFrame) -> pd.DataFrame:
     )
     result = metadata.merge(values.reset_index(), on="feature", how="left")
     return result
+
+
+def _significance_stars(q_value: object) -> str:
+    q = pd.to_numeric(pd.Series([q_value]), errors="coerce").iloc[0]
+    if not np.isfinite(q):
+        return ""
+    if q < 0.001:
+        return "***"
+    if q < 0.01:
+        return "**"
+    if q < 0.05:
+        return "*"
+    return ""
+
+
+def build_manuscript_feature_table(
+    stats: pd.DataFrame,
+    datasets: list[str],
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Select up to four individual features per prespecified manuscript group."""
+    required = {
+        "dataset", "feature", "family", "standardized_slope_change_per_year",
+        "standardized_slope_change_per_year_ci_low",
+        "standardized_slope_change_per_year_ci_high", "slope_change_q",
+    }
+    if not datasets or not required.issubset(stats.columns):
+        return pd.DataFrame(), pd.DataFrame()
+    data = stats[stats["dataset"].isin(datasets)].copy()
+    numeric = [
+        "standardized_slope_change_per_year",
+        "standardized_slope_change_per_year_ci_low",
+        "standardized_slope_change_per_year_ci_high",
+        "slope_change_q",
+    ]
+    for column in numeric:
+        data[column] = pd.to_numeric(data[column], errors="coerce")
+    summary_rows = []
+    for (feature, family), group in data.groupby(["feature", "family"], sort=False):
+        complete = group.dropna(subset=numeric).drop_duplicates("dataset")
+        values = complete.set_index("dataset")["standardized_slope_change_per_year"]
+        qs = complete.set_index("dataset")["slope_change_q"]
+        all_complete = set(datasets).issubset(values.index)
+        same_direction = bool(all_complete and ((values[datasets] > 0).all() or (values[datasets] < 0).all()))
+        all_q05 = bool(all_complete and (qs[datasets] < 0.05).all())
+        summary_rows.append({
+            "feature": feature,
+            "family": family,
+            "all_four_estimable": all_complete,
+            "same_direction": same_direction,
+            "all_four_q_lt_05": all_q05,
+            "min_abs_standardized_effect": float(values[datasets].abs().min()) if all_complete else np.nan,
+            "mean_abs_standardized_effect": float(values[datasets].abs().mean()) if all_complete else np.nan,
+            "is_group_aggregate": str(feature).endswith("_total_per_1k_words"),
+        })
+    audit = pd.DataFrame(summary_rows)
+    family_to_group = {
+        family: group
+        for group, families in MANUSCRIPT_TABLE_GROUPS.items()
+        for family in families
+    }
+    audit["manuscript_group"] = audit["family"].map(family_to_group)
+    eligible = audit[
+        audit["all_four_estimable"]
+        & audit["all_four_q_lt_05"]
+        & ~audit["is_group_aggregate"]
+        & audit["manuscript_group"].notna()
+    ].copy()
+
+    selected = []
+    for manuscript_group in MANUSCRIPT_TABLE_GROUPS:
+        candidates = eligible[eligible["manuscript_group"] == manuscript_group].sort_values(
+            ["mean_abs_standardized_effect", "feature"], ascending=[False, True]
+        )
+        # Avoid spending two rows on features with identical four-corpus
+        # estimate profiles (currently clause_depth_std/sentence_depth_std).
+        distinct_profiles = []
+        for feature in candidates["feature"]:
+            profile = tuple(
+                np.round(
+                    data[data["feature"] == feature]
+                    .set_index("dataset")
+                    .reindex(datasets)["standardized_slope_change_per_year"]
+                    .to_numpy(dtype=float),
+                    10,
+                )
+            )
+            if profile in distinct_profiles:
+                continue
+            distinct_profiles.append(profile)
+            selected.append(str(feature))
+            if len(distinct_profiles) == 4:
+                break
+    audit["selected"] = audit["feature"].isin(selected)
+    audit["selection_reason"] = np.where(
+        audit["selected"],
+        "top four individual features significant in all four corpora",
+        "not selected",
+    )
+    rows = []
+    for order, feature in enumerate(selected):
+        feature_data = data[data["feature"] == feature]
+        row = {
+            "order": order + 1,
+            "feature": feature,
+            "label": _manuscript_table_label(feature),
+            "family": str(feature_data["family"].iloc[0]),
+            "manuscript_group": family_to_group[str(feature_data["family"].iloc[0])],
+        }
+        for dataset in datasets:
+            match = feature_data[feature_data["dataset"] == dataset]
+            if match.empty:
+                continue
+            result = match.iloc[0]
+            estimate = float(result["standardized_slope_change_per_year"])
+            low = float(result["standardized_slope_change_per_year_ci_low"])
+            high = float(result["standardized_slope_change_per_year_ci_high"])
+            q = float(result["slope_change_q"])
+            row[f"{dataset}_estimate"] = estimate
+            row[f"{dataset}_ci_low"] = low
+            row[f"{dataset}_ci_high"] = high
+            row[f"{dataset}_q"] = q
+            row[f"{dataset}_stars"] = _significance_stars(q)
+            row[dataset] = f"{estimate:.2f} [{low:.2f}, {high:.2f}]{_significance_stars(q)}"
+        rows.append(row)
+    return pd.DataFrame(rows), audit.sort_values(
+        ["selected", "min_abs_standardized_effect"], ascending=[False, False]
+    )
+
+
+def _manuscript_table_label(feature: str) -> str:
+    if feature in MANUSCRIPT_FEATURE_LABELS:
+        return MANUSCRIPT_FEATURE_LABELS[feature]
+    if feature in READABILITY_FEATURE_LABELS:
+        return READABILITY_FEATURE_LABELS[feature]
+    return pretty_feature_label(feature)
+
+
+def _latex_label(label: str) -> str:
+    if label.startswith("$\\it{"):
+        return label
+    return label.replace("%", r"\%").replace("&", r"\&").replace("_", r"\_")
+
+
+def save_manuscript_feature_table_latex(table: pd.DataFrame, datasets: list[str], path: Path) -> None:
+    if table.empty:
+        path.unlink(missing_ok=True)
+        return
+    headers = [SHORT_DATASET_LABELS.get(dataset, dataset) for dataset in datasets]
+    lines = [
+        r"\begin{tabular}{l" + "c" * len(datasets) + "}",
+        r"\toprule",
+        "Feature & " + " & ".join(headers) + r" \\",
+        r"\midrule",
+    ]
+    previous_family = None
+    for row in table.itertuples(index=False):
+        if previous_family is not None and row.manuscript_group != previous_family:
+            lines.append(r"\addlinespace[2pt]")
+        cells = []
+        for dataset in datasets:
+            estimate = getattr(row, f"{dataset}_estimate")
+            low = getattr(row, f"{dataset}_ci_low")
+            high = getattr(row, f"{dataset}_ci_high")
+            stars = getattr(row, f"{dataset}_stars")
+            star_text = rf"$^{{{stars}}}$" if stars else ""
+            cells.append(rf"{estimate:.2f}{star_text} [{low:.2f}, {high:.2f}]")
+        lines.append(_latex_label(row.label) + " & " + " & ".join(cells) + r" \\")
+        previous_family = row.manuscript_group
+    lines.extend([
+        r"\bottomrule",
+        r"\end{tabular}",
+        r"\begin{flushleft}\footnotesize Standardized ITS slope changes with 95\% CIs. "
+        r"$^{*}q<.05$, $^{**}q<.01$, $^{***}q<.001$ (family-level FDR).\end{flushleft}",
+    ])
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def pairwise_correlations(matrix: pd.DataFrame, datasets: list[str]) -> pd.DataFrame:
@@ -506,8 +877,6 @@ def save_cross_corpus_dependency_trends(
         _remove_dependency_trend_artifacts(path)
         return
     data = data[data[unit_column].isin(top_units)]
-    colors = {unit: DEPENDENCY_TREND_COLORS[i % len(DEPENDENCY_TREND_COLORS)] for i, unit in enumerate(top_units)}
-
     fig, axes = plt.subplots(
         2,
         4,
@@ -524,11 +893,12 @@ def save_cross_corpus_dependency_trends(
                 continue
             ax.plot(
                 series["year"], series["proportion"],
-                color=colors[unit], linestyle=CORPUS_LINESTYLES.get(corpus, "-"),
+                color=DATASET_COLORS[dataset], linestyle=CORPUS_LINESTYLES.get(corpus, "-"),
                 linewidth=1.15,
             )
         ax.axvline(2022.92, color="0.25", linestyle="--", linewidth=0.7, alpha=0.65)
-        ax.set_title(unit, color=colors[unit], fontsize=7.5, pad=3)
+        ax.text(0.03, 0.95, unit, transform=ax.transAxes, va="top",
+                color="0.15", fontsize=7.5)
         ax.grid(alpha=0.22)
         ax.xaxis.set_major_locator(MaxNLocator(nbins=4, integer=True))
         ax.tick_params(axis="both", labelsize=6)
@@ -537,9 +907,9 @@ def save_cross_corpus_dependency_trends(
         ax.set_visible(False)
     fig.supylabel(ylabel, fontsize=8)
     fig.supxlabel("Year", fontsize=8)
-    unit_handles = [Line2D([0], [0], color=colors[unit], linewidth=1.5, label=unit) for unit in top_units]
     corpus_handles = [
-        Line2D([0], [0], color="0.2", linestyle=CORPUS_LINESTYLES[corpus], linewidth=1.4,
+        Line2D([0], [0], color=DATASET_COLORS[next(dataset for dataset in datasets if dataset.startswith(f"{corpus}_"))],
+               linestyle=CORPUS_LINESTYLES[corpus], linewidth=1.4,
                label=SHORT_DATASET_LABELS.get(corpus, corpus))
         for corpus in CORPUS_LINESTYLES
         if any(dataset.startswith(f"{corpus}_") for dataset in datasets)
@@ -548,7 +918,7 @@ def save_cross_corpus_dependency_trends(
     fig.savefig(path, dpi=200, bbox_inches="tight", facecolor="white", pad_inches=0.04)
     plt.close(fig)
     _save_cross_corpus_dependency_legend(
-        unit_handles,
+        [],
         corpus_handles,
         path.with_name(f"{path.stem}_legend{path.suffix}"),
     )
@@ -634,23 +1004,9 @@ def _save_cross_corpus_dependency_legend(
     """Save dependency colors and corpus line styles as a standalone figure."""
     fig, ax = plt.subplots(figsize=(4.8, 1.05))
     ax.axis("off")
-    dependency_legend = ax.legend(
-        handles=unit_handles,
-        loc="upper center",
-        bbox_to_anchor=(0.5, 1.0),
-        ncol=4,
-        fontsize=6.5,
-        frameon=False,
-        title="Dependency",
-        title_fontsize=7,
-        handlelength=1.8,
-        columnspacing=0.9,
-    )
-    ax.add_artist(dependency_legend)
     ax.legend(
         handles=corpus_handles,
-        loc="lower center",
-        bbox_to_anchor=(0.5, 0.0),
+        loc="center",
         ncol=4,
         fontsize=6.5,
         frameon=False,
@@ -794,10 +1150,299 @@ def pairwise_unit_correlations(
     return pd.DataFrame(rows, columns=output_columns).sort_values("pearson_r", ascending=False).reset_index(drop=True)
 
 
+def save_abstract_replicated_effects(
+    stats: pd.DataFrame,
+    datasets: list[str],
+    path: Path,
+) -> None:
+    """Compact manuscript-facing forest plot for replicated abstract effects."""
+    datasets = [dataset for dataset in datasets if dataset.endswith("_abstracts")]
+    if not datasets:
+        return
+    data = stats[
+        stats["dataset"].isin(datasets)
+        & stats["feature"].isin(MANUSCRIPT_ABSTRACT_FEATURES)
+    ].copy()
+    if data.empty:
+        return
+
+    feature_order = [
+        feature for feature in MANUSCRIPT_ABSTRACT_FEATURES
+        if feature in set(data["feature"])
+    ]
+    y_base = np.arange(len(feature_order), dtype=float)
+    offsets = np.linspace(-0.27, 0.27, len(datasets))
+    fig, ax = plt.subplots(figsize=(4.8, 3.45))
+    for row in range(len(feature_order)):
+        if row % 2 == 0:
+            ax.axhspan(row - 0.5, row + 0.5, color="0.94", zorder=0)
+    for offset, dataset in zip(offsets, datasets, strict=True):
+        subset = data[data["dataset"] == dataset].set_index("feature").reindex(feature_order)
+        estimate = subset["standardized_slope_change_per_year"].to_numpy(dtype=float)
+        low = subset["standardized_slope_change_per_year_ci_low"].to_numpy(dtype=float)
+        high = subset["standardized_slope_change_per_year_ci_high"].to_numpy(dtype=float)
+        xerr = np.vstack([estimate - low, high - estimate])
+        ax.errorbar(
+            estimate,
+            y_base + offset,
+            xerr=xerr,
+            fmt=DATASET_MARKERS[dataset],
+            color=DATASET_COLORS[dataset],
+            ecolor=DATASET_COLORS[dataset],
+            markersize=3.6,
+            linewidth=0.7,
+            capsize=1.5,
+            label=SHORT_DATASET_LABELS.get(dataset, dataset),
+        )
+    ax.axvline(0, color="0.25", linewidth=0.8)
+    ax.set_yticks(y_base, [MANUSCRIPT_FEATURE_LABELS[feature] for feature in feature_order])
+    ax.invert_yaxis()
+    ax.set_xlabel(r"Standardized $\Delta$ slope/year", fontsize=7.5)
+    ax.tick_params(axis="both", labelsize=6.5)
+    ax.grid(axis="x", alpha=0.25)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.tight_layout()
+    fig.savefig(path, dpi=300, bbox_inches="tight", facecolor=WHITE)
+    plt.close(fig)
+    save_marker_legend(datasets, path.with_name(f"{path.stem}_legend{path.suffix}"))
+
+
+def save_readability_effects(stats: pd.DataFrame, datasets: list[str], path: Path) -> None:
+    """Compact forest plot of every readability metric in the abstract analyses."""
+    data = stats[
+        stats["dataset"].isin(datasets) & stats["feature"].isin(READABILITY_FEATURES)
+    ].copy()
+    feature_order = [feature for feature in READABILITY_FEATURES if feature in set(data["feature"])]
+    save_feature_family_effects(
+        data,
+        datasets,
+        path,
+        feature_order=feature_order,
+        feature_labels=READABILITY_FEATURE_LABELS,
+    )
+
+
+def save_readability_syntax_heatmap(stats: pd.DataFrame, datasets: list[str], path: Path) -> None:
+    """Compact four-corpus heatmap for the readability and syntax families."""
+    datasets = [dataset for dataset in datasets if dataset.endswith("_abstracts")]
+    data = stats[
+        stats["dataset"].isin(datasets)
+        & stats["family"].astype(str).isin(["readability", "syntax"])
+    ].copy()
+    if data.empty or not datasets:
+        path.unlink(missing_ok=True)
+        path.with_name(f"{path.stem}_legend{path.suffix}").unlink(missing_ok=True)
+        return
+    complete = data.groupby("feature")["dataset"].nunique()
+    features = complete[complete == len(datasets)].index
+    data = data[data["feature"].isin(features)].copy()
+    data["standardized_slope_change_per_year"] = pd.to_numeric(
+        data["standardized_slope_change_per_year"], errors="coerce"
+    )
+    data["slope_change_q"] = pd.to_numeric(data["slope_change_q"], errors="coerce")
+    family_order = {"readability": 0, "syntax": 1}
+    ordering = (
+        data.groupby(["feature", "family"], as_index=False)
+        .agg(mean_abs=("standardized_slope_change_per_year", lambda values: values.abs().mean()))
+        .assign(family_order=lambda frame: frame["family"].map(family_order))
+        .sort_values(["family_order", "mean_abs"], ascending=[True, False])
+    )
+    feature_order = ordering["feature"].tolist()
+    values = data.pivot(index="feature", columns="dataset", values="standardized_slope_change_per_year").reindex(
+        index=feature_order, columns=datasets
+    )
+    qs = data.pivot(index="feature", columns="dataset", values="slope_change_q").reindex(
+        index=feature_order, columns=datasets
+    )
+    finite = values.to_numpy(dtype=float)
+    limit = float(np.nanmax(np.abs(finite))) if np.isfinite(finite).any() else 1.0
+    fig, ax = plt.subplots(figsize=(3.25, max(2.15, 0.205 * len(feature_order) + 0.45)))
+    image = ax.imshow(values, aspect="auto", cmap=ORCHID_GREEN_DIVERGING_CMAP, vmin=-limit, vmax=limit)
+    ax.set_xticks(range(len(datasets)), [SHORT_DATASET_LABELS.get(dataset, dataset) for dataset in datasets])
+    ax.set_yticks(range(len(feature_order)), [_manuscript_table_label(feature) for feature in feature_order])
+    ax.tick_params(axis="x", labelsize=6.5, rotation=0, length=0)
+    ax.tick_params(axis="y", labelsize=6.2, length=0)
+    for row in range(len(feature_order)):
+        for column in range(len(datasets)):
+            value = values.iat[row, column]
+            if np.isfinite(value):
+                ax.text(
+                    column, row, f"{value:.1f}{_significance_stars(qs.iat[row, column])}",
+                    ha="center", va="center", fontsize=5.1, color="black",
+                )
+    families = ordering["family"].tolist()
+    for index in range(1, len(families)):
+        if families[index] != families[index - 1]:
+            ax.axhline(index - 0.5, color="black", linewidth=0.75)
+    for spine in ax.spines.values():
+        spine.set_linewidth(0.5)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=300, bbox_inches="tight", facecolor=WHITE, pad_inches=0.025)
+    plt.close(fig)
+
+    legend_path = path.with_name(f"{path.stem}_legend{path.suffix}")
+    legend_fig, legend_ax = plt.subplots(figsize=(2.25, 0.34))
+    legend_ax.axis("off")
+    colorbar = legend_fig.colorbar(
+        ScalarMappable(norm=Normalize(vmin=-limit, vmax=limit), cmap=ORCHID_GREEN_DIVERGING_CMAP),
+        ax=legend_ax, orientation="horizontal", fraction=0.65, pad=0.0,
+    )
+    colorbar.set_label(r"Standardized $\Delta$ slope/year", fontsize=6)
+    colorbar.ax.tick_params(labelsize=5.5, length=2)
+    legend_fig.savefig(legend_path, dpi=300, bbox_inches="tight", facecolor=WHITE, pad_inches=0.01)
+    plt.close(legend_fig)
+
+
+def save_all_feature_family_effects(
+    stats: pd.DataFrame,
+    datasets: list[str],
+    output_dir: Path,
+) -> None:
+    """Write one four-corpus compact forest plot for every feature family."""
+    datasets = [dataset for dataset in datasets if dataset.endswith("_abstracts")]
+    abstract_stats = stats[stats["dataset"].isin(datasets)].copy()
+    if abstract_stats.empty:
+        return
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for family in sorted(abstract_stats["family"].dropna().astype(str).unique()):
+        family_data = abstract_stats[abstract_stats["family"].astype(str) == family].copy()
+        complete_counts = family_data.groupby("feature")["dataset"].nunique()
+        features = complete_counts[complete_counts == len(datasets)].index.tolist()
+        features = [feature for feature in features if feature not in FAMILY_AGGREGATE_FEATURES]
+        finite_counts = (
+            family_data.assign(
+                _finite=np.isfinite(
+                    pd.to_numeric(
+                        family_data["standardized_slope_change_per_year"],
+                        errors="coerce",
+                    )
+                )
+            )
+            .groupby("feature")["_finite"]
+            .sum()
+        )
+        features = [feature for feature in features if finite_counts.get(feature, 0) > 0]
+        if not features:
+            continue
+        ranking = (
+            family_data[family_data["feature"].isin(features)]
+            .groupby("feature")["standardized_slope_change_per_year"]
+            .apply(lambda values: values.abs().mean())
+            .sort_values(ascending=False)
+        )
+        feature_order = ranking.index.tolist()
+        labels = {feature: pretty_feature_label(feature) for feature in feature_order}
+        slug = family.replace(" ", "_").replace("/", "_")
+        save_feature_family_effects(
+            family_data,
+            datasets,
+            output_dir / f"standardized_effects_{slug}.png",
+            feature_order=feature_order,
+            feature_labels=labels,
+        )
+
+
+def save_feature_family_effects(
+    data: pd.DataFrame,
+    datasets: list[str],
+    path: Path,
+    *,
+    feature_order: list[str],
+    feature_labels: dict[str, str],
+) -> None:
+    """Shared compact forest-plot grammar used for every feature family."""
+    datasets = [dataset for dataset in datasets if dataset.endswith("_abstracts")]
+    if data.empty or not datasets or not feature_order:
+        return
+    row_spacing = 0.58
+    y_base = np.arange(len(feature_order), dtype=float) * row_spacing
+    offsets = np.linspace(-0.17, 0.17, len(datasets))
+    fig_height = max(0.82, 0.185 * len(feature_order) + 0.40)
+    fig, ax = plt.subplots(figsize=(2.62, fig_height))
+    for row, y_value in enumerate(y_base):
+        if row % 2 == 0:
+            ax.axhspan(y_value - row_spacing / 2, y_value + row_spacing / 2, color="0.94", zorder=0)
+    for offset, dataset in zip(offsets, datasets, strict=True):
+        subset = data[data["dataset"] == dataset].set_index("feature").reindex(feature_order)
+        estimate = subset["standardized_slope_change_per_year"].to_numpy(dtype=float)
+        low = subset["standardized_slope_change_per_year_ci_low"].to_numpy(dtype=float)
+        high = subset["standardized_slope_change_per_year_ci_high"].to_numpy(dtype=float)
+        ax.errorbar(
+            estimate, y_base + offset, xerr=np.vstack([estimate - low, high - estimate]),
+            fmt=DATASET_MARKERS[dataset], color=DATASET_COLORS[dataset],
+            ecolor=DATASET_COLORS[dataset], markersize=2.15, linewidth=0.6,
+            capsize=1.0, label=SHORT_DATASET_LABELS.get(dataset, dataset),
+        )
+    ax.axvline(0, color="0.25", linewidth=0.75)
+    ax.set_yticks(y_base, [feature_labels.get(feature, pretty_feature_label(feature)) for feature in feature_order])
+    ax.invert_yaxis()
+    ax.set_xlabel(r"Standardized $\Delta$ slope/year", fontsize=6)
+    ax.tick_params(axis="both", labelsize=5.5, length=2, pad=1.5)
+    ax.grid(axis="x", alpha=0.25)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.tight_layout(pad=0.3)
+    fig.savefig(path, dpi=300, bbox_inches="tight", facecolor=WHITE, pad_inches=0.01)
+    plt.close(fig)
+    save_marker_legend(datasets, path.with_name(f"{path.stem}_legend{path.suffix}"))
+
+
+def save_determiner_context_trends(
+    analysis_dir: Path,
+    datasets: list[str],
+    path: Path,
+) -> None:
+    """Two-panel cross-corpus summary of the determiner-context mechanism."""
+    datasets = [dataset for dataset in datasets if dataset.endswith("_abstracts")]
+    parts = []
+    for dataset in datasets:
+        source = analysis_dir / dataset / "additional_analysis" / "determiner_decomposition_yearly.csv"
+        if not source.exists():
+            continue
+        frame = pd.read_csv(source)
+        required = {"year", "det_pobj_per_1k_words", "prenominal_to_prepositional_ratio"}
+        if not required.issubset(frame.columns):
+            continue
+        frame = frame[list(required)].copy()
+        frame["dataset"] = dataset
+        parts.append(frame)
+    if len(parts) != len(datasets):
+        return
+    data = pd.concat(parts, ignore_index=True)
+    fig, axes = plt.subplots(1, 2, figsize=(3.65, 1.62), sharex=True)
+    panels = (
+        ("det_pobj_per_1k_words", "det–pobj frequency"),
+        ("prenominal_to_prepositional_ratio", "modifier ratio"),
+    )
+    for ax, (column, ylabel) in zip(axes, panels, strict=True):
+        for dataset in datasets:
+            series = data[data["dataset"] == dataset].sort_values("year")
+            ax.plot(
+                series["year"], series[column], color=DATASET_COLORS[dataset],
+                marker=DATASET_MARKERS[dataset], markersize=2.4, linewidth=0.85,
+            )
+        ax.axvline(2022.92, color="0.25", linestyle="--", linewidth=0.65)
+        ax.set_ylabel(ylabel, fontsize=6)
+        ax.set_xlabel("Year", fontsize=6)
+        ax.xaxis.set_major_locator(MaxNLocator(nbins=5, integer=True))
+        ax.tick_params(axis="both", labelsize=5.5, length=2, pad=1.5)
+        ax.tick_params(axis="x", rotation=45)
+        ax.grid(alpha=0.22)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.tight_layout(pad=0.35, w_pad=0.8)
+    fig.savefig(path, dpi=300, bbox_inches="tight", facecolor=WHITE, pad_inches=0.01)
+    plt.close(fig)
+    save_marker_legend(datasets, path.with_name(f"{path.stem}_legend{path.suffix}"))
+
+
 def save_correlation_heatmap(pairwise: pd.DataFrame, datasets: list[str], path: Path) -> None:
     if pairwise.empty:
         return
-    save_pairwise_correlation_heatmap(pairwise, datasets, path, colorbar_label="Pearson r")
+    datasets = [dataset for dataset in datasets if dataset in DEFAULT_PRIMARY_DATASETS]
+    if len(datasets) < 2:
+        return
+    save_pairwise_correlation_heatmap(
+        pairwise, datasets, path, colorbar_label="Pearson r"
+    )
 
 
 def save_pairwise_correlation_heatmap(
@@ -976,7 +1621,7 @@ def save_dependency_bigram_bars(bigram_slopes: pd.DataFrame, datasets: list[str]
         matrix,
         value_cols,
         path,
-        xlabel="bigram-share slope/year",
+        xlabel=r"$\Delta$ edge-proportion slope/year",
     )
 
 
@@ -993,6 +1638,9 @@ def save_grouped_horizontal_bars(
     height = min(0.8 / len(value_cols), 0.22)
     fig_height = max(2.2, 0.2 * len(data) + 0.3)
     fig, ax = plt.subplots(figsize=(3, fig_height))
+    for row in range(len(data)):
+        if row % 2 == 0:
+            ax.axhspan(row - 0.5, row + 0.5, color="0.94", zorder=0)
     offsets = np.linspace(-height * (len(value_cols) - 1) / 2, height * (len(value_cols) - 1) / 2, len(value_cols))
     for offset, column in zip(offsets, value_cols, strict=True):
         bars = ax.barh(
@@ -1046,6 +1694,22 @@ def save_separate_legend(value_cols: list[str], path: Path) -> None:
     plt.close(fig)
 
 
+def save_marker_legend(value_cols: list[str], path: Path) -> None:
+    handles = [
+        Line2D(
+            [0], [0], marker=DATASET_MARKERS[column], color=DATASET_COLORS[column],
+            linestyle="none", label=label(column), markersize=4,
+        )
+        for column in value_cols
+    ]
+    fig, ax = plt.subplots(figsize=(2.8, 0.28))
+    ax.axis("off")
+    ax.legend(handles=handles, loc="center", ncol=len(handles), fontsize=6,
+              frameon=False, handletextpad=0.35, columnspacing=0.8)
+    fig.savefig(path, dpi=200, bbox_inches="tight", facecolor=WHITE, pad_inches=0.01)
+    plt.close(fig)
+
+
 def save_heatmap(
     matrix: pd.DataFrame,
     path: Path,
@@ -1057,11 +1721,14 @@ def save_heatmap(
     colorbar_label: str | None = None,
 ) -> None:
     n = len(matrix)
-    fig, ax = plt.subplots(figsize=(3.35, max(2.4, 0.22 * n + 0.55)))
-    image = ax.imshow(matrix.to_numpy(dtype=float), vmin=vmin, vmax=vmax, cmap=cmap)
-    ax.set_xticks(range(n), [label(value) for value in matrix.columns], rotation=45, ha="right")
+    fig, ax = plt.subplots(figsize=(2.62, 2.18))
+    image = ax.imshow(
+        matrix.to_numpy(dtype=float), vmin=vmin, vmax=vmax, cmap=cmap,
+        aspect="equal", interpolation="none",
+    )
+    ax.set_xticks(range(n), [label(value) for value in matrix.columns], rotation=35, ha="right")
     ax.set_yticks(range(n), [label(value) for value in matrix.index])
-    ax.tick_params(axis="both", labelsize=6)
+    ax.tick_params(axis="both", labelsize=7.2, length=2.5, pad=2)
     for i in range(n):
         for j in range(n):
             value = matrix.iat[i, j]
@@ -1070,13 +1737,16 @@ def save_heatmap(
                     text = "1"
                 else:
                     text = compact_float(value, fmt)
-                ax.text(j, i, text, ha="center", va="center", fontsize=4.5, linespacing=0.8)
-    cbar = fig.colorbar(image, ax=ax, shrink=0.75)
+                ax.text(j, i, text, ha="center", va="center", fontsize=8.2)
+    for spine in ax.spines.values():
+        spine.set_linewidth(0.7)
+    cbar = fig.colorbar(image, ax=ax, fraction=0.045, pad=0.045, shrink=0.84)
     if colorbar_label:
-        cbar.set_label(colorbar_label, fontsize=6)
-    cbar.ax.tick_params(labelsize=6)
-    fig.tight_layout()
-    fig.savefig(path, dpi=200, bbox_inches="tight")
+        cbar.set_label(colorbar_label, fontsize=7)
+    cbar.ax.tick_params(labelsize=6.5, length=2)
+    fig.subplots_adjust(left=0.22, right=0.88, bottom=0.24, top=0.985)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=300, bbox_inches="tight", facecolor=WHITE, pad_inches=0.02)
     plt.close(fig)
 
 
@@ -1122,7 +1792,7 @@ def split_dependency_bigram(bigram: str) -> tuple[str, str]:
 
 def short_feature_label(feature: str, family: str | None = None) -> str:
     feature = str(feature)
-    mapped = pretty_feature_label(feature).replace("`", "")
+    mapped = pretty_feature_label(feature)
     if mapped != feature:
         return mapped
     return feature.replace("_per_1k_words", "").replace("_", " ")

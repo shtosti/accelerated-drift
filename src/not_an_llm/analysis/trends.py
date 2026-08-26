@@ -15,6 +15,7 @@ from .label_map import LABEL_MAP, pretty_feature_label
 from .feature_groups import FEATURE_GROUPS
 from .visual_style import (
     CATEGORICAL_COLORS,
+    DEPENDENCY_ROLE_COLORS,
     DARK_GREY,
     GREEN,
     HATCHES,
@@ -51,18 +52,12 @@ DEPENDENCY_ROLE_ORDER = [
     "appos",
 ]
 
-DEPENDENCY_ROLE_COLORS = list(CATEGORICAL_COLORS)
-
-
 def dependency_role_color_map(roles) -> dict[str, str]:
     """Return a stable dependency-label color map shared across datasets."""
-    canonical = {
-        role: DEPENDENCY_ROLE_COLORS[index % len(DEPENDENCY_ROLE_COLORS)]
-        for index, role in enumerate(DEPENDENCY_ROLE_ORDER)
-    }
+    canonical = dict(DEPENDENCY_ROLE_COLORS)
     unknown_roles = sorted(str(role) for role in roles if str(role) not in canonical)
-    for offset, role in enumerate(unknown_roles, start=len(canonical)):
-        canonical[role] = DEPENDENCY_ROLE_COLORS[offset % len(DEPENDENCY_ROLE_COLORS)]
+    for offset, role in enumerate(unknown_roles):
+        canonical[role] = CATEGORICAL_COLORS[offset % len(CATEGORICAL_COLORS)]
     return canonical
 
 
