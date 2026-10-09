@@ -243,3 +243,5 @@ docs/METHODS_REWRITE.md
 tmp/
 docs/
 data/analysis/manuscript/
+presentation_assets/
+presentation_assets/its_explainer/create_figure.py
