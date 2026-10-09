@@ -1,0 +1,21 @@
+domain,topic_id,topic_label,topic_count,topic_share,intervention_year,intervention_year_pct,latest_year,latest_year_pct,pct_point_change_since_intervention
+arxiv_titles,0,"learning, neural, deep, networks, based, neural networks, models",174804,0.4334911357059073,2022,46.449893916218485,2026,38.08217388464302,-8.367720031575466
+arxiv_titles,1,"language, models, language models, large, large language, text, generation",105531,0.2617031248837561,2022,22.045690037992795,2026,30.31550068587105,8.269810647878256
+arxiv_titles,3,"learning, reinforcement, reinforcement learning, policy, multi, bandits, control",43732,0.1084496598858764,2022,11.3238269107416,2026,11.00986347899928,-0.31396343174231944
+arxiv_titles,2,"graph, learning, federated, federated learning, networks, privacy, graph neural",39804,0.0987087318690529,2022,11.859179947698228,2026,7.270233196159122,-4.5889467515391065
+arxiv_titles,4,"causal, learning, clinical, data, medical, models, prediction",16560,0.0410666415373208,2022,4.048453150441604,2026,4.255666601345614,0.20721345090400956
+arxiv_titles,5,"ai, intelligence, artificial, human, artificial intelligence, agents, agent",13964,0.0346288999050209,2022,2.279567770266937,2026,6.6692795087856815,4.389711738518745
+arxiv_titles,6,"foundation, knowledge, ontology, models, foundation models, model, data",4489,0.0111321348949899,2022,0.8042630877781615,2026,1.342347638643935,0.5380845508657736
+arxiv_titles,7,"rag, fashion, 3d, generation, human, based, image",2463,0.006107918967779,2022,0.5698919425667341,2026,0.823045267489712,0.2531533249229778
+arxiv_titles,8,"fuzzy, based, algorithm, decision, optimization, data, classification",1892,0.004691913393032,2022,0.6142991069225835,2026,0.2318897380625775,-0.382409368860006
+arxiv_titles,-1,-1 (outliers),8,1.9838957264406183e-05,2022,0.0049341293728721,2026,,
+medarxiv_titles,0,"19, covid 19, covid, sars, cov, sars cov, vaccination",35632,0.4344783016912365,2022,47.77154803763185,2026,25.67539698906991,-22.096151048561943
+medarxiv_titles,1,"disease, alzheimer, parkinson disease, alzheimer disease, parkinson, brain, disorder",11283,0.1375791052419797,2022,13.494250688967025,2026,17.611878737884098,4.117628048917073
+medarxiv_titles,2,"health, study, care, review, clinical, data, language",9798,0.1194717781760983,2022,11.23253824954861,2026,17.220045370179417,5.9875071206308075
+medarxiv_titles,3,"cancer, learning, cell, breast, deep, breast cancer, based",7220,0.0880369706502786,2022,8.457664164211726,2026,11.012579913384204,2.554915749172478
+medarxiv_titles,4,"stroke, study, pain, patients, injury, review, brain",6189,0.0754654863371986,2022,6.623586429725363,2026,10.02268508970922,3.3990986599838573
+medarxiv_titles,5,"diabetes, study, health, type, type diabetes, risk, women",5849,0.0713197010157174,2022,7.089233108429155,2026,9.053413074860796,1.964179966431641
+medarxiv_titles,6,"heart, cardiovascular, patients, risk, disease, coronary, heart failure",4467,0.05446830303252,2022,3.316544711584149,2026,7.0117550010311405,3.6952102894469916
+medarxiv_titles,7,"dental, caries, hygiene, oral, cleft, sanitation, study",860,0.0104863981660996,2022,1.1023472393804048,2026,1.3611053825531036,0.25875814317269885
+medarxiv_titles,8,"gastric, study, patients, urinary, surgery, laparoscopic, review",712,0.0086817622026313,2022,0.9122873705217144,2026,1.031140441328109,0.11885307080639451
+medarxiv_titles,-1,-1 (outliers),1,1.219348623965078e-05,2022,,2026,,

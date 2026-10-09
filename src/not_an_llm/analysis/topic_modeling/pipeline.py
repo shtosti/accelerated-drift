@@ -29,29 +29,33 @@ def run_topic_modeling(
         return enriched, {}, None, []
 
     paths: list[Path] = []
-    input_stem = config.analysis.preprocessed_jsonl.stem
     result = assign_topics(enriched, config)
 
-    labels_path = save_topic_labels(result.topic_labels, analysis_dir / f"{input_stem}_topic_labels.csv")
+    labels_path = save_topic_labels(result.topic_labels, analysis_dir / "topic_labels.csv")
     paths.append(labels_path)
 
-    summary = _topic_summary(result.enriched, result.topic_labels)
-    summary_path = analysis_dir / f"{input_stem}_topic_summary.csv"
+    summary = _topic_summary(result.enriched, result.topic_labels, config.analysis.text_source)
+    summary_path = analysis_dir / "topic_summary.csv"
     summary.to_csv(summary_path, index=False)
     paths.append(summary_path)
 
-    stats_path = analysis_dir / f"{input_stem}_topic_modeling_stats.csv"
+    stats_path = analysis_dir / "topic_modeling_stats.csv"
     save_topic_modeling_stats(
         stats_path,
         enriched=result.enriched,
         summary=summary,
+        text_source=config.analysis.text_source,
     )
     paths.append(stats_path)
 
-    merge_candidates = _annotate_merge_candidates(result.merge_candidates, summary)
+    merge_candidates = _annotate_merge_candidates(
+        result.merge_candidates,
+        summary,
+        config.analysis.text_source,
+    )
     merge_path = save_merge_candidates(
         merge_candidates,
-        analysis_dir / f"{input_stem}_topic_merge_candidates.csv",
+        analysis_dir / "topic_merge_candidates.csv",
     )
     if merge_path is not None:
         paths.append(merge_path)
@@ -66,6 +70,7 @@ def run_topic_modeling(
 def run_topic_analysis(
     enriched: pd.DataFrame,
     config: AppConfig,
+    analysis_dir: Path,
     plot_dir: Path,
     trend_analyzer: TrendAnalyzer,
     group_specs: dict[str, dict[str, object]],
@@ -93,17 +98,16 @@ def run_topic_analysis(
         for topic in unique_labels
     }
 
-    analysis_dir = Path(config.data_dir) / "analysis"
     analysis_dir.mkdir(parents=True, exist_ok=True)
-    analysis_topic_base = analysis_dir / f"{config.analysis.preprocessed_jsonl.stem}_topics"
+    analysis_topic_base = analysis_dir / "topics"
     analysis_topic_base.mkdir(parents=True, exist_ok=True)
 
     paths = save_topic_prevalence(
         enriched,
         topic_plot_dir,
         analysis_dir,
-        config.analysis.preprocessed_jsonl.stem,
         topic_labels,
+        text_source=config.analysis.text_source,
     )
     paths.extend(save_topic_trend_plots(enriched, topic_plot_dir, topic_labels, events))
 
@@ -129,10 +133,14 @@ def run_topic_analysis(
 def _annotate_merge_candidates(
     merge_candidates: pd.DataFrame | None,
     topic_summary: pd.DataFrame,
+    text_source: str,
 ) -> pd.DataFrame | None:
     if merge_candidates is None or merge_candidates.empty or topic_summary.empty:
         return merge_candidates
 
+    text_label = _topic_text_label(text_source)
+    count_col = f"{text_label}_count"
+    share_col = f"{text_label}_share"
     summary = topic_summary.set_index("topic_id")
     annotated = merge_candidates.copy()
     for column, prefix in (
@@ -142,18 +150,33 @@ def _annotate_merge_candidates(
     ):
         if column not in annotated.columns:
             continue
-        annotated[f"{prefix}_abstract_count"] = annotated[column].map(summary["abstract_count"])
-        annotated[f"{prefix}_abstract_share"] = annotated[column].map(summary["abstract_share"])
+        annotated[f"{prefix}_{count_col}"] = annotated[column].map(summary[count_col])
+        annotated[f"{prefix}_{share_col}"] = annotated[column].map(summary[share_col])
 
     return annotated
 
 
-def _topic_summary(enriched: pd.DataFrame, topic_labels: dict[int, str]) -> pd.DataFrame:
+def _topic_summary(
+    enriched: pd.DataFrame,
+    topic_labels: dict[int, str],
+    text_source: str,
+) -> pd.DataFrame:
     if "topic_id" not in enriched.columns:
         return pd.DataFrame()
 
-    topic_counts = enriched["topic_id"].value_counts().rename_axis("topic_id").reset_index(name="abstract_count")
+    text_label = _topic_text_label(text_source)
+    count_col = f"{text_label}_count"
+    share_col = f"{text_label}_share"
+    topic_counts = enriched["topic_id"].value_counts().rename_axis("topic_id").reset_index(name=count_col)
     total = len(enriched)
-    topic_counts["abstract_share"] = topic_counts["abstract_count"] / total if total else 0.0
+    topic_counts[share_col] = topic_counts[count_col] / total if total else 0.0
     topic_counts["topic_label"] = topic_counts["topic_id"].map(topic_labels)
-    return topic_counts.sort_values(["abstract_count", "topic_id"], ascending=[False, True]).reset_index(drop=True)
+    return topic_counts.sort_values([count_col, "topic_id"], ascending=[False, True]).reset_index(drop=True)
+
+
+def _topic_text_label(text_source: str) -> str:
+    if text_source == "title":
+        return "title"
+    if text_source == "abstract":
+        return "abstract"
+    return "title_abstract"

@@ -4,7 +4,7 @@ import logging
 from dataclasses import dataclass
 from pathlib import Path
 import pandas as pd
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 from not_an_llm.analysis.topic_modeling import run_topic_analysis, run_topic_modeling
 from not_an_llm.analysis.topic_modeling.comparison import (
@@ -16,8 +16,14 @@ from not_an_llm.analysis.trends import TrendAnalyzer, is_group_total_feature
 from not_an_llm.analysis.feature_groups import FEATURE_GROUPS
 from not_an_llm.analysis.feature_selection import build_marker_group_specs, resolve_feature_columns
 from not_an_llm.analysis.interrupted_time_series import (
+    compute_first_post_year_counterfactual_excess,
+    compute_first_two_year_counterfactual_excess,
     compute_interrupted_time_series,
     compute_placebo_interrupted_time_series,
+    save_first_post_year_excess_plot,
+    save_first_post_year_grouped_excess_plots,
+    save_first_two_year_excess_plot,
+    save_first_two_year_grouped_excess_plots,
     save_its_slope_change_plot,
     save_its_standardized_grouped_slope_change_plots,
     save_its_standardized_slope_change_plot,
@@ -27,6 +33,22 @@ from not_an_llm.config import AppConfig
 
 
 logger = logging.getLogger(__name__)
+
+
+RAW_METADATA_COLUMNS = {
+    "authors",
+    "venue",
+    "fieldsOfStudy",
+    "publicationTypes",
+    "journal",
+    "citationCount",
+    "influentialCitationCount",
+    "isOpenAccess",
+    "openAccessPdf",
+    "externalIds",
+    "url",
+    "tldr",
+}
 
 
 @dataclass(slots=True)
@@ -43,7 +65,7 @@ class AnalysisArtifacts:
 def _resolve_analysis_paths(config: AppConfig):
     # Derive output names from the preprocessed input file basename to distinguish mini/full runs
     input_stem = config.analysis.preprocessed_jsonl.stem
-    analysis_dir = Path(config.data_dir) / "analysis"
+    analysis_dir = Path(config.data_dir) / "analysis" / input_stem
     visuals_dir = Path(config.data_dir) / "visuals"
 
     analysis_dir.mkdir(parents=True, exist_ok=True)
@@ -56,17 +78,17 @@ def _resolve_analysis_paths(config: AppConfig):
 
     feature_dataset = _maybe(
         config.analysis.feature_dataset_jsonl,
-        analysis_dir / f"{input_stem}.jsonl",
+        analysis_dir / "features.jsonl",
     )
 
     trends_csv = _maybe(
         config.analysis.trends_csv,
-        analysis_dir / f"{input_stem}_trends_by_year.csv",
+        analysis_dir / "trends_by_year.csv",
     )
 
     monthly_csv = _maybe(
         config.analysis.monthly_trends_csv,
-        analysis_dir / f"{input_stem}_trends_by_month.csv",
+        analysis_dir / "trends_by_month.csv",
     )
 
     plot_dir = _maybe(
@@ -74,14 +96,14 @@ def _resolve_analysis_paths(config: AppConfig):
         visuals_dir / input_stem,
     )
 
-    return feature_dataset, trends_csv, monthly_csv, plot_dir
+    return analysis_dir, feature_dataset, trends_csv, monthly_csv, plot_dir
 
 
 # =========================================================
 # WORKER (PARALLEL CHUNK PROCESSING)
 # =========================================================
 def _process_chunk_worker(args):
-    chunk, config = args
+    chunk_index, chunk, config = args
 
     import spacy
     from not_an_llm.analysis.feature_extractor import FeatureExtractor
@@ -112,12 +134,20 @@ def _process_chunk_worker(args):
     if config.analysis.include_readability:
         readability = ReadabilityAnalyzer(metrics=config.analysis.readability_metrics)
 
+    chunk = _drop_raw_metadata_columns(chunk)
     enriched = feature_extractor.transform(chunk)
 
     if readability:
         enriched = readability.transform(enriched)
 
-    return enriched
+    return chunk_index, enriched
+
+
+def _drop_raw_metadata_columns(frame: pd.DataFrame) -> pd.DataFrame:
+    return frame.drop(
+        columns=[col for col in RAW_METADATA_COLUMNS if col in frame.columns],
+        errors="ignore",
+    )
 
 
 # =========================================================
@@ -131,22 +161,36 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         )
 
     (
+        analysis_dir,
         enriched_output_path,
         trends_csv,
         monthly_trends_csv,
         plot_dir,
     ) = _resolve_analysis_paths(config)
 
-    print("Saving feature dataset to:", enriched_output_path)
-    print("Saving yearly trends to:", trends_csv)
-    print("Saving monthly trends to:", monthly_trends_csv)
-    print("Saving plots to:", plot_dir)
+    logger.info(
+        "Starting analysis: input=%s feature_output=%s text_source=%s",
+        input_path,
+        enriched_output_path,
+        config.analysis.text_source,
+    )
+    logger.info("Saving yearly trends to %s", trends_csv)
+    logger.info("Saving monthly trends to %s", monthly_trends_csv)
+    logger.info("Saving plots to %s", plot_dir)
 
     # =========================
     # CHUNK LOADING
     # =========================
+    logger.info("Loading preprocessed chunks from %s", input_path)
     chunks = pd.read_json(input_path, lines=True, chunksize=2000)
     chunks_list = list(chunks)
+    total_input_rows = sum(len(chunk) for chunk in chunks_list)
+    logger.info(
+        "Loaded %s chunks from %s: total_rows=%s",
+        len(chunks_list),
+        input_path,
+        total_input_rows,
+    )
 
     enriched_output_path.parent.mkdir(parents=True, exist_ok=True)
     plot_dir.mkdir(parents=True, exist_ok=True)
@@ -161,32 +205,52 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
 
     num_workers = config.analysis.topic_modeling_num_workers or multiprocessing.cpu_count()
     num_workers = max(1, min(num_workers, multiprocessing.cpu_count()))
-    logger.info(f"Using {num_workers} workers")
+    logger.info("Extracting features with %s workers", num_workers)
 
     results = []
+    completed_rows = 0
 
     with ProcessPoolExecutor(max_workers=num_workers) as executor:
-        for i, enriched_chunk in enumerate(
-            executor.map(_process_chunk_worker, [(c, config) for c in chunks_list])
-        ):
+        futures = {
+            executor.submit(_process_chunk_worker, (i, chunk, config)): i
+            for i, chunk in enumerate(chunks_list)
+        }
+        for completed_count, future in enumerate(as_completed(futures), start=1):
+            chunk_index, enriched_chunk = future.result()
+            enriched_chunk = _drop_raw_metadata_columns(enriched_chunk)
             enriched_chunk.to_json(
                 enriched_output_path,
                 orient="records",
                 lines=True,
                 force_ascii=False,
-                mode="w" if i == 0 else "a",
+                mode="w" if completed_count == 1 else "a",
             )
-            results.append(enriched_chunk)
+            results.append((chunk_index, enriched_chunk))
+            completed_rows += len(enriched_chunk)
+            logger.info(
+                "Finished analysis chunk %s/%s: chunk=%s rows=%s completed_rows=%s/%s output=%s",
+                completed_count,
+                len(chunks_list),
+                chunk_index + 1,
+                len(enriched_chunk),
+                completed_rows,
+                total_input_rows,
+                enriched_output_path,
+            )
 
     # =========================
     # CONCAT
     # =========================
+    logger.info("Combining %s analyzed chunks", len(results))
+    results = [chunk for _, chunk in sorted(results, key=lambda item: item[0])]
     enriched = pd.concat(results, ignore_index=True)
+    enriched = _drop_raw_metadata_columns(enriched)
+    logger.info("Combined feature dataset rows=%s columns=%s", len(enriched), len(enriched.columns))
     for col in enriched.columns:
         if col.endswith("_per_1k_words"):
             enriched[col] = pd.to_numeric(enriched[col], errors="coerce").fillna(0.0)
 
-    analysis_dir = Path(config.data_dir) / "analysis"
+    logger.info("Running topic modeling step: enabled=%s", config.analysis.topic_modeling_enabled)
     enriched, topic_labels, embeddings_2d, topic_modeling_paths = run_topic_modeling(
         enriched=enriched,
         config=config,
@@ -199,29 +263,42 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         force_ascii=False,
         mode="w",
     )
+    logger.info("Saved feature dataset to %s", enriched_output_path)
 
     feature_columns = resolve_feature_columns(config, enriched)
+    logger.info("Resolved %s feature columns for trends and ITS", len(feature_columns))
 
     trend_analyzer = TrendAnalyzer(feature_columns)
     marker_group_specs, summary_features = build_marker_group_specs(config)
 
+    logger.info("Aggregating yearly and monthly trends")
     yearly = trend_analyzer.aggregate_yearly(enriched)
     monthly = trend_analyzer.aggregate_monthly(enriched)
+    logger.info("Aggregated trends: yearly_rows=%s monthly_rows=%s", len(yearly), len(monthly))
 
     # =========================
     # STATISTICAL ANALYSIS
     # =========================
     logger.info("Computing monthly interrupted time-series statistics...")
-    input_stem = config.analysis.preprocessed_jsonl.stem
     its_stats = compute_interrupted_time_series(monthly, feature_columns)
-    its_stats_path = analysis_dir / f"{input_stem}_its_stats.csv"
+    its_stats_path = analysis_dir / "its_stats.csv"
     its_stats.to_csv(its_stats_path, index=False)
     logger.info("Saved monthly interrupted time-series statistics to %s", its_stats_path)
 
     placebo_stats = compute_placebo_interrupted_time_series(monthly, feature_columns)
-    placebo_stats_path = analysis_dir / f"{input_stem}_its_placebo_stats.csv"
+    placebo_stats_path = analysis_dir / "its_placebo_stats.csv"
     placebo_stats.to_csv(placebo_stats_path, index=False)
     logger.info("Saved placebo interrupted time-series statistics to %s", placebo_stats_path)
+
+    first_post_year_excess = compute_first_post_year_counterfactual_excess(monthly, feature_columns)
+    first_post_year_excess_path = analysis_dir / "first_post_year_counterfactual_excess.csv"
+    first_post_year_excess.to_csv(first_post_year_excess_path, index=False)
+    logger.info("Saved first-post-year counterfactual excess statistics to %s", first_post_year_excess_path)
+
+    first_two_year_excess = compute_first_two_year_counterfactual_excess(monthly, feature_columns)
+    first_two_year_excess_path = analysis_dir / "first_two_year_counterfactual_excess.csv"
+    first_two_year_excess.to_csv(first_two_year_excess_path, index=False)
+    logger.info("Saved first-two-year counterfactual excess statistics to %s", first_two_year_excess_path)
 
     # =========================
     # PRE/POST DIFF PLOTS
@@ -303,9 +380,11 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     # =========================
     trends_csv.parent.mkdir(parents=True, exist_ok=True)
     yearly.to_csv(trends_csv, index=False)
+    logger.info("Saved yearly trends to %s", trends_csv)
 
     monthly_trends_csv.parent.mkdir(parents=True, exist_ok=True)
     monthly.to_csv(monthly_trends_csv, index=False)
+    logger.info("Saved monthly trends to %s", monthly_trends_csv)
 
     # =========================
     # PLOTS
@@ -316,6 +395,7 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
 
     trend_plots = list(topic_modeling_paths)
     if config.analysis.generate_plots:
+        logger.info("Generating ITS and trend plots")
         its_plot_path = save_its_slope_change_plot(
             its_stats,
             plot_dir / "its_slope_changes.png",
@@ -329,6 +409,26 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         standardized_grouped_its_plot_paths = save_its_standardized_grouped_slope_change_plots(
             its_stats,
             plot_dir / "its_slope_changes_standardized_groups",
+            label_map=LABEL_MAP,
+        )
+        first_post_year_excess_plot_path = save_first_post_year_excess_plot(
+            first_post_year_excess,
+            plot_dir / "first_post_year_counterfactual_excess" / "overall.png",
+            label_map=LABEL_MAP,
+        )
+        first_post_year_excess_grouped_plot_paths = save_first_post_year_grouped_excess_plots(
+            first_post_year_excess,
+            plot_dir / "first_post_year_counterfactual_excess" / "groups",
+            label_map=LABEL_MAP,
+        )
+        first_two_year_excess_plot_path = save_first_two_year_excess_plot(
+            first_two_year_excess,
+            plot_dir / "first_two_year_counterfactual_excess" / "overall.png",
+            label_map=LABEL_MAP,
+        )
+        first_two_year_excess_grouped_plot_paths = save_first_two_year_grouped_excess_plots(
+            first_two_year_excess,
+            plot_dir / "first_two_year_counterfactual_excess" / "groups",
             label_map=LABEL_MAP,
         )
 
@@ -346,6 +446,12 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         if standardized_its_plot_path is not None:
             trend_plots.append(standardized_its_plot_path)
         trend_plots.extend(standardized_grouped_its_plot_paths)
+        if first_post_year_excess_plot_path is not None:
+            trend_plots.append(first_post_year_excess_plot_path)
+        trend_plots.extend(first_post_year_excess_grouped_plot_paths)
+        if first_two_year_excess_plot_path is not None:
+            trend_plots.append(first_two_year_excess_plot_path)
+        trend_plots.extend(first_two_year_excess_grouped_plot_paths)
 
         trend_plots.extend(
             trend_analyzer.save_grouped_word_plots(
@@ -385,11 +491,14 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
         )
 
         trend_plots.append(stacked_plot_path)
+        logger.info("Generated %s plot artifacts so far", len(trend_plots))
 
     if config.analysis.topic_modeling_enabled:
+        logger.info("Running per-topic analysis and plots")
         topic_paths = run_topic_analysis(
             enriched=enriched,
             config=config,
+            analysis_dir=analysis_dir,
             plot_dir=plot_dir,
             trend_analyzer=trend_analyzer,
             group_specs=marker_group_specs,
@@ -398,8 +507,21 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
             embeddings_2d=embeddings_2d,
         )
         trend_plots.extend(topic_paths)
-        trend_plots.extend(_maybe_run_cross_domain_topic_comparison(analysis_dir))
+        trend_plots.extend(
+            _maybe_run_cross_domain_topic_comparison(
+                Path(config.data_dir) / "analysis",
+                config.analysis.preprocessed_jsonl.stem,
+            )
+        )
+        logger.info("Completed topic analysis; total_plot_artifacts=%s", len(trend_plots))
 
+    logger.info(
+        "Analysis complete: feature_dataset=%s yearly=%s monthly=%s plots=%s",
+        enriched_output_path,
+        trends_csv,
+        monthly_trends_csv,
+        len(trend_plots),
+    )
     return AnalysisArtifacts(
         feature_dataset_jsonl=enriched_output_path,
         trends_csv=trends_csv,
@@ -408,16 +530,17 @@ def run_analysis(config: AppConfig) -> AnalysisArtifacts:
     )
 
 
-def _maybe_run_cross_domain_topic_comparison(analysis_dir: Path) -> list[Path]:
-    domains = ("arxiv", "medarxiv")
+def _maybe_run_cross_domain_topic_comparison(analysis_dir: Path, current_stem: str) -> list[Path]:
+    domains = _comparison_domains_for_stem(current_stem)
     required_paths = []
     for domain in domains:
+        domain_dir = analysis_dir / domain
         required_paths.extend(
             [
-                analysis_dir / f"{domain}_its_stats.csv",
-                analysis_dir / f"{domain}_topic_summary.csv",
-                analysis_dir / f"{domain}_topic_prevalence_yearly.csv",
-                analysis_dir / f"{domain}_topics",
+                domain_dir / "its_stats.csv",
+                domain_dir / "topic_summary.csv",
+                domain_dir / "topic_prevalence_yearly.csv",
+                domain_dir / "topics",
             ]
         )
 
@@ -428,7 +551,7 @@ def _maybe_run_cross_domain_topic_comparison(analysis_dir: Path) -> list[Path]:
         )
         return []
 
-    output_dir = analysis_dir / "topic_comparison"
+    output_dir = analysis_dir / "topic_comparison" / "__".join(domains)
     features, selected = select_top_its_features(
         analysis_dir=analysis_dir,
         domains=domains,
@@ -462,4 +585,13 @@ def _maybe_run_cross_domain_topic_comparison(analysis_dir: Path) -> list[Path]:
 
     logger.info("Saved cross-domain topic comparison outputs to %s", output_dir)
     return paths
+
+
+def _comparison_domains_for_stem(stem: str) -> tuple[str, str]:
+    for source in ("arxiv_ai", "arxiv", "medarxiv"):
+        if stem == source or stem.startswith(f"{source}_"):
+            suffix = stem.removeprefix(source)
+            arxiv_domain = f"{source}{suffix}" if source in {"arxiv_ai", "arxiv"} else f"arxiv_ai{suffix}"
+            return arxiv_domain, f"medarxiv{suffix}"
+    return "arxiv_ai", "medarxiv"
 

@@ -1,0 +1,9 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_abstract_count,child_left_abstract_share,child_right_abstract_count,child_right_abstract_share,parent_abstract_count,parent_abstract_share
+16,95_ci_95 ci_cancer_care,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",8,questions contact_wish work_project questions_work cited_cited reference,15,95_ci_95 ci_cancer_care,1.2317404614120746,,,,,,,,,
+15,95_ci_95 ci_cancer_care,"[0, 1, 2, 3, 4, 5, 6, 7]",14,95_ci_95 ci_cancer_care,7,hearing_loss_hearing loss_tinnitus_olfactory,0.788796311767364,,,,,,,,,
+14,95_ci_95 ci_cancer_care,"[0, 1, 2, 3, 4, 5, 6]",12,95_ci_care_95 ci_population,13,cancer_genetic_brain_variants_95,0.6602698881197987,,,,,,,,,
+13,cancer_genetic_brain_variants_95,"[2, 3, 6]",10,genetic_brain_variants_ad_association,6,cancer_tumor_breast_breast cancer_95,0.5942845294303851,,,,,,,,,
+12,95_ci_care_95 ci_population,"[0, 1, 4, 5]",0,sars_cov_sars cov_infection_95,11,95_care_ci_95 ci_learning,0.5697034740321669,,,,,,,,,
+11,95_care_ci_95 ci_learning,"[1, 4, 5]",9,95_care_ci_95 ci_pain,4,learning_ai_images_machine_machine learning,0.5187531688357353,,,,,,,,,
+10,genetic_brain_variants_ad_association,"[2, 3]",2,brain_sleep_ad_stroke_dementia,3,genetic_variants_genes_association_genome,0.4339435143535392,,,,,,,,,
+9,95_care_ci_95 ci_pain,"[1, 5]",1,care_95_ci_95 ci_women,5,pain_95_ci_95 ci_care,0.32768323193958704,,,,,,,,,

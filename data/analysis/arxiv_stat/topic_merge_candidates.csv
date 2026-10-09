@@ -1,0 +1,9 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_title_abstract_count,child_left_title_abstract_share,child_right_title_abstract_count,child_right_title_abstract_share,parent_title_abstract_count,parent_title_abstract_share
+16,data_model_learning_models_based,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",14,data_fairness_learning_model_students,15,data_model_learning_time_models,0.5926675508711355,,,,,,,,,
+15,data_model_learning_time_models,"[0, 1, 2, 3, 4, 5, 7]",13,learning_data_model_networks_graph,12,data_time_model_models_based,0.49972371319372705,,,,,,,,,
+14,data_fairness_learning_model_students,"[6, 8]",8,data_students_science_research_learning,6,fairness_data_model_fair_learning,0.4820102286861906,,,,,,,,,
+13,learning_data_model_networks_graph,"[0, 2, 3]",9,learning_data_model_algorithm_based,3,graph_network_networks_model_data,0.3583440614989076,,,,,,,,,
+12,data_time_model_models_based,"[1, 4, 5, 7]",11,data_model_time_models_based,7,time_data_detection_series_point,0.3379169104216825,,,,,,,,,
+11,data_model_time_models_based,"[1, 4, 5]",5,time_series_time series_model_data,10,data_model_models_using_based,0.31747322801169525,,,,,,,,,
+10,data_model_models_using_based,"[1, 4]",4,data_model_spatial_models_using,1,data_model_treatment_models_methods,0.25834390950664765,,,,,,,,,
+9,learning_data_model_algorithm_based,"[0, 2]",2,learning_adversarial_policy_algorithm_reinforcement,0,learning_data_model_neural_models,0.2321697936842958,,,,,,,,,

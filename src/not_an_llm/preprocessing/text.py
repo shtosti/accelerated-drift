@@ -5,6 +5,22 @@ import pandas as pd
 import spacy
 
 
+BASE_OUTPUT_COLUMNS = [
+    "paperId",
+    "title",
+    "year",
+    "publicationDate",
+    "month",
+    "arxiv_category",
+    "arxiv_domain",
+    "text_raw",
+    "text_clean",
+    "text_lemma",
+    "word_count",
+    "sentence_count",
+]
+
+
 class TextPreprocessor:
     """
     Normalize and structure raw title/abstract text.
@@ -16,8 +32,9 @@ class TextPreprocessor:
     - sentence count
     """
 
-    def __init__(self, *, keep_case: bool = False) -> None:
+    def __init__(self, *, keep_case: bool = False, text_source: str = "title_abstract") -> None:
         self.keep_case = keep_case
+        self.text_source = self._validate_text_source(text_source)
         self.nlp = self._load_nlp()
 
     def preprocess_dataframe(self, frame: pd.DataFrame) -> pd.DataFrame:
@@ -36,7 +53,7 @@ class TextPreprocessor:
             .apply(self._normalize_whitespace)
         )
 
-        text_raw = (df["title"].str.strip() + " " + df["abstract"].str.strip()).str.strip()
+        text_raw = self._build_text_raw(df)
         df["text_raw"] = text_raw
         df["text_clean"] = text_raw.apply(self.normalize_text)
         docs = list(self.nlp.pipe(df["text_clean"].tolist(), batch_size=128, n_process=1))
@@ -45,6 +62,7 @@ class TextPreprocessor:
         df["word_count"] = self._word_counts(docs)
         df["sentence_count"] = self._sentence_counts(docs)
         df["year"] = pd.to_numeric(df.get("year"), errors="coerce").astype("Int64")
+        df = self._select_output_columns(df)
 
         return df
 
@@ -62,6 +80,31 @@ class TextPreprocessor:
     @staticmethod
     def _normalize_whitespace(text: str) -> str:
         return " ".join((text or "").split())
+
+    def _build_text_raw(self, df: pd.DataFrame) -> pd.Series:
+        if self.text_source == "title":
+            return df["title"].str.strip()
+        if self.text_source == "abstract":
+            return df["abstract"].str.strip()
+
+        return (df["title"].str.strip() + " " + df["abstract"].str.strip()).str.strip()
+
+    def _select_output_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        columns = list(BASE_OUTPUT_COLUMNS)
+        if self.text_source in {"abstract", "title_abstract"}:
+            columns.insert(2, "abstract")
+
+        return df[[col for col in columns if col in df.columns]]
+
+    @staticmethod
+    def _validate_text_source(text_source: str) -> str:
+        value = str(text_source).strip().lower()
+        allowed = {"abstract", "title", "title_abstract"}
+        if value not in allowed:
+            raise ValueError(
+                f"Invalid text_source: {value!r}. Expected one of: {', '.join(sorted(allowed))}"
+            )
+        return value
 
     @staticmethod
     def _extract_lemmas(docs) -> list[str]:
