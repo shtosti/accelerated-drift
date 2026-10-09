@@ -227,21 +227,16 @@ slurm_preprocess_mini.sh
 slurm_analyze_mini.sh
 
 
-docs/RESEARCH_PLAN.md
-docs/?ODO.md
+
 docs/field_log.md
+docs/VISUALS_AND_ANALYSIS.md
 
 data/analysis/*/features.jsonl
 data/analysis/syntax_readability_abstracts/cache/document_dependency_bigrams.jsonl.gz
-docs/MANUSCRIPT_EVIDENCE_AUDIT.md
 data/analysis/syntax_readability_abstracts/syntax_readability_documents.parquet
-docs/METHODS_REWRITE.md
-# docs/RESULTS_REWRITE.md
-# docs/RESULTS_VISUALS_UPDATE.md
-# docs/VISUALS_AND_ANALYSIS.md
+
 
 tmp/
-docs/
 data/analysis/manuscript/
 presentation_assets/
 presentation_assets/its_explainer/create_figure.py
