@@ -245,5 +245,3 @@ data/analysis/manuscript/
 presentation_assets/
 presentation_assets/its_explainer/create_figure.py
 
-# dev configs
-config_mini.toml
