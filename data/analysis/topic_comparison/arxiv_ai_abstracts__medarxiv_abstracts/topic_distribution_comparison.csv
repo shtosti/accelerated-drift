@@ -1,0 +1,18 @@
+domain,topic_id,topic_label,topic_count,topic_share,intervention_year,intervention_year_pct,latest_year,latest_year_pct,pct_point_change_since_intervention
+arxiv_abstracts,0,"data, model, learning, models, training, based, performance",198928,0.4933155113367241,2022,53.55750727784082,2026,42.56646417140245,-10.991043106438369
+arxiv_abstracts,1,"models, language, model, llms, based, data, large",96874,0.2402348932540105,2022,19.393595500074014,2026,29.009079626363576,9.615484126289562
+arxiv_abstracts,2,"learning, policy, based, algorithm, model, reinforcement, reinforcement learning",59947,0.1486607463911697,2022,16.53180046380816,2026,13.603109282121627,-2.928691181686533
+arxiv_abstracts,3,"code, models, language, llms, reasoning, knowledge, model",17784,0.0441020019987749,2022,3.170178122070361,2026,7.0579397739891565,3.8877616519187956
+arxiv_abstracts,4,"data, model, learning, models, time, based, forecasting",10741,0.0266362799971233,2022,2.990082399960527,2026,2.1719250114311843,-0.8181573885293427
+arxiv_abstracts,6,"ai, human, systems, intelligence, agents, artificial, research",9030,0.0223932230121984,2022,1.6430650811664282,2026,3.5110065974263507,1.8679415162599224
+arxiv_abstracts,5,"quantum, classical, learning, machine, quantum machine, machine learning, neural",4387,0.0108791881898687,2022,1.194059308235062,2026,1.267228427722255,0.07316911948719307
+arxiv_abstracts,8,"privacy, data, learning, federated, fl, model, federated learning",3178,0.0078810257732853,2022,0.9078798046084768,2026,0.62708210856359,-0.2807976960448868
+arxiv_abstracts,7,"fuzzy, based, decision, paper, data, set, proposed",2377,0.0058946501771866,2022,0.6118320422361474,2026,0.1861650009798158,-0.4256670412563316
+medarxiv_abstracts,0,"sars, cov, sars cov, infection, 95, transmission, ci",30167,0.367840899391545,2022,41.281003516107575,2026,17.98308929676222,-23.297914219345355
+medarxiv_abstracts,1,"care, 95, ci, 95 ci, women, mental, healthcare",12381,0.1509675531331163,2022,15.860496056257723,2026,19.055475355743454,3.1949792994857305
+medarxiv_abstracts,2,"brain, sleep, ad, stroke, dementia, pd, functional",9891,0.1206057723963858,2022,11.185023282333937,2026,16.312641781810683,5.127618499476746
+medarxiv_abstracts,3,"genetic, variants, genes, association, genome, wide, expression",9249,0.11277755423053,2022,11.004466406918178,2026,12.97174675190761,1.9672803449894314
+medarxiv_abstracts,5,"pain, 95, ci, 95 ci, care, physical, heart",8292,0.1011083878991842,2022,7.735436662548703,2026,12.39430810476387,4.658871442215166
+medarxiv_abstracts,4,"learning, ai, images, machine, machine learning, prediction, deep",7024,0.085647047347307,2022,6.880167252684595,2026,14.02351000206228,7.143342749377684
+medarxiv_abstracts,6,"cancer, tumor, breast, breast cancer, 95, tumors, expression",4294,0.0523588299130604,2022,5.169628432956381,2026,6.289956692101464,1.120328259145083
+medarxiv_abstracts,7,"hearing, loss, hearing loss, tinnitus, olfactory, speech, smell",542,0.0066088695418907,2022,0.6937185213342203,2026,0.6186842647968653,-0.07503425653735496

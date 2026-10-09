@@ -1,0 +1,87 @@
+feature,family,all_four_estimable,same_direction,all_four_q_lt_05,min_abs_standardized_effect,mean_abs_standardized_effect,is_group_aggregate,manuscript_group,selected,selection_reason
+word_across_per_1k_words,marker_words,True,True,True,3.099271289093557,4.239658583303877,False,Lexical markers,True,top four individual features significant in all four corpora
+word_while_per_1k_words,marker_words,True,True,True,1.7969723446013814,2.227011288359597,False,Lexical markers,True,top four individual features significant in all four corpora
+verb_align_per_1k_words,verbs,True,True,True,1.5106365630781025,2.3205162880933634,False,Lexical markers,True,top four individual features significant in all four corpora
+em_dash_per_1k_words,punctuation,True,True,True,1.4465130405011632,2.025175002343079,False,Punctuation,True,top four individual features significant in all four corpora
+clause_depth,syntax,True,True,True,1.3095539952944553,1.753759384162453,False,Syntax,True,top four individual features significant in all four corpora
+avg_syllables_per_word,readability,True,True,True,1.2426607774508431,2.981615786148555,False,Readability,True,top four individual features significant in all four corpora
+clause_depth_std,syntax,True,True,True,1.122670343881046,1.594829503033721,False,Syntax,True,top four individual features significant in all four corpora
+flesch_reading_ease,readability,True,True,True,0.8665238351548871,2.582780771287639,False,Readability,True,top four individual features significant in all four corpora
+verb_exhibit_per_1k_words,verbs,True,True,True,0.7595962630500097,1.3152019211525685,False,Lexical markers,True,top four individual features significant in all four corpora
+dale_chall,readability,True,True,True,0.7578990617000464,2.46979528250708,False,Readability,True,top four individual features significant in all four corpora
+causal_marker_thus_per_1k_words,causal_markers,True,True,True,0.6390335062698517,0.9445579150731586,False,Rhetorical stance,True,top four individual features significant in all four corpora
+gunning_fog,readability,True,True,True,0.5908436422256943,2.3093242895326513,False,Readability,True,top four individual features significant in all four corpora
+sequential_marker_moreover_per_1k_words,sequential_markers,True,True,True,0.5898071257849616,1.0143821069907788,False,Rhetorical stance,True,top four individual features significant in all four corpora
+emphasis_marker_crucially_per_1k_words,emphasis_markers,True,True,True,0.569665943498743,0.9531122408533723,False,Rhetorical stance,True,top four individual features significant in all four corpora
+hedge_ratio,other,True,False,True,0.560708494746351,0.9137327326138673,False,Rhetorical stance,True,top four individual features significant in all four corpora
+list_of_three_per_1k_words,syntax,True,True,True,0.54844650022222,1.4951682095663437,False,Syntax,True,top four individual features significant in all four corpora
+coordination_count,syntax,True,False,True,0.3534816482284473,0.6114920242095472,False,Syntax,True,top four individual features significant in all four corpora
+marker_words_total_per_1k_words,marker_words,True,True,True,2.723358800949609,3.193684827373784,True,Lexical markers,False,not selected
+verb_delve_per_1k_words,verbs,True,True,False,2.430993592035188,3.4187469912285784,False,Lexical markers,False,not selected
+verb_underscore_per_1k_words,verbs,True,True,False,1.4641265646946977,3.270099781678155,False,Lexical markers,False,not selected
+marker_verbs_total_per_1k_words,verbs,True,True,False,1.4320198752699818,1.8802121842775392,True,Lexical markers,False,not selected
+sentence_depth_std,syntax,True,True,True,1.122670343881046,1.594829503033721,False,Syntax,False,not selected
+sequential_markers_total_per_1k_words,discourse_marker_totals,True,True,True,1.0694635589829284,1.5191311479114677,True,Rhetorical stance,False,not selected
+verb_enhance_per_1k_words,verbs,True,True,False,0.9414971951606714,1.1688674602987263,False,Lexical markers,False,not selected
+emphasis_markers_total_per_1k_words,discourse_marker_totals,True,True,False,0.8348028351752352,1.4631250263289775,True,Rhetorical stance,False,not selected
+emphasis_marker_particularly_per_1k_words,emphasis_markers,True,True,False,0.8208031609499314,1.5719093030750795,False,Rhetorical stance,False,not selected
+word_particularly_per_1k_words,marker_words,True,True,False,0.8208031609499314,1.5719093030750795,False,Lexical markers,False,not selected
+contrast_markers_total_per_1k_words,discourse_marker_totals,True,True,True,0.786055631606174,0.8740535997563739,True,Rhetorical stance,False,not selected
+contrast_marker_however_per_1k_words,contrast_markers,True,True,True,0.7369544121421516,0.8155821911255343,False,Rhetorical stance,False,not selected
+automated_readability_index,readability,True,True,True,0.6963002379340211,2.1515915572763,False,Readability,False,not selected
+flesch_kincaid_grade,readability,True,True,True,0.6635754096418708,2.187004693448867,False,Readability,False,not selected
+certainty_ratio,other,True,True,False,0.6459674620168439,0.9596026778629753,False,Rhetorical stance,False,not selected
+word_finding_per_1k_words,marker_words,True,True,False,0.5968357397761891,1.4047158485338742,False,Lexical markers,False,not selected
+sequential_marker_additionally_per_1k_words,sequential_markers,True,True,False,0.5958804634941708,1.0091969289623903,False,Rhetorical stance,False,not selected
+word_additionally_per_1k_words,marker_words,True,True,False,0.5958804634941708,1.0091969289623903,False,Lexical markers,False,not selected
+sequential_marker_furthermore_per_1k_words,sequential_markers,True,True,False,0.5281376596123875,0.8036853464636823,False,Rhetorical stance,False,not selected
+adjective_intricate_per_1k_words,adjectives,True,True,False,0.4491395399139006,0.7180786406679633,False,Lexical markers,False,not selected
+causal_markers_total_per_1k_words,discourse_marker_totals,True,True,True,0.41627684433235,0.8652382538229977,True,Rhetorical stance,False,not selected
+dependency_entropy,syntax,True,True,True,0.4137856761157044,0.5193299158511224,False,Syntax,False,not selected
+sequential_marker_further_per_1k_words,sequential_markers,True,True,True,0.3899637901485179,0.624287439205233,False,Rhetorical stance,False,not selected
+verb_showcase_per_1k_words,verbs,True,True,False,0.3806339802027914,1.0686258156064583,False,Lexical markers,False,not selected
+summary_markers_total_per_1k_words,discourse_marker_totals,True,False,False,0.3363402365896859,0.4293210163809694,True,Rhetorical stance,False,not selected
+sequential_marker_subsequently_per_1k_words,sequential_markers,True,True,False,0.2880765272803192,0.5177953794901804,False,Rhetorical stance,False,not selected
+causal_marker_hence_per_1k_words,causal_markers,True,True,True,0.2849819668096447,0.699359072350497,False,Rhetorical stance,False,not selected
+word_realm_per_1k_words,marker_words,True,True,False,0.2713517662252242,0.8671030156286591,False,Lexical markers,False,not selected
+contrast_marker_nevertheless_per_1k_words,contrast_markers,True,True,False,0.2653026187474369,0.5852149159260011,False,Rhetorical stance,False,not selected
+word_within_per_1k_words,marker_words,True,True,False,0.2174645880529182,0.6693121114058668,False,Lexical markers,False,not selected
+dependency_length,syntax,True,False,False,0.1984880348733134,1.142184108884944,False,Syntax,False,not selected
+coordination_per_sentence_std,syntax,True,False,False,0.1964695279379827,0.7201016353077292,False,Syntax,False,not selected
+emphasis_marker_remarkably_per_1k_words,emphasis_markers,True,True,False,0.1884631437461601,0.24669200301689453,False,Rhetorical stance,False,not selected
+smog_index,readability,True,True,False,0.1768042658431074,1.7759458549867406,False,Readability,False,not selected
+summary_marker_in_summary_per_1k_words,summary_markers,True,True,False,0.1755527888800728,0.34727897329330354,False,Rhetorical stance,False,not selected
+adjective_crucial_per_1k_words,adjectives,True,False,False,0.1605982379203533,0.6816500307449864,False,Lexical markers,False,not selected
+summary_marker_overall_per_1k_words,summary_markers,True,False,False,0.1569768502270676,0.3403768651725966,False,Rhetorical stance,False,not selected
+causal_marker_consequently_per_1k_words,causal_markers,True,True,False,0.1456987859787285,0.39188870740858583,False,Rhetorical stance,False,not selected
+marker_phrases_total_per_1k_words,phrases,True,False,False,0.1430727490000094,0.34728746661427345,True,Lexical markers,False,not selected
+emphasis_marker_notably_per_1k_words,emphasis_markers,True,False,False,0.1386000139705908,0.41240966271086665,False,Rhetorical stance,False,not selected
+word_notably_per_1k_words,marker_words,True,False,False,0.1386000139705908,0.41240966271086665,False,Lexical markers,False,not selected
+marker_adjectives_total_per_1k_words,adjectives,True,False,False,0.1379295756758815,0.6511574975568907,True,Lexical markers,False,not selected
+verb_garner_per_1k_words,verbs,True,False,False,0.1277617752642362,0.5795612255921876,False,Lexical markers,False,not selected
+phrase_deep_dive_per_1k_words,phrases,True,False,False,0.1259235583163062,0.2959452128243603,False,Lexical markers,False,not selected
+dependency_length_std,syntax,True,False,False,0.117100317898543,0.452930636601594,False,Syntax,False,not selected
+word_insight_per_1k_words,marker_words,True,False,False,0.1136353116499981,0.3037516754599453,False,Lexical markers,False,not selected
+summary_marker_collectively_per_1k_words,summary_markers,True,False,False,0.1112713169167437,0.31727601863058463,False,Rhetorical stance,False,not selected
+word_meticulously_per_1k_words,marker_words,True,False,False,0.098428263269233,0.761266017754451,False,Lexical markers,False,not selected
+emphasis_marker_importantly_per_1k_words,emphasis_markers,True,False,False,0.0945611274470786,0.24358904076482824,False,Rhetorical stance,False,not selected
+causal_marker_thereby_per_1k_words,causal_markers,True,True,False,0.092991904175756,0.8421279823328752,False,Rhetorical stance,False,not selected
+semicolon_per_1k_words,punctuation,True,True,False,0.0871368178093515,0.6444643933336676,False,Punctuation,False,not selected
+colon_per_1k_words,punctuation,True,True,False,0.0764702942900696,1.1553031908284828,False,Punctuation,False,not selected
+adjective_potential_per_1k_words,adjectives,True,False,False,0.0758992173623256,0.5243174874234289,False,Lexical markers,False,not selected
+contrast_marker_nonetheless_per_1k_words,contrast_markers,True,True,False,0.0736577333350118,0.33341200311906855,False,Rhetorical stance,False,not selected
+contrast_marker_alternatively_per_1k_words,contrast_markers,True,False,False,0.0705702895867387,0.18636078770156414,False,Rhetorical stance,False,not selected
+verb_foster_per_1k_words,verbs,True,False,False,0.0691483654871057,0.19286171516949183,False,Lexical markers,False,not selected
+adjective_comprehensive_per_1k_words,adjectives,True,False,False,0.0674639106439795,0.12145366130634244,False,Lexical markers,False,not selected
+causal_marker_accordingly_per_1k_words,causal_markers,True,False,False,0.0618131136736847,0.20104578518782645,False,Rhetorical stance,False,not selected
+summary_marker_taken_together_per_1k_words,summary_markers,True,False,False,0.0579984617629737,0.3943679879467178,False,Rhetorical stance,False,not selected
+summary_marker_ultimately_per_1k_words,summary_markers,True,False,False,0.0514170510650355,0.12599599646850923,False,Rhetorical stance,False,not selected
+avg_words_per_sentence,syntax,True,False,False,0.0341184485807217,0.47790751521654884,False,Syntax,False,not selected
+word_interplay_per_1k_words,marker_words,True,False,False,0.0274726475180832,0.10524127277024332,False,Lexical markers,False,not selected
+phrase_intricate_interplay_per_1k_words,phrases,True,False,False,0.0239247262392157,0.5626677219078634,False,Lexical markers,False,not selected
+adjective_pivotal_per_1k_words,adjectives,True,True,False,0.0149945717610336,0.5627479452649474,False,Lexical markers,False,not selected
+contrast_marker_conversely_per_1k_words,contrast_markers,True,False,False,0.0114072550395987,0.1130910480017922,False,Rhetorical stance,False,not selected
+phrase_essential_insight_per_1k_words,phrases,False,False,False,,,False,Lexical markers,False,not selected
+phrase_intricate_web_per_1k_words,phrases,False,False,False,,,False,Lexical markers,False,not selected
+phrase_comprehensive_chapter_per_1k_words,phrases,False,False,False,,,False,Lexical markers,False,not selected
+phrase_meticulously_delve_per_1k_words,phrases,False,False,False,,,False,Lexical markers,False,not selected

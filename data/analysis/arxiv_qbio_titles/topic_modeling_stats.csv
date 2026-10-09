@@ -1,0 +1,25 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_titles,38424.0
+dataset,all,,,topics,9.0
+dataset,all,-1.0,-1 (outliers),outlier_title_count,1.0
+dataset,all,-1.0,-1 (outliers),outlier_title_share,2.6025400791172185e-05
+topic,model,0.0,"protein, learning, prediction, cell, data, gene, molecular",title_count,11546.0
+topic,model,0.0,"protein, learning, prediction, cell, data, gene, molecular",title_share,0.30048927753487403
+topic,model,1.0,"neural, brain, learning, networks, eeg, fmri, spiking",title_count,9456.0
+topic,model,1.0,"neural, brain, learning, networks, eeg, fmri, spiking",title_share,0.24609618988132417
+topic,model,2.0,"networks, model, dynamics, phylogenetic, models, systems, evolution",title_count,7741.0
+topic,model,2.0,"networks, model, dynamics, phylogenetic, models, systems, evolution",title_share,0.20146262752446387
+topic,model,3.0,"19, covid 19, covid, epidemic, sars, sars cov, cov",title_count,3983.0
+topic,model,3.0,"19, covid 19, covid, epidemic, sars, sars cov, cov",title_share,0.10365917135123881
+topic,model,6.0,"cell, membrane, dynamics, cells, molecular, transport, ion",title_count,1651.0
+topic,model,6.0,"cell, membrane, dynamics, cells, molecular, transport, ion",title_share,0.04296793670622528
+topic,model,4.0,"microbial, bacterial, bacteria, microbiome, growth, resistance, model",title_count,1474.0
+topic,model,4.0,"microbial, bacterial, bacteria, microbiome, growth, resistance, model",title_share,0.0383614407661878
+topic,model,5.0,"cardiac, model, atrial, heart, atrial fibrillation, tissue, using",title_count,1246.0
+topic,model,5.0,"cardiac, model, atrial, heart, atrial fibrillation, tissue, using",title_share,0.03242764938580054
+topic,model,7.0,"cryo, microscopy, imaging, cryo em, images, using, retinal",title_count,1162.0
+topic,model,7.0,"cryo, microscopy, imaging, cryo em, images, using, retinal",title_share,0.03024151571934208
+topic,model,8.0,"pregnancy, fetal, mineralocorticoid, maternal, prenatal, mineralocorticoid receptor, birth",title_count,164.0
+topic,model,8.0,"pregnancy, fetal, mineralocorticoid, maternal, prenatal, mineralocorticoid receptor, birth",title_share,0.004268165729752238
+topic,model,-1.0,-1 (outliers),title_count,1.0
+topic,model,-1.0,-1 (outliers),title_share,2.6025400791172185e-05

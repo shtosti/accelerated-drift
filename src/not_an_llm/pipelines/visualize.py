@@ -11,7 +11,13 @@ from not_an_llm.analysis.feature_groups import FEATURE_GROUPS
 from not_an_llm.analysis.feature_selection import build_marker_group_specs, resolve_feature_columns
 from not_an_llm.analysis.interrupted_time_series import (
     add_standardized_slope_change_columns,
+    compute_first_post_year_counterfactual_excess,
+    compute_first_two_year_counterfactual_excess,
     compute_interrupted_time_series,
+    save_first_post_year_excess_plot,
+    save_first_post_year_grouped_excess_plots,
+    save_first_two_year_excess_plot,
+    save_first_two_year_grouped_excess_plots,
     save_its_slope_change_plot,
     save_its_standardized_grouped_slope_change_plots,
     save_its_standardized_slope_change_plot,
@@ -89,9 +95,8 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
     # =========================
     # LOAD PRIMARY STATISTICS
     # =========================
-    input_stem = config.analysis.preprocessed_jsonl.stem
-    analysis_dir = Path(config.data_dir) / "analysis"
-    its_stats_path = analysis_dir / f"{input_stem}_its_stats.csv"
+    analysis_dir = config.analysis.feature_dataset_jsonl.parent
+    its_stats_path = analysis_dir / "its_stats.csv"
     if its_stats_path.exists():
         its_stats = pd.read_csv(its_stats_path)
         logger.info("Loaded monthly interrupted time-series statistics from %s", its_stats_path)
@@ -103,6 +108,34 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
         its_stats = compute_interrupted_time_series(monthly, feature_columns)
     if "standardized_slope_change_per_year" not in its_stats.columns:
         its_stats = add_standardized_slope_change_columns(its_stats, monthly)
+
+    first_post_year_excess_path = analysis_dir / "first_post_year_counterfactual_excess.csv"
+    if first_post_year_excess_path.exists():
+        first_post_year_excess = pd.read_csv(first_post_year_excess_path)
+        logger.info(
+            "Loaded first-post-year counterfactual excess statistics from %s",
+            first_post_year_excess_path,
+        )
+    else:
+        logger.warning(
+            "First-post-year counterfactual excess statistics not found at %s; computing them in memory for plotting only.",
+            first_post_year_excess_path,
+        )
+        first_post_year_excess = compute_first_post_year_counterfactual_excess(monthly, feature_columns)
+
+    first_two_year_excess_path = analysis_dir / "first_two_year_counterfactual_excess.csv"
+    if first_two_year_excess_path.exists():
+        first_two_year_excess = pd.read_csv(first_two_year_excess_path)
+        logger.info(
+            "Loaded first-two-year counterfactual excess statistics from %s",
+            first_two_year_excess_path,
+        )
+    else:
+        logger.warning(
+            "First-two-year counterfactual excess statistics not found at %s; computing them in memory for plotting only.",
+            first_two_year_excess_path,
+        )
+        first_two_year_excess = compute_first_two_year_counterfactual_excess(monthly, feature_columns)
 
     # =========================
     # PRE/POST DIFF PLOTS
@@ -213,6 +246,38 @@ def run_visualization(config: AppConfig) -> VisualizationArtifacts:
         save_its_standardized_grouped_slope_change_plots(
             its_stats,
             plot_dir / "its_slope_changes_standardized_groups",
+            label_map=LABEL_MAP,
+        )
+    )
+
+    first_post_year_excess_plot_path = save_first_post_year_excess_plot(
+        first_post_year_excess,
+        plot_dir / "first_post_year_counterfactual_excess" / "overall.png",
+        label_map=LABEL_MAP,
+    )
+    if first_post_year_excess_plot_path is not None:
+        trend_plots.append(first_post_year_excess_plot_path)
+
+    trend_plots.extend(
+        save_first_post_year_grouped_excess_plots(
+            first_post_year_excess,
+            plot_dir / "first_post_year_counterfactual_excess" / "groups",
+            label_map=LABEL_MAP,
+        )
+    )
+
+    first_two_year_excess_plot_path = save_first_two_year_excess_plot(
+        first_two_year_excess,
+        plot_dir / "first_two_year_counterfactual_excess" / "overall.png",
+        label_map=LABEL_MAP,
+    )
+    if first_two_year_excess_plot_path is not None:
+        trend_plots.append(first_two_year_excess_plot_path)
+
+    trend_plots.extend(
+        save_first_two_year_grouped_excess_plots(
+            first_two_year_excess,
+            plot_dir / "first_two_year_counterfactual_excess" / "groups",
             label_map=LABEL_MAP,
         )
     )

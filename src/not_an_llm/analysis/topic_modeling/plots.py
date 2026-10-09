@@ -10,35 +10,13 @@ import numpy as np
 import pandas as pd
 
 from not_an_llm.analysis.label_map import pretty_feature_label
+from not_an_llm.analysis.visual_style import HATCHES, MARKERS, TOPIC_COLORS, VERMILION
 
 if TYPE_CHECKING:
     from not_an_llm.analysis.trends import TrendAnalyzer
 
 
-TOPIC_COLORS = [
-    "#1f77b4",
-    "#ff7f0e",
-    "#2ca02c",
-    "#d62728",
-    "#9467bd",
-    "#8c564b",
-    "#e377c2",
-    "#7f7f7f",
-    "#bcbd22",
-    "#17becf",
-    "#aec7e8",
-    "#ffbb78",
-    "#98df8a",
-    "#ff9896",
-    "#c5b0d5",
-    "#c49c94",
-    "#f7b6d2",
-    "#c7c7c7",
-    "#dbdb8d",
-    "#9edae5",
-]
-
-TOPIC_MARKERS = ["o", "s", "^", "D", "v", "P", "X", "*", "<", ">", "h", "p", "8", "H", "d"]
+TOPIC_MARKERS = MARKERS
 
 
 def format_xticks(ax):
@@ -126,8 +104,8 @@ def save_topic_prevalence(
     enriched: pd.DataFrame,
     plot_dir: Path,
     analysis_dir: Path,
-    input_stem: str,
     topic_labels: dict[int, str],
+    text_source: str = "title_abstract",
 ) -> list[Path]:
     plot_dir.mkdir(parents=True, exist_ok=True)
     analysis_dir.mkdir(parents=True, exist_ok=True)
@@ -150,7 +128,7 @@ def save_topic_prevalence(
     yearly["pct"] = yearly["count"] / yearly["total"] * 100
     yearly["topic_label"] = yearly["topic_id"].map(topic_labels)
 
-    yearly_csv = analysis_dir / f"{input_stem}_topic_prevalence_yearly.csv"
+    yearly_csv = analysis_dir / "topic_prevalence_yearly.csv"
     yearly.to_csv(yearly_csv, index=False)
     paths.append(yearly_csv)
 
@@ -165,7 +143,7 @@ def save_topic_prevalence(
     yearly_count_pivot = yearly.pivot(index="year", columns="topic_id", values="count").fillna(0)
     fig, ax = plt.subplots(figsize=(3.5, 2.8))
     bottom = np.zeros(len(yearly_count_pivot.index))
-    for topic_id in topic_order:
+    for topic_index, topic_id in enumerate(topic_order):
         if topic_id not in yearly_count_pivot.columns:
             continue
         values = yearly_count_pivot[topic_id].to_numpy()
@@ -176,11 +154,14 @@ def save_topic_prevalence(
             bottom=bottom,
             label=label,
             color=color_map[int(topic_id)],
+            hatch=HATCHES[topic_index % len(HATCHES)],
+            edgecolor="0.25",
+            linewidth=0.25,
             alpha=0.9,
         )
         bottom += values
     ax.set_xlabel("Year")
-    ax.set_ylabel("Abstract count")
+    ax.set_ylabel(_text_count_label(text_source))
     legend = ax.legend(loc="best", fontsize=8)
     save_legend_only(ax, plot_dir / "topic_evolution_stacked_counts_legend.png")
     legend.remove()
@@ -223,13 +204,17 @@ def save_topic_prevalence(
     paths.append(trend_path)
 
     fig, ax = plt.subplots(figsize=(3.5, 2.8))
-    ax.stackplot(
+    stacks = ax.stackplot(
         yearly_pivot.index,
         *[yearly_pivot[topic_id] for topic_id in topic_order if topic_id in yearly_pivot.columns],
         labels=[topic_legend_label(int(topic_id), topic_labels) for topic_id in topic_order if topic_id in yearly_pivot.columns],
         colors=[color_map[int(topic_id)] for topic_id in topic_order if topic_id in yearly_pivot.columns],
         alpha=0.9,
     )
+    for topic_index, collection in enumerate(stacks):
+        collection.set_hatch(HATCHES[topic_index % len(HATCHES)])
+        collection.set_edgecolor("0.25")
+        collection.set_linewidth(0.25)
     ax.set_xlabel("Year")
     ax.set_ylabel("Topic prevalence (%)")
     legend = ax.legend(loc="best", fontsize=8)
@@ -250,7 +235,7 @@ def save_topic_prevalence(
         monthly["pct"] = monthly["count"] / monthly["total"] * 100
         monthly["topic_label"] = monthly["topic_id"].map(topic_labels)
 
-        monthly_csv = analysis_dir / f"{input_stem}_topic_prevalence_monthly.csv"
+        monthly_csv = analysis_dir / "topic_prevalence_monthly.csv"
         monthly.to_csv(monthly_csv, index=False)
         paths.append(monthly_csv)
 
@@ -303,6 +288,8 @@ def save_topic_trend_plots(
         "paper_count",
         "abstract_count",
         "abstract_share",
+        "title_count",
+        "title_share",
     }
     feature_columns = [
         col
@@ -345,7 +332,13 @@ def save_topic_trend_plots(
 
         for event_name, event_date in event_dates.items():
             if event_date.year in grouped["year"].values:
-                ax.axvline(x=event_date.year, color="red", linestyle="--", alpha=0.7, label=event_name)
+                ax.axvline(
+                    x=event_date.year,
+                    color=VERMILION,
+                    linestyle="--",
+                    alpha=0.7,
+                    label=event_name,
+                )
 
         ax.set_xlabel("Year")
         ax.set_ylabel(pretty_feature_label(feature))
@@ -362,6 +355,14 @@ def save_topic_trend_plots(
         paths.append(plot_path)
 
     return paths
+
+
+def _text_count_label(text_source: str) -> str:
+    if text_source == "title":
+        return "Title count"
+    if text_source == "abstract":
+        return "Abstract count"
+    return "Title+abstract count"
 
 
 def save_topic_cluster_plot(embeddings_2d: pd.DataFrame | None, plot_dir: Path) -> Path | None:

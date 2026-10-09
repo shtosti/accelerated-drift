@@ -3,48 +3,60 @@ name = "not-an-llm"
 data_dir = "data"
 
 [collection]
-# Data source: arxiv, medarxiv, semantic_scholar, or biorxiv
-source = "arxiv"
+# Data source: arxiv_ai, arxiv_qbio, arxiv_stat, medarxiv
+source = "arxiv_qbio"
 
 # Keep source-specific queries side-by-side so switching source never overwrites them.
 
 # For arXiv, use search_query syntax (https://info.arxiv.org/help/api/user-manual.html).
-arxiv_queries = [
+arxiv_ai_queries = [
   "cat:cs.CL", # computation and language
   "cat:cs.AI", # AI
   "cat:cs.LG", # machine learning
 ]
 
-# For arXiv, use arXiv category/query syntax.
-semantic_scholar_queries = [
-  "(\"artificial intelligence\" OR AI) AND language:English",
-  "(\"deep learning\" OR \"machine learning\") AND language:English",
-  "(\"computer science\") AND language:English",
-  "(\"natural language processing\" OR NLP) AND language:English",
-  "(\"large language models\" OR LLM) AND language:English",
+# q-bio is collected from arXiv, but kept as a separate source/output namespace.
+arxiv_qbio_queries = [
+  "cat:q-bio.BM", # biomolecules
+  "cat:q-bio.CB", # cell behavior
+  "cat:q-bio.GN", # genomics
+  "cat:q-bio.MN", # molecular networks
+  "cat:q-bio.NC", # neurons and cognition
+  "cat:q-bio.OT", # other quantitative biology
+  "cat:q-bio.PE", # populations and evolution
+  "cat:q-bio.QM", # quantitative methods
+  "cat:q-bio.SC", # subcellular processes
+  "cat:q-bio.TO", # tissues and organs
+]
+
+# Statistics is collected from arXiv, but kept as a separate source/output namespace.
+arxiv_stat_queries = [
+  "cat:stat.AP", # applications
+  "cat:stat.CO", # computation
+  "cat:stat.ME", # methodology
+  "cat:stat.ML", # machine learning
+  "cat:stat.OT", # other statistics
+  "cat:stat.TH", # statistics theory
 ]
 
 # For medRxiv, query is a local text filter over title/abstract/category.
 # Use ["*"] to collect all records in the date range.
 medarxiv_queries = ["*"]
 
-# For bioRxiv, query is a local text filter over title/abstract/category.
-# Use ["*"] to collect all records in the date range.
-biorxiv_queries = ["*"]
-
 year_min = 2015
-year_max = 2026
+year_max = 2016
+cutoff_date = "2026-04-30"
 page_size = 100
-arxiv_collection_mode = "full" # full or monthly
+arxiv_ai_collection_mode = "monthly" # full or monthly
+arxiv_qbio_collection_mode = "monthly" # full or monthly
+arxiv_stat_collection_mode = "monthly" # full or monthly
 medarxiv_collection_mode = "full" # full or monthly
-biorxiv_collection_mode = "full" # full or monthly
 samples_per_month = 2 # used only when *_collection_mode = "monthly"
-arxiv_output_jsonl = "data/raw/arxiv.jsonl"
-arxiv_monthly_output_jsonl = "data/raw/arxiv_monthly.jsonl"
-semantic_scholar_output_jsonl = "data/raw/semantic_scholar.jsonl"
+arxiv_ai_monthly_output_jsonl = "data/raw/arxiv_ai_mini.jsonl"
+arxiv_qbio_monthly_output_jsonl = "data/raw/arxiv_qbio_mini.jsonl"
+arxiv_stat_monthly_output_jsonl = "data/raw/arxiv_stat_mini.jsonl"
 medarxiv_output_jsonl = "data/raw/medarxiv.jsonl"
-biorxiv_output_jsonl = "data/raw/biorxiv.jsonl"
-biorxiv_monthly_output_jsonl = "data/raw/biorxiv_monthly.jsonl"
+
 # Safe request pacing for collection APIs.
 min_request_interval_seconds = 3.5
 max_retries = 10
@@ -72,6 +84,7 @@ fields = [
 
 [analysis]
 enabled = true
+text_source = "title" # title_abstract, abstract, or title
 generate_plots = true
 include_readability = true
 topic_modeling_enabled = true
@@ -107,7 +120,7 @@ readability_metrics = [
 ]
 
 # Full run config. Use config_mini.toml for the mini run.
-preprocessed_jsonl = "data/processed/arxiv_mini.jsonl"
+preprocessed_jsonl = ""
 feature_dataset_jsonl = ""
 trends_csv = ""
 monthly_trends_csv = ""

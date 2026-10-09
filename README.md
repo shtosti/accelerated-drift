@@ -16,6 +16,24 @@ Edit the matching file to control:
 
 ## Run
 
+### One-command reproduction
+
+The reproduction script recreates the Python environment from `uv.lock`, installs the required spaCy English model if missing, and runs the selected pipeline stages.
+
+Linux/macOS or any Bash environment:
+
+```bash
+bash scripts/reproduce.sh all
+```
+
+Use `config_mini.toml` for a faster smoke test:
+
+```bash
+bash scripts/reproduce.sh --config config_mini.toml preprocess analyze visualize
+```
+
+Valid stages are `collect`, `preprocess`, `analyze`, `visualize`, `additional-analysis`, and `topic-compare`. Passing `all` runs `collect`, `preprocess`, `analyze`, and `visualize` in order. Add `--recreate-env` to remove and rebuild `.venv` before running; add `--dry-run` to print the selected commands without executing them. The collection cut-off date is set in `[collection].cutoff_date` in the config files.
+
 ### Full pipeline
 
 1. Collect records:
@@ -40,6 +58,77 @@ Edit the matching file to control:
 
 The analysis and visualization steps are separated so that feature extraction and topic modeling can be run once, while figures can be regenerated quickly after styling changes.
 
+### Additional analysis
+
+Targeted follow-up analyses can be run after `preprocess` or `analyze` with:
+
+```bash
+uv run python main.py --config config.toml additional-analysis
+```
+
+To refresh only the strict pre-intervention counterfactual tables and plots
+from an existing `trends_by_month.csv`, without feature extraction, topic
+modeling, or dependency parsing:
+
+```bash
+uv run python main.py --config config.toml additional-analysis --counterfactual-only
+```
+
+Add `--comparisons` to regenerate both the cross-corpus and title-vs-abstract
+comparison tables and figures after the selected follow-up analyses:
+
+```bash
+uv run python main.py --config config.toml additional-analysis --counterfactual-only --comparisons
+```
+
+Full reproduction (`scripts/reproduce.sh all`) always runs both comparison
+scripts. They can also be selected directly with `scripts/reproduce.sh comparisons`.
+
+This currently runs the dependency-based determiner decomposition used to examine whether determiner decline is concentrated in prepositional-object contexts, plus dependency-edge bigram trends such as `prep->pobj`, `pobj->amod`, and `pobj->compound`. By default, it reads the configured feature dataset if present, otherwise the configured preprocessed JSONL, and writes outputs to `<analysis_dir>/additional_analysis/`. Use `--input`, `--output-dir`, or `--chunk-size` to override those defaults.
+
+To compare title-only and abstract-only trend analyses after both have been run:
+
+```bash
+uv run python scripts/compare_title_abstract_trends.py
+```
+
+This writes paired ITS comparison tables to `data/analysis/title_abstract_comparison/`
+and dependency/syntax comparison plots to `data/visuals/title_abstract_comparison/`.
+
+To compare ITS slope-change profiles across the title-only and abstract-only corpora:
+
+```bash
+uv run python scripts/compare_corpus_trends.py
+```
+
+This writes corpus-correlation tables to `data/analysis/corpus_comparison/` and figures to `data/visuals/corpus_comparison/`, including overall correlations, feature-group correlations, syntax/dependency slope comparisons, dependency-role and dependency-bigram correlations when source files are available, and largest cross-corpus feature differences. Combined title+abstract datasets are ignored by default.
+
+To decompose abstract ARI and FKGL slope changes without rerunning the pipeline:
+
+```bash
+uv run python scripts/decompose_readability_abstracts.py
+```
+
+This reads the existing abstract `trends_by_month.csv` files, writes component
+ITS tables to `data/analysis/readability_abstract_decomposition/`, and writes
+separate ARI/FKGL figures and legends to
+`data/visuals/readability_abstract_decomposition/`.
+
+To associate document-level syntax with readability and combine those
+associations with post-2022 syntax changes:
+
+```bash
+uv run python scripts/analyze_syntax_readability_abstracts.py
+```
+
+This standalone abstract-only analysis reads existing `features.jsonl` files.
+It caches document-level dependency-edge bigrams on its first run, fits
+year-grouped elastic-net models for ARI, FKGL, and a multi-metric readability
+composite, and writes tables to `data/analysis/syntax_readability_abstracts/`
+and figures to `data/visuals/syntax_readability_abstracts/`. Use
+`--skip-bigrams` for a faster analysis of stored syntax features and dependency
+roles only.
+
 ### Mini Dataset
 
 The mini configuration is intended for quick checks of the pipeline.
@@ -52,16 +141,23 @@ uv run python main.py --config config_mini.toml visualize
 
 ## Main Outputs
 
-- `data/analyzed/<stem>_features.jsonl`: document-level feature output
-- `data/analysis/<stem>_year.csv`: yearly feature means
-- `data/analysis/<stem>_month.csv`: monthly feature means
-- `data/analysis/<stem>_its_stats.csv`: primary interrupted time-series statistics
-- `data/analysis/<stem>_its_placebo_stats.csv`: placebo interrupted time-series checks
-- `data/analysis/<stem>_topic_*.csv`: topic labels, prevalence, and summaries
-- `data/analysis/<stem>_topics/topic_*/`: topic-level trend tables
+- `data/analysis/<stem>/features.jsonl`: document-level feature output
+- `data/analysis/<stem>/trends_by_year.csv`: yearly feature means
+- `data/analysis/<stem>/trends_by_month.csv`: monthly feature means
+- `data/analysis/<stem>/its_stats.csv`: primary interrupted time-series statistics
+- `data/analysis/<stem>/its_placebo_stats.csv`: placebo interrupted time-series checks
+- `data/analysis/<stem>/first_post_year_counterfactual_excess.csv`: 2023 excess over the pre-ChatGPT trend counterfactual
+- `data/analysis/<stem>/first_two_year_counterfactual_excess.csv`: 2023-2024 excess over the pre-ChatGPT trend counterfactual
+- `data/analysis/<stem>/topic_*.csv`: topic labels, prevalence, and summaries
+- `data/analysis/<stem>/topics/topic_*/`: topic-level trend tables
+- `data/analysis/<stem>/additional_analysis/`: targeted follow-up outputs such as the determiner decomposition CSVs and plot
+- `data/analysis/title_abstract_comparison/`: title-versus-abstract ITS comparison tables
+- `data/analysis/corpus_comparison/`: cross-corpus ITS slope-correlation and feature-difference tables
 - `data/visuals/<stem>/`: rendered figures
+- `data/visuals/title_abstract_comparison/`: title-versus-abstract comparison figures
+- `data/visuals/corpus_comparison/`: cross-corpus comparison figures
 
-The paper-facing inferential tables are the monthly interrupted time-series outputs in `data/analysis/<stem>_its_stats.csv`. Pre/post percentage-change plots are retained as descriptive summaries.
+The paper-facing inferential tables are the monthly interrupted time-series outputs in `data/analysis/<stem>/its_stats.csv`. Pre/post percentage-change plots are retained as descriptive summaries.
 
 ## Statistical Design
 
@@ -80,6 +176,8 @@ Interpretation:
 5. `beta1 + beta3` is the post-intervention monthly slope.
 
 The main tests use `slope_change_per_year`, its 95% confidence interval, `slope_change_p`, and family-level Benjamini-Hochberg `slope_change_q`. Models are weighted by monthly paper count and use HAC/Newey-West style standard errors for autocorrelated monthly residuals. Standardized effect sizes divide the annualized slope change by the pre-intervention monthly standard deviation.
+
+As a complementary check for short-lived post-ChatGPT elevations, the pipeline also estimates counterfactual excess over the pre-intervention trend. It reports both a 2023 first-post-year excess and a combined 2023-2024 early post-period excess. The output tables include raw and standardized excess estimates, confidence intervals, p-values, and family-level FDR q-values.
 
 ## Topic Modeling
 
@@ -105,6 +203,7 @@ Outputs include topic labels, yearly prevalence, topic-level feature trends, and
 - [src/not_an_llm/pipelines/collect.py](src/not_an_llm/pipelines/collect.py): collection pipeline
 - [src/not_an_llm/pipelines/preprocess.py](src/not_an_llm/pipelines/preprocess.py): preprocessing pipeline
 - [src/not_an_llm/pipelines/analyze.py](src/not_an_llm/pipelines/analyze.py): feature extraction, trend aggregation, ITS, and topic analysis
+- [src/not_an_llm/pipelines/additional_analysis.py](src/not_an_llm/pipelines/additional_analysis.py): targeted follow-up analyses such as determiner decomposition
 - [src/not_an_llm/pipelines/visualize.py](src/not_an_llm/pipelines/visualize.py): plot generation from saved analysis tables
 - [src/not_an_llm/analysis/feature_extractor.py](src/not_an_llm/analysis/feature_extractor.py): lexical, punctuation, discourse, and syntactic feature extraction
 - [src/not_an_llm/analysis/readability.py](src/not_an_llm/analysis/readability.py): readability metrics

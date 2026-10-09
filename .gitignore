@@ -213,21 +213,35 @@ data/processed/*.jsonl
 data/analyzed/*.jsonl
 data/external/
 logs/
+
+
+# slurm scripts
+slurm_scripts/
 slurm.sh
-slurm_analyze.sh
-slurm_collect.sh
-slurm_preprocess.sh
+# slurm_analyze.sh
+# slurm_collect.sh
+# slurm_preprocess.sh
 logs/preprocessing_external_*.err
 logs/preprocessing_external_*.out
 logs/analyze_external_*.err
 logs/analyze_external_*.out
-slurm_preprocess_external.sh
-slurm_analyze_external.sh
+# slurm_preprocess_external.sh
+# slurm_analyze_external.sh
 slurm_preprocess_mini.sh
 slurm_analyze_mini.sh
 
 
-docs/RESEARCH_PLAN.md
-docs/?ODO.md
+
 docs/field_log.md
+docs/VISUALS_AND_ANALYSIS.md
+
+data/analysis/*/features.jsonl
+data/analysis/syntax_readability_abstracts/cache/document_dependency_bigrams.jsonl.gz
+data/analysis/syntax_readability_abstracts/syntax_readability_documents.parquet
+
+
+tmp/
+data/analysis/manuscript/
+presentation_assets/
+presentation_assets/its_explainer/create_figure.py
 

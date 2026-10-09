@@ -4,12 +4,16 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 import pandas as pd
 
 from not_an_llm.analysis.interrupted_time_series import compute_interrupted_time_series
 from not_an_llm.analysis.label_map import pretty_feature_label
+from not_an_llm.analysis.visual_style import (
+    DECREASE_COLOR,
+    INCREASE_COLOR,
+    ORCHID_GREEN_DIVERGING_CMAP,
+)
 
 
 DEFAULT_TOPIC_FEATURES = [
@@ -25,16 +29,12 @@ DEFAULT_TOPIC_FEATURES = [
 
 
 DOMAIN_LABELS = {
-    "arxiv": "arXiv",
+    "arxiv": "arXiv AI",
+    "arxiv_ai": "arXiv AI",
     "medarxiv": "medRxiv",
 }
 
-DECREASE_COLOR = "#943F8B"
-INCREASE_COLOR = "#54A066"
-TOPIC_HEATMAP_CMAP = LinearSegmentedColormap.from_list(
-    "orchid_white_green",
-    [DECREASE_COLOR, "#FFFFFF", INCREASE_COLOR],
-)
+TOPIC_HEATMAP_CMAP = ORCHID_GREEN_DIVERGING_CMAP
 
 
 @dataclass(slots=True)
@@ -58,7 +58,7 @@ def select_top_its_features(
     """Select top unique features with the same ranking logic used for the main ITS table."""
     rows = []
     for domain in domains:
-        path = analysis_dir / f"{domain}_its_stats.csv"
+        path = _domain_analysis_dir(analysis_dir, domain) / "its_stats.csv"
         _require_file(path)
         df = pd.read_csv(path)
         df["domain"] = domain
@@ -101,7 +101,7 @@ def compare_topic_distributions_and_features(
     *,
     analysis_dir: Path,
     output_dir: Path,
-    domains: tuple[str, ...] = ("arxiv", "medarxiv"),
+    domains: tuple[str, ...] = ("arxiv_ai", "medarxiv"),
     features: tuple[str, ...] = tuple(DEFAULT_TOPIC_FEATURES),
     intervention_year: int = 2022,
     post_start_year: int = 2023,
@@ -111,9 +111,8 @@ def compare_topic_distributions_and_features(
 ) -> TopicComparisonArtifacts:
     """Compare topic prevalence and feature strength for existing topic outputs.
 
-    The function expects files produced by the main analysis pipeline:
-    ``{domain}_topic_summary.csv``, ``{domain}_topic_prevalence_yearly.csv``,
-    and ``{domain}_topics/topic_{id}/trends_by_year.csv``.
+    The function expects files produced by the main analysis pipeline under
+    ``{analysis_dir}/{domain}/``.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -216,14 +215,15 @@ def _load_topic_distribution(
     latest_year: int | None,
     min_topic_share: float,
 ) -> pd.DataFrame:
-    summary_path = analysis_dir / f"{domain}_topic_summary.csv"
-    prevalence_path = analysis_dir / f"{domain}_topic_prevalence_yearly.csv"
+    domain_dir = _domain_analysis_dir(analysis_dir, domain)
+    summary_path = domain_dir / "topic_summary.csv"
+    prevalence_path = domain_dir / "topic_prevalence_yearly.csv"
     _require_file(summary_path)
     _require_file(prevalence_path)
 
-    summary = pd.read_csv(summary_path)
+    summary = _load_topic_summary(summary_path)
     prevalence = pd.read_csv(prevalence_path)
-    summary = summary[summary["abstract_share"] >= min_topic_share].copy()
+    summary = summary[summary["topic_share"] >= min_topic_share].copy()
 
     available_years = sorted(int(year) for year in prevalence["year"].dropna().unique())
     if not available_years:
@@ -247,8 +247,8 @@ def _load_topic_distribution(
                 "domain": domain,
                 "topic_id": topic_id,
                 "topic_label": topic.topic_label,
-                "abstract_count": int(topic.abstract_count),
-                "abstract_share": float(topic.abstract_share),
+                "topic_count": int(topic.topic_count),
+                "topic_share": float(topic.topic_share),
                 "intervention_year": intervention_year,
                 "intervention_year_pct": intervention_pct,
                 "latest_year": selected_latest_year,
@@ -257,7 +257,7 @@ def _load_topic_distribution(
             }
         )
 
-    return pd.DataFrame(rows).sort_values(["domain", "abstract_count"], ascending=[True, False])
+    return pd.DataFrame(rows).sort_values(["domain", "topic_count"], ascending=[True, False])
 
 
 def _load_topic_feature_strength(
@@ -269,16 +269,17 @@ def _load_topic_feature_strength(
     post_start_year: int,
     min_topic_share: float,
 ) -> pd.DataFrame:
-    summary_path = analysis_dir / f"{domain}_topic_summary.csv"
+    domain_dir = _domain_analysis_dir(analysis_dir, domain)
+    summary_path = domain_dir / "topic_summary.csv"
     _require_file(summary_path)
 
-    summary = pd.read_csv(summary_path)
-    summary = summary[summary["abstract_share"] >= min_topic_share].copy()
+    summary = _load_topic_summary(summary_path)
+    summary = summary[summary["topic_share"] >= min_topic_share].copy()
 
     rows = []
     for topic in summary.itertuples(index=False):
         topic_id = int(topic.topic_id)
-        trends_path = analysis_dir / f"{domain}_topics" / f"topic_{topic_id}" / "trends_by_year.csv"
+        trends_path = domain_dir / "topics" / f"topic_{topic_id}" / "trends_by_year.csv"
         _require_file(trends_path)
         trends = pd.read_csv(trends_path)
         pre = trends[trends["year"] <= intervention_year]
@@ -288,8 +289,8 @@ def _load_topic_feature_strength(
             "domain": domain,
             "topic_id": topic_id,
             "topic_label": topic.topic_label,
-            "abstract_count": int(topic.abstract_count),
-            "abstract_share": float(topic.abstract_share),
+            "topic_count": int(topic.topic_count),
+            "topic_share": float(topic.topic_share),
             "pre_end_year": intervention_year,
             "post_start_year": post_start_year,
         }
@@ -307,7 +308,7 @@ def _load_topic_feature_strength(
 
         rows.append(row)
 
-    return pd.DataFrame(rows).sort_values(["domain", "abstract_count"], ascending=[True, False])
+    return pd.DataFrame(rows).sort_values(["domain", "topic_count"], ascending=[True, False])
 
 
 def _load_topic_its_stats(
@@ -317,16 +318,17 @@ def _load_topic_its_stats(
     features: tuple[str, ...],
     min_topic_share: float,
 ) -> pd.DataFrame:
-    summary_path = analysis_dir / f"{domain}_topic_summary.csv"
+    domain_dir = _domain_analysis_dir(analysis_dir, domain)
+    summary_path = domain_dir / "topic_summary.csv"
     _require_file(summary_path)
 
-    summary = pd.read_csv(summary_path)
-    summary = summary[summary["abstract_share"] >= min_topic_share].copy()
+    summary = _load_topic_summary(summary_path)
+    summary = summary[summary["topic_share"] >= min_topic_share].copy()
 
     rows = []
     for topic in summary.itertuples(index=False):
         topic_id = int(topic.topic_id)
-        trends_path = analysis_dir / f"{domain}_topics" / f"topic_{topic_id}" / "trends_by_month.csv"
+        trends_path = domain_dir / "topics" / f"topic_{topic_id}" / "trends_by_month.csv"
         _require_file(trends_path)
         monthly = pd.read_csv(trends_path)
         available_features = [
@@ -344,15 +346,15 @@ def _load_topic_its_stats(
         stats.insert(0, "domain", domain)
         stats.insert(1, "topic_id", topic_id)
         stats.insert(2, "topic_label", topic.topic_label)
-        stats.insert(3, "abstract_count", int(topic.abstract_count))
-        stats.insert(4, "abstract_share", float(topic.abstract_share))
+        stats.insert(3, "topic_count", int(topic.topic_count))
+        stats.insert(4, "topic_share", float(topic.topic_share))
         rows.append(stats)
 
     if not rows:
         return pd.DataFrame()
 
     return pd.concat(rows, ignore_index=True).sort_values(
-        ["domain", "abstract_count", "feature"],
+        ["domain", "topic_count", "feature"],
         ascending=[True, False, True],
     )
 
@@ -364,7 +366,7 @@ def _save_feature_strength_heatmap(df: pd.DataFrame, features: tuple[str, ...], 
 
     plot_df = df.copy()
     plot_df["topic"] = plot_df.apply(
-        lambda row: f"{_domain_label(row['domain'])}: {row['topic_id']} ({row['abstract_share']:.1%})",
+        lambda row: f"{_domain_label(row['domain'])}: {row['topic_id']} ({row['topic_share']:.1%})",
         axis=1,
     )
     values = plot_df[heatmap_cols].replace([np.inf, -np.inf], np.nan)
@@ -403,7 +405,7 @@ def _save_standardized_its_heatmap(df: pd.DataFrame, features: tuple[str, ...], 
         return
 
     value_table = df.pivot_table(
-        index=["domain", "topic_id", "abstract_share"],
+        index=["domain", "topic_id", "topic_share"],
         columns="feature",
         values="standardized_slope_change_per_year",
         aggfunc="first",
@@ -413,7 +415,7 @@ def _save_standardized_its_heatmap(df: pd.DataFrame, features: tuple[str, ...], 
         return
     value_table = value_table[available_features].reset_index()
     value_table["topic"] = value_table.apply(
-        lambda row: f"{_domain_label(row['domain'])}: {int(row['topic_id'])} ({row['abstract_share']:.1%})",
+        lambda row: f"{_domain_label(row['domain'])}: {int(row['topic_id'])} ({row['topic_share']:.1%})",
         axis=1,
     )
 
@@ -443,6 +445,37 @@ def _save_standardized_its_heatmap(df: pd.DataFrame, features: tuple[str, ...], 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_path, dpi=200)
     plt.close(fig)
+
+
+def _domain_analysis_dir(analysis_dir: Path, domain: str) -> Path:
+    return analysis_dir / domain
+
+
+def _load_topic_summary(path: Path) -> pd.DataFrame:
+    summary = pd.read_csv(path)
+    count_column, share_column = _topic_count_share_columns(summary, path)
+    summary = summary.copy()
+    summary["topic_count"] = pd.to_numeric(summary[count_column], errors="coerce").fillna(0).astype(int)
+    summary["topic_share"] = pd.to_numeric(summary[share_column], errors="coerce").fillna(0.0)
+    return summary
+
+
+def _topic_count_share_columns(summary: pd.DataFrame, path: Path) -> tuple[str, str]:
+    candidates = [
+        ("topic_count", "topic_share"),
+        ("title_count", "title_share"),
+        ("abstract_count", "abstract_share"),
+        ("title_abstract_count", "title_abstract_share"),
+    ]
+    for count_column, share_column in candidates:
+        if count_column in summary.columns and share_column in summary.columns:
+            return count_column, share_column
+
+    raise KeyError(
+        "Could not find topic count/share columns in "
+        f"{path}. Expected one of: "
+        + ", ".join(f"{count}/{share}" for count, share in candidates)
+    )
 
 
 def _weighted_mean(df: pd.DataFrame, column: str) -> float:

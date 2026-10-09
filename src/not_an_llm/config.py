@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Any
 import tomllib
@@ -15,21 +16,25 @@ class CollectionConfig:
     source: str
     queries: list[str]
 
-    arxiv_collection_mode: str
+    arxiv_ai_collection_mode: str
     medarxiv_collection_mode: str
-    biorxiv_collection_mode: str
 
     samples_per_month: int
     year_min: int
     year_max: int
+    cutoff_date: date | None
     page_size: int
 
     # FIXED: explicit outputs (no dict)
-    arxiv_output_jsonl: Path
-    arxiv_monthly_output_jsonl: Path
-    semantic_scholar_output_jsonl: Path
+    arxiv_ai_output_jsonl: Path
+    arxiv_ai_monthly_output_jsonl: Path
+    arxiv_qbio_output_jsonl: Path
+    arxiv_qbio_monthly_output_jsonl: Path
+    arxiv_qbio_collection_mode: str
+    arxiv_stat_output_jsonl: Path
+    arxiv_stat_monthly_output_jsonl: Path
+    arxiv_stat_collection_mode: str
     medarxiv_output_jsonl: Path
-    biorxiv_output_jsonl: Path
 
     fields: list[str]
 
@@ -41,14 +46,20 @@ class CollectionConfig:
 
     @property
     def output_jsonl(self) -> Path:
-        if self.source == "arxiv":
-            return self.arxiv_output_jsonl
+        if self.source == "arxiv_ai":
+            if self.arxiv_ai_collection_mode == "monthly":
+                return self.arxiv_ai_monthly_output_jsonl
+            return self.arxiv_ai_output_jsonl
+        if self.source == "arxiv_qbio":
+            if self.arxiv_qbio_collection_mode == "monthly":
+                return self.arxiv_qbio_monthly_output_jsonl
+            return self.arxiv_qbio_output_jsonl
+        if self.source == "arxiv_stat":
+            if self.arxiv_stat_collection_mode == "monthly":
+                return self.arxiv_stat_monthly_output_jsonl
+            return self.arxiv_stat_output_jsonl
         if self.source == "medarxiv":
             return self.medarxiv_output_jsonl
-        if self.source == "biorxiv":
-            return self.biorxiv_output_jsonl
-        if self.source == "semantic_scholar":
-            return self.semantic_scholar_output_jsonl
 
         raise ValueError(f"Unknown collection source: {self.source}")
 
@@ -56,6 +67,7 @@ class CollectionConfig:
 @dataclass(slots=True)
 class AnalysisConfig:
     enabled: bool
+    text_source: str
     features: list[str]
     spacy_features: list[str]
     include_readability: bool
@@ -155,24 +167,52 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         source=source,
         queries=_load_collection_queries(collection, source),
 
-        arxiv_collection_mode=_load_arxiv_collection_mode(collection),
+        arxiv_ai_collection_mode=_load_arxiv_ai_collection_mode(collection),
+        arxiv_qbio_collection_mode=_load_arxiv_qbio_collection_mode(collection),
+        arxiv_stat_collection_mode=_load_arxiv_stat_collection_mode(collection),
         medarxiv_collection_mode=_load_medarxiv_collection_mode(collection),
-        biorxiv_collection_mode=_load_biorxiv_collection_mode(collection),
 
         samples_per_month=int(collection.get("samples_per_month", 5)),
         year_min=int(collection["year_min"]),
         year_max=int(collection["year_max"]),
+        cutoff_date=_load_collection_cutoff_date(collection),
         page_size=int(collection["page_size"]),
 
-        arxiv_output_jsonl=Path(collection["arxiv_output_jsonl"]),
-        arxiv_monthly_output_jsonl=Path(collection["arxiv_monthly_output_jsonl"]),
-        semantic_scholar_output_jsonl=Path(collection["semantic_scholar_output_jsonl"]),
-        medarxiv_output_jsonl=Path(collection["medarxiv_output_jsonl"]),
-        biorxiv_output_jsonl=_load_optional_collection_path(
+        arxiv_ai_output_jsonl=_load_collection_path_aliases(
             collection,
-            "biorxiv_output_jsonl",
-            "bioarxiv_output_jsonl",
+            Path("data/raw/arxiv_ai.jsonl"),
+            "arxiv_ai_output_jsonl",
+            "arxiv_output_jsonl",
         ),
+        arxiv_ai_monthly_output_jsonl=_load_collection_path_aliases(
+            collection,
+            Path("data/raw/arxiv_ai_mini.jsonl"),
+            "arxiv_ai_monthly_output_jsonl",
+            "arxiv_monthly_output_jsonl",
+        ),
+        arxiv_qbio_output_jsonl=_load_collection_path_aliases(
+            collection,
+            Path("data/raw/arxiv_qbio.jsonl"),
+            "arxiv_qbio_output_jsonl",
+            "arxiv_q_bio_output_jsonl",
+        ),
+        arxiv_qbio_monthly_output_jsonl=_load_collection_path_aliases(
+            collection,
+            Path("data/raw/arxiv_qbio_mini.jsonl"),
+            "arxiv_qbio_monthly_output_jsonl",
+            "arxiv_q_bio_monthly_output_jsonl",
+        ),
+        arxiv_stat_output_jsonl=_load_collection_path(
+            collection,
+            "arxiv_stat_output_jsonl",
+            Path("data/raw/arxiv_stat.jsonl"),
+        ),
+        arxiv_stat_monthly_output_jsonl=_load_collection_path(
+            collection,
+            "arxiv_stat_monthly_output_jsonl",
+            Path("data/raw/arxiv_stat_mini.jsonl"),
+        ),
+        medarxiv_output_jsonl=Path(collection["medarxiv_output_jsonl"]),
 
         fields=[str(x) for x in collection["fields"]],
 
@@ -183,8 +223,11 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         backoff_jitter_seconds=float(collection.get("backoff_jitter_seconds", 0.25)),
     )
 
-    default_preprocessed = Path("data/processed/" + source + ".jsonl")
+    text_source = _load_analysis_text_source(analysis)
+
+    default_preprocessed = Path("data/processed") / collection_config.output_jsonl.name
     preprocessed_jsonl = _load_optional_path(analysis, "preprocessed_jsonl", default_preprocessed)
+    preprocessed_jsonl = _apply_text_source_slug(preprocessed_jsonl, text_source)
 
     (
         default_feature_dataset,
@@ -193,10 +236,30 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
         default_trends_plot_dir,
     ) = _default_analysis_paths(preprocessed_jsonl)
 
-    feature_dataset_jsonl = _load_optional_path(analysis, "feature_dataset_jsonl", default_feature_dataset)
-    trends_csv = _load_optional_path(analysis, "trends_csv", default_trends_csv)
-    monthly_trends_csv = _load_optional_path(analysis, "monthly_trends_csv", default_monthly_trends_csv)
-    trends_plot_dir = _load_optional_path(analysis, "trends_plot_dir", default_trends_plot_dir)
+    feature_dataset_jsonl = _load_analysis_path(
+        analysis,
+        "feature_dataset_jsonl",
+        default_feature_dataset,
+        text_source,
+    )
+    trends_csv = _load_analysis_path(
+        analysis,
+        "trends_csv",
+        default_trends_csv,
+        text_source,
+    )
+    monthly_trends_csv = _load_analysis_path(
+        analysis,
+        "monthly_trends_csv",
+        default_monthly_trends_csv,
+        text_source,
+    )
+    trends_plot_dir = _load_analysis_path(
+        analysis,
+        "trends_plot_dir",
+        default_trends_plot_dir,
+        text_source,
+    )
 
     return AppConfig(
         project_name=str(project["name"]),
@@ -205,6 +268,7 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
 
         analysis=AnalysisConfig(
             enabled=bool(analysis["enabled"]),
+            text_source=text_source,
             features=[str(x) for x in analysis["features"]],
             spacy_features=_load_query_list(analysis.get("spacy_features", [])),
             include_readability=bool(analysis.get("include_readability", True)),
@@ -284,8 +348,58 @@ def _load_optional_path(section: dict[str, Any], key: str, default: Path) -> Pat
     return Path(value_str) if value_str else default
 
 
+def _load_collection_path(collection: dict[str, Any], key: str, default: Path) -> Path:
+    value = collection.get(key)
+    if value is None:
+        return default
+    value_str = str(value).strip()
+    return Path(value_str) if value_str else default
+
+
+def _load_collection_path_aliases(collection: dict[str, Any], default: Path, *keys: str) -> Path:
+    for key in keys:
+        value = collection.get(key)
+        if value is None:
+            continue
+        value_str = str(value).strip()
+        return Path(value_str) if value_str else default
+    return default
+
+
+def _load_analysis_path(
+    analysis: dict[str, Any],
+    key: str,
+    default: Path,
+    text_source: str,
+) -> Path:
+    value = analysis.get(key)
+    if value is None or not str(value).strip():
+        return default
+    return _apply_text_source_slug(Path(str(value).strip()), text_source)
+
+
 def _load_collection_source(collection: dict[str, Any]) -> str:
-    return str(collection.get("source", "semantic_scholar")).lower()
+    raw = str(collection.get("source", "semantic_scholar")).strip().lower()
+    normalized = raw.replace("-", "_")
+    aliases = {
+        "arxiv": "arxiv_ai",
+        "arxiv_ai": "arxiv_ai",
+        "arxiv_qbio": "arxiv_qbio",
+        "arxiv_q_bio": "arxiv_qbio",
+    }
+    return aliases.get(normalized, normalized)
+
+
+def _load_collection_cutoff_date(collection: dict[str, Any]) -> date | None:
+    raw = collection.get("cutoff_date")
+    if raw is None or not str(raw).strip():
+        return None
+    try:
+        return date.fromisoformat(str(raw).strip())
+    except ValueError as exc:
+        raise ValueError(
+            f"Invalid collection.cutoff_date: {raw!r}. Expected YYYY-MM-DD."
+        ) from exc
 
 
 def _load_optional_collection_path(collection: dict[str, Any], *keys: str) -> Path:
@@ -296,19 +410,40 @@ def _load_optional_collection_path(collection: dict[str, Any], *keys: str) -> Pa
     raise KeyError(keys[0])
 
 
-def _load_arxiv_collection_mode(c: dict[str, Any]) -> str:
-    return str(c.get("arxiv_collection_mode", "full")).lower()
+def _load_arxiv_ai_collection_mode(c: dict[str, Any]) -> str:
+    return str(c.get("arxiv_ai_collection_mode", c.get("arxiv_collection_mode", "full"))).lower()
+
+
+def _load_arxiv_qbio_collection_mode(c: dict[str, Any]) -> str:
+    return str(
+        c.get(
+            "arxiv_qbio_collection_mode",
+            c.get(
+                "arxiv_q_bio_collection_mode",
+                c.get("arxiv_ai_collection_mode", c.get("arxiv_collection_mode", "full")),
+            ),
+        )
+    ).lower()
+
+
+def _load_arxiv_stat_collection_mode(c: dict[str, Any]) -> str:
+    return str(
+        c.get(
+            "arxiv_stat_collection_mode",
+            c.get("arxiv_ai_collection_mode", c.get("arxiv_collection_mode", "full")),
+        )
+    ).lower()
 
 
 def _load_medarxiv_collection_mode(c: dict[str, Any]) -> str:
     return str(c.get("medarxiv_collection_mode", "full")).lower()
 
 
-def _load_biorxiv_collection_mode(c: dict[str, Any]) -> str:
-    return str(c.get("biorxiv_collection_mode", "full")).lower()
-
-
 def _load_collection_queries(collection: dict[str, Any], source: str) -> list[str]:
+    if source == "arxiv_ai":
+        return _load_query_list(
+            collection.get("arxiv_ai_queries", collection.get("arxiv_queries", ["*"]))
+        )
     key = f"{source}_queries"
     return _load_query_list(collection.get(key, ["*"]))
 
@@ -324,10 +459,40 @@ def _load_readability_metrics(analysis: dict[str, Any]) -> list[str]:
     return _load_query_list(analysis.get("readability_metrics", []))
 
 
+def _load_analysis_text_source(analysis: dict[str, Any]) -> str:
+    value = str(analysis.get("text_source", "title_abstract")).strip().lower()
+    allowed = {"abstract", "title", "title_abstract"}
+    if value not in allowed:
+        raise ValueError(
+            f"Invalid analysis.text_source: {value!r}. Expected one of: {', '.join(sorted(allowed))}"
+        )
+    return value
+
+
+def _apply_text_source_slug(path: Path, text_source: str) -> Path:
+    if text_source == "title":
+        return _append_path_slug(path, "_titles")
+    if text_source == "abstract":
+        return _append_path_slug(path, "_abstracts")
+    return path
+
+
+def _append_path_slug(path: Path, slug: str) -> Path:
+    if path.suffix:
+        if path.stem.endswith(slug):
+            return path
+        return path.with_name(f"{path.stem}{slug}{path.suffix}")
+
+    if path.name.endswith(slug):
+        return path
+    return path.with_name(f"{path.name}{slug}")
+
+
 def _default_analysis_paths(path: Path):
+    analysis_dir = Path("data/analysis") / path.stem
     return (
-        Path("data/analyzed/" + path.name),
-        Path("data/analysis/" + path.stem + "_year.csv"),
-        Path("data/analysis/" + path.stem + "_month.csv"),
+        analysis_dir / "features.jsonl",
+        analysis_dir / "trends_by_year.csv",
+        analysis_dir / "trends_by_month.csv",
         Path("data/visuals/" + path.stem),
     )

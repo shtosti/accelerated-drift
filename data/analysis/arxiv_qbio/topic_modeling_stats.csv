@@ -1,0 +1,23 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_title_abstracts,38424.0
+dataset,all,,,topics,9.0
+dataset,all,-1.0,-1 (outliers),outlier_title_abstract_count,0.0
+dataset,all,-1.0,-1 (outliers),outlier_title_abstract_share,0.0
+topic,model,0.0,"protein, drug, datasets, graph, language, phylogenetic, proteins",title_abstract_count,10937.0
+topic,model,0.0,"protein, drug, datasets, graph, language, phylogenetic, proteins",title_abstract_share,0.2846398084530502
+topic,model,1.0,"eeg, fmri, connectivity, task, neural networks, neuronal, representations",title_abstract_count,10595.0
+topic,model,1.0,"eeg, fmri, connectivity, task, neural networks, neuronal, representations",title_abstract_share,0.2757391213824693
+topic,model,2.0,"protein, proteins, membrane, tissue, folding, tumor, reaction networks",title_abstract_count,7080.0
+topic,model,2.0,"protein, proteins, membrane, tissue, folding, tumor, reaction networks",title_abstract_share,0.18425983760149905
+topic,model,3.0,"predator, prey, extinction, dispersal, coexistence, biodiversity, ecosystems",title_abstract_count,3932.0
+topic,model,3.0,"predator, prey, extinction, dispersal, coexistence, biodiversity, ecosystems",title_abstract_share,0.10233187591088903
+topic,model,4.0,"epidemic, infected, pandemic, outbreak, vaccination, sir, reproduction number",title_abstract_count,3760.0
+topic,model,4.0,"epidemic, infected, pandemic, outbreak, vaccination, sir, reproduction number",title_abstract_share,0.09785550697480741
+topic,model,5.0,"cooperation, game, social, games, punishment, payoff, cooperators",title_abstract_count,837.0
+topic,model,5.0,"cooperation, game, social, games, punishment, payoff, cooperators",title_abstract_share,0.02178326046221112
+topic,model,7.0,"drug, bone, nanoparticles, tissue, mesoporous, delivery, scaffolds",title_abstract_count,506.0
+topic,model,7.0,"drug, bone, nanoparticles, tissue, mesoporous, delivery, scaffolds",title_abstract_share,0.013168852800333124
+topic,model,6.0,"crop, breeding, cuttings, stress, germination, oil, feed",title_abstract_count,428.0
+topic,model,6.0,"crop, breeding, cuttings, stress, germination, oil, feed",title_abstract_share,0.011138871538621694
+topic,model,8.0,"radiation, photosynthetic, oxygen, photosynthesis, electron, wastewater, radical pair",title_abstract_count,349.0
+topic,model,8.0,"radiation, photosynthetic, oxygen, photosynthesis, electron, wastewater, radical pair",title_abstract_share,0.009082864876119092

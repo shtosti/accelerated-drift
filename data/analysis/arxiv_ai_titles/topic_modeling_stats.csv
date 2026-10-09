@@ -1,0 +1,25 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_titles,403247.0
+dataset,all,,,topics,9.0
+dataset,all,-1.0,-1 (outliers),outlier_title_count,8.0
+dataset,all,-1.0,-1 (outliers),outlier_title_share,1.9838957264406183e-05
+topic,model,0.0,"learning, neural, deep, networks, based, neural networks, models",title_count,174804.0
+topic,model,0.0,"learning, neural, deep, networks, based, neural networks, models",title_share,0.4334911357059073
+topic,model,1.0,"language, models, language models, large, large language, text, generation",title_count,105531.0
+topic,model,1.0,"language, models, language models, large, large language, text, generation",title_share,0.26170312488375613
+topic,model,3.0,"learning, reinforcement, reinforcement learning, policy, multi, bandits, control",title_count,43732.0
+topic,model,3.0,"learning, reinforcement, reinforcement learning, policy, multi, bandits, control",title_share,0.1084496598858764
+topic,model,2.0,"graph, learning, federated, federated learning, networks, privacy, graph neural",title_count,39804.0
+topic,model,2.0,"graph, learning, federated, federated learning, networks, privacy, graph neural",title_share,0.09870873186905296
+topic,model,4.0,"causal, learning, clinical, data, medical, models, prediction",title_count,16560.0
+topic,model,4.0,"causal, learning, clinical, data, medical, models, prediction",title_share,0.0410666415373208
+topic,model,5.0,"ai, intelligence, artificial, human, artificial intelligence, agents, agent",title_count,13964.0
+topic,model,5.0,"ai, intelligence, artificial, human, artificial intelligence, agents, agent",title_share,0.03462889990502099
+topic,model,6.0,"foundation, knowledge, ontology, models, foundation models, model, data",title_count,4489.0
+topic,model,6.0,"foundation, knowledge, ontology, models, foundation models, model, data",title_share,0.011132134894989919
+topic,model,7.0,"rag, fashion, 3d, generation, human, based, image",title_count,2463.0
+topic,model,7.0,"rag, fashion, 3d, generation, human, based, image",title_share,0.0061079189677790535
+topic,model,8.0,"fuzzy, based, algorithm, decision, optimization, data, classification",title_count,1892.0
+topic,model,8.0,"fuzzy, based, algorithm, decision, optimization, data, classification",title_share,0.0046919133930320624
+topic,model,-1.0,-1 (outliers),title_count,8.0
+topic,model,-1.0,-1 (outliers),title_share,1.9838957264406183e-05

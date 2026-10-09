@@ -1,0 +1,9 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_abstract_count,child_left_abstract_share,child_right_abstract_count,child_right_abstract_share,parent_abstract_count,parent_abstract_share
+16,data_learning_model_models_based,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",5,quantum_classical_learning_machine_quantum machine,15,data_model_learning_models_based,0.6857284505473924,,,,,,,,,
+15,data_model_learning_models_based,"[0, 1, 2, 3, 4, 6, 7, 8]",14,data_model_learning_models_based,6,ai_human_systems_intelligence_agents,0.5845920729567017,,,,,,,,,
+14,data_model_learning_models_based,"[0, 1, 2, 3, 4, 7, 8]",8,privacy_data_learning_federated_fl,13,data_model_models_based_learning,0.5323845822829709,,,,,,,,,
+13,data_model_models_based_learning,"[0, 1, 2, 3, 4, 7]",12,models_model_data_learning_based,7,fuzzy_based_decision_paper_data,0.4859906609337673,,,,,,,,,
+12,models_model_data_learning_based,"[0, 1, 2, 3, 4]",9,models_language_llms_model_code,11,learning_data_model_based_models,0.4175423242501885,,,,,,,,,
+11,learning_data_model_based_models,"[0, 2, 4]",10,data_model_learning_models_based,2,learning_policy_based_algorithm_model,0.2608305802333535,,,,,,,,,
+10,data_model_learning_models_based,"[0, 4]",4,data_model_learning_models_time,0,data_model_learning_models_training,0.19216886463458804,,,,,,,,,
+9,models_language_llms_model_code,"[1, 3]",3,code_models_language_llms_reasoning,1,models_language_model_llms_based,0.15682075849840926,,,,,,,,,

@@ -1,0 +1,11 @@
+topic_id,topic_label
+-1,-1 (outliers)
+0,"learning, neural, deep, networks, based, neural networks, models"
+1,"language, models, language models, large, large language, text, generation"
+2,"graph, learning, federated, federated learning, networks, privacy, graph neural"
+3,"learning, reinforcement, reinforcement learning, policy, multi, bandits, control"
+4,"causal, learning, clinical, data, medical, models, prediction"
+5,"ai, intelligence, artificial, human, artificial intelligence, agents, agent"
+6,"foundation, knowledge, ontology, models, foundation models, model, data"
+7,"rag, fashion, 3d, generation, human, based, image"
+8,"fuzzy, based, algorithm, decision, optimization, data, classification"

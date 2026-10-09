@@ -13,6 +13,7 @@ from not_an_llm.analysis.topic_modeling.comparison import (
     select_top_its_features,
 )
 from not_an_llm.config import load_config
+from not_an_llm.pipelines.additional_analysis import run_additional_analysis, run_comparison_analyses
 from not_an_llm.pipelines.analyze import run_analysis
 from not_an_llm.pipelines.collect import run_collection
 from not_an_llm.pipelines.external_analyze import (
@@ -41,10 +42,41 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("collect", help="Download Semantic Scholar papers to JSONL.")
     subparsers.add_parser("preprocess", help="Preprocess raw title/abstract text and save JSONL.")
     subparsers.add_parser("analyze", help="Run feature and readability analysis with yearly trends.")
+    additional = subparsers.add_parser(
+        "additional-analysis",
+        aliases=["additional_analysis"],
+        help="Run targeted follow-up analyses from existing feature or preprocessed outputs.",
+    )
+    additional.add_argument(
+        "--input",
+        default=None,
+        help="Optional feature_dataset.jsonl or preprocessed JSONL. Defaults to the configured feature dataset if present.",
+    )
+    additional.add_argument(
+        "--output-dir",
+        default=None,
+        help="Optional output directory. Defaults to <analysis_dir>/additional_analysis.",
+    )
+    additional.add_argument(
+        "--chunk-size",
+        type=int,
+        default=2000,
+        help="Rows to parse per chunk for targeted dependency analyses.",
+    )
+    additional.add_argument(
+        "--counterfactual-only",
+        action="store_true",
+        help="Refresh strict counterfactual tables and plots from existing monthly trends; skip dependency parsing.",
+    )
+    additional.add_argument(
+        "--comparisons",
+        action="store_true",
+        help="Also regenerate cross-corpus and title-vs-abstract comparison outputs.",
+    )
     subparsers.add_parser("visualize", help="Generate plots from previously computed analysis data.")
     topic_compare = subparsers.add_parser(
         "topic-compare",
-        help="Compare topic prevalence and post/pre feature strength for arXiv and medRxiv.",
+        help="Compare topic prevalence and post/pre feature strength for arXiv AI and medRxiv.",
     )
     topic_compare.add_argument(
         "--analysis-dir",
@@ -53,13 +85,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     topic_compare.add_argument(
         "--output-dir",
-        default="data/analysis/topic_comparison",
-        help="Directory where topic comparison CSVs and plots are written.",
+        default=None,
+        help="Directory where topic comparison CSVs and plots are written. Defaults to data/analysis/topic_comparison/<domains>.",
     )
     topic_compare.add_argument(
         "--domains",
         nargs="+",
-        default=["arxiv", "medarxiv"],
+        default=["arxiv_ai", "medarxiv"],
         help="Dataset prefixes to compare.",
     )
     topic_compare.add_argument(
@@ -232,6 +264,30 @@ def main() -> None:
         print(f"Saved trend plots to {config.analysis.trends_plot_dir} ({len(artifacts.trends_plot_paths)} files)")
         return
 
+    if args.command in {"additional-analysis", "additional_analysis"}:
+        artifacts = run_additional_analysis(
+            config,
+            input_path=args.input,
+            output_dir=args.output_dir,
+            chunk_size=args.chunk_size,
+            counterfactual_only=args.counterfactual_only,
+        )
+        if artifacts.first_post_year_counterfactual_csv is not None:
+            print(f"Saved first-post-year counterfactual statistics to {artifacts.first_post_year_counterfactual_csv}")
+            print(f"Saved first-two-year counterfactual statistics to {artifacts.first_two_year_counterfactual_csv}")
+            print(f"Saved counterfactual plots ({len(artifacts.counterfactual_plot_paths)} files)")
+        if artifacts.per_document_csv is not None:
+            print(f"Saved determiner decomposition documents to {artifacts.per_document_csv}")
+            print(f"Saved determiner decomposition yearly trends to {artifacts.yearly_csv}")
+            print(f"Saved determiner decomposition plot to {artifacts.plot_path}")
+            print(f"Saved dependency bigram yearly trends to {artifacts.dependency_bigram_yearly_csv}")
+            print(f"Saved dependency bigram change table to {artifacts.dependency_bigram_change_csv}")
+            print(f"Saved dependency bigram trend plot to {artifacts.dependency_bigram_plot_path}")
+        if args.comparisons:
+            run_comparison_analyses()
+            print("Regenerated cross-corpus and title-vs-abstract comparisons")
+        return
+
     if args.command == "visualize":
         artifacts = run_visualization(config)
         print(f"Saved trend plots to {config.analysis.trends_plot_dir} ({len(artifacts.trends_plot_paths)} files)")
@@ -239,7 +295,11 @@ def main() -> None:
 
     if args.command == "topic-compare":
         analysis_dir = Path(args.analysis_dir)
-        output_dir = Path(args.output_dir)
+        output_dir = (
+            Path(args.output_dir)
+            if args.output_dir
+            else analysis_dir / "topic_comparison" / "__".join(args.domains)
+        )
         selected_features_csv = None
         if args.features:
             features = tuple(args.features)

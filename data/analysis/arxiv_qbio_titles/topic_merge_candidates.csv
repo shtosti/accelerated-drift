@@ -1,0 +1,9 @@
+Parent_ID,Parent_Name,Topics,Child_Left_ID,Child_Left_Name,Child_Right_ID,Child_Right_Name,Distance,child_left_label,child_right_label,parent_label,child_left_title_count,child_left_title_share,child_right_title_count,child_right_title_share,parent_title_count,parent_title_share
+16,model_using_learning_analysis_based,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",14,model_learning_using_based_networks,15,19_covid 19_covid_epidemic_pregnancy,1.0174830273442612,,,,,,,,,
+15,19_covid 19_covid_epidemic_pregnancy,"[3, 8]",3,19_covid 19_covid_epidemic_sars,8,pregnancy_fetal_mineralocorticoid_maternal_prenatal,0.9495747801038427,,,,,,,,,
+14,model_learning_using_based_networks,"[0, 1, 2, 4, 5, 6, 7]",12,cell_bacterial_microbial_dynamics_model,13,learning_model_using_networks_based,0.82703142591573,,,,,,,,,
+13,learning_model_using_networks_based,"[0, 1, 2, 5, 7]",10,networks_learning_model_neural_models,11,using_imaging_cryo_microscopy_model,0.7988580946568834,,,,,,,,,
+12,cell_bacterial_microbial_dynamics_model,"[4, 6]",6,cell_membrane_dynamics_cells_molecular,4,microbial_bacterial_bacteria_microbiome_growth,0.792861051747439,,,,,,,,,
+11,using_imaging_cryo_microscopy_model,"[5, 7]",7,cryo_microscopy_imaging_cryo em_images,5,cardiac_model_atrial_heart_atrial fibrillation,0.7756183804418392,,,,,,,,,
+10,networks_learning_model_neural_models,"[0, 1, 2]",2,networks_model_dynamics_phylogenetic_models,9,neural_learning_brain_networks_protein,0.654605829061783,,,,,,,,,
+9,neural_learning_brain_networks_protein,"[0, 1]",0,protein_learning_prediction_cell_data,1,neural_brain_learning_networks_eeg,0.5982406066708499,,,,,,,,,

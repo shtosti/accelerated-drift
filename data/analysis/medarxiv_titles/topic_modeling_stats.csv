@@ -1,0 +1,25 @@
+scope,stage,topic_id,topic_label,metric,value
+dataset,all,,,total_titles,82011.0
+dataset,all,,,topics,9.0
+dataset,all,-1.0,-1 (outliers),outlier_title_count,1.0
+dataset,all,-1.0,-1 (outliers),outlier_title_share,1.2193486239650779e-05
+topic,model,0.0,"19, covid 19, covid, sars, cov, sars cov, vaccination",title_count,35632.0
+topic,model,0.0,"19, covid 19, covid, sars, cov, sars cov, vaccination",title_share,0.4344783016912365
+topic,model,1.0,"disease, alzheimer, parkinson disease, alzheimer disease, parkinson, brain, disorder",title_count,11283.0
+topic,model,1.0,"disease, alzheimer, parkinson disease, alzheimer disease, parkinson, brain, disorder",title_share,0.13757910524197972
+topic,model,2.0,"health, study, care, review, clinical, data, language",title_count,9798.0
+topic,model,2.0,"health, study, care, review, clinical, data, language",title_share,0.11947177817609833
+topic,model,3.0,"cancer, learning, cell, breast, deep, breast cancer, based",title_count,7220.0
+topic,model,3.0,"cancer, learning, cell, breast, deep, breast cancer, based",title_share,0.08803697065027861
+topic,model,4.0,"stroke, study, pain, patients, injury, review, brain",title_count,6189.0
+topic,model,4.0,"stroke, study, pain, patients, injury, review, brain",title_share,0.07546548633719867
+topic,model,5.0,"diabetes, study, health, type, type diabetes, risk, women",title_count,5849.0
+topic,model,5.0,"diabetes, study, health, type, type diabetes, risk, women",title_share,0.0713197010157174
+topic,model,6.0,"heart, cardiovascular, patients, risk, disease, coronary, heart failure",title_count,4467.0
+topic,model,6.0,"heart, cardiovascular, patients, risk, disease, coronary, heart failure",title_share,0.05446830303252003
+topic,model,7.0,"dental, caries, hygiene, oral, cleft, sanitation, study",title_count,860.0
+topic,model,7.0,"dental, caries, hygiene, oral, cleft, sanitation, study",title_share,0.01048639816609967
+topic,model,8.0,"gastric, study, patients, urinary, surgery, laparoscopic, review",title_count,712.0
+topic,model,8.0,"gastric, study, patients, urinary, surgery, laparoscopic, review",title_share,0.008681762202631354
+topic,model,-1.0,-1 (outliers),title_count,1.0
+topic,model,-1.0,-1 (outliers),title_share,1.2193486239650779e-05
