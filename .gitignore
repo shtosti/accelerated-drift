@@ -213,6 +213,10 @@ data/processed/*.jsonl
 data/analyzed/*.jsonl
 data/external/
 logs/
+
+
+# slurm scripts
+slurm_scripts/
 slurm.sh
 # slurm_analyze.sh
 # slurm_collect.sh
@@ -240,3 +244,6 @@ tmp/
 data/analysis/manuscript/
 presentation_assets/
 presentation_assets/its_explainer/create_figure.py
+
+# dev configs
+config_mini.toml
