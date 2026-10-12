@@ -208,6 +208,19 @@ marimo/_lsp/
 __marimo__/
 
 # heavy data
+# Track only abstract/title analysis outputs and abstract visuals; everything else stays local.
+data/analysis/*
+!data/analysis/*_abstracts/
+!data/analysis/*_titles/
+!data/analysis/readability_abstract_decomposition/
+!data/analysis/title_abstract_comparison/
+!data/analysis/corpus_comparison/
+!data/analysis/topic_comparison/
+data/analysis/*mini*/
+
+data/visuals/*
+!data/visuals/*_abstracts/
+!data/visuals/readability_abstract_decomposition/
 data/raw/*.jsonl
 data/processed/*.jsonl
 data/analyzed/*.jsonl
