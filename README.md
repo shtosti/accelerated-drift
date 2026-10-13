@@ -103,7 +103,7 @@ Other scripts require their corresponding saved inputs:
 
 Comparison tables and figures go into named directories such as `title_abstract_comparison/` and `corpus_comparison/` under `data/analysis/` and `data/visuals/`.
 
-Separate HC3/MAGE human–AI comparisons are available through `external-preprocess` and `external-analyze`, configured in `[external]`. They are separate from the temporal preprint workflow. For topic comparisons, use `topic-compare` with domain stems matching the outputs you have generated. Explore commands with:
+For topic comparisons, use `topic-compare` with domain stems matching the outputs you have generated. Explore commands with:
 
 ```bash
 uv run python main.py --help

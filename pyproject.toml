@@ -8,7 +8,6 @@ license-files = ["LICENSE"]
 requires-python = ">=3.11"
 dependencies = [
     "bertopic>=0.17.4",
-    "datasets==2.21.0",
     "ipykernel>=7.2.0",
     "jupyter>=1.1.1",
     "matplotlib>=3.10.8",

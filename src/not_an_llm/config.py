@@ -118,33 +118,11 @@ class AnalysisConfig:
 
 
 @dataclass(slots=True)
-class ExternalConfig:
-    dataset: str
-    hc3_subset: str
-    hc3_subsets: list[str]
-    hc3_split: str
-    hc3_pair_output_jsonl: Path
-    hc3_feature_output_jsonl: Path
-    hc3_comparison_csv: Path
-    hc3_comparison_plot: Path
-    mage_split: str
-    mage_max_pairs: int
-    mage_domains: list[str]
-    mage_include_sources: list[str]
-    mage_exclude_sources: list[str]
-    mage_pair_output_jsonl: Path
-    mage_feature_output_jsonl: Path
-    mage_comparison_csv: Path
-    mage_comparison_plot: Path
-
-
-@dataclass(slots=True)
 class AppConfig:
     project_name: str
     data_dir: Path
     collection: CollectionConfig
     analysis: AnalysisConfig
-    external: ExternalConfig | None
 
 
 # =========================
@@ -158,7 +136,6 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
     project = _require_dict(raw, "project")
     collection = _require_dict(raw, "collection")
     analysis = _require_dict(raw, "analysis")
-    external = raw.get("external") if isinstance(raw.get("external"), dict) else None
     lexicon = analysis.get("lexicon") if isinstance(analysis.get("lexicon"), dict) else {}
 
     source = _load_collection_source(collection)
@@ -320,7 +297,6 @@ def load_config(config_path: str | Path = "config.toml") -> AppConfig:
             topic_modeling_max_final_topics=int(analysis.get("topic_modeling_max_final_topics", 12)),
         ),
 
-        external=None,
     )
 
 
