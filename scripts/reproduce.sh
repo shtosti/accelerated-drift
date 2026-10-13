@@ -16,8 +16,8 @@ Usage:
 
 Examples:
   ./scripts/reproduce.sh all
-  ./scripts/reproduce.sh --config config_mini.toml preprocess analyze visualize
-  ./scripts/reproduce.sh --dry-run all
+  ./scripts/reproduce.sh --config config_mini.toml collect preprocess analyze visualize
+  ./scripts/reproduce.sh --skip-sync --dry-run all
 
 Options:
   --config PATH    Config file to use. Default: config.toml

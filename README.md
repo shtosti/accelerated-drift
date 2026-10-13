@@ -22,7 +22,7 @@ bash scripts/reproduce.sh --config config_mini.toml collect preprocess analyze v
 
 The mini configuration currently samples arXiv quantitative biology titles from 2015–2016. It checks pipeline execution; estimating post-2022 effects requires a date range spanning the intervention. Topic modeling is enabled by default and can still require substantial memory and model downloads. Set `[analysis].topic_modeling_enabled = false` for a lighter check.
 
-Raw, preprocessed, and document-level datasets are not bundled as a complete reproduction dataset. Some aggregate tables and figures are tracked; other generated outputs must be regenerated. Run `collect` before `preprocess` unless you already have the configured raw JSONL.
+Raw and preprocessed JSONL datasets and document-level features are not tracked in this release. Some aggregate tables and figures are tracked; other generated outputs must be regenerated. Run `collect` before `preprocess` unless you already have the configured raw JSONL.
 
 ## Configure and run
 
@@ -49,10 +49,14 @@ uv run python main.py --config config.toml visualize
 The Bash wrapper synchronizes dependencies from `uv.lock` and installs the spaCy model if missing:
 
 ```bash
-bash scripts/reproduce.sh all
+bash scripts/reproduce.sh --config config.toml collect preprocess analyze visualize
 ```
 
 `all` runs `collect`, `preprocess`, `analyze`, `visualize`, and both comparison scripts. Comparisons need the relevant corpus outputs, which may require separate runs. Additional wrapper stages are `additional-analysis`, `topic-compare`, `comparisons`, and `corpus-compare`. See `bash scripts/reproduce.sh --help` for options. To preview commands without dependency setup, use `--skip-sync --dry-run` together.
+
+## Reproduction scope
+
+Run the pipeline separately for each corpus and text mode, then generate the comparisons and follow-up analyses. Raw datasets are collected separately; exact numerical reproduction requires the original data and model versions.
 
 ## Outputs and methods
 
