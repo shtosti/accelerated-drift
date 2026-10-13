@@ -3,6 +3,8 @@ name = "not-an-llm"
 version = "0.1.0"
 description = "Analyze stylistic change in scientific preprints around broad LLM adoption"
 readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
 dependencies = [
     "bertopic>=0.17.4",

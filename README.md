@@ -123,4 +123,4 @@ Large generated datasets, caches, and exploratory figures should stay out of Git
 
 ## License
 
-No project license has been specified yet. Third-party datasets, preprint text, models, and dependencies remain subject to their respective terms; a future code license does not replace those terms.
+Project code is licensed under the [BSD-3-Clause License](LICENSE). Copyright (c) 2026, University of Bern. Third-party datasets, preprint text, models, and dependencies remain subject to their respective terms; this code license does not replace those terms.
