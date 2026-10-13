@@ -2,7 +2,6 @@
 
 Research pipeline for studying changes in scientific writing around broad LLM adoption. It collects arXiv and medRxiv titles and abstracts, extracts lexical, readability, and syntactic features, fits interrupted time-series (ITS) models, and generates figures.
 
-The GitHub repository is `accelerated-drift`; the Python package and CLI retain the name `not_an_llm` / `not-an-llm`.
 
 ## Quick start
 
