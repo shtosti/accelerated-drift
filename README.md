@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23418752.svg)](https://doi.org/10.5281/zenodo.23418752)
+
+
 # Accelerated Drift
 
 Research pipeline for studying changes in scientific writing around broad LLM adoption. It collects arXiv and medRxiv titles and abstracts, extracts lexical, readability, and syntactic features, fits interrupted time-series (ITS) models, and generates figures.
@@ -128,3 +131,14 @@ Large generated datasets, caches, and exploratory figures should stay out of Git
 ## License
 
 Project code is licensed under the [BSD-3-Clause License](LICENSE). Copyright (c) 2026, University of Bern. Third-party datasets, preprint text, models, and dependencies remain subject to their respective terms; this code license does not replace those terms.
+
+## Citation
+
+
+## Citation
+
+If you use accelerated-drift in your research, please cite:
+
+Hubarava, H. (2026). accelerated-drift (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23418752
+
+Citation metadata is also available in [CITATION.cff](CITATION.cff).
