@@ -132,8 +132,6 @@ Large generated datasets, caches, and exploratory figures should stay out of Git
 
 Project code is licensed under the [BSD-3-Clause License](LICENSE). Copyright (c) 2026, University of Bern. Third-party datasets, preprint text, models, and dependencies remain subject to their respective terms; this code license does not replace those terms.
 
-## Citation
-
 
 ## Citation
 
@@ -142,3 +140,6 @@ If you use accelerated-drift in your research, please cite:
 Hubarava, H. (2026). accelerated-drift (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23418752
 
 Citation metadata is also available in [CITATION.cff](CITATION.cff).
+
+## Acknowledgements
+Calculations were performed on [UBELIX](https://www.id.unibe.ch/hpc), the HPC cluster at the University of Bern.
